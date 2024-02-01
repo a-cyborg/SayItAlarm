@@ -1,0 +1,11 @@
+syntax = "proto3";
+import "volume_button_behavior.proto";
+
+option java_package = "org.a_cyb.sayitalarm";
+option java_multiple_files = true;
+
+enum DarkThemeConfigProto {
+  FOLLOW_SYSTEM = 0;
+  LIGHT = 1;
+  DARK = 2;
+}
