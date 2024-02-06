@@ -1,6 +1,7 @@
 package org.a_cyb.sayitalarm.navigation
 
-import android.util.Log
+import android.annotation.SuppressLint
+import android.os.Build
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.WindowInsets
@@ -9,12 +10,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -22,22 +22,23 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionStatus
+import com.google.accompanist.permissions.rememberPermissionState
 import org.a_cyb.sayitalarm.R
 import org.a_cyb.sayitalarm.core.alarm.ImplAlarmScheduler
 import org.a_cyb.sayitalarm.core.designsystem.component.SiaIcons
 import org.a_cyb.sayitalarm.core.designsystem.component.SiaTopAppBar
 import org.a_cyb.sayitalarm.core.designsystem.component.SiaTopAppBarIconButton
 import org.a_cyb.sayitalarm.core.designsystem.theme.SayItAlarmTheme
-import org.a_cyb.sayitalarm.util.TAG
 import org.a_cyb.sayitalarm.util.getRandomAlarm
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun SiaApp(
-    permissionGranted: Boolean,
-) {
+fun SiaApp() {
     val snackBarHostState = remember { SnackbarHostState() }
     val navController = rememberNavController()
 
@@ -88,30 +89,38 @@ fun SiaApp(
                 .consumeWindowInsets(padding)
                 .windowInsetsPadding(WindowInsets.safeDrawing),
         ) {
-            Log.d(TAG, "SiaApp: [***] permissionGranted = $permissionGranted")
-            if (!permissionGranted) {
-                Text(
-                    text = "Permission is not granted for SayIt Alarm. It can not wake you without permission given.",
-                    style = MaterialTheme.typography.titleSmall,
-                    color = MaterialTheme.colorScheme.error,
-                )
-            }
-            Text(text = "DEBUG TEXT")
             SiaNavHost(
                 navController = navController,
                 onEditMode = onEditMode,
                 offEditMode = { onEditMode = false },
             )
+            NotificationPermissionEffect()
         }
     }
 }
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+private fun NotificationPermissionEffect() {
+    if (LocalInspectionMode.current) return  // Return if it is preview mode.
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
 
+    val notificationPermissionState = rememberPermissionState(
+        android.Manifest.permission.POST_NOTIFICATIONS,
+    )
+    LaunchedEffect(notificationPermissionState) {
+        val status = notificationPermissionState.status
+        if (status is PermissionStatus.Denied && !status.shouldShowRationale) {
+            notificationPermissionState.launchPermissionRequest()
+        }
+    }
+    // TODO: When status is denied or shouldShowRationale display permission warning box.
+}
+
+@SuppressLint("UnrememberedMutableState")
 @Preview
 @Composable
 fun PreviewTaAppScreen() {
     SayItAlarmTheme {
-        SiaApp(
-            permissionGranted = true,
-        )
+        SiaApp()
     }
 }
