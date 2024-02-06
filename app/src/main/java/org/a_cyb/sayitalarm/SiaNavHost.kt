@@ -1,4 +1,4 @@
-package org.a_cyb.sayitalarm.navigation
+package org.a_cyb.sayitalarm
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -42,7 +42,7 @@ fun SiaNavHost(
             SettingsDialog(onDismiss = navController::navigateToList)
         }
         composable(
-            route = "${editRoute}/{alarmId}",
+            route = "$editRoute/{alarmId}",
             arguments = listOf(navArgument("alarmId") { type = NavType.StringType })
         ) {
             EditDialog(onDismiss = navController::navigateToList)
@@ -53,4 +53,4 @@ fun SiaNavHost(
 fun NavHostController.navigateToList() = this.navigate(listRoute)
 fun NavHostController.navigateToAdd() = this.navigate(addRoute)
 fun NavHostController.navigateToSettings() = this.navigate(settingsRoute)
-fun NavHostController.navigateToEdit(id: Int) = this.navigate("${editRoute}/$id")
+fun NavHostController.navigateToEdit(id: Int) = this.navigate("$editRoute/$id")

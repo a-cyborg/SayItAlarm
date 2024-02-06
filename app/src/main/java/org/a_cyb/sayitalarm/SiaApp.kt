@@ -1,4 +1,4 @@
-package org.a_cyb.sayitalarm.navigation
+package org.a_cyb.sayitalarm
 
 import android.annotation.SuppressLint
 import android.os.Build
@@ -28,7 +28,6 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
-import org.a_cyb.sayitalarm.R
 import org.a_cyb.sayitalarm.core.alarm.ImplAlarmScheduler
 import org.a_cyb.sayitalarm.core.designsystem.component.SiaIcons
 import org.a_cyb.sayitalarm.core.designsystem.component.SiaTopAppBar

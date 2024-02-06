@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import dagger.hilt.android.AndroidEntryPoint
 import org.a_cyb.sayitalarm.core.designsystem.theme.SayItAlarmTheme
-import org.a_cyb.sayitalarm.navigation.SiaApp
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
