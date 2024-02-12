@@ -21,7 +21,7 @@ class ImplAlarmInstanceRepository @Inject constructor(
             .getAlarmInstance(id)
             .map { it?.asExternalModel() }
 
-    override suspend fun insertAlarm(instance: AlarmInstance): Int =
+    override suspend fun insertAlarmInstance(instance: AlarmInstance): Int =
         instanceDao
             .insertAlarm(instance.asEntity())
             .toInt()

@@ -35,7 +35,6 @@ fun SiaNavHost(
             )
         }
         composable(addRoute) {
-//            AddDialog(onDismiss = { navController.navigateToList() })
             AddDialog(onDismiss = navController::navigateToList)
         }
         composable(route = settingsRoute) {

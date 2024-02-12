@@ -15,8 +15,8 @@ interface AlarmInstanceRepository {
     /**
      * Inserts the provided alarm into the database.
      *
-     * @param alarm The alarm instance to insert.
+     * @param instance The alarm instance to insert.
      * @return The primaryKey (as a String) of the inserted row. Returns -1 if the insertion fails.
      */
-    suspend fun insertAlarm(instance: AlarmInstance): Int
+    suspend fun insertAlarmInstance(instance: AlarmInstance): Int
 }
