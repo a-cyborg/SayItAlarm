@@ -1,13 +1,14 @@
 package org.a_cyb.sayitalarm.core.alarm.util
 
 import org.a_cyb.sayitalarm.core.model.WeeklyRepeat
-import java.util.Calendar
 
 object AlarmTimeCalculator {
+    fun getNextDayOfWeek(today: Int, weeklyRepeat: WeeklyRepeat): Int {
+        val nextDay = weeklyRepeat.weekdays.firstOrNull { it > today }
 
-    fun getNextAlarmTime(calendar: Calendar, weeklyRepeat: WeeklyRepeat) {
-        if (calendar > Calendar.getInstance()) {
-
-        }
+        return nextDay ?: weeklyRepeat.weekdays.first()
     }
+
+//    fun getNextAlarmTime(alarm: Alarm): Calendar {
+//    }
 }
