@@ -1,6 +1,5 @@
 package org.a_cyb.sayitalarm.core.model
 
-import android.net.Uri
 import org.a_cyb.sayitalarm.core.alarm.AlarmOptionalFeature
 import org.a_cyb.sayitalarm.core.alarm.AlarmTerminator
 
@@ -15,7 +14,7 @@ data class Alarm (
     val label: String,
     val enabled: Boolean,
     val vibrate: Boolean,
-    val ringtone: Uri,
+    val ringtone: String,
     val alarmTerminator: AlarmTerminator,
     val alarmOptionalFeature: AlarmOptionalFeature,
 ) {

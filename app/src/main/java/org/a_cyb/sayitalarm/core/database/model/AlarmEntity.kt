@@ -1,6 +1,5 @@
 package org.a_cyb.sayitalarm.core.database.model
 
-import androidx.core.net.toUri
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -35,7 +34,7 @@ fun AlarmEntity.asExternalModel() = Alarm (
     weeklyRepeat = weeklyRepeat,
     label = label,
     vibrate = vibrate,
-    ringtone = ringtone.toUri(),
+    ringtone = ringtone,
     alarmTerminator = alarmTerminator,
     alarmOptionalFeature = alarmOptionalFeature,
 )

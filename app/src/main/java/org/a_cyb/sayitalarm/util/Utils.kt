@@ -1,6 +1,5 @@
 package org.a_cyb.sayitalarm.util
 
-import android.net.Uri
 import android.os.Build
 import org.a_cyb.sayitalarm.core.alarm.AlarmOptionalFeature
 import org.a_cyb.sayitalarm.core.alarm.AlarmTerminator
@@ -33,21 +32,22 @@ val isBuildVersionOMR1OrLater: Boolean
 // Dev mode
 // For dev mode create randomly generated Alarm.
 fun getRandomAlarm(
-    combinedMinutes: Int = (0..1439).random(),
+    combinedMinutes: CombinedMinutes = CombinedMinutes((0..1439).random()),
     enabled: Boolean = Random().nextBoolean(),
     weeklyRepeat: WeeklyRepeat = WeeklyRepeat((1..7).random(), (1..7).random()),
     label: String = "",
     vibrate: Boolean = Random().nextBoolean(),
+    ringtone: String = "",
     alarmTerminator: AlarmTerminator = VoiceRecognitionTerminator(listOf("Hi", "Awesome")),
     alarmOptionalFeature: AlarmOptionalFeature = DreamQuestion(""),
 ) =
     Alarm (
-        combinedMinutes = CombinedMinutes(combinedMinutes),
+        combinedMinutes = combinedMinutes,
         enabled = enabled,
         weeklyRepeat = weeklyRepeat,
         label = label,
         vibrate = vibrate,
-        ringtone = Uri.EMPTY,
+        ringtone = ringtone,
         alarmTerminator = alarmTerminator,
         alarmOptionalFeature = alarmOptionalFeature,
     )

@@ -133,7 +133,7 @@ fun AlarmPanel(
             )
             Divider(Modifier.padding(vertical = 13.dp))
             RingtoneSection(
-                ringtone = alarm.ringtone,
+                ringtone = Uri.parse(alarm.ringtone),
                 onClick = { showRingtonePicker = true }
             )
         }
@@ -162,7 +162,7 @@ fun AlarmPanel(
         }
         showRingtonePicker -> {
             RingtonePicker(
-                ringtone = alarm.ringtone,
+                ringtone = Uri.parse(alarm.ringtone),
                 onCancel = { showRingtonePicker = false },
                 onConfirm = onUpdateRingtone,
             )

@@ -88,7 +88,7 @@ fun AddDialog(
                         weeklyRepeat = addUiState.weeklyRepeat,
                         enabled = true,
                         vibrate = false,    // Not implemented.
-                        ringtone = addUiState.ringtone,
+                        ringtone = addUiState.ringtone.toString(),
                         alarmTerminator = VoiceRecognitionTerminator(addUiState.sayItText),
                         alarmOptionalFeature = NoOptionalFeature,
                     ),

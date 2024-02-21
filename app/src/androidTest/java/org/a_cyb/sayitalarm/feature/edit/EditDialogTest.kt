@@ -1,6 +1,7 @@
 package org.a_cyb.sayitalarm.feature.edit
 
 import android.media.RingtoneManager
+import android.net.Uri
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -65,7 +66,7 @@ class EditDialogTest {
                 label = "Morning",
                 enabled = true,
                 vibrate = false,
-                ringtone = AddUiSate().ringtone, // TODO: change to get uri with string.
+                ringtone = AddUiSate().ringtone.toString(), // TODO: change to get uri with string.
                 alarmTerminator = VoiceRecognitionTerminator(listOf("I am grateful.")),
                 alarmOptionalFeature = NoOptionalFeature,
             )
@@ -86,7 +87,7 @@ class EditDialogTest {
                 formattedTime = getFormattedClockTime(fetchedAlarm.combinedMinutes)
 
                 defaultRingtoneTitle = RingtoneManager
-                    .getRingtone(LocalContext.current, fetchedAlarm.ringtone)
+                    .getRingtone(LocalContext.current, Uri.parse(fetchedAlarm.ringtone))
                     .getTitle(LocalContext.current)
             }
 

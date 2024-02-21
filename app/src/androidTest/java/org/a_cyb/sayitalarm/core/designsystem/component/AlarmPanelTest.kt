@@ -37,7 +37,7 @@ class AlarmPanelTest {
                     weeklyRepeat = defaultAlarm.weeklyRepeat,
                     enabled = true,
                     vibrate = false,    // Not implemented.
-                    ringtone = defaultAlarm.ringtone,
+                    ringtone = defaultAlarm.ringtone.toString(),
                     alarmTerminator = VoiceRecognitionTerminator(defaultAlarm.sayItText),
                     alarmOptionalFeature = NoOptionalFeature,
                 ),

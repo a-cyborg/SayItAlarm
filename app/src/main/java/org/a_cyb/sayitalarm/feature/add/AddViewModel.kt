@@ -57,7 +57,7 @@ class AddViewModel @Inject constructor(
                     weeklyRepeat = _addUiState.value.weeklyRepeat,
                     label = _addUiState.value.label,
                     vibrate = false, // Not implemented yet.
-                    ringtone = _addUiState.value.ringtone,
+                    ringtone = _addUiState.value.ringtone.toString(),
                     // TODO: Before saving the alarm implements available test for the SayItText.
                     alarmTerminator = VoiceRecognitionTerminator(_addUiState.value.sayItText),
                     alarmOptionalFeature = NoOptionalFeature, // Not implemented yet.
@@ -74,18 +74,3 @@ data class AddUiSate (
     val ringtone: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM),
     val sayItText: List<String> = listOf(""),
 )
-
-// TODO
-//sealed interface AddUiState {
-//    data object Loading: AddUiState
-//    data class Success(val alarmFieldValues: AlarmFieldValues): AddUiState
-//}
-
-
-//    fun updateAlarmTime(hourOfDay: Int, minute: Int) = _addUiState.update { currentState ->
-//            currentState.copy(alarmTime = Calendar.getInstance().apply {
-//                    set(Calendar.HOUR_OF_DAY, hourOfDay)
-//                    set(Calendar.MINUTE, minute)
-//                }
-//            )
-//        }

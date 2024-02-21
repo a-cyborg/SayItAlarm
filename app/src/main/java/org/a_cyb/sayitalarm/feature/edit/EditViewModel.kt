@@ -56,7 +56,7 @@ class EditViewModel @Inject constructor(
         }
 
     fun onUpdateRingtone(ringtone: Uri) = editedAlarmState.update { currentState ->
-            currentState.copy(ringtone = ringtone)
+            currentState.copy(ringtone = ringtone.toString())
         }
 
     fun onUpdateSayItText(text: List<String>) = editedAlarmState.update { currentState ->

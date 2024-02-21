@@ -24,17 +24,17 @@ class TestAlarmRepository : AlarmRepository {
     override fun getAlarmById(id: Int): Flow<Alarm?> =
         flowOf(
             cachedAlarms.find {
-                it.id == id.toString()
+                it.id == id
             }
         )
 
     override suspend fun insertAlarm(alarm: Alarm): String {
         cachedAlarms.add(alarm)
-        return alarm.id
+        return alarm.id.toString()
     }
 
-    override suspend fun updateAlarm(id: String, enabled: Boolean): Int {
-        val alarm = getAlarmById(id.toInt()).first()
+    override suspend fun updateAlarm(id: Int, enabled: Boolean): Int {
+        val alarm = getAlarmById(id).first()
 
         return if (alarm == null) {
             0
