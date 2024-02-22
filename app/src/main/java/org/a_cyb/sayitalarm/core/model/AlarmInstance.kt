@@ -36,7 +36,3 @@ data class AlarmInstance(
         const val INVALID_ID = 0
     }
 }
-
-//fun Alarm.toAlarmInstance() = AlarmInstance(
-//
-//)

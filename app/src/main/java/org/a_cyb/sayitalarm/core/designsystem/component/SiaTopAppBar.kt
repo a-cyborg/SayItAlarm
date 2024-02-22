@@ -28,7 +28,6 @@ fun SiaTopAppBar(
     secondActionItem: (@Composable () -> Unit)? = null,
     ) {
     CenterAlignedTopAppBar(
-//    MediumTopAppBar(
         title = {
             Text(
                 text = if (titleResId != null) stringResource(id = titleResId) else "",

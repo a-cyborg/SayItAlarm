@@ -9,7 +9,6 @@ import org.a_cyb.sayitalarm.core.database.model.AlarmEntity
 import org.a_cyb.sayitalarm.core.database.model.AlarmInstanceEntity
 import org.a_cyb.sayitalarm.core.database.util.AlarmTerminatorConverter
 import org.a_cyb.sayitalarm.core.database.util.OptionalFeatureConverter
-import org.a_cyb.sayitalarm.core.database.util.StringListConverter
 import org.a_cyb.sayitalarm.core.database.util.WeeklyRepeatConverter
 
 
@@ -19,7 +18,6 @@ import org.a_cyb.sayitalarm.core.database.util.WeeklyRepeatConverter
     exportSchema = true,
 )
 @TypeConverters(
-    StringListConverter::class,
     WeeklyRepeatConverter::class,
     AlarmTerminatorConverter::class,
     OptionalFeatureConverter::class,

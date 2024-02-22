@@ -26,17 +26,3 @@ data class WeeklyRepeat(val weekdays: Set<Int>) {
         val NEVER = WeeklyRepeat(emptySet())
     }
 }
-
-//data class WeeklyRepeat(val value: Set<Int>) {
-//
-//    val isRepeating: Boolean
-//        get() = value.isNotEmpty()
-//
-//    companion object {
-//        val ALL_DAYS = WeeklyRepeat(setOf(Calendar.MONDAY, Calendar.TUESDAY, Calendar.WEDNESDAY,
-//            Calendar.THURSDAY, Calendar.FRIDAY, Calendar.SATURDAY, Calendar.SUNDAY))
-//
-//        val NEVER = WeeklyRepeat(emptySet())
-//    }
-//}
-//
