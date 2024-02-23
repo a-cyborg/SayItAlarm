@@ -7,7 +7,7 @@ import org.junit.Test
 import java.util.Calendar
 import kotlin.test.assertEquals
 
-class AlarmTimeCalculatorTest {
+class AlarmUtilsTest {
     @Test
     fun getNextAlarmTime_testCase1() {
         /* When the current time is 2024-FEB-20(TUE) 16:14, the alarm time is set for 8am, and it repeats weekly on [MON, WED, FRI]. getNextAlarmTime() returns a Calendar instance for 2024-FEB-21(WED) 8:00. */
@@ -19,7 +19,7 @@ class AlarmTimeCalculatorTest {
             weeklyRepeat = WeeklyRepeat(Calendar.MONDAY, Calendar.WEDNESDAY, Calendar.FRIDAY),
         )
 
-        val nextAlarmTime = AlarmTimeCalculator.getNextAlarmTime(testAlarm, testCurrentTime)
+        val nextAlarmTime = testAlarm.getNextAlarmTime(testCurrentTime)
 
         assertEquals(2024, nextAlarmTime[Calendar.YEAR])
         assertEquals(Calendar.FEBRUARY, nextAlarmTime[Calendar.MONTH])
@@ -43,7 +43,7 @@ class AlarmTimeCalculatorTest {
             weeklyRepeat = WeeklyRepeat.EVERYDAY,
         )
 
-        val nextAlarmTime = AlarmTimeCalculator.getNextAlarmTime(testAlarm, testCurrentTime)
+        val nextAlarmTime = testAlarm.getNextAlarmTime(testCurrentTime)
 
         assertEquals(2024, nextAlarmTime[Calendar.YEAR])
         assertEquals(Calendar.FEBRUARY, nextAlarmTime[Calendar.MONTH])
@@ -67,7 +67,7 @@ class AlarmTimeCalculatorTest {
             weeklyRepeat = WeeklyRepeat(Calendar.SUNDAY),
         )
 
-        val nextAlarmTime = AlarmTimeCalculator.getNextAlarmTime(testAlarm, testCurrentTime)
+        val nextAlarmTime = testAlarm.getNextAlarmTime(testCurrentTime)
 
         assertEquals(2024, nextAlarmTime[Calendar.YEAR])
         assertEquals(Calendar.FEBRUARY, nextAlarmTime[Calendar.MONTH])
@@ -91,7 +91,7 @@ class AlarmTimeCalculatorTest {
             weeklyRepeat = WeeklyRepeat.NEVER,
         )
 
-        val nextAlarmTime = AlarmTimeCalculator.getNextAlarmTime(testAlarm, testCurrentTime)
+        val nextAlarmTime = testAlarm.getNextAlarmTime(testCurrentTime)
 
         assertEquals(2024, nextAlarmTime[Calendar.YEAR])
         assertEquals(Calendar.MARCH, nextAlarmTime[Calendar.MONTH])
@@ -108,42 +108,34 @@ class AlarmTimeCalculatorTest {
         // Today is Monday and WeeklyRepeat.Everyday then should [Calendar.MONDAY].
         assertEquals(
             expected = Calendar.MONDAY,
-            actual = AlarmTimeCalculator.getNextDayOfWeek(
-                today = Calendar.MONDAY,
-                weeklyRepeat = WeeklyRepeat.EVERYDAY
-            )
+            actual = (WeeklyRepeat.EVERYDAY)
+                .getNextDayOfWeek(Calendar.MONDAY)
         )
 
         // Today is Wednesday and weeklyRepeat[Sat, Sun] should return [Calendar.Saturday]
         assertEquals(
             expected = Calendar.SATURDAY,
-            actual = AlarmTimeCalculator.getNextDayOfWeek(
-                today = Calendar.WEDNESDAY,
-                weeklyRepeat = WeeklyRepeat(Calendar.SATURDAY, Calendar.SUNDAY)
-            )
+            actual =  WeeklyRepeat(Calendar.SATURDAY, Calendar.SUNDAY)
+                .getNextDayOfWeek(today = Calendar.WEDNESDAY)
         )
 
         // Today is Sunday and weeklyRepeat[Sun] should return [Calendar.Sunday]
         assertEquals(
             expected = Calendar.SUNDAY,
-            actual = AlarmTimeCalculator.getNextDayOfWeek(
-                today = Calendar.SUNDAY,
-                weeklyRepeat = WeeklyRepeat(Calendar.SUNDAY)
-            )
+            actual = WeeklyRepeat(Calendar.SUNDAY)
+                .getNextDayOfWeek(today = Calendar.SUNDAY)
         )
 
         // Today is Tuesday and weeklyRepeat[Mon, Wed, Fri] should return [Calendar.Wednesday]
         assertEquals(
             expected = Calendar.WEDNESDAY,
-            actual = AlarmTimeCalculator.getNextDayOfWeek(
-                today = Calendar.TUESDAY,
-                weeklyRepeat = WeeklyRepeat(Calendar.MONDAY, Calendar.WEDNESDAY, Calendar.FRIDAY)
-            )
+            actual =  WeeklyRepeat(Calendar.MONDAY, Calendar.WEDNESDAY, Calendar.FRIDAY)
+                .getNextDayOfWeek(today = Calendar.TUESDAY)
         )
     }
 
     private fun Calendar.setCurrentTime(
-        year: Int = 2024,
+        year: Int,
         month: Int,
         dayOfMonth: Int,
         hour: Int,
