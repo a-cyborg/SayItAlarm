@@ -2,21 +2,32 @@ package org.a_cyb.sayitalarm.core.alarm
 
 import android.app.NotificationManager
 import android.content.Context
-import android.content.Context.NOTIFICATION_SERVICE
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.core.app.NotificationCompat
 import androidx.test.rule.GrantPermissionRule
+import org.a_cyb.sayitalarm.core.model.Alarm
 import org.a_cyb.sayitalarm.core.model.AlarmInstance
 import org.junit.Assert.assertFalse
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class AlarmNotificationTest {
+    private lateinit var context: Context
+    private lateinit var manager: NotificationManager
+
+    @Before
+    fun setup() {
+        composeTestRule.setContent {
+            context = LocalContext.current
+            manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        }
+    }
 
     @get:Rule
     val composeTestRule = createAndroidComposeRule<ComponentActivity>()
@@ -31,19 +42,10 @@ class AlarmNotificationTest {
     @Test
     fun whenShowAlarmNotificationCalled_notificationNotified() {
         composeTestRule.apply {
-            val testInstance = AlarmInstance(alarmState = 0)
-            lateinit var manager: NotificationManager
-
-            setContent {
-                val context = LocalContext.current
-
-                AlarmNotification.showAlarmNotification(context, testInstance)
-                manager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-            }
+            AlarmNotification.showAlarmNotification(context, getDummyAlarmInstance())
 
             waitUntil { manager.activeNotifications.isNotEmpty() }
 
-            // Test the notification.
             with(manager.activeNotifications.first()) {
                 assertEquals(818, id) // ALARM_FIRING_NOTIFICATION_ID
                 assertEquals(NotificationCompat.CATEGORY_ALARM, notification.category)
@@ -62,15 +64,7 @@ class AlarmNotificationTest {
     @Test
     fun whenShowAlarmNotificationCalled_fullScreenNotificationDisplayed() {
         composeTestRule.apply {
-            val testInstance = AlarmInstance(alarmState = 0)
-            lateinit var manager: NotificationManager
-
-            setContent {
-                with(LocalContext.current) {
-                    AlarmNotification.showAlarmNotification(this, testInstance)
-                    manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-                }
-            }
+            AlarmNotification.showAlarmNotification(context, getDummyAlarmInstance())
 
             waitUntil { manager.activeNotifications.isNotEmpty() }
 
@@ -84,20 +78,11 @@ class AlarmNotificationTest {
     @Test
     fun whenCancelAlarmNotificationCalled_notificationCanceled() {
         composeTestRule.apply {
-            lateinit var context: Context
-            lateinit var manager: NotificationManager
+            AlarmNotification.showAlarmNotification(context, getDummyAlarmInstance())
 
-            setContent {
-                with(LocalContext.current) {
-                    AlarmNotification.showAlarmNotification(this, AlarmInstance(alarmState = 0))
-                    manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-
-                    context = this
-                }
-            }
-
-            // Check if notification is exist.
             waitUntil { manager.activeNotifications.isNotEmpty() }
+
+            // To Confirm that notification is exists.
             assertEquals(818, manager.activeNotifications.first().id)
 
             AlarmNotification.cancelAlarmFiringNotification(context)
@@ -105,4 +90,7 @@ class AlarmNotificationTest {
             assertTrue(manager.activeNotifications.isEmpty())
         }
     }
+
+    private fun getDummyAlarmInstance() =
+        AlarmInstance(associatedAlarmId = Alarm.INVALID_ID, alarmState = 0)
 }
