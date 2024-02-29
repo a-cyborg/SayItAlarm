@@ -7,6 +7,7 @@ import android.os.PowerManager
 import android.util.Log
 import org.a_cyb.sayitalarm.core.alarm.util.AlarmAlertWakeLock
 import org.a_cyb.sayitalarm.core.alarm.util.SiaAsyncHandler
+import org.a_cyb.sayitalarm.core.model.Alarm
 import org.a_cyb.sayitalarm.core.model.AlarmInstance
 import org.a_cyb.sayitalarm.util.TAG
 
@@ -16,8 +17,7 @@ class AlarmStateManager: BroadcastReceiver() {
 //    lateinit var userDataRepo: UserDataRepository
 
     override fun onReceive(context: Context, intent: Intent?) {
-//        Log.d(TAG, "onReceive: alarmId = ${intent?.getStringExtra("alarmId")}")
-        Log.d(TAG, "onReceive: intent = ${intent}")
+        Log.d(TAG, "onReceive: intent = $intent")
 
         val pendingResult = goAsync()
         val wakeLock = AlarmAlertWakeLock
@@ -32,14 +32,11 @@ class AlarmStateManager: BroadcastReceiver() {
     }
 
     companion object {
-
         fun handleIntent(context: Context, intent: Intent?) {
-            /*
-            if (intent?.getStringExtra("alarmId") == null) {
-                Log.i(TAG, "handleIntent: received null intent $intent")
-                return
-            }
-             */
+            val alarmId = intent?.getStringExtra(ALARM_ID_EXTRA)
+
+            Log.i(TAG, "handleIntent: Received broadcast intent from the system with alarmId = $alarmId")
+
             when (intent?.action) {
                 CHANGE_STATE_ACTION -> {
 
@@ -48,7 +45,7 @@ class AlarmStateManager: BroadcastReceiver() {
                     Log.d(TAG, "handleIntent: [***] call : showAlarmNotification() ")
                     AlarmNotification.showAlarmNotification(
                         context,
-                        AlarmInstance(alarmState = 0)
+                        AlarmInstance(associatedAlarmId = Alarm.INVALID_ID, alarmState = 0)
                     )
                 }
             }
