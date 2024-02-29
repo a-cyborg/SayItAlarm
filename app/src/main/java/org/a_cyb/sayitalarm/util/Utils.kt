@@ -19,7 +19,7 @@ val Any.TAG: String
 /**
  * @return true if the device is [Build.VERSION_CODES.O] or later.
  */
-val IsBuildVersionOOrLater: Boolean
+val isBuildVersionOOrLater: Boolean
     get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
 
 /**

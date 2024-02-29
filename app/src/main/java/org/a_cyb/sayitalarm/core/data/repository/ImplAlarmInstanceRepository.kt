@@ -23,6 +23,6 @@ class ImplAlarmInstanceRepository @Inject constructor(
 
     override suspend fun insertAlarmInstance(instance: AlarmInstance): Int =
         instanceDao
-            .insertAlarm(instance.asEntity())
+            .insertAlarmInstance(instance.asEntity())
             .toInt()
 }

@@ -28,12 +28,13 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
-import org.a_cyb.sayitalarm.core.alarm.ImplAlarmScheduler
+import org.a_cyb.sayitalarm.core.alarm.AlarmManagerScheduler
 import org.a_cyb.sayitalarm.core.designsystem.component.SiaIcons
 import org.a_cyb.sayitalarm.core.designsystem.component.SiaTopAppBar
 import org.a_cyb.sayitalarm.core.designsystem.component.SiaTopAppBarIconButton
 import org.a_cyb.sayitalarm.core.designsystem.theme.SayItAlarmTheme
-import org.a_cyb.sayitalarm.util.getRandomAlarm
+import org.a_cyb.sayitalarm.core.model.Alarm
+import org.a_cyb.sayitalarm.core.model.AlarmInstance
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -71,7 +72,10 @@ fun SiaApp() {
                     SiaTopAppBarIconButton(
                         onClick = {
                             // DEBUG
-                            ImplAlarmScheduler.setAlarm(context, getRandomAlarm())
+                            AlarmManagerScheduler.setAlarm(context, AlarmInstance(
+                                associatedAlarmId = Alarm.INVALID_ID,
+                                alarmState = 0,
+                            ))
 //                            navController.navigateToSettings()
                         },
                         icon = SiaIcons.Settings,

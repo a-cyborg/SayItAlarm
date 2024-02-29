@@ -1,5 +1,6 @@
 package org.a_cyb.sayitalarm.core.alarm
 
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -11,9 +12,9 @@ import androidx.core.app.NotificationManagerCompat
 import org.a_cyb.sayitalarm.R
 import org.a_cyb.sayitalarm.core.model.AlarmInstance
 import org.a_cyb.sayitalarm.feature.alarm.AlarmActivity
-import org.a_cyb.sayitalarm.util.IsBuildVersionOOrLater
 import org.a_cyb.sayitalarm.util.TAG
 import org.a_cyb.sayitalarm.util.getFormattedClockTime
+import org.a_cyb.sayitalarm.util.isBuildVersionOOrLater
 
 internal object AlarmNotification {
     /**
@@ -22,18 +23,14 @@ internal object AlarmNotification {
     private const val ALARM_NOTIFICATION_CHANNEL_ID = "siaAlarmNotification"
     private const val ALARM_FIRING_NOTIFICATION_ID = 818
 
+    @SuppressLint("MissingPermission")
     @Synchronized
-    fun showAlarmNotification(
-        context: Context,
-        instance: AlarmInstance,
-    ) {
-        Log.i(TAG, "[***] showAlertNotification: Display notification for alarm instance + [${instance}]")
-
-        val stringResources: (Int) -> String = context::getString
+    fun showAlarmNotification(context: Context, instance: AlarmInstance) {
+        Log.i(TAG, "showAlertNotification: Display notification for alarm instance:[${instance}]")
 
         val builder: NotificationCompat.Builder = NotificationCompat
             .Builder(context, ALARM_NOTIFICATION_CHANNEL_ID)
-                .setContentTitle(instance.label ?: stringResources(R.string.notification_content_title))
+                .setContentTitle(instance.label ?: context.getString(R.string.notification_content_title))
                 .setContentText(getFormattedClockTime(context, instance.alarmTime))
                 .setOngoing(true)
                 .setAutoCancel(false)
@@ -48,7 +45,9 @@ internal object AlarmNotification {
                     PendingIntent.getActivity(
                         context,
                         ALARM_FIRING_NOTIFICATION_ID,
-                        Intent(context, AlarmActivity::class.java).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+                        Intent(context, AlarmActivity::class.java)
+                            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            .putExtra(ALARM_ID_EXTRA, instance.associatedAlarmId),
                         PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
                     ),
                     true
@@ -56,7 +55,7 @@ internal object AlarmNotification {
 
         val notificationManager = NotificationManagerCompat.from(context)
 
-        if (IsBuildVersionOOrLater) {
+        if (isBuildVersionOOrLater) {
             notificationManager.createNotificationChannel(
                 NotificationChannel(
                     ALARM_NOTIFICATION_CHANNEL_ID,
@@ -67,13 +66,13 @@ internal object AlarmNotification {
         }
 
         cancelAlarmFiringNotification(context)
+
         notificationManager.notify(ALARM_FIRING_NOTIFICATION_ID, builder.build())
     }
 
     @Synchronized
     fun cancelAlarmFiringNotification(context: Context) {
-        with(NotificationManagerCompat.from(context)) {
-            cancel(ALARM_FIRING_NOTIFICATION_ID)
-        }
+        NotificationManagerCompat.from(context)
+            .cancel(ALARM_FIRING_NOTIFICATION_ID)
     }
 }

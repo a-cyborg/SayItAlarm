@@ -10,9 +10,9 @@ import org.a_cyb.sayitalarm.core.database.model.AlarmInstanceEntity
 @Dao
 interface AlarmInstanceDao {
 
-    // It will return primaryKey of the inserted row. If the insertion fails it will return -1
+    // It will return primary key of the inserted row. If the insertion fails it will return -1
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAlarm(instance: AlarmInstanceEntity): Long
+    suspend fun insertAlarmInstance(instance: AlarmInstanceEntity): Long
 
     @Query(value =
     """ SELECT * FROM alarm_instances 
@@ -20,4 +20,11 @@ interface AlarmInstanceDao {
     """,
     )
     fun getAlarmInstance(instanceId: Int) : Flow<AlarmInstanceEntity?>
+
+//    @Query(value =
+//    """
+//        SELECT * FROM alarm_instances
+//        ORDER BY combinedMinutes ASC
+//    """)
+//    fun getAlarmEntitiesSortedByCombinedMinute(): Flow<List<AlarmEntity>>
 }

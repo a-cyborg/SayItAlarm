@@ -13,7 +13,7 @@ data class AlarmInstance(
     val label: String? = null,
     val vibrate: Boolean = false,  // Not implemented.
     val ringtone: Uri? = null,
-    val associatedAlarmId: Int? = null,
+    val associatedAlarmId: Int,
     val alarmState: Int
 ) {
     var alarmTime: Calendar

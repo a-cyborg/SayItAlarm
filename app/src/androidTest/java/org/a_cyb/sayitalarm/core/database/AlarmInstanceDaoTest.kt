@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.a_cyb.sayitalarm.core.database.dao.AlarmInstanceDao
 import org.a_cyb.sayitalarm.core.database.model.AlarmInstanceEntity
+import org.a_cyb.sayitalarm.core.model.Alarm
 import org.a_cyb.sayitalarm.core.model.AlarmInstance
 import org.junit.After
 import org.junit.Before
@@ -34,11 +35,11 @@ class AlarmInstanceDaoTest {
     }
 
     @Test
-    fun instantDao_insert_alarm_and_fetch_alarm() =
+    fun instantDao_insert_alarm_and_fetch_alarmInstance() =
         runTest {
             val instanceEntity = testInstanceEntity(id = 3)
 
-            instanceDao.insertAlarm(instanceEntity)
+            instanceDao.insertAlarmInstance(instanceEntity)
 
             val savedInstance = instanceDao.getAlarmInstance(3).first()!!
 
@@ -54,6 +55,11 @@ class AlarmInstanceDaoTest {
             TestCase.assertEquals(instanceEntity.associatedAlarmId, savedInstance.associatedAlarmId)
             TestCase.assertEquals(instanceEntity.alarmState, savedInstance.alarmState)
         }
+
+    @Test
+    fun alarmInstantDao_fails_whenAssociatedAlarmId_isNotUnique() {
+
+    }
 }
 
 private fun testInstanceEntity(
@@ -66,7 +72,7 @@ private fun testInstanceEntity(
     label: String = "",
     vibrate: Boolean = false,
     ringtone: String = "",
-    associatedAlarmId: Int? = null,
+    associatedAlarmId: Int = Alarm.INVALID_ID,
     alarmState: Int = 0,
 ) = AlarmInstanceEntity(
     id = id,
@@ -81,27 +87,3 @@ private fun testInstanceEntity(
     associatedAlarmId = associatedAlarmId,
     alarmState = alarmState,
 )
-
- /*
-private fun testAlarmEntity(
-    id: Int = Alarm.INVALID_ID.toInt(),
-    combinedMinute: Int = 0,
-    enabled: Boolean = true,
-    weeklyRepeat: WeeklyRepeat = WeeklyRepeat.EVERYDAY,
-    label: String = "",
-    vibrate: Boolean = true,
-    ringtone: String = "",
-    alarmTerminator: AlarmTerminator = VoiceRecognitionTerminator(listOf("test1", "test2", "test3")),
-    alarmOptionalFeature: AlarmOptionalFeature = DreamQuestion(""),
-) = AlarmEntity(
-    id = id,
-    combinedMinutes = combinedMinute,
-    enabled = enabled,
-    weeklyRepeat = weeklyRepeat,
-    label = label,
-    vibrate = vibrate,
-    ringtone = ringtone,
-    alarmTerminator = alarmTerminator,
-    alarmOptionalFeature = alarmOptionalFeature
-)
-  */

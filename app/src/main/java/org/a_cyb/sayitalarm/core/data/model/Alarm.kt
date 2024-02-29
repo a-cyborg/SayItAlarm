@@ -10,7 +10,7 @@ fun Alarm.asEntity() = AlarmEntity(
     weeklyRepeat = weeklyRepeat,
     label = label,
     vibrate = vibrate,
-    ringtone = ringtone.toString(),
+    ringtone = ringtone,
     alarmTerminator = alarmTerminator,
     alarmOptionalFeature = alarmOptionalFeature,
 )

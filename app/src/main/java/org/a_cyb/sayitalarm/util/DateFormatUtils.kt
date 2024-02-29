@@ -17,7 +17,7 @@ import java.util.TimeZone
 fun getFormattedClockTime(context: Context, calendar: Calendar): String {
     val timeFormat = DateFormat.getTimeFormat(context).apply {
         timeZone =   when {
-            IsBuildVersionOOrLater -> TimeZone.getTimeZone(ZoneId.systemDefault())
+            isBuildVersionOOrLater -> TimeZone.getTimeZone(ZoneId.systemDefault())
             else -> TimeZone.getDefault()
         }
     }
