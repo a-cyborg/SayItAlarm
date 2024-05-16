@@ -2,7 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.dagger.hilt.android")
-    id("com.google.protobuf")
+    id("io.github.takahirom.roborazzi")
 
     kotlin("kapt")
 }
@@ -139,6 +139,11 @@ dependencies {
     androidTestImplementation(composeBom)
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest:1.5.4")
+
+    val roborazziVersion = "1.15.0"
+    testImplementation("io.github.takahirom.roborazzi:roborazzi:$roborazziVersion")
+    testImplementation("io.github.takahirom.roborazzi:roborazzi-compose:$roborazziVersion")
+    testImplementation("io.github.takahirom.roborazzi:roborazzi-junit-rule:$roborazziVersion")
 }
 
 kapt {
