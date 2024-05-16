@@ -13,6 +13,10 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Say It Alarm"
-include(":app")
- 
+include(
+    ":app",
+    ":entity"
+)
+
+rootProject.name = "SayItAlarm"
+include(":presentation")
