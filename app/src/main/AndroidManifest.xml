@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
 
     <application
-        android:name=".SiaApplication"
+        android:name=".SayItAlarm"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -32,23 +32,23 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".feature.alarm.AlarmActivity"
-            android:exported="false"
-            android:launchMode="singleTask"
-            android:directBootAware="true"
-            android:excludeFromRecents="true"
-            android:showOnLockScreen="true"
-            android:showWhenLocked="true" />
+<!--        <activity-->
+<!--            android:name=".feature.alarm.AlarmActivity"-->
+<!--            android:exported="false"-->
+<!--            android:launchMode="singleTask"-->
+<!--            android:directBootAware="true"-->
+<!--            android:excludeFromRecents="true"-->
+<!--            android:showOnLockScreen="true"-->
+<!--            android:showWhenLocked="true" />-->
 
-        <service
-            android:name=".core.alarm.AlarmService"
-            android:exported="false"
-            android:description="@string/manifest_service_description"
-            android:directBootAware="true" />
+<!--        <service-->
+<!--            android:name=".core.alarm.AlarmService"-->
+<!--            android:exported="false"-->
+<!--            android:description="@string/manifest_service_description"-->
+<!--            android:directBootAware="true" />-->
 
-        <receiver
-            android:name=".core.alarm.AlarmReceiver"
-            android:directBootAware="true" />
+<!--        <receiver-->
+<!--            android:name=".core.alarm.AlarmReceiver"-->
+<!--            android:directBootAware="true" />-->
     </application>
 </manifest>

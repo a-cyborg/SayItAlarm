@@ -8,6 +8,7 @@ package org.a_cyb.sayitalarm.atom
 
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import org.a_cyb.sayitalarm.R
@@ -96,14 +97,14 @@ fun IconButtonSaveText(onClick: () -> Unit) {
 
 @Composable
 fun IconButtonCancelText(onClick: () -> Unit) {
-    IconButton(onClick = onClick) {
+    TextButton(onClick = onClick) {
         TextTitleWarningMedium(text = stringResource(id = R.string.cancel))
     }
 }
 
 @Composable
 fun IconButtonConfirmText(onClick: () -> Unit) {
-    IconButton(onClick = onClick) {
+    TextButton(onClick = onClick) {
         TextTitleAttentionMedium(text = stringResource(id = R.string.confirm))
     }
 }
