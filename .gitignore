@@ -1,11 +1,36 @@
-*.iml
-.gradle
-/local.properties
-.idea/
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+# Gradle
+.gradle/
+build/
 local.properties
-*.hprof
+build-cache/
+
+# IDEA/Android Studio ignores
+*iml
+.idea/*
+
+# IDEA/Android Studio includes
+!.idea/fileTemplates/
+!.idea/inspectionProfiles/
+!.idea/scopes/
+!.idea/codeStyles/
+!.idea/encoding.xml
+!.idea/copyright/
+
+# android bundle
+*.aab
+*.apk
+*.ap_
+
+# Others
+captures/
+
+.asciidoctor/
+
+.DS_Store
+
+# Editors
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
