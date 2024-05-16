@@ -1,0 +1,9 @@
+appId: "org.a_cyb.sayitalarm"
+---
+
+- launchApp:
+    appId: "org.a_cyb.sayitalarm.debug"
+- runFlow: "add-alarm-flow.yml"
+- runFlow: "edit-alarm-flow.yml"
+- runFlow: "delete-alarm-flow.yml"
+

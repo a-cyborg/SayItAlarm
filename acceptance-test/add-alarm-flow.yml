@@ -1,0 +1,32 @@
+appId: "org.a_cyb.sayitalarm"
+---
+
+- launchApp:
+    appId: "org.a_cyb.sayitalarm.debug"
+    clearState: true
+- tapOn:
+    id: "Add"
+- assertVisible: "Add Alarm"
+# Time
+- tapOn:
+    id: "TimeSection"
+- tapOn:
+      below: "Select alarm time"
+      above: "Cancel"
+      text:  .*5.*
+- tapOn:
+      below: "Select alarm time"
+      above: "Cancel"
+      text:   .*30.*
+- tapOn: "OK"
+# Weekly repeat
+- tapOn:
+    id: "WeeklyRepeatSection"
+- tapOn:
+    text: .*Monday.*
+
+- assertVisible: "Save"
+- tapOn: "Save"
+- assertVisible:
+    below: "Alarms"
+    text: .*5:30.*

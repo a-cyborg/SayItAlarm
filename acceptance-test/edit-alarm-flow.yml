@@ -1,0 +1,24 @@
+appId: "org.a_cyb.sayitalarm"
+---
+
+- launchApp:
+    appId: "org.a_cyb.sayitalarm.debug"
+- runFlow: "add-alarm-flow.yml"
+- tapOn: "Edit"
+- tapOn:
+    id: "EditIcon"
+- tapOn:
+      id: "TimeSection"
+- tapOn:
+    below: "Select alarm time"
+    above: "Cancel"
+    text: ".*9.*"
+- tapOn:
+    below: "Select alarm time"
+    above: "Cancel"
+    text: ".*20.*"
+- tapOn: "OK"
+- tapOn: "Save"
+- assertVisible:
+    below: "Alarms"
+    text: .*9:20.*

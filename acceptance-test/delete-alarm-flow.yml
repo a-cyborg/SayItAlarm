@@ -1,0 +1,12 @@
+appId: "org.a_cyb.sayitalarm"
+---
+
+- launchApp:
+    appId: "org.a_cyb.sayitalarm.debug"
+- runFlow: "add-alarm-flow.yml"
+- tapOn: "Edit"
+- tapOn:
+    id: "AlarmListDeleteIcon" # Naming
+- assertNotVisible:
+    below: "Alarms"
+    text: .*5:30.*
