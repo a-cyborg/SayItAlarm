@@ -15,8 +15,12 @@ dependencyResolutionManagement {
 
 include(
     ":app",
-    ":entity"
+    ":entity",
+    ":presentation",
+    ":presentation:viewmodel",
+    ":presentation:tasker",
+    ":formatter",
+    ":util",
 )
 
 rootProject.name = "SayItAlarm"
-include(":presentation")
