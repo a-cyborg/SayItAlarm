@@ -6,7 +6,37 @@
 
 package org.a_cyb.sayitalarm.screen
 
-/*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
+import org.a_cyb.sayitalarm.BuildConfig
+import org.a_cyb.sayitalarm.R
+import org.a_cyb.sayitalarm.atom.ColumnScreenStandardScrollable
+import org.a_cyb.sayitalarm.atom.IconButtonEdit
+import org.a_cyb.sayitalarm.atom.IconButtonNavigateBack
+import org.a_cyb.sayitalarm.atom.PanelRowStandard
+import org.a_cyb.sayitalarm.atom.PanelStandard
+import org.a_cyb.sayitalarm.atom.SpacerLarge
+import org.a_cyb.sayitalarm.atom.SpacerXLarge
+import org.a_cyb.sayitalarm.atom.TextTitleStandardLarge
+import org.a_cyb.sayitalarm.entity.Theme
+import org.a_cyb.sayitalarm.molecule.PopUpPickerStandardWheel
+import org.a_cyb.sayitalarm.molecule.TextRowTimeDuration
+import org.a_cyb.sayitalarm.molecule.TextRowWarning
+import org.a_cyb.sayitalarm.molecule.TopAppBarGlobal
+import org.a_cyb.sayitalarm.presentation.CommandContract
+import org.a_cyb.sayitalarm.presentation.CommandContract.CommandReceiver
+import org.a_cyb.sayitalarm.presentation.SetSnoozeCommand
+import org.a_cyb.sayitalarm.presentation.SetThemeCommand
+import org.a_cyb.sayitalarm.presentation.SetTimeOutCommand
+import org.a_cyb.sayitalarm.presentation.SettingsContract.Error
+import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsStateWithContent
+import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsViewModel
+
 @Composable
 private fun SettingsTopAppBar(onNavigateBack: () -> Unit) {
     TopAppBarGlobal(
@@ -17,7 +47,7 @@ private fun SettingsTopAppBar(onNavigateBack: () -> Unit) {
 
 @Suppress("MagicNumber")
 @Composable
-fun PanelItemTimeOut(value: Int, execute: (Command<out CommandReceiver>) -> Unit) {
+fun PanelItemTimeOut(value: Int, execute: (CommandContract.Command<out CommandReceiver>) -> Unit) {
     val timeOuts = (30..300).toList()
     var showPopUpPicker by remember { mutableStateOf(false) }
 
@@ -43,7 +73,11 @@ fun PanelItemTimeOut(value: Int, execute: (Command<out CommandReceiver>) -> Unit
 
 @Suppress("MagicNumber")
 @Composable
-fun PanelItemSnooze(value: Int, execute: (Command<out CommandReceiver>) -> Unit) {
+fun PanelItemSnooze(
+    snoozes: List<String>,
+    value: Int,
+    execute: (CommandContract.Command<out CommandReceiver>) -> Unit,
+) {
     val snoozes = (5..60).toList()
     var showPopUpPicker by remember { mutableStateOf(false) }
 
@@ -68,7 +102,7 @@ fun PanelItemSnooze(value: Int, execute: (Command<out CommandReceiver>) -> Unit)
 }
 
 @Composable
-fun PanelItemTheme(value: Theme, execute: (Command<out CommandReceiver>) -> Unit) {
+fun PanelItemTheme(value: Theme, execute: (CommandContract.Command<out CommandReceiver>) -> Unit) {
     val themes = Theme.entries.map { it.name.toCamelCase() }
     var displayPopUpPicker by remember { mutableStateOf(false) }
 
@@ -95,16 +129,17 @@ private fun String.toCamelCase() = this.lowercase().replaceFirstChar(Char::title
 
 @Composable
 fun SettingsPanel(
-    timeOut: Int,
-    snooze: Int,
-    theme: Theme,
-    executor: (Command<out CommandReceiver>) -> Unit,
+    currentTimeOut: Int,
+    currentSnooze: Int,
+    currentTheme: Theme,
+    snoozes: List<String>,
+    executor: (CommandContract.Command<out CommandReceiver>) -> Unit,
 ) {
     PanelStandard(
         panelItems = listOf(
-            { PanelItemTimeOut(value = timeOut, execute = executor) },
-            { PanelItemSnooze(value = snooze, execute = executor) },
-            { PanelItemTheme(value = theme, execute = executor) },
+            { PanelItemTimeOut(value = currentTimeOut, execute = executor) },
+            { PanelItemSnooze(snoozes = snoozes, value = currentSnooze, execute = executor) },
+            { PanelItemTheme(value = currentTheme, execute = executor) },
         ),
     )
 }
@@ -148,15 +183,16 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
             is SettingsStateWithContent -> {
                 val settings = (state.value as SettingsStateWithContent)
                 SettingsPanel(
-                    timeOut = settings.timeOut.input,
-                    snooze = settings.snooze.input,
-                    theme = settings.theme,
+                    currentTimeOut = settings.timeOut.input,
+                    currentSnooze = settings.snooze.input,
+                    currentTheme = settings.theme,
                     executor = { viewModel.runCommand(it) },
+                    snoozes = viewModel.snoozes
                 )
             }
 
-            is SettingsContract.Error -> {
-                val errorMessage = (state.value as SettingsContract.Error).error.name
+            is Error -> {
+                val errorMessage = (state.value as Error).error.name
                 TextRowWarning(text = errorMessage)
             }
         }
@@ -164,4 +200,3 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
         InfoPanel()
     }
 }
-*/
