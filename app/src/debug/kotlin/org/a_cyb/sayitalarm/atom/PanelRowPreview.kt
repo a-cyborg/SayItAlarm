@@ -16,7 +16,7 @@ import org.a_cyb.sayitalarm.R
 fun PanelRowStandardPreview() {
     PanelRowStandard(
         valueLabel = stringResource(id = R.string.timeout),
-        value = stringResource(id = R.string.minute_short, 180),
+        value = "180 min",
         afterContent = { IconButtonEdit {} },
     )
 }

@@ -18,9 +18,10 @@ include(
     ":entity",
     ":presentation",
     ":presentation:viewmodel",
-    ":presentation:tasker",
+    ":presentation:interactor",
     ":formatter",
     ":util",
 )
 
 rootProject.name = "SayItAlarm"
+include(":alarm-service")

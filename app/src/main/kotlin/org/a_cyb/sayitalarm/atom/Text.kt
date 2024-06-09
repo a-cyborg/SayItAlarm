@@ -57,10 +57,28 @@ fun TextTitleStandardLarge(text: String) {
 }
 
 @Composable
+fun TextTitleStandardMedium(text: String) {
+    Text(
+        text = text,
+        color = Color.text.standard,
+        style = Font.title.m,
+    )
+}
+
+@Composable
 fun TextTitleAttentionMedium(text: String) {
     Text(
         text = text,
         color = Color.text.attention,
+        style = Font.title.m,
+    )
+}
+
+@Composable
+fun TextTitleAccentMedium(text: String) {
+    Text(
+        text = text,
+        color = Color.text.accent,
         style = Font.title.m,
     )
 }

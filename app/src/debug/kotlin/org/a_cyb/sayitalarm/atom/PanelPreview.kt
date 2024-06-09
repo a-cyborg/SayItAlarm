@@ -19,14 +19,14 @@ fun PanelColumnStandardPreview() {
             {
                 PanelRowStandard(
                     valueLabel = stringResource(id = R.string.timeout),
-                    value = stringResource(id = R.string.minute_short, 180),
+                    value = "180 min",
                     afterContent = { IconButtonEdit {} },
                 )
             },
             {
                 PanelRowStandard(
                     valueLabel = stringResource(id = R.string.snooze),
-                    value = stringResource(id = R.string.minute_short, 15),
+                    value = "15 min",
                     afterContent = { IconButtonEdit {} },
                 )
             },

@@ -6,14 +6,16 @@
 
 package org.a_cyb.sayitalarm.molecule
 
-import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onParent
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollToIndex
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.a_cyb.sayitalarm.R
 import org.a_cyb.sayitalarm.RoborazziTest
 import org.a_cyb.sayitalarm.atom.TextHeadlineStandardLarge
+import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
@@ -45,27 +47,9 @@ class WheelPickerSpec : RoborazziTest() {
     }
 
     @Test
-    fun `When initIdx is not provided it displays a first value in the center`() {
-        subjectUnderTest.setContent {
-            WheelPicker(
-                values = colors,
-                itemRow = { TextHeadlineStandardLarge(text = it) },
-                onCancel = {},
-                onConfirm = { _ -> },
-            )
-        }
-
-        with(subjectUnderTest) {
-            onNodeWithText(colors[0]).assertExists()
-            onNodeWithText(colors[1]).assertExists()
-            onNodeWithText(colors[2]).assertExists()
-            onNodeWithText(colors[3]).assertDoesNotExist()
-        }
-    }
-
-    @Test
-    fun `When initIdx is provided it displays a value at initIdx in the center`() {
+    fun `Given initIdx is provided it displays item of index as selected value `() {
         val initIdx = 6
+        var currentItemIdx: Int? = null
 
         subjectUnderTest.setContent {
             WheelPicker(
@@ -73,21 +57,49 @@ class WheelPickerSpec : RoborazziTest() {
                 initIdx = initIdx,
                 itemRow = { TextHeadlineStandardLarge(text = it) },
                 onCancel = {},
-                onConfirm = { _ -> },
+                onConfirm = { currentItemIdx = it },
             )
         }
 
         with(subjectUnderTest) {
+            onNodeWithText(colors[initIdx - 3]).assertDoesNotExist()
             onNodeWithText(colors[initIdx - 2]).assertExists()
             onNodeWithText(colors[initIdx - 1]).assertExists()
             onNodeWithText(colors[initIdx]).assertExists()
             onNodeWithText(colors[initIdx + 1]).assertExists()
             onNodeWithText(colors[initIdx + 2]).assertExists()
+            onNodeWithText(colors[initIdx + 3]).assertDoesNotExist()
         }
+
+        subjectUnderTest
+            .onNodeWithText(getString(R.string.confirm))
+            .performClick()
+
+        currentItemIdx mustBe initIdx
     }
 
     @Test
-    fun `When 1 is provided for the initIdx it displays a second value in the center`() {
+    fun `When initIdx is not provided it sets initIdx to 0`() {
+        var currentItemIdx: Int? = null
+
+        subjectUnderTest.setContent {
+            WheelPicker(
+                values = colors,
+                itemRow = { TextHeadlineStandardLarge(text = it) },
+                onCancel = {},
+                onConfirm = { currentItemIdx = it },
+            )
+        }
+
+        subjectUnderTest
+            .onNodeWithText(getString(R.string.confirm))
+            .performClick()
+
+        currentItemIdx mustBe 0
+    }
+
+    @Test
+    fun `Given initIdx to 1 it displays a second value in the center`() {
         val initIdx = 1
 
         subjectUnderTest.setContent {
@@ -109,42 +121,19 @@ class WheelPickerSpec : RoborazziTest() {
     }
 
     @Test
-    fun `When last value is centered it displays only value before`() {
-        val initIdx = colors.lastIndex
-
-        subjectUnderTest.setContent {
-            WheelPicker(
-                values = colors,
-                initIdx = initIdx,
-                itemRow = { TextHeadlineStandardLarge(text = it) },
-                onCancel = {},
-                onConfirm = { _ -> },
-            )
-        }
-
-        with(subjectUnderTest) {
-            onNodeWithText(colors[initIdx - 2]).assertExists()
-            onNodeWithText(colors[initIdx - 1]).assertExists()
-            onNodeWithText(colors[initIdx]).assertExists()
-        }
-    }
-
-    @Test
-    fun `When onConfirm called it propagates the given action with selected value`() {
-        val selectedItemIdx = 3
-
+    fun `Given onConfirm is called it propagates the given action with index of selected item`() {
         var hasBeenCalled = false
-        var selectedItem = ""
+        var selectedItemIdx: Int? = null
 
         subjectUnderTest.setContent {
             WheelPicker(
                 values = colors,
-                initIdx = selectedItemIdx,
+                initIdx = 3,
                 itemRow = { TextHeadlineStandardLarge(text = it) },
                 onCancel = {},
             ) {
                 hasBeenCalled = true
-                selectedItem = it
+                selectedItemIdx = it
             }
         }
 
@@ -152,8 +141,8 @@ class WheelPickerSpec : RoborazziTest() {
             .onNodeWithText(getString(R.string.confirm))
             .performClick()
 
-        assertTrue(hasBeenCalled)
-        assertEquals(selectedItem, colors[selectedItemIdx])
+        hasBeenCalled mustBe true
+        selectedItemIdx mustBe 3
     }
 
     @Test
@@ -176,5 +165,31 @@ class WheelPickerSpec : RoborazziTest() {
             .performClick()
 
         assertTrue(hasBeenCalled)
+    }
+
+    @Test
+    fun `Given a scroll to value at the center and confirm is clicked it propagates an action with the index corresponding to the value`() {
+        var selectedItemIdx: Int? = null
+
+        subjectUnderTest.setContent {
+            WheelPicker(
+                values = colors,
+                initIdx = 3,
+                itemRow = { TextHeadlineStandardLarge(text = it) },
+                onCancel = {},
+            ) {
+                selectedItemIdx = it
+            }
+        }
+
+        subjectUnderTest.onNodeWithText(colors[3])
+            .onParent()
+            .performScrollToIndex(6)
+
+        subjectUnderTest
+            .onNodeWithText(getString(R.string.confirm))
+            .performClick()
+
+        selectedItemIdx mustBe 7
     }
 }

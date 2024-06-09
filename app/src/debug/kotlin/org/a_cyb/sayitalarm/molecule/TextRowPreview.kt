@@ -11,12 +11,6 @@ import androidx.compose.ui.tooling.preview.Preview
 
 @Preview
 @Composable
-fun TextRowTimeDurationPreview() {
-    TextRowTimeDuration(minutes = 213)
-}
-
-@Preview
-@Composable
 fun TextRowTitleAndInfoPreview() {
     TextRowTitleAndInfo(title = "Title", info = "Additional information.")
 }

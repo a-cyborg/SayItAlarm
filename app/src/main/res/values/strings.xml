@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
-    <string name="app_name">SayIt</string>
+    <string name="app_name">SayItAlarm</string>
     <!-- Informational Text -->
     <string name="info_next_alarm_time">After %s hours and %s minutes,\n the alarm will go off.</string>
     <string name="info_timeout">The alarm will stop ringing after</string>
     <string name="info_snooze">Alarm will ring again after"</string>
+    <string name="info_settings_initialize_error">Oops! Something went wrong while loading the settings. Please restart the application to try again.</string>
+    <string name="info_list_initialize_error">Oops! Something went wrong while loading the alarms. Please restart the application to try again.</string>
+    <string name="info_list_no_alarm">Hey there! Just tap the + button to get started.</string>
     <!-- Label -->
     <string name="alarms">Alarms</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
     <string name="edit">Edit</string>
+    <string name="done">Done</string>
     <string name="save">Save</string>
     <string name="settings">Settings</string>
     <string name="timeout">TimeOut</string>
@@ -18,18 +22,8 @@
     <string name="theme">Theme</string>
     <string name="about">About</string>
     <string name="version">Version</string>
-    <!-- Text -->
-    <string name="hour_abbr">h</string>
-    <string name="minute_short">%s Min</string>
-    <string name="minute_abbr">m</string>
-    <string name="everyday">Everyday</string>
-    <string name="mon">Mon</string>
-    <string name="tue">Tue</string>
-    <string name="wed">Wed</string>
-    <string name="thr">Thu</string>
-    <string name="fri">Fri</string>
-    <string name="sat">Sat</string>
-    <string name="sun">Sun</string>
+    <string name="license">License</string>
+    <string name="say_it">Say It</string>
     <!-- ContentDescription -->
     <string name="action_close">Close</string>
     <string name="action_add_alarm">Add alarm</string>

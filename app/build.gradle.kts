@@ -95,6 +95,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.9.24")
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
     testImplementation("org.robolectric:robolectric:4.12")
+    debugImplementation("androidx.compose.ui:ui-tooling:1.6.7")
 
     val roborazziVersion = "1.15.0"
     testImplementation("io.github.takahirom.roborazzi:roborazzi:$roborazziVersion")

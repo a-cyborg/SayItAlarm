@@ -43,9 +43,13 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
     testImplementation("app.cash.turbine:turbine:1.1.0")
     testImplementation("tech.antibytes.kfixture:core:0.4.0")
+    val mockkVersion = "1.13.11"
+    testImplementation("io.mockk:mockk:$mockkVersion")
 
     implementation(project(":entity"))
     implementation(project(":presentation"))
-    implementation(project(":presentation:tasker"))
+    implementation(project(":presentation:interactor"))
+    implementation(project(":formatter"))
+    implementation(project(":alarm-service"))
     implementation(project(":util"))
 }

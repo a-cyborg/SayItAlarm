@@ -20,7 +20,7 @@ import org.a_cyb.sayitalarm.token.Sizing
 fun PanelRowStandard(
     valueLabel: String,
     value: String = "",
-    afterContent: @Composable () -> Unit = {},
+    afterContent: @Composable () -> Unit = { SpacerMedium() },
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,

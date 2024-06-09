@@ -42,7 +42,7 @@ fun <T> WheelPicker(
     initIdx: Int = 0,
     itemRow: @Composable (T) -> Unit,
     onCancel: () -> Unit,
-    onConfirm: (T) -> Unit,
+    onConfirm: (idx: Int) -> Unit,
 ) {
     val itemRowHeight = Sizing.WheelPicker.SmallRowHeight
     val visibleItemNum: Int = 5
@@ -95,7 +95,7 @@ fun <T> WheelPicker(
 
         ActionRowCancelAndConfirm(
             onCancel = onCancel,
-            onConfirm = { onConfirm(values[getSelectedItemIdx()]) },
+            onConfirm = { onConfirm(getSelectedItemIdx()) },
         )
 
         val density = LocalDensity.current.density

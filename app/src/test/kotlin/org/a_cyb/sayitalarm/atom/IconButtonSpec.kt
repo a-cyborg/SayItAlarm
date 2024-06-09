@@ -95,6 +95,29 @@ class IconButtonSpec : RoborazziTest() {
     }
 
     @Test
+    fun `It renders a IconButtonDone`() {
+        subjectUnderTest.setContent {
+            IconButtonDone {}
+        }
+    }
+
+    @Test
+    fun `Given IconButtonDone click is called it propagates the given action`() {
+        var hasBeenCalled = false
+
+        subjectUnderTest.setContent {
+            IconButtonDone {
+                hasBeenCalled = true
+            }
+        }
+        subjectUnderTest
+            .onNodeWithText(getString(R.string.done))
+            .performClick()
+
+        assertTrue(hasBeenCalled)
+    }
+
+    @Test
     fun `It renders a IconButtonEdit`() {
         subjectUnderTest.setContent {
             IconButtonEdit {}

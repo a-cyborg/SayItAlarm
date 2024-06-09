@@ -36,8 +36,7 @@ class ColumnSpec : RoborazziTest() {
             onNodeWithText("Column").assertExists()
             onNodeWithText(("Screen")).assertExists()
             onNodeWithText("Standard").assertExists()
-            onNodeWithText(getString(R.string.app_name))
-                .assertExists()
+            onNodeWithText(getString(R.string.say_it)).assertExists()
         }
     }
 }

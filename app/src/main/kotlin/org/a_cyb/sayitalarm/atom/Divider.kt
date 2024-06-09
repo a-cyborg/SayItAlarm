@@ -7,7 +7,7 @@
 package org.a_cyb.sayitalarm.atom
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -16,9 +16,18 @@ import org.a_cyb.sayitalarm.token.Spacing
 
 @Composable
 fun DividerStandard() {
-    Divider(
-        color = Color.text.subtle.copy(alpha = 0.3f),
-        thickness = 0.8.dp,
+    HorizontalDivider(
         modifier = Modifier.padding(horizontal = Spacing.xs),
+        thickness = 0.8.dp,
+        color = Color.text.subtle.copy(alpha = 0.3f)
+    )
+}
+
+@Composable
+fun DividerMedium() {
+    HorizontalDivider(
+        modifier = Modifier.padding(horizontal = Spacing.l),
+        thickness = 0.5.dp,
+        color = Color.text.subtle.copy(alpha = 0.3f)
     )
 }

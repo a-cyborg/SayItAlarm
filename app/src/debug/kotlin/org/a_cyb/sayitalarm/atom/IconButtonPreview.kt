@@ -23,6 +23,12 @@ fun IconButtonDeletePreview() {
 
 @Preview
 @Composable
+fun IconButtonDonePreview() {
+    IconButtonDone {}
+}
+
+@Preview
+@Composable
 fun IconButtonEditPreview() {
     IconButtonEdit {}
 }

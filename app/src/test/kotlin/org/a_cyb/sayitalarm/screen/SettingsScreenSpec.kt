@@ -10,23 +10,19 @@ import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.isRoot
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithContentDescription
-import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onLast
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.onParent
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performScrollToIndex
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.github.takahirom.roborazzi.RobolectricDeviceQualifiers
 import com.github.takahirom.roborazzi.RoborazziRule
 import com.github.takahirom.roborazzi.captureRoboImage
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
-import org.a_cyb.sayitalarm.BuildConfig
 import org.a_cyb.sayitalarm.R
-import org.a_cyb.sayitalarm.entity.Theme
-import org.a_cyb.sayitalarm.presentation.SettingsContract
+import org.a_cyb.sayitalarm.presentation.settings.SettingsContract
 import org.a_cyb.sayitalarm.roborazziOf
 import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Rule
@@ -38,7 +34,7 @@ import org.robolectric.annotation.GraphicsMode
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(AndroidJUnit4::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
-@Config(sdk = [33])
+@Config(sdk = [33], qualifiers = RobolectricDeviceQualifiers.ResizableExperimental)
 class SettingsScreenSpec {
 
     @get:Rule
@@ -48,9 +44,9 @@ class SettingsScreenSpec {
     val roborazziRule = roborazziOf(composeTestRule, RoborazziRule.CaptureType.None)
 
     private val stateWithContent = SettingsContract.SettingsStateWithContent(
-        timeOut = SettingsContract.ValidTimeInput(180),
-        snooze = SettingsContract.ValidTimeInput(15),
-        theme = Theme.LIGHT,
+        timeOut = SettingsContract.TimeInput(180, "3 hr"),
+        snooze = SettingsContract.TimeInput(15, "15 min"),
+        theme = "Light",
     )
 
     private fun getString(id: Int) = composeTestRule.activity.getString(id)
@@ -74,21 +70,21 @@ class SettingsScreenSpec {
             onNodeWithText(getString(R.string.snooze)).assertExists()
             onNodeWithText(getString(R.string.theme)).assertExists()
             onNodeWithText(getString(R.string.about)).assertExists()
+            onNodeWithText(getString(R.string.license)).assertExists()
             onNodeWithText(getString(R.string.version)).assertExists()
 
-            onNodeWithText("180 Min").assertExists()
-            onNodeWithText("15 Min").assertExists()
+            onNodeWithText("3 hr").assertExists()
+            onNodeWithText("15 min").assertExists()
             onNodeWithText("Light").assertExists()
 
-            onAllNodesWithContentDescription(getString(R.string.action_edit)).fetchSemanticsNodes().size mustBe 4
+            onAllNodesWithContentDescription(getString(R.string.action_edit)).fetchSemanticsNodes().size mustBe 5
 
             onNode(isRoot()).captureRoboImage()
         }
     }
 
-    // PanelItem : TimeOut
     @Test
-    fun `Given panelItemTimeOut edit button click it displays PopUpPickerStandardWheel`() = runTest {
+    fun `Given panelItemTimeOut edit button is clicked it displays PopUpPickerStandardWheel`() = runTest {
         // Given
         val viewModel = SettingsViewModelFake(this, stateWithContent)
 
@@ -109,7 +105,7 @@ class SettingsScreenSpec {
     }
 
     @Test
-    fun `Given timeOut popUpPicker is displayed and onConfirm click it executes setTimeOutCommand`() = runTest {
+    fun `Given timeOut popUpPicker is displayed and onConfirm is clicked it executes setTimeOutCommand`() = runTest {
         // Given
         val viewModel = SettingsViewModelFake(this, stateWithContent)
 
@@ -121,18 +117,14 @@ class SettingsScreenSpec {
             onAllNodesWithContentDescription(getString(R.string.action_edit))[0].performClick()
 
             // When
-            onAllNodesWithText(getString(R.string.hour_abbr))[0].onParent().performScrollToIndex(13)   // Scroll up to 44 min
             onNodeWithText(getString(R.string.confirm)).performClick()
             advanceUntilIdle()
 
             // Then
             viewModel.executed mustBe SettingsViewModelFake.ExecutedCommand.SET_TIMEOUT
-
-            onNodeWithText("44 Min").assertExists()
         }
     }
 
-    // PanelItem : Snooze
     @Test
     fun `Given panelItemSnooze edit button click it displays PopUpPickerStandardWheel`() = runTest {
         // Given
@@ -175,7 +167,6 @@ class SettingsScreenSpec {
         }
     }
 
-    // PanelItem : Theme
     @Test
     fun `Given panelItemTheme edit button click it displays PopUpPickerStandardWheel`() = runTest {
         // Given
@@ -191,12 +182,10 @@ class SettingsScreenSpec {
                 .performClick()
 
             // Then
-            onNodeWithText("Dark")
-                .assertExists()
-            onNodeWithContentDescription(getString(R.string.component_wheel_picker))
-                .assertExists()
-            onAllNodes(isRoot()).onLast()
-                .captureRoboImage()
+            onNodeWithText("Dark").assertExists()
+            onNodeWithContentDescription(getString(R.string.component_wheel_picker)).assertExists()
+
+            onAllNodes(isRoot()).onLast().captureRoboImage()
         }
     }
 
@@ -221,10 +210,9 @@ class SettingsScreenSpec {
     }
 
     @Test
-    fun `It displays version name`() = runTest {
+    fun `Given the viewModel state Error it displays info panel`() = runTest {
         // Given
-        val viewModel = SettingsViewModelFake(this, stateWithContent)
-        val versionName = BuildConfig.VERSION_NAME
+        val viewModel = SettingsViewModelFake(this, SettingsContract.InitialError)
 
         composeTestRule.setContent {
             // When
@@ -232,14 +220,21 @@ class SettingsScreenSpec {
         }
 
         // Then
-        composeTestRule.onNodeWithText(versionName).assertExists()
+        with(composeTestRule) {
+            onNodeWithText(getString(R.string.timeout)).assertDoesNotExist()
+            onNodeWithText(getString(R.string.snooze)).assertDoesNotExist()
+            onNodeWithText(getString(R.string.theme)).assertDoesNotExist()
+
+            onNodeWithText(getString(R.string.about)).assertExists()
+            onNodeWithText(getString(R.string.license)).assertExists()
+            onNodeWithText(getString(R.string.version)).assertExists()
+        }
     }
 
     @Test
     fun `Given viewModel state error it displays error message`() = runTest {
         // Given
-        val error = SettingsContract.SettingsError.INITIAL_SETTINGS_UNRESOLVED
-        val state = SettingsContract.Error(error)
+        val state = SettingsContract.InitialError
         val viewModel = SettingsViewModelFake(this, state)
 
         // When
@@ -249,13 +244,8 @@ class SettingsScreenSpec {
 
         with(composeTestRule) {
             // Then
-            onNodeWithText(getString(R.string.settings)).assertExists()
-            onNodeWithContentDescription(getString(R.string.action_navigate_back)).assertExists()
-
-            onNodeWithText(error.name).assertExists()
-
-            onNodeWithText(getString(R.string.about)).assertExists()
-            onNodeWithText(getString(R.string.version)).assertExists()
+            onNodeWithText(getString(R.string.info_settings_initialize_error))
+                .assertExists()
 
             onNode(isRoot()).captureRoboImage()
         }

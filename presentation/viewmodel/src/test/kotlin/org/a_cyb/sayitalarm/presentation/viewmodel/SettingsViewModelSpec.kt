@@ -4,14 +4,20 @@
  * Use of this source code is governed by Apache v2.0
  */
 
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package org.a_cyb.sayitalarm.presentation.viewmodel
 
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import app.cash.turbine.test
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -19,19 +25,13 @@ import org.a_cyb.sayitalarm.entity.Settings
 import org.a_cyb.sayitalarm.entity.Snooze
 import org.a_cyb.sayitalarm.entity.Theme
 import org.a_cyb.sayitalarm.entity.TimeOut
-import org.a_cyb.sayitalarm.presentation.SetSnoozeCommand
-import org.a_cyb.sayitalarm.presentation.SetThemeCommand
-import org.a_cyb.sayitalarm.presentation.SetTimeOutCommand
-import org.a_cyb.sayitalarm.presentation.SettingsContract
-import org.a_cyb.sayitalarm.presentation.SettingsContract.Error
-import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsError
-import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsStateWithContent
-import org.a_cyb.sayitalarm.presentation.SettingsContract.ValidTimeInput
+import org.a_cyb.sayitalarm.presentation.CommandContract
+import org.a_cyb.sayitalarm.presentation.settings.SettingsContract
+import org.a_cyb.sayitalarm.presentation.viewmodel.fake.DurationFormatterFake
+import org.a_cyb.sayitalarm.presentation.viewmodel.fake.SettingsInteractorFake
 import org.a_cyb.sayitalarm.util.fulfils
 import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Test
-import tech.antibytes.kfixture.fixture
-import tech.antibytes.kfixture.kotlinFixture
 
 class SettingsViewModelSpec {
 
@@ -40,8 +40,14 @@ class SettingsViewModelSpec {
         snooze = Snooze(15),
         theme = Theme.LIGHT,
     )
-    private val fixture = kotlinFixture()
-    private val taskerFake = SettingsTaskerFake(listOf(Result.success(settings)), TestScope())
+    private val settingsStateWithContent = SettingsContract.SettingsStateWithContent(
+        timeOut = SettingsContract.TimeInput(settings.timeOut.timeOut, "3 hr"),
+        snooze = SettingsContract.TimeInput(settings.snooze.snooze, "15 min"),
+        theme = "Light",
+    )
+
+    private val interactor = SettingsInteractorFake(listOf(Result.failure(IllegalStateException())), TestScope())
+    private val durationFormatter = DurationFormatterFake()
 
     @BeforeTest
     fun setup() {
@@ -55,164 +61,140 @@ class SettingsViewModelSpec {
 
     @Test
     fun `It fulfils SettingsViewModel`() {
-        SettingsViewModel(taskerFake) fulfils SettingsContract.SettingsViewModel::class
+        SettingsViewModel(interactor, durationFormatter) fulfils
+            SettingsContract.SettingsViewModel::class
     }
 
     @Test
     fun `It is in the initial state`() {
-        SettingsViewModel(taskerFake).state.value mustBe SettingsContract.Initial
+        SettingsViewModel(interactor, durationFormatter)
+            .state.value mustBe SettingsContract.Initial
     }
 
     @Test
-    fun `Given tasker emit  success result it propagates SettingsStateWithContent state`() = runTest {
-        // Given
-        val results = listOf(Result.success(settings))
-        val taskerFake = SettingsTaskerFake(results, this)
-        val viewModel = SettingsViewModel(taskerFake)
-
-        viewModel.state.test {
-            // When
-            skipItems(1) // Initial state
-
-            // Then
-            awaitItem() mustBe SettingsStateWithContent(
-                timeOut = ValidTimeInput(settings.timeOut.timeOut),
-                snooze = ValidTimeInput(settings.snooze.snooze),
-                theme = settings.theme,
-            )
-        }
-    }
-
-    @Test
-    fun `Given interactor load result fail it propagates INITIAL_SETTINGS_UNRESOLVED error state`() = runTest {
+    fun `Given interactor fails it sets InitialError state`() = runTest {
         val result = listOf(Result.failure<Settings>(RuntimeException()))
-        val taskerFake = SettingsTaskerFake(result, this)
-        val viewModel = SettingsViewModel(taskerFake)
+        val interactor = SettingsInteractorFake(result, this)
+        val viewModel = SettingsViewModel(interactor, durationFormatter)
 
         viewModel.state.test {
             // When
             skipItems(1)
 
             // Then
-            awaitItem() mustBe Error(SettingsError.INITIAL_SETTINGS_UNRESOLVED)
+            awaitItem() mustBe SettingsContract.InitialError
         }
     }
 
     @Test
-    fun `Given setTimeOut called it propagates updated SettingsStateWithContent state`() = runTest {
+    fun `Given interactor success result with Settings it sets SettingsStateWithContent`() = runTest {
         // Given
-        val timeOut: Int = fixture.fixture(range = (30..300)) { it != settings.timeOut.timeOut }
-        val results = listOf(
-            Result.success(settings),
-            Result.success(settings.copy(timeOut = TimeOut(timeOut))),
-        )
-        val taskerFake = SettingsTaskerFake(results, this)
-        val viewModel = SettingsViewModel(taskerFake)
+        val results = listOf(Result.success(settings))
+        val interactor = SettingsInteractorFake(results, this)
+        val viewModel = SettingsViewModel(interactor, durationFormatter)
 
         viewModel.state.test {
             // When
-            skipItems(2)
-            viewModel.runCommand(SetTimeOutCommand(timeOut))
+            skipItems(1) // Initial state
 
             // Then
-            awaitItem() mustBe SettingsStateWithContent(
-                timeOut = ValidTimeInput(timeOut),
-                snooze = ValidTimeInput(settings.snooze.snooze),
-                theme = settings.theme,
-            )
+            awaitItem() mustBe settingsStateWithContent
         }
     }
 
     @Test
-    fun `When state is not SettingsStateWithContent and setTimeOut called it propagates SETTINGS_STATE_WITH_CONTENT_UNRESOLVED error state`() =
-        runTest {
-            // Given
-            val timeOut: Int = fixture.fixture(range = (30..300)) { it != settings.timeOut.timeOut }
-            val result: List<Result<Settings>> = listOf(
-                Result.failure(RuntimeException()),
-                Result.failure(IllegalStateException()),
-            )
-            val taskerFake = SettingsTaskerFake(result, this)
-            val viewModel = SettingsViewModel(taskerFake)
-
-            viewModel.state.test {
-                // When
-                skipItems(2)
-                viewModel.runCommand(SetTimeOutCommand(timeOut))
-
-                // Then
-                awaitItem() mustBe Error(SettingsError.SETTINGS_STATE_WITH_CONTENT_UNRESOLVED)
-            }
-        }
-
-    @Test
-    fun `Given setSnooze called it propagates updated SettingsStateWithContent state`() = runTest {
+    fun `Given setTimeOut is called it propagates SettingsStateWithContent`() = runTest {
         // Given
-        val snooze: Int = fixture.fixture(range = 5..60) { it != settings.snooze.snooze }
+        val timeOut = TimeOut(60)
+
         val results = listOf(
             Result.success(settings),
-            Result.success(settings.copy(snooze = Snooze(snooze))),
+            Result.success(settings.copy(timeOut = timeOut)),
         )
-        val taskerFake = SettingsTaskerFake(results, this)
-        val viewModel = SettingsViewModel(taskerFake)
+        val interactor = SettingsInteractorFake(results, this)
+        val viewModel = SettingsViewModel(interactor, durationFormatter)
 
         viewModel.state.test {
-            // When
             skipItems(2)
-            viewModel.runCommand(SetSnoozeCommand(snooze))
+            advanceUntilIdle()
+
+            // When
+            viewModel.setTimeOut(timeOut)
 
             // Then
-            awaitItem() mustBe SettingsStateWithContent(
-                timeOut = ValidTimeInput(settings.timeOut.timeOut),
-                snooze = ValidTimeInput(snooze),
-                theme = settings.theme,
+            awaitItem() mustBe settingsStateWithContent.copy(
+                timeOut = SettingsContract.TimeInput(timeOut.timeOut, "1 hr"),
             )
+
+            interactor.invoked mustBe SettingsInteractorFake.InvokedType.SET_TIMEOUT
         }
     }
 
     @Test
-    fun `When state is not SettingsStateWithContent and setSnooze called it propagates SETTINGS_STATE_WITH_CONTENT_UNRESOLVED error state`() =
-        runTest {
-            // Given
-            val snooze: Int = fixture.fixture(range = (5..60)) { it != settings.snooze.snooze }
-            val result: List<Result<Settings>> = listOf(
-                Result.failure(RuntimeException()),
-                Result.failure(IllegalStateException()),
-            )
-            val taskerFake = SettingsTaskerFake(result, this)
-            val viewModel = SettingsViewModel(taskerFake)
-
-            viewModel.state.test {
-                // When
-                skipItems(2)
-                viewModel.runCommand(SetSnoozeCommand(snooze))
-
-                // Then
-                awaitItem() mustBe Error(SettingsError.SETTINGS_STATE_WITH_CONTENT_UNRESOLVED)
-            }
-        }
-
-    @Test
-    fun `Given setTheme called it propagates updated SettingsStateWithContent state`() = runTest {
+    fun `Given setSnooze is called it propagates SettingsStateWithContent`() = runTest {
         // Given
+        val snooze = Snooze(20)
+
         val results = listOf(
             Result.success(settings),
-            Result.success(settings.copy(theme = Theme.DARK)),
+            Result.success(settings.copy(snooze = snooze)),
         )
-        val taskerFake = SettingsTaskerFake(results, this)
-        val viewModel = SettingsViewModel(taskerFake)
+        val interactor = SettingsInteractorFake(results, this)
+        val viewModel = SettingsViewModel(interactor, durationFormatter)
 
         viewModel.state.test {
-            // When
             skipItems(2)
-            viewModel.runCommand(SetThemeCommand(Theme.DARK))
+            advanceUntilIdle()
+
+            // When
+            viewModel.setSnooze(snooze)
 
             // Then
-            awaitItem() mustBe SettingsStateWithContent(
-                timeOut = ValidTimeInput(settings.timeOut.timeOut),
-                snooze = ValidTimeInput(settings.snooze.snooze),
-                theme = Theme.DARK,
+            awaitItem() mustBe settingsStateWithContent.copy(
+                snooze = SettingsContract.TimeInput(snooze.snooze, "20 min")
             )
+
+            interactor.invoked mustBe SettingsInteractorFake.InvokedType.SET_SNOOZE
         }
+    }
+
+    @Test
+    fun `Given setTheme is called it propagates SettingsStateWithContent`() = runTest {
+        // Given
+        val theme = Theme.DARK
+
+        val results = listOf(
+            Result.success(settings),
+            Result.success(settings.copy(theme = theme)),
+        )
+        val interactor = SettingsInteractorFake(results, this)
+        val viewModel = SettingsViewModel(interactor, durationFormatter)
+
+        viewModel.state.test {
+            skipItems(2)
+            advanceUntilIdle()
+
+            // When
+            viewModel.setTheme("Dark")
+
+            // Then
+            awaitItem() mustBe settingsStateWithContent.copy(
+                theme = "Dark"
+            )
+
+            interactor.invoked mustBe SettingsInteractorFake.InvokedType.SET_THEME
+        }
+    }
+
+    @Test
+    fun `Given runCommand is called it executes the given command`() {
+        // Given
+        val command: CommandContract.Command<SettingsViewModel> = mockk(relaxed = true)
+
+        // When
+        SettingsViewModel(interactor, durationFormatter).runCommand(command)
+
+        // Then
+        verify(exactly = 1) { command.execute(any()) }
     }
 }

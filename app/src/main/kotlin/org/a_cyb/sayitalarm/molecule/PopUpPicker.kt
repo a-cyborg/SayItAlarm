@@ -22,7 +22,7 @@ fun <T> PopUpPickerStandardWheel(
     pickerInitIdx: Int = 0,
     pickerItemRow: @Composable (T) -> Unit,
     onDismiss: () -> Unit,
-    onConfirm: (T) -> Unit,
+    onConfirm: (idx: Int) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
 

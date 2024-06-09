@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2024 Mima Kang / All rights reserved.
+  ~
+  ~ Use of this source code is governed by Apache v2.0
+  -->
+
+<resources>
+    <!-- Weekday -->
+    <string name="every_day">매일</string>
+    <string name="every_weekday">주중</string>
+    <string name="every_weekend">주말</string>
+    <!-- AlertType -->
+    <string name="sound_only">벨소리 모드</string>
+    <string name="sound_and_vibration">벨소리와 진동 모드</string>
+    <string name="vibration_only">진동 모드</string>
+    <!-- AlarmType -->
+    <string name="alarm_type_say_it">스크립트를 읽어 알람 끄기.</string>
+    <string name="alarm_type_typing">타이핑으로 알람 끄기.</string>
+    <string name="alarm_type_push_button">버튼을 눌러 알람 끄기.</string>
+</resources>

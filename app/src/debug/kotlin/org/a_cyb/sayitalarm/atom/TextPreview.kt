@@ -29,8 +29,14 @@ fun TextTitleStandardLargePreview() {
 
 @Preview
 @Composable
+fun TextTitleStandardMediumPreview() {
+    TextTitleStandardMedium(text = "SayIt")
+}
+
+@Preview
+@Composable
 fun TextTitleSubtleMediumPreview() {
-    TextTitleSubtleMedium(text = "TitleSubtleMedium")
+    TextTitleSubtleMedium(text = "SayIt")
 }
 
 @Preview

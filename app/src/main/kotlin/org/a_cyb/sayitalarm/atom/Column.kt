@@ -36,9 +36,7 @@ fun ColumnScreenStandardScrollable(content: @Composable ColumnScope.() -> Unit) 
             .background(Color.surface.standard),
     ) {
         content()
-        Spacer(modifier = Modifier.weight(1f))
-        TextBodyStandardSmall(text = stringResource(R.string.app_name))
-        SpacerMedium()
+        Footer()
     }
 }
 
@@ -53,8 +51,13 @@ fun ColumnScreenStandard(content: @Composable ColumnScope.() -> Unit) {
             .background(Color.surface.standard),
     ) {
         content()
-        Spacer(modifier = Modifier.weight(1f))
-        TextBodyStandardSmall(text = stringResource(R.string.app_name))
-        SpacerMedium()
+        Footer()
     }
+}
+
+@Composable
+fun ColumnScope.Footer() {
+    Spacer(modifier = Modifier.weight(1f))
+    TextBodyStandardSmall(text = stringResource(R.string.say_it))
+    SpacerMedium()
 }

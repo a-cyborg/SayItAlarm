@@ -54,6 +54,13 @@ class TextSpec : RoborazziTest() {
     }
 
     @Test
+    fun `It renders TextTitleStandardMedium`() {
+        subjectUnderTest.setContent {
+            TextTitleSubtleMedium(text = "TitleStandardLarge")
+        }
+    }
+
+    @Test
     fun `It renders TextTitleAttentionMedium`() {
         subjectUnderTest.setContent {
             TextTitleAttentionMedium(text = "TitleAttentionMedium")

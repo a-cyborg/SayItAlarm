@@ -15,19 +15,20 @@ import org.a_cyb.sayitalarm.entity.Snooze
 import org.a_cyb.sayitalarm.entity.Theme
 import org.a_cyb.sayitalarm.entity.TimeOut
 import org.a_cyb.sayitalarm.presentation.CommandContract
-import org.a_cyb.sayitalarm.presentation.SettingsContract
+import org.a_cyb.sayitalarm.presentation.settings.SettingsContract
+import org.a_cyb.sayitalarm.presentation.settings.SettingsContract.SettingsState
+import org.a_cyb.sayitalarm.presentation.settings.SettingsContract.SettingsStateWithContent
+import org.a_cyb.sayitalarm.presentation.settings.SettingsContract.SettingsViewModel
+import org.a_cyb.sayitalarm.presentation.settings.SettingsContract.TimeInput
 
 @Suppress("EmptyFunctionBlock")
 internal class SettingsViewModelFake(
     private val viewModelScope: CoroutineScope,
-    initState: SettingsContract.SettingsState,
-) : SettingsContract.SettingsViewModel {
+    initState: SettingsState = SettingsContract.InitialError,
+) : SettingsViewModel {
 
-    private val _state: MutableStateFlow<SettingsContract.SettingsState> = MutableStateFlow(initState)
-    override val state: StateFlow<SettingsContract.SettingsState> = _state
-
-    override val timeOuts: List<String> = listOf()
-    override val snoozes: List<String> = listOf()
+    private val _state: MutableStateFlow<SettingsState> = MutableStateFlow(initState)
+    override val state: StateFlow<SettingsState> = _state
 
     private var _executedCommand = ExecutedCommand.NONE
     val executed: ExecutedCommand
@@ -38,8 +39,8 @@ internal class SettingsViewModelFake(
 
         viewModelScope.launch {
             _state.update {
-                (_state.value as SettingsContract.SettingsStateWithContent)
-                    .copy(timeOut = SettingsContract.ValidTimeInput(timeOut.timeOut))
+                (_state.value as SettingsStateWithContent)
+                    .copy(timeOut = TimeInput(timeOut.timeOut, timeOut.timeOut.formatAsDuration()))
             }
         }
     }
@@ -48,13 +49,36 @@ internal class SettingsViewModelFake(
         _executedCommand = ExecutedCommand.SET_SNOOZE
     }
 
-    override fun setTheme(theme: Theme) {
+    override fun setTheme(themeName: String) {
         _executedCommand = ExecutedCommand.SET_THEME
     }
 
     override fun <T : CommandContract.CommandReceiver> runCommand(command: CommandContract.Command<T>) {
         @Suppress("UNCHECKED_CAST")
         command.execute(this as T)
+    }
+
+    override val timeOuts: List<TimeInput> = (30..300).map {
+        TimeInput(it, it.formatAsDuration())
+    }
+
+    override val snoozes: List<TimeInput> = (5..60).map {
+        TimeInput(it, it.formatAsDuration())
+    }
+
+    override val themes: List<String> = Theme.entries.map { formatToCamelCase(it.name) }
+
+    private fun formatToCamelCase(text: String): String = text.lowercase().replaceFirstChar(Char::titlecase)
+    private fun Int.formatAsDuration(): String {
+        val hour = this / 60
+        val min = this % 60
+
+        return when {
+            hour >= 1 && min >= 1 -> "$hour hr $min min"
+            hour >= 1 -> "$hour hr"
+            min >= 1 -> "$min min"
+            else -> "0 min"
+        }
     }
 
     enum class ExecutedCommand {

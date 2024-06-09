@@ -22,20 +22,18 @@ import org.a_cyb.sayitalarm.atom.PanelRowStandard
 import org.a_cyb.sayitalarm.atom.PanelStandard
 import org.a_cyb.sayitalarm.atom.SpacerLarge
 import org.a_cyb.sayitalarm.atom.SpacerXLarge
-import org.a_cyb.sayitalarm.atom.TextTitleStandardLarge
-import org.a_cyb.sayitalarm.entity.Theme
-import org.a_cyb.sayitalarm.molecule.PopUpPickerStandardWheel
-import org.a_cyb.sayitalarm.molecule.TextRowTimeDuration
+import org.a_cyb.sayitalarm.molecule.PanelItemWithPopUpPicker
 import org.a_cyb.sayitalarm.molecule.TextRowWarning
 import org.a_cyb.sayitalarm.molecule.TopAppBarGlobal
 import org.a_cyb.sayitalarm.presentation.CommandContract
 import org.a_cyb.sayitalarm.presentation.CommandContract.CommandReceiver
-import org.a_cyb.sayitalarm.presentation.SetSnoozeCommand
-import org.a_cyb.sayitalarm.presentation.SetThemeCommand
-import org.a_cyb.sayitalarm.presentation.SetTimeOutCommand
-import org.a_cyb.sayitalarm.presentation.SettingsContract.Error
-import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsStateWithContent
-import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsViewModel
+import org.a_cyb.sayitalarm.presentation.settings.SetSnoozeCommand
+import org.a_cyb.sayitalarm.presentation.settings.SetThemeCommand
+import org.a_cyb.sayitalarm.presentation.settings.SetTimeOutCommand
+import org.a_cyb.sayitalarm.presentation.settings.SettingsContract
+import org.a_cyb.sayitalarm.presentation.settings.SettingsContract.InitialError
+import org.a_cyb.sayitalarm.presentation.settings.SettingsContract.SettingsStateWithContent
+import org.a_cyb.sayitalarm.presentation.settings.SettingsContract.SettingsViewModel
 
 @Composable
 private fun SettingsTopAppBar(onNavigateBack: () -> Unit) {
@@ -45,102 +43,84 @@ private fun SettingsTopAppBar(onNavigateBack: () -> Unit) {
     )
 }
 
-@Suppress("MagicNumber")
 @Composable
-fun PanelItemTimeOut(value: Int, execute: (CommandContract.Command<out CommandReceiver>) -> Unit) {
-    val timeOuts = (30..300).toList()
-    var showPopUpPicker by remember { mutableStateOf(false) }
-
-    PanelRowStandard(
-        valueLabel = stringResource(id = R.string.timeout),
-        value = stringResource(id = R.string.minute_short, value),
-    ) {
-        IconButtonEdit { showPopUpPicker = true }
-    }
-
-    if (showPopUpPicker) {
-        PopUpPickerStandardWheel(
-            title = stringResource(id = R.string.timeout),
-            info = stringResource(id = R.string.info_timeout),
-            pickerValues = (30..300).toList(),
-            pickerInitIdx = timeOuts.indexOf(value),
-            pickerItemRow = { TextRowTimeDuration(minutes = it) },
-            onDismiss = { showPopUpPicker = false },
-            onConfirm = { execute(SetTimeOutCommand(it)) },
-        )
-    }
+fun PanelItemTimeOut(
+    timeOuts: List<String>,
+    currentIdx: Int,
+    onConfirm: (Int) -> Unit,
+) {
+    PanelItemWithPopUpPicker(
+        title = stringResource(id = R.string.timeout),
+        info = stringResource(id = R.string.info_timeout),
+        values = timeOuts,
+        selectedItemIdx = currentIdx,
+        popUpPickerOnConfirm = { onConfirm(it) }
+    )
 }
 
-@Suppress("MagicNumber")
 @Composable
 fun PanelItemSnooze(
     snoozes: List<String>,
-    value: Int,
-    execute: (CommandContract.Command<out CommandReceiver>) -> Unit,
+    currentIdx: Int,
+    onConfirm: (Int) -> Unit,
 ) {
-    val snoozes = (5..60).toList()
-    var showPopUpPicker by remember { mutableStateOf(false) }
-
-    PanelRowStandard(
-        valueLabel = stringResource(id = R.string.snooze),
-        value = stringResource(id = R.string.minute_short, value),
-    ) {
-        IconButtonEdit { showPopUpPicker = true }
-    }
-
-    if (showPopUpPicker) {
-        PopUpPickerStandardWheel(
-            title = stringResource(id = R.string.snooze),
-            info = stringResource(id = R.string.info_snooze),
-            pickerValues = snoozes,
-            pickerInitIdx = snoozes.indexOf(value),
-            pickerItemRow = { TextRowTimeDuration(minutes = it) },
-            onDismiss = { showPopUpPicker = false },
-            onConfirm = { execute(SetSnoozeCommand(it)) },
-        )
-    }
+    PanelItemWithPopUpPicker(
+        title = stringResource(id = R.string.snooze),
+        info = stringResource(id = R.string.info_snooze),
+        values = snoozes,
+        selectedItemIdx = currentIdx,
+        popUpPickerOnConfirm = { onConfirm(it) }
+    )
 }
 
 @Composable
-fun PanelItemTheme(value: Theme, execute: (CommandContract.Command<out CommandReceiver>) -> Unit) {
-    val themes = Theme.entries.map { it.name.toCamelCase() }
-    var displayPopUpPicker by remember { mutableStateOf(false) }
-
-    PanelRowStandard(
-        valueLabel = stringResource(id = R.string.theme),
-        value = value.name.toCamelCase(),
-    ) {
-        IconButtonEdit { displayPopUpPicker = true }
-    }
-
-    if (displayPopUpPicker) {
-        PopUpPickerStandardWheel(
-            title = stringResource(id = R.string.theme),
-            pickerValues = themes,
-            pickerInitIdx = themes.indexOf(value.name.toCamelCase()),
-            pickerItemRow = { TextTitleStandardLarge(it) },
-            onDismiss = { displayPopUpPicker = false },
-            onConfirm = { execute(SetThemeCommand(Theme.valueOf(it.uppercase()))) },
-        )
-    }
+fun PanelItemTheme(
+    themes: List<String>,
+    currentIdx: Int,
+    onConfirm: (Int) -> Unit,
+) {
+    PanelItemWithPopUpPicker(
+        title = stringResource(id = R.string.theme),
+        values = themes,
+        selectedItemIdx = currentIdx,
+        popUpPickerOnConfirm = { onConfirm(it) }
+    )
 }
-
-private fun String.toCamelCase() = this.lowercase().replaceFirstChar(Char::titlecase)
 
 @Composable
 fun SettingsPanel(
-    currentTimeOut: Int,
-    currentSnooze: Int,
-    currentTheme: Theme,
-    snoozes: List<String>,
-    executor: (CommandContract.Command<out CommandReceiver>) -> Unit,
+    currentTimeOut: SettingsContract.TimeInput,
+    currentSnooze: SettingsContract.TimeInput,
+    currentTheme: String,
+    timeOuts: List<SettingsContract.TimeInput>,
+    snoozes: List<SettingsContract.TimeInput>,
+    themes: List<String>,
+    execute: (CommandContract.Command<out CommandReceiver>) -> Unit,
 ) {
     PanelStandard(
         panelItems = listOf(
-            { PanelItemTimeOut(value = currentTimeOut, execute = executor) },
-            { PanelItemSnooze(snoozes = snoozes, value = currentSnooze, execute = executor) },
-            { PanelItemTheme(value = currentTheme, execute = executor) },
-        ),
+            {
+                PanelItemTimeOut(
+                    timeOuts = timeOuts.map { it.formatted },
+                    currentIdx = timeOuts.indexOf(currentTimeOut),
+                    onConfirm = { execute(SetTimeOutCommand(timeOuts[it].input)) }
+                )
+            },
+            {
+                PanelItemSnooze(
+                    snoozes = snoozes.map { it.formatted },
+                    currentIdx = snoozes.indexOf(currentSnooze),
+                    onConfirm = { execute(SetSnoozeCommand(snoozes[it].input)) }
+                )
+            },
+            {
+                PanelItemTheme(
+                    themes = themes,
+                    currentIdx = themes.indexOf(currentTheme),
+                    onConfirm = { execute(SetThemeCommand(themes[it])) }
+                )
+            },
+        )
     )
 }
 
@@ -150,6 +130,18 @@ fun PanelItemAbout() {
 
     PanelRowStandard(valueLabel = stringResource(id = R.string.about)) {
         IconButtonEdit { showText = true }
+    }
+}
+
+@Composable
+fun PanelItemLicense() {
+    var showText by remember { mutableStateOf(false) }
+
+    PanelRowStandard(valueLabel = stringResource(id = R.string.license)) {
+        IconButtonEdit { showText = true }
+    }
+
+    if (showText) {
     }
 }
 
@@ -166,6 +158,7 @@ fun InfoPanel() {
     PanelStandard(
         panelItems = listOf(
             { PanelItemAbout() },
+            { PanelItemLicense() },
             { PanelItemVersion() },
         ),
     )
@@ -177,26 +170,30 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
 
     ColumnScreenStandardScrollable {
         SettingsTopAppBar(onNavigateBack = {})
+
         SpacerLarge()
 
         when (state.value) {
             is SettingsStateWithContent -> {
                 val settings = (state.value as SettingsStateWithContent)
                 SettingsPanel(
-                    currentTimeOut = settings.timeOut.input,
-                    currentSnooze = settings.snooze.input,
+                    currentTimeOut = settings.timeOut,
+                    currentSnooze = settings.snooze,
                     currentTheme = settings.theme,
-                    executor = { viewModel.runCommand(it) },
-                    snoozes = viewModel.snoozes
+                    timeOuts = viewModel.timeOuts,
+                    snoozes = viewModel.snoozes,
+                    themes = viewModel.themes,
+                    execute = { viewModel.runCommand(it) }
                 )
             }
 
-            is Error -> {
-                val errorMessage = (state.value as Error).error.name
-                TextRowWarning(text = errorMessage)
+            is InitialError -> {
+                TextRowWarning(text = stringResource(R.string.info_settings_initialize_error))
             }
         }
+
         SpacerXLarge()
+
         InfoPanel()
     }
 }
