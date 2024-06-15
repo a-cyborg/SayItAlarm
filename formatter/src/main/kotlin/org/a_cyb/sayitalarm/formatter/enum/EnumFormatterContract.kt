@@ -10,6 +10,6 @@ import org.a_cyb.sayitalarm.entity.AlarmType
 import org.a_cyb.sayitalarm.entity.AlertType
 
 interface EnumFormatterContract {
-    fun formatAlertType(alertType: AlertType): String
-    fun formatAlarmType(alarmType: AlarmType): String
+    fun format(alertType: AlertType): String
+    fun format(alarmType: AlarmType): String
 }

@@ -11,11 +11,14 @@ import org.a_cyb.sayitalarm.entity.AlertType
 import org.a_cyb.sayitalarm.formatter.enum.EnumFormatterContract
 
 class EnumFormatterFake : EnumFormatterContract {
-    override fun formatAlertType(alertType: AlertType): String = when (alertType) {
-        AlertType.SOUND_ONLY -> "Sound only"
-        AlertType.SOUND_AND_VIBRATE -> "Sound and vibration"
-        AlertType.VIBRATE_ONLY -> "Vibration only"
+
+    override fun format(alertType: AlertType): String {
+        return when (alertType) {
+            AlertType.SOUND_ONLY -> "Sound only"
+            AlertType.SOUND_AND_VIBRATE -> "Sound and vibration"
+            AlertType.VIBRATE_ONLY -> "Vibration only"
+        }
     }
 
-    override fun formatAlarmType(alarmType: AlarmType): String = ""
+    override fun format(alarmType: AlarmType): String = ""
 }
