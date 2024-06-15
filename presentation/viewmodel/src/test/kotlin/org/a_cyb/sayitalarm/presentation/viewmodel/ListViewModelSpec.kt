@@ -36,7 +36,7 @@ import org.a_cyb.sayitalarm.entity.Ringtone
 import org.a_cyb.sayitalarm.entity.SayItScripts
 import org.a_cyb.sayitalarm.entity.WeeklyRepeat
 import org.a_cyb.sayitalarm.presentation.CommandContract
-import org.a_cyb.sayitalarm.presentation.interactor.ListInteractorContract
+import org.a_cyb.sayitalarm.presentation.interactor.InteractorContract
 import org.a_cyb.sayitalarm.presentation.list.ListContract
 import org.a_cyb.sayitalarm.presentation.list.ListContract.AlarmInfo
 import org.a_cyb.sayitalarm.presentation.list.ListContract.Initial
@@ -58,7 +58,7 @@ class ListViewModelSpec {
     private val timeFormatter = TimeFormatterFake()
     private val weekdayFormatter = WeekdayFormatterFake()
 
-    private val listViewModel: (interactorFake: ListInteractorContract) -> ListContract.ListViewModel = { fake ->
+    private val listViewModel: (interactorFake: InteractorContract.ListInteractorContract) -> ListContract.ListViewModel = { fake ->
         ListViewModel(fake, alarmScheduler!!, timeFormatter, weekdayFormatter)
     }
 

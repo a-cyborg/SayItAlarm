@@ -11,12 +11,12 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import org.a_cyb.sayitalarm.entity.Alarm
-import org.a_cyb.sayitalarm.presentation.interactor.ListInteractorContract
+import org.a_cyb.sayitalarm.presentation.interactor.InteractorContract
 
 class ListInteractorFake(
     scope: CoroutineScope,
     results: List<Result<List<Alarm>>> = listOf(Result.failure(IllegalStateException())),
-) : ListInteractorContract {
+) : InteractorContract.ListInteractorContract {
     private val results = results.toMutableList()
 
     private val _alarm: MutableSharedFlow<Result<List<Alarm>>> = MutableSharedFlow()

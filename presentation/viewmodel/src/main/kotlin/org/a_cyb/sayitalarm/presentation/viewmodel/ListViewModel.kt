@@ -17,7 +17,7 @@ import org.a_cyb.sayitalarm.entity.Alarm
 import org.a_cyb.sayitalarm.formatter.time.TimeFormatterContract
 import org.a_cyb.sayitalarm.formatter.weekday.WeekdayFormatterContract
 import org.a_cyb.sayitalarm.presentation.CommandContract
-import org.a_cyb.sayitalarm.presentation.interactor.ListInteractorContract
+import org.a_cyb.sayitalarm.presentation.interactor.InteractorContract
 import org.a_cyb.sayitalarm.presentation.list.ListContract
 import org.a_cyb.sayitalarm.presentation.list.ListContract.AlarmInfo
 import org.a_cyb.sayitalarm.presentation.list.ListContract.Error
@@ -28,7 +28,7 @@ import org.a_cyb.sayitalarm.presentation.list.ListContract.ListStateWithContent
 import org.a_cyb.sayitalarm.presentation.list.ListContract.Success
 
 internal class ListViewModel(
-    private val interactor: ListInteractorContract,
+    private val interactor: InteractorContract.ListInteractorContract,
     private val alarmScheduler: AlarmSchedulerContract,
     private val timeFormatter: TimeFormatterContract,
     private val weekdayFormatter: WeekdayFormatterContract,

@@ -19,7 +19,7 @@ import org.a_cyb.sayitalarm.entity.Theme
 import org.a_cyb.sayitalarm.entity.TimeOut
 import org.a_cyb.sayitalarm.formatter.duration.DurationFormatterContract
 import org.a_cyb.sayitalarm.presentation.CommandContract
-import org.a_cyb.sayitalarm.presentation.interactor.SettingsInteractorContract
+import org.a_cyb.sayitalarm.presentation.interactor.InteractorContract
 import org.a_cyb.sayitalarm.presentation.settings.SettingsContract
 import org.a_cyb.sayitalarm.presentation.settings.SettingsContract.Initial
 import org.a_cyb.sayitalarm.presentation.settings.SettingsContract.InitialError
@@ -28,7 +28,7 @@ import org.a_cyb.sayitalarm.presentation.settings.SettingsContract.SettingsState
 import org.a_cyb.sayitalarm.presentation.settings.SettingsContract.TimeInput
 
 internal class SettingsViewModel(
-    private val interactor: SettingsInteractorContract,
+    private val interactor: InteractorContract.SettingsInteractorContract,
     private val durationFormatter: DurationFormatterContract,
 ) : SettingsContract.SettingsViewModel, ViewModel() {
 

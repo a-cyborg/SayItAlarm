@@ -14,12 +14,12 @@ import org.a_cyb.sayitalarm.entity.Settings
 import org.a_cyb.sayitalarm.entity.Snooze
 import org.a_cyb.sayitalarm.entity.Theme
 import org.a_cyb.sayitalarm.entity.TimeOut
-import org.a_cyb.sayitalarm.presentation.interactor.SettingsInteractorContract
+import org.a_cyb.sayitalarm.presentation.interactor.InteractorContract
 
 class SettingsInteractorFake(
     results: List<Result<Settings>>,
     scope: CoroutineScope,
-) : SettingsInteractorContract {
+) : InteractorContract.SettingsInteractorContract {
     private val results = results.toMutableList()
 
     private val _settings: MutableSharedFlow<Result<Settings>> = MutableSharedFlow()
