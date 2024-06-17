@@ -8,62 +8,57 @@ package org.a_cyb.sayitalarm.presentation.viewmodel
 
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
-import java.util.Calendar
 import app.cash.turbine.test
 import io.mockk.coVerify
 import io.mockk.mockk
-import io.mockk.verify
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.a_cyb.sayitalarm.entity.Alarm
-import org.a_cyb.sayitalarm.entity.AlarmType
-import org.a_cyb.sayitalarm.entity.AlertType
 import org.a_cyb.sayitalarm.entity.Hour
-import org.a_cyb.sayitalarm.entity.Label
 import org.a_cyb.sayitalarm.entity.Minute
-import org.a_cyb.sayitalarm.entity.Ringtone
-import org.a_cyb.sayitalarm.entity.SayItScripts
-import org.a_cyb.sayitalarm.entity.WeeklyRepeat
-import org.a_cyb.sayitalarm.presentation.CommandContract
 import org.a_cyb.sayitalarm.presentation.add.AddContract
-import org.a_cyb.sayitalarm.presentation.interactor.AddInteractorContract
+import org.a_cyb.sayitalarm.presentation.add.AddContract.AddStateWithContent
+import org.a_cyb.sayitalarm.presentation.add.AddContract.Initial
+import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract
+import org.a_cyb.sayitalarm.presentation.alarm_panel.SetTimeCommand
+import org.a_cyb.sayitalarm.presentation.interactor.InteractorContract
+import org.a_cyb.sayitalarm.presentation.viewmodel.fake.AlarmPanelInteractorFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.EnumFormatterFake
+import org.a_cyb.sayitalarm.presentation.viewmodel.fake.RingtoneManagerFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.WeekdayFormatterFake
 import org.a_cyb.sayitalarm.util.fulfils
 import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Test
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class AddViewModelSpec {
-    private val interactor = AddInteractorFake()
-    private val weekdayFormatter = WeekdayFormatterFake()
-    private val enumFormatter = EnumFormatterFake()
 
-    private val alarmUi = AddContract.AlarmUi(
+    private val defaultAlarmUI = AlarmPanelContract.AlarmUI(
         hour = 8,
         minute = 0,
-        weeklyRepeat = weekdayFormatter.formatAbbr(emptySet()),
+        weeklyRepeat = "",
         label = "",
-        alertType = enumFormatter.formatAlertType(AlertType.SOUND_AND_VIBRATE),
-        ringtone = "",
+        alertType = "Sound and vibration",
+        ringtone = "Radial",
         sayItScripts = emptyList()
     )
 
-    private val alarm = Alarm(
-        id = 1,
-        hour = Hour(6),
-        minute = Minute(0),
-        weeklyRepeat = WeeklyRepeat(Calendar.MONDAY, Calendar.WEDNESDAY, Calendar.FRIDAY),
-        label = Label("Wake Up"),
-        enabled = true,
-        alertType = AlertType.SOUND_ONLY,
-        ringtone = Ringtone("file://wake_up_alarm.mp3"),
-        alarmType = AlarmType.SAY_IT,
-        sayItScripts = SayItScripts("I am peaceful and whole.")
-    )
+    private fun getAlarmPanelViewModel( id: Long = 0L, scope: CoroutineScope = TestScope()) =
+        AlarmPanelViewModel(
+            id,
+            scope,
+            AlarmPanelInteractorFake(),
+            RingtoneManagerFake(),
+            WeekdayFormatterFake(),
+            EnumFormatterFake(),
+        )
 
     @BeforeTest
     fun setup() {
@@ -77,57 +72,64 @@ class AddViewModelSpec {
 
     @Test
     fun `It fulfills AddViewModel`() {
-        AddViewModel(interactor, weekdayFormatter, enumFormatter) fulfils AddContract.AddViewModel::class
+        val viewModel = AddViewModel(AddInteractorFake(), getAlarmPanelViewModel(scope = TestScope()))
+
+        viewModel fulfils AddContract.AddViewModel::class
     }
 
     @Test
     fun `It is in Initial state`() {
-        AddViewModel(interactor, weekdayFormatter, enumFormatter).state.value mustBe AddContract.Initial
+        val viewModel = AddViewModel(AddInteractorFake(), getAlarmPanelViewModel(scope = TestScope()))
+
+        viewModel.state.value mustBe Initial
     }
 
     @Test
     fun `It sets AddStateWithContent`() = runTest {
         // Given
-        val viewModel = AddViewModel(interactor, weekdayFormatter, enumFormatter)
+        val viewModel = AddViewModel(AddInteractorFake(), getAlarmPanelViewModel())
 
         viewModel.state.test {
             // When
             skipItems(1)
 
             // Then
-            awaitItem() mustBe AddContract.AddStateWithContent(alarmUi)
+            awaitItem() mustBe AddStateWithContent(defaultAlarmUI)
         }
     }
 
     @Test
-    fun `Given save is called it calls interactor save`() = runTest {
+    fun `Given alarmPanelCommand is executed it propagates AddStateWithContent`() = runTest {
         // Given
-        val interactor: AddInteractorContract = mockk(relaxed = true)
-        val viewModel = AddViewModel(interactor, weekdayFormatter, enumFormatter)
+        val viewModel = AddViewModel(AddInteractorFake(), getAlarmPanelViewModel())
+        val command = SetTimeCommand(hour = Hour(3), minute = Minute(33))
 
         // When
-        viewModel.save(alarm)
+        viewModel.alarmPanelExecutor(command)
 
-        advanceUntilIdle()
+        viewModel.state.test {
+            skipItems(2) // Initial & AddStateWithContent with default alarmUI
 
-        // Then
-        coVerify(exactly = 1) { interactor.save(any()) }
+            // Then
+            awaitItem() mustBe AddStateWithContent(defaultAlarmUI.copy(hour = 3, minute = 33))
+        }
     }
 
     @Test
-    fun `Given runCommand is called it executes the given command`() {
+    fun `Given SaveCommand is executed, it calls AddInteractor's save method`() = runTest {
         // Given
-        val command: CommandContract.Command<AddViewModel> = mockk(relaxed = true)
+        val interactor: InteractorContract.AddInteractor = mockk(relaxed = true)
+        val viewModel = AddViewModel(interactor, getAlarmPanelViewModel())
 
         // When
-        AddViewModel(interactor, weekdayFormatter, enumFormatter).runCommand(command)
+        viewModel.save()
+        advanceUntilIdle()
 
         // Then
-        verify(exactly = 1) { command.execute(any()) }
+        coVerify(exactly = 1) { interactor.save(any(), any()) }
     }
 }
 
-private class AddInteractorFake : AddInteractorContract {
-    override suspend fun save(alarm: Alarm) {
-    }
+private class AddInteractorFake : InteractorContract.AddInteractor {
+    override suspend fun save(alarm: Alarm, scope: CoroutineScope) {}
 }

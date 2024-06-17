@@ -38,7 +38,7 @@ class AddCommandSpec {
 
     @Test
     fun `SaveCommand fulfils Command`() {
-        SaveCommand(alarm = alarm) fulfils CommandContract.Command::class
+        SaveCommand fulfils CommandContract.Command::class
     }
 
     @Test
@@ -47,9 +47,9 @@ class AddCommandSpec {
         val receiver: AddCommandContract.Save = mockk(relaxed = true)
 
         // When
-        SaveCommand(alarm = alarm).execute(receiver)
+        SaveCommand.execute(receiver)
 
         // Then
-        verify(exactly = 1) { receiver.save(any()) }
+        verify(exactly = 1) { receiver.save() }
     }
 }

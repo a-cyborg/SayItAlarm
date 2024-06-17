@@ -8,25 +8,18 @@ package org.a_cyb.sayitalarm.presentation.add
 
 import kotlinx.coroutines.flow.StateFlow
 import org.a_cyb.sayitalarm.presentation.CommandContract
-import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelCommandContractAll
+import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract
 
 interface AddContract {
 
-    interface AddViewModel : AddCommandContract.Save, AlarmPanelCommandContractAll, CommandContract.CommandExecutor {
+    interface AddViewModel : AddCommandContract.Save, CommandContract.CommandExecutor {
         val state: StateFlow<AddState>
+        val alarmPanelExecutor: (CommandContract.Command<out CommandContract.CommandReceiver>) -> Unit
     }
 
     interface AddState
-    data object Initial : AddState
-    data class AddStateWithContent(val alarmUi: AlarmUi) : AddState
 
-    data class AlarmUi(
-        val hour: Int,
-        val minute: Int,
-        val weeklyRepeat: String,
-        val label: String,
-        val alertType: String,
-        val ringtone: String,
-        val sayItScripts: List<String>,
-    )
+    data object Initial : AddState
+
+    data class AddStateWithContent(val alarmUI: AlarmPanelContract.AlarmUI) : AddState
 }

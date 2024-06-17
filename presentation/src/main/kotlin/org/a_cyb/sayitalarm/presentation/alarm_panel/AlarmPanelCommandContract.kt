@@ -52,7 +52,7 @@ interface AlarmPanelCommandContractAll :
     AlarmPanelCommandContract.SetLabel,
     AlarmPanelCommandContract.SetAlertType,
     AlarmPanelCommandContract.SetRingtone,
-    AlarmPanelCommandContract.SetAlarmType,
+    // AlarmPanelCommandContract.SetAlarmType,
     AlarmPanelCommandContract.SetScripts
 
 data class SetTimeCommand(val hour: Hour, val minute: Minute) :

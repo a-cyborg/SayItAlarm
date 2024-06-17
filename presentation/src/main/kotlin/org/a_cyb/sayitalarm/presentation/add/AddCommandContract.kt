@@ -11,12 +11,12 @@ import org.a_cyb.sayitalarm.presentation.CommandContract
 
 interface AddCommandContract {
     fun interface Save : CommandContract.CommandReceiver {
-        fun save(alarm: Alarm)
+        fun save()
     }
 }
 
-data class SaveCommand(val alarm: Alarm) : CommandContract.Command<AddCommandContract.Save> {
+data object SaveCommand : CommandContract.Command<AddCommandContract.Save> {
     override fun execute(receiver: AddCommandContract.Save) {
-        receiver.save(alarm)
+        receiver.save()
     }
 }

@@ -20,8 +20,9 @@ include(
     ":presentation:viewmodel",
     ":presentation:interactor",
     ":formatter",
+    ":alarm-service",
+    ":ringtone-manager",
     ":util",
 )
 
 rootProject.name = "SayItAlarm"
-include(":alarm-service")

@@ -8,93 +8,50 @@ package org.a_cyb.sayitalarm.presentation.viewmodel
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.a_cyb.sayitalarm.entity.Alarm
-import org.a_cyb.sayitalarm.entity.AlarmType
-import org.a_cyb.sayitalarm.entity.AlertType
-import org.a_cyb.sayitalarm.entity.Hour
-import org.a_cyb.sayitalarm.entity.Label
-import org.a_cyb.sayitalarm.entity.Minute
-import org.a_cyb.sayitalarm.entity.Ringtone
-import org.a_cyb.sayitalarm.entity.SayItScripts
-import org.a_cyb.sayitalarm.entity.WeeklyRepeat
-import org.a_cyb.sayitalarm.formatter.enum.EnumFormatterContract
-import org.a_cyb.sayitalarm.formatter.weekday.WeekdayFormatterContract
-import org.a_cyb.sayitalarm.presentation.CommandContract
+import org.a_cyb.sayitalarm.presentation.CommandContract.*
 import org.a_cyb.sayitalarm.presentation.add.AddContract
-import org.a_cyb.sayitalarm.presentation.interactor.AddInteractorContract
+import org.a_cyb.sayitalarm.presentation.add.AddContract.AddState
+import org.a_cyb.sayitalarm.presentation.add.AddContract.AddStateWithContent
+import org.a_cyb.sayitalarm.presentation.add.AddContract.Initial
+import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract
+import org.a_cyb.sayitalarm.presentation.interactor.InteractorContract
 
 internal class AddViewModel(
-    private val interactor: AddInteractorContract,
-    private val weekdayFormatter: WeekdayFormatterContract,
-    private val enumFormatter: EnumFormatterContract,
+    private val interactor: InteractorContract.AddInteractor,
+    private val alarmPanelViewModel: AlarmPanelViewModel,
 ) : AddContract.AddViewModel, ViewModel() {
 
-    private val _state: MutableStateFlow<AddContract.AddState> = MutableStateFlow(AddContract.Initial)
-    override val state: StateFlow<AddContract.AddState> = _state
+    private val _state: MutableStateFlow<AddState> = MutableStateFlow(Initial)
+    override val state: StateFlow<AddState> = _state.asStateFlow()
+
+    override val alarmPanelExecutor: (Command<out CommandReceiver>) -> Unit = {
+        alarmPanelViewModel.runCommand(it)
+    }
 
     init {
-        updateState(AddContract.AddStateWithContent(getDefaultAlarmUi()))
+        alarmPanelViewModel.alarmUI
+            .onEach(::updateState)
+            .launchIn(scope)
     }
 
-    private fun updateState(state: AddContract.AddState) {
-        scope.launch {
-            _state.update {
-                state
-            }
+    private fun updateState(alarmUI: AlarmPanelContract.AlarmUI) {
+        _state.update {
+            AddStateWithContent(alarmUI)
         }
     }
 
-    private fun getDefaultAlarmUi() =
-        AddContract.AlarmUi(
-            hour = 8,
-            minute = 0,
-            weeklyRepeat = weekdayFormatter.formatAbbr(emptySet()),
-            label = "",
-            alertType = enumFormatter.formatAlertType(AlertType.SOUND_AND_VIBRATE),
-            ringtone = getDefaultRingtoneName(),
-            sayItScripts = emptyList()
-        )
-
-    private fun getDefaultRingtoneName(): String {
-        return ""
-    }
-
-    override fun save(alarm: Alarm) {
+    override fun save() {
         scope.launch {
-            interactor.save(alarm)
+            interactor.save(alarmPanelViewModel.getAlarm(), scope)
         }
     }
 
-    override fun setTime(hour: Hour, minute: Minute) {
-    }
-
-    override fun setWeeklyRepeat(weeklyRepeat: WeeklyRepeat) {
-        TODO("Not yet implemented")
-    }
-
-    override fun setLabel(label: Label) {
-        TODO("Not yet implemented")
-    }
-
-    override fun setAlertType(alertType: AlertType) {
-        TODO("Not yet implemented")
-    }
-
-    override fun setRingtone(ringtone: Ringtone) {
-        TODO("Not yet implemented")
-    }
-
-    override fun setAlarmType(alarmType: AlarmType) {
-        TODO("Not yet implemented")
-    }
-
-    override fun setScripts(scripts: SayItScripts) {
-        TODO("Not yet implemented")
-    }
-
-    override fun <T : CommandContract.CommandReceiver> runCommand(command: CommandContract.Command<T>) {
+    override fun <T : CommandReceiver> runCommand(command: Command<T>) {
         @Suppress("UNCHECKED_CAST")
         command.execute(this as T)
     }
