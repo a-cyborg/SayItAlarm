@@ -33,6 +33,15 @@ class WeekdayFormatterFake : WeekdayFormatterContract {
     private fun Set<Int>.toFullNames(): String =
         concatDayNames(map { fullDayNames[it - 1] })
 
-    private fun concatDayNames(daysNames: List<String>): String =
-        "${daysNames.dropLast(1).joinToString(", ")}, and ${daysNames.last()}"
+    private fun concatDayNames(dayNames: List<String>): String =
+        when (dayNames.size) {
+            0 -> ""
+            1 -> dayNames.first()
+            else -> {
+                val first = dayNames.dropLast(1).joinToString(", ")
+                val last = ", and ${dayNames.last()}"
+
+                "$first$last"
+            }
+        }
 }
