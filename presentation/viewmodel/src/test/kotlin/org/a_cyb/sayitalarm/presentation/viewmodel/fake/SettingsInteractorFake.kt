@@ -19,7 +19,7 @@ import org.a_cyb.sayitalarm.presentation.interactor.InteractorContract
 class SettingsInteractorFake(
     results: List<Result<Settings>>,
     scope: CoroutineScope,
-) : InteractorContract.SettingsInteractorContract {
+) : InteractorContract.SettingsInteractor {
     private val results = results.toMutableList()
 
     private val _settings: MutableSharedFlow<Result<Settings>> = MutableSharedFlow()

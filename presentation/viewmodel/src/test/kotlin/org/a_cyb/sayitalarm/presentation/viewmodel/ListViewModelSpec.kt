@@ -8,13 +8,6 @@ package org.a_cyb.sayitalarm.presentation.viewmodel
 
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
-import java.util.Calendar.FRIDAY
-import java.util.Calendar.MONDAY
-import java.util.Calendar.SATURDAY
-import java.util.Calendar.SUNDAY
-import java.util.Calendar.THURSDAY
-import java.util.Calendar.TUESDAY
-import java.util.Calendar.WEDNESDAY
 import app.cash.turbine.test
 import io.mockk.mockk
 import io.mockk.verify
@@ -26,17 +19,9 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import org.a_cyb.sayitalarm.entity.Alarm
-import org.a_cyb.sayitalarm.entity.AlarmType
-import org.a_cyb.sayitalarm.entity.AlertType
-import org.a_cyb.sayitalarm.entity.Hour
-import org.a_cyb.sayitalarm.entity.Label
-import org.a_cyb.sayitalarm.entity.Minute
-import org.a_cyb.sayitalarm.entity.Ringtone
-import org.a_cyb.sayitalarm.entity.SayItScripts
-import org.a_cyb.sayitalarm.entity.WeeklyRepeat
+import org.a_cyb.sayitalarm.alarm_service.AlarmSchedulerContract
 import org.a_cyb.sayitalarm.presentation.CommandContract
-import org.a_cyb.sayitalarm.presentation.interactor.InteractorContract
+import org.a_cyb.sayitalarm.presentation.interactor.InteractorContract.ListInteractor
 import org.a_cyb.sayitalarm.presentation.list.ListContract
 import org.a_cyb.sayitalarm.presentation.list.ListContract.AlarmInfo
 import org.a_cyb.sayitalarm.presentation.list.ListContract.Initial
@@ -44,6 +29,7 @@ import org.a_cyb.sayitalarm.presentation.list.ListContract.InitialError
 import org.a_cyb.sayitalarm.presentation.list.ListContract.Success
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.AlarmSchedulerFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.ListInteractorFake
+import org.a_cyb.sayitalarm.presentation.viewmodel.fake.TestAlarms
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.TimeFormatterFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.WeekdayFormatterFake
 import org.a_cyb.sayitalarm.util.fulfils
@@ -53,67 +39,7 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class ListViewModelSpec {
 
-    private var alarmScheduler: AlarmSchedulerFake? = null
-
-    private val timeFormatter = TimeFormatterFake()
-    private val weekdayFormatter = WeekdayFormatterFake()
-
-    private val listViewModel: (interactorFake: InteractorContract.ListInteractorContract) -> ListContract.ListViewModel = { fake ->
-        ListViewModel(fake, alarmScheduler!!, timeFormatter, weekdayFormatter)
-    }
-
-    private val alarms = listOf(
-        Alarm(
-            id = 1,
-            hour = Hour(6),
-            minute = Minute(0),
-            weeklyRepeat = WeeklyRepeat(MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY),
-            label = Label("Wake Up"),
-            enabled = true,
-            alertType = AlertType.SOUND_ONLY,
-            ringtone = Ringtone("file://wake_up_alarm.mp3"),
-            alarmType = AlarmType.SAY_IT,
-            sayItScripts = SayItScripts(
-                "I am peaceful and whole.",
-                "I do all things in love.",
-                "I embrace change seamlessly and rise to the new opportunity it presents."
-            )
-        ),
-        Alarm(
-            id = 2,
-            hour = Hour(20),
-            minute = Minute(30),
-            weeklyRepeat = WeeklyRepeat(MONDAY, WEDNESDAY, FRIDAY),
-            label = Label("Workout"),
-            enabled = true,
-            alertType = AlertType.SOUND_ONLY,
-            ringtone = Ringtone("file://workout_time_alarm.mp3"),
-            alarmType = AlarmType.SAY_IT,
-            sayItScripts = SayItScripts(
-                "My body is strong.",
-                "I am thankful for my body.",
-                "My body helps me play.",
-                "I am worthy of investing time and effort into my physical health."
-            )
-        ),
-        Alarm(
-            id = 3,
-            hour = Hour(9),
-            minute = Minute(0),
-            weeklyRepeat = WeeklyRepeat(SATURDAY, SUNDAY),
-            label = Label("Passion Hour"),
-            enabled = false,
-            alertType = AlertType.SOUND_AND_VIBRATE,
-            ringtone = Ringtone("file://passion_hour_ringtone.mp3"),
-            alarmType = AlarmType.SAY_IT,
-            sayItScripts = SayItScripts(
-                "I'm ready to dive into my passion",
-                "Ready to explore, ready to learn.",
-                "I embrace this hour with enthusiasm."
-            )
-        ),
-    )
-
+    private val alarms = TestAlarms().getAlarms()
     private val alarmInfo = listOf(
         AlarmInfo(
             id = 1,
@@ -135,9 +61,13 @@ class ListViewModelSpec {
         )
     )
 
+    private fun getListViewModel(
+        interactor: ListInteractor = ListInteractorFake(TestScope()),
+        schedulerFake: AlarmSchedulerContract = AlarmSchedulerFake()
+    ) = ListViewModel(interactor, schedulerFake, TimeFormatterFake(), WeekdayFormatterFake())
+
     @BeforeTest
     fun setup() {
-        alarmScheduler = AlarmSchedulerFake()
         Dispatchers.setMain(StandardTestDispatcher())
     }
 
@@ -150,14 +80,14 @@ class ListViewModelSpec {
     fun `It fulfills ListViewModel`() {
         val interactor = ListInteractorFake(TestScope())
 
-        listViewModel(interactor) fulfils ListContract.ListViewModel::class
+        getListViewModel(interactor) fulfils ListContract.ListViewModel::class
     }
 
     @Test
     fun `It is in the Initial State`() {
         val interactor = ListInteractorFake(TestScope())
 
-        listViewModel(interactor).state.value mustBe Initial
+        getListViewModel(interactor).state.value mustBe Initial
     }
 
     @Test
@@ -166,7 +96,7 @@ class ListViewModelSpec {
         val interactor = ListInteractorFake(this, listOf(Result.failure(IllegalStateException())))
 
         // When
-        val viewModel = listViewModel(interactor)
+        val viewModel = getListViewModel(interactor)
 
         viewModel.state.test {
             skipItems(1) // Initial
@@ -182,7 +112,7 @@ class ListViewModelSpec {
         val interactor = ListInteractorFake(this, listOf(Result.success(alarms)))
 
         // When
-        val viewModel = listViewModel(interactor)
+        val viewModel = getListViewModel(interactor)
 
         viewModel.state.test {
             skipItems(1)
@@ -200,7 +130,8 @@ class ListViewModelSpec {
         }
         val results = listOf(Result.success(alarms), Result.success(updatedAlarms))
         val interactor = ListInteractorFake(this, results)
-        val viewModel = listViewModel(interactor)
+        val scheduler = AlarmSchedulerFake()
+        val viewModel = getListViewModel(interactor, scheduler)
 
         viewModel.state.test {
             skipItems(2)
@@ -217,7 +148,7 @@ class ListViewModelSpec {
             )
 
             interactor.invokedType mustBe ListInteractorFake.InvokedType.SET_ENABLED
-            alarmScheduler!!.invokedType mustBe AlarmSchedulerFake.InvokedType.SET_ALARM
+            scheduler.invokedType mustBe AlarmSchedulerFake.InvokedType.SET_ALARM
         }
     }
 
@@ -227,7 +158,8 @@ class ListViewModelSpec {
         val updatedAlarms = alarms.toMutableList().apply { removeLast() }
         val results = listOf(Result.success(alarms), Result.success(updatedAlarms))
         val interactor = ListInteractorFake(this, results)
-        val viewModel = listViewModel(interactor)
+        val scheduler = AlarmSchedulerFake()
+        val viewModel = getListViewModel(interactor, scheduler)
 
         viewModel.state.test {
             skipItems(2)
@@ -244,7 +176,7 @@ class ListViewModelSpec {
             )
 
             interactor.invokedType mustBe ListInteractorFake.InvokedType.DELETE_ALARM
-            alarmScheduler!!.invokedType mustBe AlarmSchedulerFake.InvokedType.CANCEL_ALARM
+            scheduler.invokedType mustBe AlarmSchedulerFake.InvokedType.CANCEL_ALARM
         }
     }
 
@@ -255,7 +187,7 @@ class ListViewModelSpec {
         val command: CommandContract.Command<ListViewModel> = mockk(relaxed = true)
 
         // When
-        listViewModel(interactor).runCommand(command)
+        getListViewModel(interactor).runCommand(command)
 
         // Then
         verify(exactly = 1) { command.execute(any()) }

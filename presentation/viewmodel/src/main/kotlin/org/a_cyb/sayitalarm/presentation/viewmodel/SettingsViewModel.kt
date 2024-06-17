@@ -28,7 +28,7 @@ import org.a_cyb.sayitalarm.presentation.settings.SettingsContract.SettingsState
 import org.a_cyb.sayitalarm.presentation.settings.SettingsContract.TimeInput
 
 internal class SettingsViewModel(
-    private val interactor: InteractorContract.SettingsInteractorContract,
+    private val interactor: InteractorContract.SettingsInteractor,
     private val durationFormatter: DurationFormatterContract,
 ) : SettingsContract.SettingsViewModel, ViewModel() {
 

@@ -16,7 +16,7 @@ import org.a_cyb.sayitalarm.presentation.interactor.InteractorContract
 class ListInteractorFake(
     scope: CoroutineScope,
     results: List<Result<List<Alarm>>> = listOf(Result.failure(IllegalStateException())),
-) : InteractorContract.ListInteractorContract {
+) : InteractorContract.ListInteractor {
     private val results = results.toMutableList()
 
     private val _alarm: MutableSharedFlow<Result<List<Alarm>>> = MutableSharedFlow()
