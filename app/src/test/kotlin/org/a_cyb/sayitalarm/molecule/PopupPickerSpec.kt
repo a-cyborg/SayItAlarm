@@ -9,6 +9,7 @@ package org.a_cyb.sayitalarm.molecule
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import androidx.activity.ComponentActivity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.test.isDialog
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
@@ -16,12 +17,14 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.espresso.Espresso
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.github.takahirom.roborazzi.ExperimentalRoborazziApi
 import com.github.takahirom.roborazzi.RobolectricDeviceQualifiers
 import com.github.takahirom.roborazzi.RoborazziRule
 import com.github.takahirom.roborazzi.captureRoboImage
 import org.a_cyb.sayitalarm.R
 import org.a_cyb.sayitalarm.atom.TextDisplayStandardSmall
 import org.a_cyb.sayitalarm.roborazziOf
+import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -31,7 +34,7 @@ import org.robolectric.annotation.GraphicsMode
 @RunWith(AndroidJUnit4::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(sdk = [33], qualifiers = RobolectricDeviceQualifiers.ResizableExperimental)
-class PopUpPickerSpec {
+class PopupPickerSpec {
 
     private val colors: List<String> = listOf(
         "Red", "Blue", "Green", "Yellow", "Purple",
@@ -56,13 +59,13 @@ class PopUpPickerSpec {
                 pickerValues = colors,
                 pickerInitIdx = 6,
                 pickerItemRow = { TextDisplayStandardSmall(it) },
-                onDismiss = {},
+                onCancel = {},
                 onConfirm = { _ -> },
             )
         }
 
         composeTestRule
-            .onNodeWithContentDescription(getString(R.string.component_wheel_picker))
+            .onNodeWithContentDescription(getString(R.string.action_component_wheel_picker))
             .assertExists()
 
         composeTestRule
@@ -71,7 +74,7 @@ class PopUpPickerSpec {
     }
 
     @Test
-    fun `Given PopUpPickerStandardWheel confirm click it propagates the given onConfirm and onDismiss action`() {
+    fun `Given PopUpPickerStandardWheel confirm button is clicked it propagates the onConfirm and onDismiss action`() {
         var onConfirmHasBeenCalled = false
         var onCancelHasBeenCalled = false
 
@@ -82,7 +85,7 @@ class PopUpPickerSpec {
                 info = "My favorite color is",
                 pickerValues = colors,
                 pickerItemRow = { TextDisplayStandardSmall(it) },
-                onDismiss = {
+                onCancel = {
                     onCancelHasBeenCalled = true
                 },
                 onConfirm = { _ ->
@@ -102,7 +105,7 @@ class PopUpPickerSpec {
     }
 
     @Test
-    fun `Given PopUpPickerStandardWheel cancel click it propagates the given onDismiss action`() {
+    fun `Given PopUpPickerStandardWheel cancel button is clicked it propagates the onDismiss action`() {
         var onConfirmHasBeenCalled = false
         var onCancelHasBeenCalled = false
 
@@ -113,7 +116,7 @@ class PopUpPickerSpec {
                 info = "My favorite color is",
                 pickerValues = colors,
                 pickerItemRow = { TextDisplayStandardSmall(it) },
-                onDismiss = {
+                onCancel = {
                     onCancelHasBeenCalled = true
                 },
                 onConfirm = { _ ->
@@ -133,7 +136,7 @@ class PopUpPickerSpec {
     }
 
     @Test
-    fun `When pressBack is called given PopUpPickerStandardWheel it propagates the given onDismiss action`() {
+    fun `When back button is clicked given PopUpPickerStandardWheel runs the onDismiss action`() {
         var hasBeenCalled = false
 
         composeTestRule.setContent {
@@ -142,7 +145,7 @@ class PopUpPickerSpec {
                 info = "My favorite color is",
                 pickerValues = colors,
                 pickerItemRow = { TextDisplayStandardSmall(it) },
-                onDismiss = {
+                onCancel = {
                     hasBeenCalled = true
                 },
                 onConfirm = { _ -> },
@@ -152,5 +155,116 @@ class PopUpPickerSpec {
         Espresso.pressBack()
 
         assertTrue(hasBeenCalled)
+    }
+
+    @Test
+    fun `It renders PopupPickerTime`() {
+        composeTestRule.setContent {
+            PopupPickerTime(
+                hour = 8,
+                minute = 0,
+                onConfirm = { _, _ -> },
+                onCancel = {}
+            )
+        }
+
+        composeTestRule
+            .onNode(isDialog())
+            .captureRoboImage()
+    }
+
+    @Test
+    fun `Given PopupPickerTime confirm button is clicked it propagates the onConfirm and onDismiss action`() {
+        var onConfirmHasBeenCalled = false
+        var onDismissHasBeenCalled = false
+
+        // Given
+        composeTestRule.setContent {
+            PopupPickerTime(
+                hour = 8,
+                minute = 0,
+                onConfirm = { _, _ -> onConfirmHasBeenCalled = true },
+                onCancel = { onDismissHasBeenCalled = true }
+            )
+        }
+
+        // When
+        composeTestRule
+            .onNodeWithText(getString(R.string.confirm))
+            .performClick()
+
+        // Then
+        onConfirmHasBeenCalled mustBe true
+        onDismissHasBeenCalled mustBe true
+    }
+
+    @Test
+    fun `Given PopupPickerTime cancel button is clicked it propagates the onDismiss action`() {
+        var onConfirmHasBeenCalled = false
+        var onDismissHasBeenCalled = false
+
+        // Given
+        composeTestRule.setContent {
+            PopupPickerTime(
+                hour = 8,
+                minute = 0,
+                onConfirm = { _, _ -> onConfirmHasBeenCalled = true },
+                onCancel = { onDismissHasBeenCalled = true }
+            )
+        }
+
+        // When
+        composeTestRule
+            .onNodeWithText(getString(R.string.cancel))
+            .performClick()
+
+        // Then
+        onConfirmHasBeenCalled mustBe false
+        onDismissHasBeenCalled mustBe true
+    }
+
+    @Test
+    fun `When back button is clicked given PopupPickerTime runs the onDismiss action`() {
+        var onConfirmHasBeenCalled = false
+        var onDismissHasBeenCalled = false
+
+        // Given
+        composeTestRule.setContent {
+            PopupPickerTime(
+                hour = 8,
+                minute = 0,
+                onConfirm = { _, _ -> onConfirmHasBeenCalled = true },
+                onCancel = { onDismissHasBeenCalled = true }
+            )
+        }
+
+        // When
+        Espresso.pressBack()
+
+        // Then
+        onConfirmHasBeenCalled mustBe false
+        onDismissHasBeenCalled mustBe true
+    }
+
+    @Test
+    fun `It renders PopupPickerRepeat`() {
+        val selectableRepeat = mapOf(
+            "Sunday" to 1, "Monday" to 2, "Tuesday" to 3, "Wednesday" to 4,
+            "Thursday" to 5, "Friday" to 6, "Saturday" to 7,
+        )
+
+        composeTestRule.setContent {
+            PopupPickerRepeat(
+                title = stringResource(id = R.string.repeat),
+                selectedRepeat = emptySet(),
+                selectableRepeat = selectableRepeat,
+                onConfirm = { _ -> },
+                onCancel = {}
+            )
+        }
+
+        composeTestRule
+            .onNode(isDialog())
+            .captureRoboImage()
     }
 }

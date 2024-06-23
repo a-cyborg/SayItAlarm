@@ -48,7 +48,7 @@ fun <T> WheelPicker(
     val visibleItemNum: Int = 5
     val pickerHeight = remember { itemRowHeight * visibleItemNum }
     val placeholderHeight = remember { itemRowHeight * (visibleItemNum / 2) }
-    val pickerContentDescription = stringResource(id = R.string.component_wheel_picker)
+    val pickerContentDescription = stringResource(id = R.string.action_component_wheel_picker)
 
     val lazyListState = rememberLazyListState()
 

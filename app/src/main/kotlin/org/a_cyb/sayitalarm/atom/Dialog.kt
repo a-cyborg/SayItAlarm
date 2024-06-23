@@ -43,7 +43,9 @@ fun DialogStandardFitContent(
         properties = DialogProperties(usePlatformDefaultWidth = false),
     ) {
         CardStandardCentered {
+            SpacerXLarge()
             content()
+            SpacerXLarge()
         }
     }
 }

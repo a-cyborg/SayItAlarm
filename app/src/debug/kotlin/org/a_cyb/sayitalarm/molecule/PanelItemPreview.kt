@@ -10,14 +10,33 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import org.a_cyb.sayitalarm.R
+import org.a_cyb.sayitalarm.atom.IconButtonEdit
 import org.a_cyb.sayitalarm.screen.SettingsViewModelFake
 
 @Preview
 @Composable
-fun PanelItemPreviewWithPopUpPickerPreview() {
+fun PanelRowStandardWithoutValuePreview() {
+    PanelItemStandard(
+        valueLabel = stringResource(id = R.string.about),
+        afterContent = { IconButtonEdit {} },
+    )
+}
+
+@Preview
+@Composable
+fun PanelRowStandardWithoutAfterContentPreview() {
+    PanelItemStandard(
+        valueLabel = stringResource(id = R.string.version),
+        value = "1.0",
+    )
+}
+
+@Preview
+@Composable
+fun PanelItemPreviewWithPopUpPickerStandardWheelPreview() {
     val fakeViewModel = SettingsViewModelFake()
 
-    PanelItemWithPopUpPicker(
+    PanelItemWithPopupPickerStandardWheel(
         title = stringResource(id = R.string.timeout),
         info = stringResource(id = R.string.info_timeout),
         values = fakeViewModel.timeOuts.map { it.formatted },

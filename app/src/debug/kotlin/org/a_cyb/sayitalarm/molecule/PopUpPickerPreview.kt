@@ -15,19 +15,61 @@ import org.a_cyb.sayitalarm.atom.TextDisplayStandardSmall
 @Preview
 @Composable
 fun PopUpPickerStandardWheelPreview() {
+    val colors: List<String> = listOf(
+        "Red", "Blue", "Green", "Yellow", "Purple",
+        "Orange", "Pink", "Brown", "Black", "White",
+        "Gray", "Turquoise", "Maroon",
+    )
+
     PopUpPickerStandardWheel(
-        title = stringResource(id = R.string.timeout),
-        info = stringResource(id = R.string.info_timeout),
-        pickerValues = (30..300).toList(),
-        pickerItemRow = { TextDisplayStandardSmall(text = it.formatAsDuration()) },
-        onDismiss = {},
+        title = "Colors",
+        info = "My favorite color is",
+        pickerValues = colors,
+        pickerInitIdx = 6,
+        pickerItemRow = { TextDisplayStandardSmall(text = it) },
+        onCancel = {},
         onConfirm = { _ -> },
     )
 }
 
-private fun Int.formatAsDuration(): String {
-    val hour = this / 60
+@Preview
+@Composable
+fun PopupPickerTimePreview() {
+    PopupPickerTime(
+        hour = 8,
+        minute = 30,
+        onConfirm = { _, _ -> },
+        onCancel = {}
+    )
+}
 
-    return if (hour >= 1) "$hour hr ${this % 60}"
-    else "${this % 60} min"
+
+
+@Preview
+@Composable
+fun PopupPickerRepeatPreview() {
+    val selectableRepeat = mapOf(
+        "Sunday" to 1, "Monday" to 2, "Tuesday" to 3, "Wednesday" to 4,
+        "Thursday" to 5, "Friday" to 6, "Saturday" to 7,
+    )
+
+    PopupPickerRepeat(
+        title = stringResource(id = R.string.repeat),
+        selectedRepeat = emptySet(),
+        selectableRepeat = selectableRepeat,
+        onConfirm = { _ -> },
+        onCancel = {}
+    )
+}
+
+@Preview
+@Composable
+fun PopupPickerSayItScriptPreview() {
+
+    PopupPickerSayItScript(
+        script = "Test",
+        onConfirm = { _ -> },
+        onCancel = {},
+        onDelete = {}
+    )
 }

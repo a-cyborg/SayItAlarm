@@ -95,6 +95,29 @@ class IconButtonSpec : RoborazziTest() {
     }
 
     @Test
+    fun `It renders a IconButtonDeleteText`() {
+        subjectUnderTest.setContent {
+            IconButtonDeleteText {}
+        }
+    }
+
+    @Test
+    fun `Given IconButtonDeleteText click is called it propagates the given action`() {
+        var hasBeenCalled = false
+
+        subjectUnderTest.setContent {
+            IconButtonDeleteText {
+                hasBeenCalled = true
+            }
+        }
+        subjectUnderTest
+            .onNodeWithText("Delete")
+            .performClick()
+
+        assertTrue(hasBeenCalled)
+    }
+
+    @Test
     fun `It renders a IconButtonDone`() {
         subjectUnderTest.setContent {
             IconButtonDone {}
@@ -206,6 +229,54 @@ class IconButtonSpec : RoborazziTest() {
 
         subjectUnderTest
             .onNodeWithContentDescription(getString(R.string.action_navigate_back))
+            .performClick()
+
+        assertTrue(hasBeenCalled)
+    }
+
+    @Test
+    fun `It renders IconButtonInfo`() {
+        subjectUnderTest.setContent {
+            IconButtonInfo {}
+        }
+    }
+
+    @Test
+    fun `Given IconButtonInfo click is called it propagates the given action`() {
+        var hasBeenCalled = false
+
+        subjectUnderTest.setContent {
+            IconButtonInfo {
+                hasBeenCalled = true
+            }
+        }
+
+        subjectUnderTest
+            .onNodeWithContentDescription(getString(R.string.action_info))
+            .performClick()
+
+        assertTrue(hasBeenCalled)
+    }
+
+    @Test
+    fun `It renders IconButtonCollapse`() {
+        subjectUnderTest.setContent {
+            IconButtonCollapse {}
+        }
+    }
+
+    @Test
+    fun `Given IconButtonCollapse click is called it propagates the given action`() {
+        var hasBeenCalled = false
+
+        subjectUnderTest.setContent {
+            IconButtonCollapse {
+                hasBeenCalled = true
+            }
+        }
+
+        subjectUnderTest
+            .onNodeWithContentDescription(getString(R.string.action_collapse))
             .performClick()
 
         assertTrue(hasBeenCalled)

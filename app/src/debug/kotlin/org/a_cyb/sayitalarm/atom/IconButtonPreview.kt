@@ -23,6 +23,12 @@ fun IconButtonDeletePreview() {
 
 @Preview
 @Composable
+fun IconButtonDeleteTextPreview() {
+    IconButtonDeleteText {}
+}
+
+@Preview
+@Composable
 fun IconButtonDonePreview() {
     IconButtonDone {}
 }
@@ -49,6 +55,18 @@ fun IconButtonSettingsPreview() {
 @Composable
 fun IconButtonNavigateBackPreview() {
     IconButtonNavigateBack {}
+}
+
+@Preview
+@Composable
+fun IconButtonInfoPreview() {
+    IconButtonInfo {}
+}
+
+@Preview
+@Composable
+fun IconButtonCollapsePreview() {
+    IconButtonCollapse {}
 }
 
 @Preview

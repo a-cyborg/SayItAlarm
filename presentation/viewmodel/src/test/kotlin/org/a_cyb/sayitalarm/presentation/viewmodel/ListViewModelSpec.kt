@@ -28,8 +28,8 @@ import org.a_cyb.sayitalarm.presentation.list.ListContract.Initial
 import org.a_cyb.sayitalarm.presentation.list.ListContract.InitialError
 import org.a_cyb.sayitalarm.presentation.list.ListContract.Success
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.AlarmSchedulerFake
+import org.a_cyb.sayitalarm.presentation.viewmodel.fake.FakeAlarmData
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.ListInteractorFake
-import org.a_cyb.sayitalarm.presentation.viewmodel.fake.TestAlarms
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.TimeFormatterFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.WeekdayFormatterFake
 import org.a_cyb.sayitalarm.util.fulfils
@@ -39,7 +39,7 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class ListViewModelSpec {
 
-    private val alarms = TestAlarms().getAlarms()
+    private val alarms = FakeAlarmData.alarms
     private val alarmInfo = listOf(
         AlarmInfo(
             id = 1,

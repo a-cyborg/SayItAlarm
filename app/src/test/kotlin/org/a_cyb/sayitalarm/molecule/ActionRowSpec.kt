@@ -27,4 +27,11 @@ class ActionRowSpec : RoborazziTest() {
             )
         }
     }
+
+    @Test
+    fun `It renders ActionRowCollapse`() {
+        subjectUnderTest.setContent {
+            ActionRowCollapse {}
+        }
+    }
 }

@@ -17,3 +17,9 @@ fun ActionRowCancelAndConfirmPreview() {
         onConfirm = {},
     )
 }
+
+@Preview
+@Composable
+fun ActionRowCollapsePreview() {
+    ActionRowCollapse {}
+}

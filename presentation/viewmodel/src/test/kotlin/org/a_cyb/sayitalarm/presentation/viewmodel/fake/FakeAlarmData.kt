@@ -13,6 +13,7 @@ import java.util.Calendar.SUNDAY
 import java.util.Calendar.THURSDAY
 import java.util.Calendar.TUESDAY
 import java.util.Calendar.WEDNESDAY
+import android.icu.util.Calendar
 import org.a_cyb.sayitalarm.entity.Alarm
 import org.a_cyb.sayitalarm.entity.AlarmType
 import org.a_cyb.sayitalarm.entity.AlertType
@@ -23,21 +24,8 @@ import org.a_cyb.sayitalarm.entity.Ringtone
 import org.a_cyb.sayitalarm.entity.SayItScripts
 import org.a_cyb.sayitalarm.entity.WeeklyRepeat
 
-class TestAlarms {
-    fun getDefaultAlarm() = Alarm(
-        id = 1,
-        hour = Hour(6),
-        minute = Minute(0),
-        weeklyRepeat = WeeklyRepeat(MONDAY, WEDNESDAY, FRIDAY),
-        label = Label("Wake Up"),
-        enabled = true,
-        alertType = AlertType.SOUND_ONLY,
-        ringtone = Ringtone("file://wake_up_alarm.mp3"),
-        alarmType = AlarmType.SAY_IT,
-        sayItScripts = SayItScripts("I am peaceful and whole.")
-    )
-
-    fun getAlarms() = listOf(
+object FakeAlarmData {
+    val alarms = listOf(
         Alarm(
             id = 1,
             hour = Hour(6),
@@ -61,7 +49,7 @@ class TestAlarms {
             weeklyRepeat = WeeklyRepeat(MONDAY, WEDNESDAY, FRIDAY),
             label = Label("Workout"),
             enabled = true,
-            alertType = AlertType.SOUND_ONLY,
+            alertType = AlertType.VIBRATE_ONLY,
             ringtone = Ringtone("file://workout_time_alarm.mp3"),
             alarmType = AlarmType.SAY_IT,
             sayItScripts = SayItScripts(
@@ -88,4 +76,12 @@ class TestAlarms {
             )
         )
     )
+
+    val selectableRepeat: Map<String, Int>
+        get() = (Calendar.SUNDAY..Calendar.SATURDAY)
+            .associateBy { WeekdayFormatterFake().formatFull(it) }
+
+    val selectableAlertType: Map<String, AlertType>
+        get() = AlertType.entries
+            .associateBy { AlertTypeFormatterFake().format(it) }
 }

@@ -36,7 +36,7 @@ class ListInteractorFake(
         }
     }
 
-    override suspend fun setEnabled(id: Long, enabled: Boolean, scope: CoroutineScope) {
+    override fun setEnabled(id: Long, enabled: Boolean, scope: CoroutineScope) {
         scope.launch {
             _alarm.emit(results.removeFirst())
         }
@@ -44,7 +44,7 @@ class ListInteractorFake(
         _invokedType = InvokedType.SET_ENABLED
     }
 
-    override suspend fun deleteAlarm(id: Long, scope: CoroutineScope) {
+    override fun deleteAlarm(id: Long, scope: CoroutineScope) {
         scope.launch {
             _alarm.emit(results.removeFirst())
         }

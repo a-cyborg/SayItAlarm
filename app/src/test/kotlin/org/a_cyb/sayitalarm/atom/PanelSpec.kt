@@ -10,6 +10,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.a_cyb.sayitalarm.R
 import org.a_cyb.sayitalarm.RoborazziTest
+import org.a_cyb.sayitalarm.molecule.PanelItemStandard
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
@@ -24,29 +25,27 @@ class PanelSpec : RoborazziTest() {
     fun `It renders PanelStandard`() {
         subjectUnderTest.setContent {
             PanelStandard(
-                panelItems = listOf(
-                    {
-                        PanelRowStandard(
-                            valueLabel = stringResource(id = R.string.timeout),
-                            value = "180 min",
-                            afterContent = { IconButtonEdit {} },
-                        )
-                    },
-                    {
-                        PanelRowStandard(
-                            valueLabel = stringResource(id = R.string.snooze),
-                            value = "15 min",
-                            afterContent = { IconButtonEdit {} },
-                        )
-                    },
-                    {
-                        PanelRowStandard(
-                            valueLabel = stringResource(id = R.string.theme),
-                            value = "Light",
-                            afterContent = { IconButtonEdit {} },
-                        )
-                    },
-                ),
+                {
+                    PanelItemStandard(
+                        valueLabel = stringResource(id = R.string.timeout),
+                        value = "180 min",
+                        afterContent = { IconButtonEdit {} },
+                    )
+                },
+                {
+                    PanelItemStandard(
+                        valueLabel = stringResource(id = R.string.snooze),
+                        value = "15 min",
+                        afterContent = { IconButtonEdit {} },
+                    )
+                },
+                {
+                    PanelItemStandard(
+                        valueLabel = stringResource(id = R.string.theme),
+                        value = "Light",
+                        afterContent = { IconButtonEdit {} },
+                    )
+                },
             )
         }
     }

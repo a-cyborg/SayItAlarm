@@ -27,12 +27,15 @@ fun IconButtonAdd(onClick: () -> Unit) {
 }
 
 @Composable
-fun IconButtonClose(onClick: () -> Unit) {
+fun IconButtonClose(
+    contentDescription: String = stringResource(id = R.string.action_close),
+    onClick: () -> Unit,
+) {
     IconButton(onClick = onClick) {
         Icon(
             imageVector = Icon.close,
             tint = Color.text.attention,
-            contentDescription = stringResource(id = R.string.action_close),
+            contentDescription = contentDescription,
         )
     }
 }
@@ -45,6 +48,13 @@ fun IconButtonDelete(onClick: () -> Unit) {
             tint = Color.text.danger,
             contentDescription = stringResource(id = R.string.action_delete_alarm),
         )
+    }
+}
+
+@Composable
+fun IconButtonDeleteText(onClick: () -> Unit) {
+    TextButton(onClick = onClick) {
+        TextTitleDangerMedium(text = stringResource(id = R.string.delete))
     }
 }
 
@@ -91,6 +101,28 @@ fun IconButtonNavigateBack(onClick: () -> Unit) {
             imageVector = Icon.arrowLeft,
             tint = Color.text.attention,
             contentDescription = stringResource(id = R.string.action_navigate_back),
+        )
+    }
+}
+
+@Composable
+fun IconButtonInfo(onClick: () -> Unit) {
+    IconButton(onClick = onClick) {
+        Icon(
+            imageVector = Icon.info,
+            tint = Color.text.attention,
+            contentDescription = stringResource(id = R.string.action_info),
+        )
+    }
+}
+
+@Composable
+fun IconButtonCollapse(onClick: () -> Unit) {
+    IconButton(onClick = onClick) {
+        Icon(
+            imageVector = Icon.arrowUp,
+            tint = Color.text.attention,
+            contentDescription = stringResource(id = R.string.action_collapse),
         )
     }
 }

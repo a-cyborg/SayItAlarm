@@ -9,4 +9,5 @@ package org.a_cyb.sayitalarm.formatter.weekday
 interface WeekdayFormatterContract {
     fun formatAbbr(days: Set<Int>): String
     fun formatFull(days: Set<Int>): String
+    fun formatFull(vararg day: Int): String
 }

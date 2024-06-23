@@ -8,11 +8,12 @@ package org.a_cyb.sayitalarm.token
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.KeyboardArrowLeft
 import androidx.compose.material.icons.rounded.KeyboardArrowRight
+import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.Settings
 
 object Icon {
@@ -22,5 +23,6 @@ object Icon {
     val arrowLeft = Icons.Rounded.KeyboardArrowLeft
     val delete = Icons.Rounded.Delete
     val settings = Icons.Rounded.Settings
-    val check = Icons.Rounded.CheckCircle
+    val info = Icons.Rounded.Info
+    val arrowUp = Icons.Rounded.KeyboardArrowUp
 }

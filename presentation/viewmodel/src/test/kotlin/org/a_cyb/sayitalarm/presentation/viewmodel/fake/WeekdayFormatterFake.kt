@@ -13,9 +13,10 @@ class WeekdayFormatterFake : WeekdayFormatterContract {
 
     private val abbrDayNames = listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat")
     private val fullDayNames = listOf("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
-    override fun formatAbbr(days: Set<Int>): String = format(days, true)
 
+    override fun formatAbbr(days: Set<Int>): String = format(days, true)
     override fun formatFull(days: Set<Int>): String = format(days, false)
+    override fun formatFull(vararg day: Int): String = formatFull(day.toSortedSet())
 
     private fun format(days: Set<Int>, isAbbr: Boolean): String {
         return when (days) {

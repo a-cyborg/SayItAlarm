@@ -20,7 +20,7 @@ import org.a_cyb.sayitalarm.atom.TextTitleWarningMedium
 import org.a_cyb.sayitalarm.token.Spacing
 
 @Composable
-fun TextRowTitleAndInfo(title: String, info: String) {
+fun TextRowTitleAndInfo(title: String, info: String = "") {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         TextTitleStandardLarge(text = title)
         SpacerLarge()

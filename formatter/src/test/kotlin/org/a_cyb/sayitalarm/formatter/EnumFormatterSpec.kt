@@ -16,13 +16,13 @@ import io.mockk.mockkStatic
 import io.mockk.unmockkStatic
 import org.a_cyb.sayitalarm.entity.AlarmType
 import org.a_cyb.sayitalarm.entity.AlertType
-import org.a_cyb.sayitalarm.formatter.enum.EnumFormatter
+import org.a_cyb.sayitalarm.formatter.enum.AlarmTypeFormatter
+import org.a_cyb.sayitalarm.formatter.enum.AlertTypeFormatter
 import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.robolectric.annotation.Config
 
 @RunWith(AndroidJUnit4::class)
 class EnumFormatterSpec {
@@ -51,9 +51,9 @@ class EnumFormatterSpec {
     }
 
     @Test
-    fun `Given AlertType format is called it maps to display name in english`() {
+    fun `Given AlertTypeFormatter when format is called it maps to formatted string`() {
         // Given
-        val formatter = EnumFormatter()
+        val formatter = AlertTypeFormatter()
 
         // When & Then
         formatter.format(AlertType.SOUND_ONLY) mustBe "Sound only"
@@ -61,38 +61,14 @@ class EnumFormatterSpec {
         formatter.format(AlertType.VIBRATE_ONLY) mustBe "Vibration only"
     }
 
-    @Config(qualifiers = "ko")
     @Test
-    fun `Given AlertType format is called it maps to display name in korean`() {
+    fun `Given AlarmTypeFormatter when format is called it maps to formatted string`() {
         // Given
-        val formatter = EnumFormatter()
-
-        // When & Then
-        formatter.format(AlertType.SOUND_ONLY) mustBe "벨소리 모드"
-        formatter.format(AlertType.SOUND_AND_VIBRATE) mustBe "벨소리와 진동 모드"
-        formatter.format(AlertType.VIBRATE_ONLY) mustBe "진동 모드"
-    }
-
-    @Test
-    fun `Given AlarmType format is called it maps to display name in english`() {
-        // Given
-        val formatter = EnumFormatter()
+        val formatter = AlarmTypeFormatter()
 
         // When & Then
         formatter.format(AlarmType.SAY_IT) mustBe "Turn off the alarm by reading scripts out."
         formatter.format(AlarmType.TYPING) mustBe "Turn off the alarm by typing."
         formatter.format(AlarmType.PUSH_BUTTON) mustBe "Turn off the alarm by pushing button."
-    }
-
-    @Config(qualifiers = "ko")
-    @Test
-    fun `Given AlarmType format is called it maps to display name in korean`() {
-        // Given
-        val formatter = EnumFormatter()
-
-        // When & Then
-        formatter.format(AlarmType.SAY_IT) mustBe "스크립트를 읽어 알람 끄기."
-        formatter.format(AlarmType.TYPING) mustBe "타이핑으로 알람 끄기."
-        formatter.format(AlarmType.PUSH_BUTTON) mustBe "버튼을 눌러 알람 끄기."
     }
 }

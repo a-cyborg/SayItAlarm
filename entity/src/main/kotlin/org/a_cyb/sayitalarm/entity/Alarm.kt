@@ -39,7 +39,7 @@ enum class AlarmType {
 }
 
 data class Alarm(
-    val id: Long = 0,
+    val id: Long = 0L,
     val hour: Hour,
     val minute: Minute,
     val weeklyRepeat: WeeklyRepeat,

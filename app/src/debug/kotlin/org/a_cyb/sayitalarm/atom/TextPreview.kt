@@ -35,8 +35,20 @@ fun TextTitleStandardMediumPreview() {
 
 @Preview
 @Composable
-fun TextTitleSubtleMediumPreview() {
-    TextTitleSubtleMedium(text = "SayIt")
+fun TextTitleAttentionMediumPreview() {
+    TextTitleAttentionMedium(text = "SayIt")
+}
+
+@Preview
+@Composable
+fun TextTitleWarningPreview() {
+    TextTitleWarningMedium(text = "SayIt")
+}
+
+@Preview
+@Composable
+fun TextTitleDangerPreview() {
+    TextTitleDangerMedium(text = "SayIt")
 }
 
 @Preview

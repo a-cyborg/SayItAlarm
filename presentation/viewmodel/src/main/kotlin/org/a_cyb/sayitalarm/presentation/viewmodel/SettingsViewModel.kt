@@ -55,11 +55,11 @@ internal class SettingsViewModel(
         )
 
     private fun toTimeInput(time: Int): TimeInput {
-        return TimeInput(input = time, time.toFormattedDuration())
+        return TimeInput(
+            input = time,
+            formatted = durationFormatter.format(time.minutes).short
+        )
     }
-
-    private fun Int.toFormattedDuration(): String = durationFormatter.format(this.minutes).short
-    private fun String.toCamelCase(): String = lowercase().replaceFirstChar(Char::titlecase)
 
     override fun setTimeOut(timeOut: TimeOut) {
         interactor.setTimeOut(timeOut, scope)
@@ -74,6 +74,8 @@ internal class SettingsViewModel(
 
         interactor.setTheme(theme, scope)
     }
+
+    private fun String.toCamelCase(): String = lowercase().replaceFirstChar(Char::titlecase)
 
     override fun <T : CommandContract.CommandReceiver> runCommand(command: CommandContract.Command<T>) {
         @Suppress("UNCHECKED_CAST")

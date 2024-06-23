@@ -7,14 +7,20 @@
 package org.a_cyb.sayitalarm.molecule
 
 import androidx.activity.ComponentActivity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.test.isRoot
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.test.espresso.Espresso
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.takahirom.roborazzi.RoborazziRule
 import com.github.takahirom.roborazzi.captureRoboImage
 import org.a_cyb.sayitalarm.R
+import org.a_cyb.sayitalarm.atom.DialogStandardFitContent
+import org.a_cyb.sayitalarm.atom.IconButtonEdit
+import org.a_cyb.sayitalarm.atom.TextDisplayStandardLarge
 import org.a_cyb.sayitalarm.roborazziOf
 import org.junit.Rule
 import org.junit.Test
@@ -36,9 +42,29 @@ class PanelItemSpec {
     private fun getString(id: Int) = composeTestRule.activity.getString(id)
 
     @Test
+    fun `Given PanelRowSpec displays without a value`() {
+        composeTestRule.setContent {
+            PanelItemStandard(
+                valueLabel = stringResource(id = R.string.about),
+                afterContent = { IconButtonEdit {} },
+            )
+        }
+    }
+
+    @Test
+    fun `Given PanelRowSpec displays without an afterContent`() {
+        composeTestRule.setContent {
+            PanelItemStandard(
+                valueLabel = stringResource(id = R.string.version),
+                value = "1.0",
+            )
+        }
+    }
+
+    @Test
     fun `It renders PanelItemWithPopUpPicker`() {
         composeTestRule.setContent {
-            PanelItemWithPopUpPicker(
+            PanelItemWithPopupPickerStandardWheel(
                 title = getString(id = R.string.timeout),
                 info = getString(id = R.string.info_timeout),
                 values = listOf("3hr"),
@@ -52,10 +78,10 @@ class PanelItemSpec {
     }
 
     @Test
-    fun `Given PanelItemWithPopUpPicker IconButtonEdit is clicked it displays PopUpPicker`() {
+    fun `Given PanelItemWithPopupPicker IconButtonEdit is clicked it displays PopUpPicker`() {
         // Given
         composeTestRule.setContent {
-            PanelItemWithPopUpPicker(
+            PanelItemWithPopupPickerStandardWheel(
                 title = getString(id = R.string.timeout),
                 info = getString(id = R.string.info_timeout),
                 values = listOf("3hr"),
@@ -69,7 +95,50 @@ class PanelItemSpec {
             .performClick()
 
         // Then
-        composeTestRule.onNodeWithContentDescription(getString(R.string.component_wheel_picker))
+        composeTestRule.onNodeWithContentDescription(getString(R.string.action_component_wheel_picker))
             .assertExists()
+    }
+
+    @Test
+    fun `Given PanelItemPopupPicker editButton is clicked it displays popupPicker`() {
+        // Given
+        composeTestRule.setContent {
+            PanelItemWithPopupPicker(valueLabel = "Test", value = "") { onDismiss ->
+                DialogStandardFitContent(onDismiss = onDismiss) {
+                    TextDisplayStandardLarge(text = "PopupPicker")
+                }
+            }
+        }
+
+        // When
+        composeTestRule.onNodeWithContentDescription(getString(R.string.action_edit))
+            .performClick()
+
+        // Then
+        composeTestRule.onNodeWithText("PopupPicker").assertExists()
+    }
+
+    @Test
+    fun `Given PanelItemPopupPicker when popupPicker is displayed and dismiss actions received it runs onDismiss action`() {
+        // Given
+        val text = "PopupPicker"
+
+        composeTestRule.setContent {
+            PanelItemWithPopupPicker(valueLabel = "Test", value = "") { onDismiss ->
+                DialogStandardFitContent(onDismiss = onDismiss) {
+                    TextDisplayStandardLarge(text = text)
+                }
+            }
+        }
+        composeTestRule.onNodeWithContentDescription(getString(R.string.action_edit))
+            .performClick()
+        composeTestRule.onNodeWithText(text)
+            .assertExists()
+
+        // When
+        Espresso.pressBack()
+
+        // Then
+        composeTestRule.onNodeWithText(text).assertDoesNotExist()
     }
 }

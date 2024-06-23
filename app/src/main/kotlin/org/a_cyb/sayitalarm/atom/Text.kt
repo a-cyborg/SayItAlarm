@@ -75,15 +75,6 @@ fun TextTitleAttentionMedium(text: String) {
 }
 
 @Composable
-fun TextTitleAccentMedium(text: String) {
-    Text(
-        text = text,
-        color = Color.text.accent,
-        style = Font.title.m,
-    )
-}
-
-@Composable
 fun TextTitleWarningMedium(text: String) {
     Text(
         text = text,
@@ -93,10 +84,10 @@ fun TextTitleWarningMedium(text: String) {
 }
 
 @Composable
-fun TextTitleSubtleMedium(text: String) {
+fun TextTitleDangerMedium(text: String) {
     Text(
         text = text,
-        color = Color.text.subtle,
+        color = Color.text.danger,
         style = Font.title.m,
     )
 }

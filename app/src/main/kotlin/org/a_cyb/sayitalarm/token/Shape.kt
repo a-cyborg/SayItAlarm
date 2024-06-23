@@ -10,7 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.unit.dp
 
 object Shape {
-    object PanelSection {
+    object Panel {
         val primary = RoundedCornerShape(13.dp)
     }
 

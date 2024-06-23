@@ -4,7 +4,7 @@
  * Use of this source code is governed by Apache v2.0
  */
 
-package org.a_cyb.sayitalarm.molecule
+package org.a_cyb.sayitalarm.atom
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.a_cyb.sayitalarm.RoborazziTest
@@ -16,11 +16,27 @@ import org.robolectric.annotation.GraphicsMode
 @RunWith(AndroidJUnit4::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(sdk = [33])
-class SectionSpec : RoborazziTest() {
+class TextFieldSpec : RoborazziTest() {
+
     @Test
-    fun `It renders TimeSection`() {
+    fun `It renders TextFieldStandardAlignEnd`() {
+
         subjectUnderTest.setContent {
-            TimeSection(time = "8:30 AM") {}
+            TextFieldStandard(
+                value = "",
+                hint = "SayIt",
+                onDone = { _ -> }
+            )
+        }
+    }
+
+    @Test
+    fun `It renders TextFieldSayItScript`() {
+        subjectUnderTest.setContent {
+            TextFieldSayItScript(
+                text = "SayIt",
+                onValueChange = { _ -> }
+            )
         }
     }
 }

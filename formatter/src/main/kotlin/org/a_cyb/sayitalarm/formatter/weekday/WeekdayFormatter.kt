@@ -16,13 +16,10 @@ class WeekdayFormatter(
 ) : WeekdayFormatterContract {
 
     private val dateFormatSymbols = DateFormatSymbols.getInstance(locale)
-    override fun formatAbbr(days: Set<Int>): String {
-        return format(days.toSortedSet(), isAbbr = true)
-    }
 
-    override fun formatFull(days: Set<Int>): String {
-        return format(days.toSortedSet(), isAbbr = false)
-    }
+    override fun formatAbbr(days: Set<Int>): String = format(days.toSortedSet(), isAbbr = true)
+    override fun formatFull(days: Set<Int>): String = format(days.toSortedSet(), isAbbr = false)
+    override fun formatFull(vararg day: Int): String = formatFull(day.toSortedSet())
 
     private fun format(days: Set<Int>, isAbbr: Boolean): String {
         return when (days) {

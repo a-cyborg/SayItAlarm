@@ -10,11 +10,11 @@ import org.a_cyb.sayitalarm.ringtone_manager.RingtoneManagerContract
 
 class RingtoneManagerFake : RingtoneManagerContract {
 
-    override fun getRingtoneTitle(ringtone: String): String {
-        return ringtone
-    }
+    override fun getRingtoneTitle(ringtone: String): String =
+        ringtone.split("//")
+            .last()
+            .split(".")
+            .first()
 
-    override fun getDefaultRingtoneTitle(): String {
-        return "Radial"
-    }
+    override fun getDefaultRingtone(): String = "file://Radial.mp3"
 }

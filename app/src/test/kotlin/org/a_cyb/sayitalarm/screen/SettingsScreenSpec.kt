@@ -98,7 +98,7 @@ class SettingsScreenSpec {
 
             // Then
             onNodeWithText(getString(R.string.info_timeout)).assertExists()
-            onNodeWithContentDescription(getString(R.string.component_wheel_picker)).assertExists()
+            onNodeWithContentDescription(getString(R.string.action_component_wheel_picker)).assertExists()
 
             onAllNodes(isRoot()).onLast().captureRoboImage()
         }
@@ -141,7 +141,7 @@ class SettingsScreenSpec {
 
             // Then
             onNodeWithText(getString(R.string.info_snooze)).assertExists()
-            onNodeWithContentDescription(getString(R.string.component_wheel_picker)).assertExists()
+            onNodeWithContentDescription(getString(R.string.action_component_wheel_picker)).assertExists()
 
             onAllNodes(isRoot()).onLast().captureRoboImage()
         }
@@ -183,7 +183,7 @@ class SettingsScreenSpec {
 
             // Then
             onNodeWithText("Dark").assertExists()
-            onNodeWithContentDescription(getString(R.string.component_wheel_picker)).assertExists()
+            onNodeWithContentDescription(getString(R.string.action_component_wheel_picker)).assertExists()
 
             onAllNodes(isRoot()).onLast().captureRoboImage()
         }

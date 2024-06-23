@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import org.a_cyb.sayitalarm.atom.IconButtonCancelText
+import org.a_cyb.sayitalarm.atom.IconButtonCollapse
 import org.a_cyb.sayitalarm.atom.IconButtonConfirmText
 
 @Composable
@@ -27,5 +28,17 @@ fun ActionRowCancelAndConfirm(
     ) {
         IconButtonCancelText { onCancel() }
         IconButtonConfirmText { onConfirm() }
+    }
+}
+
+@Composable
+fun ActionRowCollapse(
+    onClick: () -> Unit,
+) {
+    Row(
+        horizontalArrangement = Arrangement.End,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        IconButtonCollapse { onClick() }
     }
 }

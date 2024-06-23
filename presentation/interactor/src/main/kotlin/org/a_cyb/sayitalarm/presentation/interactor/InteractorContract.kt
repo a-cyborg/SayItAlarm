@@ -17,18 +17,14 @@ import org.a_cyb.sayitalarm.entity.TimeOut
 interface InteractorContract {
 
     interface AddInteractor {
-        suspend fun save(alarm: Alarm, scope: CoroutineScope)
+        fun save(alarm: Alarm, scope: CoroutineScope)
     }
 
     interface ListInteractor {
         val alarms: SharedFlow<Result<List<Alarm>>>
 
-        suspend fun setEnabled(id: Long, enabled: Boolean, scope: CoroutineScope)
-        suspend fun deleteAlarm(id: Long, scope: CoroutineScope)
-    }
-
-    interface AlarmPanelInteractor {
-        fun fetchAlarm(id: Long, scope: CoroutineScope): Alarm
+        fun setEnabled(id: Long, enabled: Boolean, scope: CoroutineScope)
+        fun deleteAlarm(id: Long, scope: CoroutineScope)
     }
 
     interface SettingsInteractor {

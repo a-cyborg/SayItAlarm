@@ -10,33 +10,32 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import org.a_cyb.sayitalarm.R
+import org.a_cyb.sayitalarm.molecule.PanelItemStandard
 
 @Preview
 @Composable
 fun PanelColumnStandardPreview() {
     PanelStandard(
-        panelItems = listOf(
-            {
-                PanelRowStandard(
-                    valueLabel = stringResource(id = R.string.timeout),
-                    value = "180 min",
-                    afterContent = { IconButtonEdit {} },
-                )
-            },
-            {
-                PanelRowStandard(
-                    valueLabel = stringResource(id = R.string.snooze),
-                    value = "15 min",
-                    afterContent = { IconButtonEdit {} },
-                )
-            },
-            {
-                PanelRowStandard(
-                    valueLabel = stringResource(id = R.string.theme),
-                    value = "Light",
-                    afterContent = { IconButtonEdit {} },
-                )
-            },
-        ),
+        {
+            PanelItemStandard(
+                valueLabel = stringResource(id = R.string.timeout),
+                value = "180 min",
+                afterContent = { IconButtonEdit {} },
+            )
+        },
+        {
+            PanelItemStandard(
+                valueLabel = stringResource(id = R.string.snooze),
+                value = "15 min",
+                afterContent = { IconButtonEdit {} },
+            )
+        },
+        {
+            PanelItemStandard(
+                valueLabel = stringResource(id = R.string.theme),
+                value = "Light",
+                afterContent = { IconButtonEdit {} },
+            )
+        },
     )
 }
