@@ -20,6 +20,8 @@ import org.a_cyb.sayitalarm.entity.Minute
 import org.a_cyb.sayitalarm.entity.Ringtone
 import org.a_cyb.sayitalarm.entity.SayItScripts
 import org.a_cyb.sayitalarm.entity.WeeklyRepeat
+import org.a_cyb.sayitalarm.formatter.time.TimeFormatterContract
+import org.a_cyb.sayitalarm.formatter.weekday.WeekdayFormatterContract
 import org.a_cyb.sayitalarm.presentation.CommandContract.Command
 import org.a_cyb.sayitalarm.presentation.CommandContract.CommandReceiver
 import org.a_cyb.sayitalarm.presentation.add.AddContract
@@ -27,58 +29,77 @@ import org.a_cyb.sayitalarm.presentation.add.AddContract.AddState
 import org.a_cyb.sayitalarm.presentation.add.AddContract.AddState.Error
 import org.a_cyb.sayitalarm.presentation.add.AddContract.AddState.Initial
 import org.a_cyb.sayitalarm.presentation.add.AddContract.AddState.Success
-import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract.AlarmUI
+import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract.*
 import org.a_cyb.sayitalarm.presentation.interactor.InteractorContract
 import org.a_cyb.sayitalarm.presentation.viewmodel.mapper.AlarmMapperContract
 
 internal class AddViewModel(
     private val interactor: InteractorContract.AddInteractor,
+    private val timeFormatter: TimeFormatterContract,
+    private val weeklyRepeatFormatter: WeekdayFormatterContract,
     private val mapper: AlarmMapperContract,
 ) : AddContract.AddViewModel, ViewModel() {
 
-    private val _state: MutableStateFlow<AddState> = MutableStateFlow(Initial)
+    private val _state: MutableStateFlow<AddState> = MutableStateFlow(Initial(getDefaultAlarmUI()))
     override val state: StateFlow<AddState> = _state.stateIn(
         scope = scope,
         started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = Initial
+        initialValue = Initial(getDefaultAlarmUI())
     )
 
-    init {
-        setDefaultAlarmUI()
+    private fun getDefaultAlarmUI(): AlarmUI {
+        return mapper.mapToAlarmUI(defaultAlarm)
     }
 
-    private fun setDefaultAlarmUI() {
-        Success(mapper.mapToAlarmUI(defaultAlarm))
-            .updateState()
+    private fun updateSuccessOrError(update: AlarmUI.() -> AlarmUI) {
+        when (_state.value) {
+            is Success -> Success(alarmUI = (_state.value as Success).alarmUI.update())
+            is Initial -> Success(alarmUI = (_state.value as Initial).alarmUI.update())
+            is Error -> Error(alarmUI = (_state.value as Error).alarmUI.update())
+        }.updateState()
+    }
+
+    private fun AddState.updateState() {
+        _state.update { this }
     }
 
     override fun setTime(hour: Hour, minute: Minute) {
         updateSuccessOrError {
-            copy(time = mapper.mapToTimeUI(hour, minute))
+            copy(
+                timeUI = TimeUI(hour.hour, minute.minute, timeFormatter.format(hour, minute))
+            )
         }
     }
 
-    override fun setWeeklyRepeat(weeklyRepeat: WeeklyRepeat) {
+    override fun setWeeklyRepeat(selectableRepeats: List<SelectableRepeat>) {
         updateSuccessOrError {
-            copy(weeklyRepeat = mapper.mapToWeeklyRepeatUI(weeklyRepeat))
+            copy(
+                weeklyRepeatUI = WeeklyRepeatUI(selectableRepeats.format(), selectableRepeats)
+            )
         }
     }
 
-    override fun setLabel(label: Label) {
+    private fun List<SelectableRepeat>.format(): String {
+        val codes = filter { it.selected }.map { it.code }
+
+        return weeklyRepeatFormatter.formatAbbr(codes.toSet())
+    }
+
+    override fun setLabel(label: String) {
         updateSuccessOrError {
-            copy(label = label.label)
+            copy(label = label)
         }
     }
 
-    override fun setAlertType(alertType: AlertType) {
+    override fun setAlertType(alertTypeUI: AlertTypeUI) {
         updateSuccessOrError {
-            copy(alertType = mapper.mapToAlertTypeUI(alertType))
+            copy(alertTypeUI = alertTypeUI)
         }
     }
 
-    override fun setRingtone(ringtone: Ringtone) {
+    override fun setRingtone(ringtoneUI: RingtoneUI) {
         updateSuccessOrError {
-            copy(ringtone = mapper.mapToRingtoneUI(ringtone))
+            copy(ringtoneUI = ringtoneUI)
         }
     }
 
@@ -89,37 +110,13 @@ internal class AddViewModel(
     }
 
     override fun save() {
-        getAlarmUIOrNull()
-            ?.let { interactor.save(mapper.mapToAlarm(it), scope) }
-            ?: run { Error.updateState() }
+        if (_state.value is Success) {
+            interactor.save(
+                mapper.mapToAlarm((_state.value as Success).alarmUI),
+                scope
+            )
+        }
     }
-
-    private fun updateSuccessOrError(update: AlarmUI.() -> AlarmUI) {
-        val alarmUI = getAlarmUIOrNull()
-        if (alarmUI == null) Error else Success(alarmUI.update())
-            .updateState()
-    }
-
-    private fun getAlarmUIOrNull(): AlarmUI? {
-        return (_state.value as? Success)?.alarmUI
-    }
-
-    private fun AddState.updateState() {
-        _state.update { this }
-    }
-
-    private val defaultAlarm: Alarm
-        get() = Alarm(
-            hour = HOUR,
-            minute = MINUTE,
-            weeklyRepeat = WEEKLY_REPEAT,
-            label = LABEL,
-            enabled = ENABLED,
-            alertType = ALERT_TYPE,
-            ringtone = RINGTONE,
-            alarmType = ALARM_TYPE,
-            sayItScripts = SAY_IT_SCRIPTS
-        )
 
     override fun <T : CommandReceiver> runCommand(command: Command<T>) {
         @Suppress("UNCHECKED_CAST")
@@ -127,14 +124,27 @@ internal class AddViewModel(
     }
 
     companion object Default {
-        val HOUR = Hour(8)
-        val MINUTE = Minute(0)
-        val WEEKLY_REPEAT = WeeklyRepeat()
-        val LABEL = Label("")
-        val ENABLED = true
-        val ALERT_TYPE = AlertType.SOUND_AND_VIBRATE
-        val RINGTONE = Ringtone("")
-        val ALARM_TYPE = AlarmType.SAY_IT
-        val SAY_IT_SCRIPTS = SayItScripts()
+        private val HOUR = Hour(8)
+        private val MINUTE = Minute(0)
+        private val WEEKLY_REPEAT = WeeklyRepeat()
+        private val LABEL = Label("")
+        private const val ENABLED = true
+        private val ALERT_TYPE = AlertType.SOUND_AND_VIBRATE
+        private val RINGTONE = Ringtone("")
+        private val ALARM_TYPE = AlarmType.SAY_IT
+        private val SAY_IT_SCRIPTS = SayItScripts()
+
+        private val defaultAlarm: Alarm
+            get() = Alarm(
+                hour = HOUR,
+                minute = MINUTE,
+                weeklyRepeat = WEEKLY_REPEAT,
+                label = LABEL,
+                enabled = ENABLED,
+                alertType = ALERT_TYPE,
+                ringtone = RINGTONE,
+                alarmType = ALARM_TYPE,
+                sayItScripts = SAY_IT_SCRIPTS
+            )
     }
 }

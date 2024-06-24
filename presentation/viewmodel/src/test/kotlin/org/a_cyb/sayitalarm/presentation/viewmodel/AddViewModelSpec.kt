@@ -9,7 +9,7 @@ package org.a_cyb.sayitalarm.presentation.viewmodel
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
-import android.icu.util.Calendar
+import java.util.Calendar
 import app.cash.turbine.test
 import io.mockk.mockk
 import io.mockk.verify
@@ -19,34 +19,42 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import org.a_cyb.sayitalarm.entity.AlertType
 import org.a_cyb.sayitalarm.entity.Hour
-import org.a_cyb.sayitalarm.entity.Label
 import org.a_cyb.sayitalarm.entity.Minute
-import org.a_cyb.sayitalarm.entity.WeeklyRepeat
+import org.a_cyb.sayitalarm.formatter.enum.EnumFormatterContract
+import org.a_cyb.sayitalarm.formatter.time.TimeFormatterContract
+import org.a_cyb.sayitalarm.formatter.weekday.WeekdayFormatterContract
 import org.a_cyb.sayitalarm.presentation.add.AddContract
-import org.a_cyb.sayitalarm.presentation.add.AddContract.AddState.Initial
-import org.a_cyb.sayitalarm.presentation.add.AddContract.AddState.Success
+import org.a_cyb.sayitalarm.presentation.add.AddContract.AddState.*
 import org.a_cyb.sayitalarm.presentation.add.SaveCommand
-import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract
-import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract.AlarmUI
-import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract.AlertTypeUI
-import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract.TimeUI
-import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract.WeeklyRepeatUI
+import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract.*
 import org.a_cyb.sayitalarm.presentation.interactor.InteractorContract
-import org.a_cyb.sayitalarm.presentation.viewmodel.fake.AlarmMapperFake
+import org.a_cyb.sayitalarm.presentation.viewmodel.fake.AlertTypeFormatterFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.FakeAlarmData
-import org.a_cyb.sayitalarm.presentation.viewmodel.fake.FakeAlarmData.selectableAlertType
-import org.a_cyb.sayitalarm.presentation.viewmodel.fake.FakeAlarmData.selectableRepeat
+import org.a_cyb.sayitalarm.presentation.viewmodel.fake.RingtoneManagerFake
+import org.a_cyb.sayitalarm.presentation.viewmodel.fake.TimeFormatterFake
+import org.a_cyb.sayitalarm.presentation.viewmodel.fake.WeekdayFormatterFake
+import org.a_cyb.sayitalarm.presentation.viewmodel.mapper.AlarmMapper
 import org.a_cyb.sayitalarm.presentation.viewmodel.mapper.AlarmMapperContract
+import org.a_cyb.sayitalarm.ringtone_manager.RingtoneManagerContract
 import org.a_cyb.sayitalarm.util.fulfils
 import org.a_cyb.sayitalarm.util.mustBe
+import tech.antibytes.kfixture.fixture
+import tech.antibytes.kfixture.kotlinFixture
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class AddViewModelSpec {
 
+    private val fixture = kotlinFixture()
+
+    private val timeFormatter: TimeFormatterContract = TimeFormatterFake()
+    private val weeklyRepeatFormatter: WeekdayFormatterContract = WeekdayFormatterFake()
+    private val alertTypeFormatter: EnumFormatterContract.AlertTypeFormatter = AlertTypeFormatterFake()
+    private val ringtoneManager: RingtoneManagerContract = RingtoneManagerFake()
+    private val mapper: AlarmMapperContract =
+        AlarmMapper(timeFormatter, weeklyRepeatFormatter, alertTypeFormatter, ringtoneManager)
+
     private val interactor: InteractorContract.AddInteractor = mockk(relaxed = true)
-    private val mapper: AlarmMapperContract = AlarmMapperFake()
 
     private lateinit var viewModel: AddContract.AddViewModel
 
@@ -54,7 +62,7 @@ class AddViewModelSpec {
     fun setup() {
         Dispatchers.setMain(StandardTestDispatcher())
 
-        viewModel = AddViewModel(interactor, mapper)
+        viewModel = AddViewModel(interactor, timeFormatter, weeklyRepeatFormatter, mapper)
     }
 
     @AfterTest
@@ -69,19 +77,7 @@ class AddViewModelSpec {
 
     @Test
     fun `It is in Initial state`() = runTest {
-        viewModel.state.value mustBe Initial
-    }
-
-    @Test
-    fun `Given initialization succeeds then it is in Success state and contains default AlarmUI data`() = runTest {
-        // Given
-        viewModel.state.test {
-            // When
-            skipItems(1)
-
-            // Then
-            awaitItem() mustBe Success(defaultAlarmUI)
-        }
+        viewModel.state.value mustBe Initial(defaultAlarmUI)
     }
 
     @Test
@@ -91,7 +87,7 @@ class AddViewModelSpec {
         val minute = Minute(33)
 
         viewModel.state.test {
-            skipItems(2)
+            skipItems(1)
 
             // When
             viewModel.setTime(hour, minute)
@@ -99,7 +95,7 @@ class AddViewModelSpec {
             // Then
             awaitItem() mustBe Success(
                 defaultAlarmUI.copy(
-                    time = mapper.mapToTimeUI(hour, minute)
+                    TimeUI(hour.hour, minute.minute, "3:33 AM")
                 )
             )
         }
@@ -109,23 +105,24 @@ class AddViewModelSpec {
     fun `Given setWeeklyRepeat is called when it succeeds it is in Success state with updated AlarmUI data`() =
         runTest {
             // Given
-            val weeklyRepeat = WeeklyRepeat(Calendar.SUNDAY, Calendar.WEDNESDAY, Calendar.FRIDAY)
+            val selectedDays = listOf(Calendar.MONDAY, Calendar.WEDNESDAY, Calendar.FRIDAY)
+            val selectableRepeats = defaultAlarmUI.weeklyRepeatUI.selectableRepeats.map {
+                it.copy(selected = selectedDays.contains(it.code))
+            }
 
             viewModel.state.test {
-                skipItems(2)
+                skipItems(1)
 
                 // When
-                viewModel.setWeeklyRepeat(weeklyRepeat)
+                viewModel.setWeeklyRepeat(selectableRepeats)
 
                 // Then
                 awaitItem() mustBe Success(
                     defaultAlarmUI.copy(
-                        weeklyRepeat = mapper.mapToWeeklyRepeatUI(weeklyRepeat)
-                        // weeklyRepeat = AlarmPanelContract.WeeklyRepeatUI(
-                        //     selected = weeklyRepeat.weekdays,
-                        //     formattedSelectedRepeat = "Sun, Wed, and Fri",
-                        //     selectableRepeat = FakeAlarmData.selectableRepeat
-                        // )
+                        weeklyRepeatUI = WeeklyRepeatUI(
+                            formatted = "Mon, Wed, and Fri",
+                            selectableRepeats = selectableRepeats
+                        )
                     )
                 )
             }
@@ -135,19 +132,17 @@ class AddViewModelSpec {
     fun `Given setLabel is called when it succeeds it is in Success state with updated AlarmUI data`() =
         runTest {
             // Given
-            val label = Label("Say It")
+            val label: String = fixture.fixture()
 
             viewModel.state.test {
-                skipItems(2)
+                skipItems(1)
 
                 // When
                 viewModel.setLabel(label)
 
                 // Then
                 awaitItem() mustBe Success(
-                    defaultAlarmUI.copy(
-                        label = label.label
-                    )
+                    defaultAlarmUI.copy(label = label)
                 )
             }
         }
@@ -156,18 +151,21 @@ class AddViewModelSpec {
     fun `Given setAlertType is called when it succeeds it is in Success state with updated AlarmUI data`() =
         runTest {
             // Given
-            val alertType = AlertType.VIBRATE_ONLY
+            val selected = "Sound only"
+            val selectable = defaultAlarmUI.alertTypeUI.selectableAlertType.map {
+                SelectableAlertType(it.name, it.name == selected)
+            }
 
             viewModel.state.test {
-                skipItems(2)
+                skipItems(1)
 
                 // When
-                viewModel.setAlertType(alertType)
+                viewModel.setAlertType(AlertTypeUI(selectable))
 
                 // Then
                 awaitItem() mustBe Success(
                     defaultAlarmUI.copy(
-                        alertType = mapper.mapToAlertTypeUI(alertType)
+                        alertTypeUI = AlertTypeUI(selectable)
                     )
                 )
             }
@@ -177,19 +175,21 @@ class AddViewModelSpec {
     fun `Given setRingtone is called when it succeeds it is in Success state with updated AlarmUI data`() =
         runTest {
             // Given
-            val ringtone = FakeAlarmData.alarms[1].ringtone
+            val selected = FakeAlarmData.alarms[1].ringtone
+            val ringtoneUI = RingtoneUI(
+                ringtoneManager.getRingtoneTitle(selected.ringtone),
+                selected.ringtone
+            )
 
             viewModel.state.test {
-                skipItems(2)
+                skipItems(1)
 
                 // When
-                viewModel.setRingtone(ringtone)
+                viewModel.setRingtone(ringtoneUI)
 
                 // Then
                 awaitItem() mustBe Success(
-                    defaultAlarmUI.copy(
-                        ringtone = mapper.mapToRingtoneUI(ringtone)
-                    )
+                    defaultAlarmUI.copy(ringtoneUI = ringtoneUI)
                 )
             }
         }
@@ -201,7 +201,7 @@ class AddViewModelSpec {
             val scripts = FakeAlarmData.alarms[1].sayItScripts
 
             viewModel.state.test {
-                skipItems(2)
+                skipItems(1)
 
                 // When
                 viewModel.setScripts(scripts)
@@ -219,15 +219,25 @@ class AddViewModelSpec {
     fun `Given save is called it maps AlarmUI to Alarm and trigger interactor save`() = runTest {
         // Given
         val alarm = FakeAlarmData.alarms[1].copy(id = 0)
+        val weeklyRepeatUI = defaultAlarmUI.weeklyRepeatUI.selectableRepeats.map {
+            it.copy(selected = alarm.weeklyRepeat.weekdays.contains(it.code))
+        }
+        val alertTypeUI = AlertTypeUI(defaultAlarmUI.alertTypeUI.selectableAlertType.map {
+            it.copy(selected = it.name == alertTypeFormatter.format(alarm.alertType))
+        })
+        val ringtoneUI = RingtoneUI(
+            ringtoneManager.getRingtoneTitle(alarm.ringtone.ringtone),
+            alarm.ringtone.ringtone
+        )
 
         viewModel.state.test {
-            skipItems(2)
+            skipItems(1)
 
             viewModel.setTime(alarm.hour, alarm.minute)
-            viewModel.setWeeklyRepeat(alarm.weeklyRepeat)
-            viewModel.setLabel(alarm.label)
-            viewModel.setAlertType(alarm.alertType)
-            viewModel.setRingtone(alarm.ringtone)
+            viewModel.setWeeklyRepeat(weeklyRepeatUI)
+            viewModel.setLabel(alarm.label.label)
+            viewModel.setAlertType(alertTypeUI)
+            viewModel.setRingtone(ringtoneUI)
             viewModel.setScripts(alarm.sayItScripts)
 
             // When
@@ -246,6 +256,7 @@ class AddViewModelSpec {
         val command = SaveCommand
 
         // When
+        viewModel.setLabel("label")
         viewModel.runCommand(command)
 
         // Then
@@ -253,13 +264,12 @@ class AddViewModelSpec {
     }
 }
 
-
 private val defaultAlarmUI: AlarmUI =
     AlarmUI(
-        time = TimeUI(8, 0, "8:00 AM"),
-        weeklyRepeat = WeeklyRepeatUI(emptySet(), "", selectableRepeat),
+        timeUI = TimeUI(8, 0, "8:00 AM"),
+        weeklyRepeatUI = WeeklyRepeatUI("", FakeAlarmData.selectableRepeats),
         label = "",
-        alertType = AlertTypeUI(AlertType.SOUND_AND_VIBRATE, "Sound and vibration", selectableAlertType),
-        ringtone = AlarmPanelContract.RingtoneUI("Radial", "file://Radial.mp3"),
+        alertTypeUI = AlertTypeUI(FakeAlarmData.selectableAlertTypes),
+        ringtoneUI = RingtoneUI("Radial", "file://Radial.mp3"),
         sayItScripts = emptyList()
     )

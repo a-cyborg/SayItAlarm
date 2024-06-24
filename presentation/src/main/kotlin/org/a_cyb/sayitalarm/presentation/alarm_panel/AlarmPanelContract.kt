@@ -6,16 +6,14 @@
 
 package org.a_cyb.sayitalarm.presentation.alarm_panel
 
-import org.a_cyb.sayitalarm.entity.AlertType
-
 interface AlarmPanelContract : AlarmPanelCommandContractAll {
 
     data class AlarmUI(
-        val time: TimeUI,
-        val weeklyRepeat: WeeklyRepeatUI,
+        val timeUI: TimeUI,
+        val weeklyRepeatUI: WeeklyRepeatUI,
         val label: String,
-        val alertType: AlertTypeUI,
-        val ringtone: RingtoneUI,
+        val alertTypeUI: AlertTypeUI,
+        val ringtoneUI: RingtoneUI,
         val sayItScripts: List<String>,
     )
 
@@ -25,16 +23,24 @@ interface AlarmPanelContract : AlarmPanelCommandContractAll {
         val formattedTime: String
     )
 
+    data class SelectableRepeat(
+        val name: String,
+        val code: Int,
+        val selected: Boolean
+    )
+
     data class WeeklyRepeatUI(
-        val selected: Set<Int>,
-        val formattedSelectedRepeat: String,
-        val selectableRepeat: Map<String, Int>
+        val formatted: String,
+        val selectableRepeats: List<SelectableRepeat>
+    )
+
+    data class SelectableAlertType(
+        val name: String,
+        val selected: Boolean
     )
 
     data class AlertTypeUI(
-        val selected: AlertType,
-        val formattedAlertType: String,
-        val selectableAlertType: Map<String, AlertType>
+        val selectableAlertType: List<SelectableAlertType>
     )
 
     data class RingtoneUI(

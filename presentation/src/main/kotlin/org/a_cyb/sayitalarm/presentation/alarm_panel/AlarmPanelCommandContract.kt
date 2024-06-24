@@ -7,14 +7,11 @@
 package org.a_cyb.sayitalarm.presentation.alarm_panel
 
 import org.a_cyb.sayitalarm.entity.AlarmType
-import org.a_cyb.sayitalarm.entity.AlertType
 import org.a_cyb.sayitalarm.entity.Hour
-import org.a_cyb.sayitalarm.entity.Label
 import org.a_cyb.sayitalarm.entity.Minute
-import org.a_cyb.sayitalarm.entity.Ringtone
 import org.a_cyb.sayitalarm.entity.SayItScripts
-import org.a_cyb.sayitalarm.entity.WeeklyRepeat
 import org.a_cyb.sayitalarm.presentation.CommandContract
+import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract.*
 
 interface AlarmPanelCommandContract {
     fun interface SetTime : CommandContract.CommandReceiver {
@@ -22,19 +19,19 @@ interface AlarmPanelCommandContract {
     }
 
     fun interface SetWeeklyRepeat : CommandContract.CommandReceiver {
-        fun setWeeklyRepeat(weeklyRepeat: WeeklyRepeat)
+        fun setWeeklyRepeat(selectableRepeats: List<SelectableRepeat>)
     }
 
     fun interface SetLabel : CommandContract.CommandReceiver {
-        fun setLabel(label: Label)
+        fun setLabel(label: String)
     }
 
     fun interface SetAlertType : CommandContract.CommandReceiver {
-        fun setAlertType(alertType: AlertType)
+        fun setAlertType(alertTypeUI: AlertTypeUI)
     }
 
     fun interface SetRingtone : CommandContract.CommandReceiver {
-        fun setRingtone(ringtone: Ringtone)
+        fun setRingtone(ringtoneUI: RingtoneUI)
     }
 
     fun interface SetAlarmType : CommandContract.CommandReceiver {
@@ -62,31 +59,31 @@ data class SetTimeCommand(val hour: Hour, val minute: Minute) :
     }
 }
 
-data class SetWeeklyRepeatCommand(val weeklyRepeat: WeeklyRepeat) :
+data class SetWeeklyRepeatCommand(val selectableRepeats: List<SelectableRepeat>) :
     CommandContract.Command<AlarmPanelCommandContract.SetWeeklyRepeat> {
     override fun execute(receiver: AlarmPanelCommandContract.SetWeeklyRepeat) {
-        receiver.setWeeklyRepeat(weeklyRepeat)
+        receiver.setWeeklyRepeat(selectableRepeats)
     }
 }
 
-data class SetLabelCommand(val label: Label) :
+data class SetLabelCommand(val label: String) :
     CommandContract.Command<AlarmPanelCommandContract.SetLabel> {
     override fun execute(receiver: AlarmPanelCommandContract.SetLabel) {
         receiver.setLabel(label)
     }
 }
 
-data class SetAlertTypeCommand(val alertType: AlertType) :
+data class SetAlertTypeCommand(val alertTypeUI: AlertTypeUI) :
     CommandContract.Command<AlarmPanelCommandContract.SetAlertType> {
     override fun execute(receiver: AlarmPanelCommandContract.SetAlertType) {
-        receiver.setAlertType(alertType)
+        receiver.setAlertType(alertTypeUI)
     }
 }
 
-data class SetRingtoneCommand(val ringtone: Ringtone) :
+data class SetRingtoneCommand(val ringtoneUI: RingtoneUI) :
     CommandContract.Command<AlarmPanelCommandContract.SetRingtone> {
     override fun execute(receiver: AlarmPanelCommandContract.SetRingtone) {
-        receiver.setRingtone(ringtone)
+        receiver.setRingtone(ringtoneUI)
     }
 }
 

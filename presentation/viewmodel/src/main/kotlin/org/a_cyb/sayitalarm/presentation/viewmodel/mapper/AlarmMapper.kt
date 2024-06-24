@@ -6,7 +6,7 @@
 
 package org.a_cyb.sayitalarm.presentation.viewmodel.mapper
 
-import android.icu.util.Calendar
+import java.util.Calendar
 import org.a_cyb.sayitalarm.entity.Alarm
 import org.a_cyb.sayitalarm.entity.AlarmType
 import org.a_cyb.sayitalarm.entity.AlertType
@@ -19,7 +19,13 @@ import org.a_cyb.sayitalarm.entity.WeeklyRepeat
 import org.a_cyb.sayitalarm.formatter.enum.EnumFormatterContract
 import org.a_cyb.sayitalarm.formatter.time.TimeFormatterContract
 import org.a_cyb.sayitalarm.formatter.weekday.WeekdayFormatterContract
-import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract
+import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract.AlarmUI
+import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract.AlertTypeUI
+import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract.RingtoneUI
+import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract.SelectableAlertType
+import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract.SelectableRepeat
+import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract.TimeUI
+import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract.WeeklyRepeatUI
 import org.a_cyb.sayitalarm.ringtone_manager.RingtoneManagerContract
 
 class AlarmMapper(
@@ -29,64 +35,97 @@ class AlarmMapper(
     private val ringtoneManager: RingtoneManagerContract,
 ) : AlarmMapperContract {
 
-    override fun mapToAlarm(alarmUI: AlarmPanelContract.AlarmUI): Alarm =
-        Alarm(
-            hour = Hour(alarmUI.time.hour),
-            minute = Minute(alarmUI.time.minute),
-            weeklyRepeat = WeeklyRepeat(alarmUI.weeklyRepeat.selected),
-            label = Label(alarmUI.label),
-            enabled = true,
-            alertType = alarmUI.alertType.selected,
-            ringtone = Ringtone(alarmUI.ringtone.uri),
-            alarmType = AlarmType.SAY_IT,
-            sayItScripts = SayItScripts(alarmUI.sayItScripts)
-        )
+    override fun mapToAlarm(alarmUI: AlarmUI): Alarm =
+        with(alarmUI) {
+            Alarm(
+                hour = Hour(timeUI.hour),
+                minute = Minute(timeUI.minute),
+                weeklyRepeat = weeklyRepeatUI.toWeeklyRepeat(),
+                label = Label(label),
+                enabled = true,
+                alertType = alertTypeUI.toAlertType(),
+                ringtone = Ringtone(ringtoneUI.uri),
+                alarmType = AlarmType.SAY_IT,
+                sayItScripts = SayItScripts(sayItScripts)
+            )
+        }
 
-    override fun mapToAlarmUI(alarm: Alarm): AlarmPanelContract.AlarmUI =
-        AlarmPanelContract.AlarmUI(
-            mapToTimeUI(alarm.hour, alarm.minute),
-            mapToWeeklyRepeatUI(alarm.weeklyRepeat),
-            alarm.label.label,
-            mapToAlertTypeUI(alarm.alertType),
-            mapToRingtoneUI(alarm.ringtone),
-            alarm.sayItScripts.scripts
-        )
+    private fun WeeklyRepeatUI.toWeeklyRepeat(): WeeklyRepeat {
+        val weekdays = selectableRepeats
+            .filter { it.selected }
+            .map { it.code }
 
-    override fun mapToTimeUI(hour: Hour, minute: Minute): AlarmPanelContract.TimeUI =
-        AlarmPanelContract.TimeUI(
-            hour.hour,
-            minute.minute,
-            timeFormatter.format(hour, minute)
-        )
+        return WeeklyRepeat(weekdays.toSortedSet())
+    }
 
-    override fun mapToWeeklyRepeatUI(weeklyRepeat: WeeklyRepeat): AlarmPanelContract.WeeklyRepeatUI =
-        AlarmPanelContract.WeeklyRepeatUI(
-            selected = weeklyRepeat.weekdays,
-            formattedSelectedRepeat = weeklyRepeatFormatter.formatAbbr(weeklyRepeat.weekdays),
-            selectableRepeat = selectableRepeat
-        )
+    private fun AlertTypeUI.toAlertType(): AlertType {
+        val name: String = selectableAlertType
+            .first { it.selected }
+            .name
 
-    private val selectableRepeat: Map<String, Int>
-        get() = (Calendar.SUNDAY..Calendar.SATURDAY)
-            .associateBy { weeklyRepeatFormatter.formatFull(it) }
+        return alertTypeMap[name] ?: DEFAULT_ALERT_TYPE
+    }
 
-    override fun mapToAlertTypeUI(alertType: AlertType): AlarmPanelContract.AlertTypeUI =
-        AlarmPanelContract.AlertTypeUI(
-            selected = alertType,
-            formattedAlertType = alertTypeFormatter.format(alertType),
-            selectableAlertType = selectableAlertType
-        )
-
-    private val selectableAlertType: Map<String, AlertType>
+    private val alertTypeMap: Map<String, AlertType>
         get() = AlertType.entries
             .associateBy { alertTypeFormatter.format(it) }
 
-    override fun mapToRingtoneUI(ringtone: Ringtone): AlarmPanelContract.RingtoneUI {
-        val uri = ringtone.ringtone.ifEmpty { ringtoneManager.getDefaultRingtone() }
+    override fun mapToAlarmUI(alarm: Alarm): AlarmUI =
+        with(alarm) {
+            AlarmUI(
+                Pair(hour, minute).toTimeUI(),
+                weeklyRepeat.toWeeklyRepeatUI(),
+                label.label,
+                alertType.toAlertTypeUI(),
+                ringtone.toRingtoneUI(),
+                sayItScripts.scripts
+            )
+        }
 
-        return AlarmPanelContract.RingtoneUI(
-            title = ringtoneManager.getRingtoneTitle(uri),
-            uri = uri
+    private fun Pair<Hour, Minute>.toTimeUI(): TimeUI {
+        return TimeUI(
+            hour = first.hour,
+            minute = second.minute,
+            formattedTime = timeFormatter.format(first, second)
         )
+    }
+
+    private fun WeeklyRepeat.toWeeklyRepeatUI(): WeeklyRepeatUI {
+        val formatted = weeklyRepeatFormatter.formatAbbr(weekdays)
+        val selectableRepeats = weekdays.toSelectableRepeats()
+
+        return WeeklyRepeatUI(formatted, selectableRepeats)
+    }
+
+    private fun Set<Int>.toSelectableRepeats(): List<SelectableRepeat> {
+        return SELECTABLE_REPEAT_CODE_RANGE.map { code ->
+            SelectableRepeat(
+                name = weeklyRepeatFormatter.formatFull(code),
+                code = code,
+                selected = contains(code)
+            )
+        }
+    }
+
+    private fun AlertType.toAlertTypeUI(): AlertTypeUI {
+        val selectableAlertTypes = AlertType.entries.map { alertType ->
+            SelectableAlertType(
+                name = alertTypeFormatter.format(alertType),
+                selected = this == alertType
+            )
+        }
+
+        return AlertTypeUI(selectableAlertTypes)
+    }
+
+    private fun Ringtone.toRingtoneUI(): RingtoneUI {
+        val uri = ringtone.ifEmpty { ringtoneManager.getDefaultRingtone() }
+
+        return RingtoneUI(title = ringtoneManager.getRingtoneTitle(uri), uri = uri)
+    }
+
+    companion object {
+        private val DEFAULT_ALERT_TYPE = AlertType.SOUND_AND_VIBRATE
+        private val SELECTABLE_REPEAT_CODE_RANGE = (Calendar.SUNDAY..Calendar.SATURDAY)
     }
 }

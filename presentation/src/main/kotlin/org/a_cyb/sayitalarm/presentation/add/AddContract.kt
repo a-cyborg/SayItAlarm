@@ -18,7 +18,7 @@ interface AddContract {
 
     sealed interface AddState {
         data class Success(val alarmUI: AlarmPanelContract.AlarmUI) : AddState
-        data object Error : AddState
-        data object Initial : AddState
+        data class Error(val alarmUI: AlarmPanelContract.AlarmUI) : AddState
+        data class Initial(val alarmUI: AlarmPanelContract.AlarmUI) : AddState
     }
 }
