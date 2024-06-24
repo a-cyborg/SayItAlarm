@@ -29,11 +29,8 @@ import org.a_cyb.sayitalarm.atom.SpacerXLarge
 import org.a_cyb.sayitalarm.atom.TextDisplayStandardLarge
 import org.a_cyb.sayitalarm.atom.TextFieldStandard
 import org.a_cyb.sayitalarm.entity.Hour
-import org.a_cyb.sayitalarm.entity.Label
 import org.a_cyb.sayitalarm.entity.Minute
-import org.a_cyb.sayitalarm.entity.Ringtone
 import org.a_cyb.sayitalarm.entity.SayItScripts
-import org.a_cyb.sayitalarm.entity.WeeklyRepeat
 import org.a_cyb.sayitalarm.molecule.ActionRowCollapse
 import org.a_cyb.sayitalarm.molecule.PanelItemStandard
 import org.a_cyb.sayitalarm.molecule.PanelItemStandardClickable
@@ -46,7 +43,10 @@ import org.a_cyb.sayitalarm.molecule.PopupPickerTime
 import org.a_cyb.sayitalarm.molecule.TextRowInfo
 import org.a_cyb.sayitalarm.presentation.CommandContract
 import org.a_cyb.sayitalarm.presentation.CommandContract.CommandReceiver
-import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract
+import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract.AlarmUI
+import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract.RingtoneUI
+import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract.TimeUI
+import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract.WeeklyRepeatUI
 import org.a_cyb.sayitalarm.presentation.alarm_panel.SetLabelCommand
 import org.a_cyb.sayitalarm.presentation.alarm_panel.SetRingtoneCommand
 import org.a_cyb.sayitalarm.presentation.alarm_panel.SetScriptsCommand
@@ -55,22 +55,22 @@ import org.a_cyb.sayitalarm.presentation.alarm_panel.SetWeeklyRepeatCommand
 
 @Composable
 fun AlarmPanel(
-    alarmUI: AlarmPanelContract.AlarmUI,
+    alarmUI: AlarmUI,
     executor: (CommandContract.Command<out CommandReceiver>) -> Unit,
 ) {
     ColumnScreenStandardScrollable {
         SpacerXLarge()
         TimePanel(
-            time = alarmUI.time,
+            time = alarmUI.timeUI,
             onConfirm = { hour, minute ->
                 executor(SetTimeCommand(Hour(hour), Minute(minute)))
             }
         )
         SpacerLarge()
         AdvancedConfigurationPanel(
-            repeat = alarmUI.weeklyRepeat,
+            repeat = alarmUI.weeklyRepeatUI,
             label = alarmUI.label,
-            ringtone = alarmUI.ringtone,
+            ringtone = alarmUI.ringtoneUI,
             executor = executor
         )
         SpacerLarge()
@@ -86,7 +86,7 @@ fun AlarmPanel(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TimePanel(
-    time: AlarmPanelContract.TimeUI,
+    time: TimeUI,
     onConfirm: (Int, Int) -> Unit,
 ) {
     val timePickerState = rememberTimePickerState(
@@ -116,9 +116,9 @@ private fun TimePanel(
 
 @Composable
 private fun AdvancedConfigurationPanel(
-    repeat: AlarmPanelContract.WeeklyRepeatUI,
+    repeat: WeeklyRepeatUI,
     label: String,
-    ringtone: AlarmPanelContract.RingtoneUI,
+    ringtone: RingtoneUI,
     executor: (CommandContract.Command<out CommandReceiver>) -> Unit,
 ) {
     PanelStandard(
@@ -138,25 +138,24 @@ private fun PanelItemLabel(
             value = label,
             hint = stringResource(id = R.string.label),
             textAlign = TextAlign.End,
-            onDone = { executor(SetLabelCommand(Label(it))) }
+            onDone = { executor(SetLabelCommand(it)) }
         )
     }
 }
 
 @Composable
 private fun PanelItemRepeat(
-    repeat: AlarmPanelContract.WeeklyRepeatUI,
+    repeat: WeeklyRepeatUI,
     executor: (CommandContract.Command<out CommandReceiver>) -> Unit,
 ) {
     PanelItemWithPopupPicker(
         valueLabel = stringResource(id = R.string.repeat),
-        value = repeat.formattedSelectedRepeat
+        value = repeat.selectableRepeats.first { it.selected }.name
     ) { onCancel ->
         PopupPickerRepeat(
             title = stringResource(id = R.string.repeat),
-            selectedRepeat = repeat.selected,
-            selectableRepeat = repeat.selectableRepeat,
-            onConfirm = { executor(SetWeeklyRepeatCommand(WeeklyRepeat(it))) },
+            selectableRepeats = repeat.selectableRepeats,
+            onConfirm = { executor(SetWeeklyRepeatCommand(it)) },
             onCancel = onCancel
         )
     }
@@ -164,7 +163,7 @@ private fun PanelItemRepeat(
 
 @Composable
 private fun PanelItemRingtone(
-    ringtoneUI: AlarmPanelContract.RingtoneUI,
+    ringtoneUI: RingtoneUI,
     executor: (CommandContract.Command<out CommandReceiver>) -> Unit,
 ) {
     PanelItemWithPopupPicker(
@@ -173,7 +172,9 @@ private fun PanelItemRingtone(
     ) { onCancel ->
         PopupPickerRingtone(
             selectedUri = ringtoneUI.uri,
-            onConfirm = { executor(SetRingtoneCommand(Ringtone(it.toString()))) },
+            onConfirm = { title, uri ->
+                executor(SetRingtoneCommand(RingtoneUI(title, uri.toString())))
+            },
             onCancel = onCancel,
         )
     }
