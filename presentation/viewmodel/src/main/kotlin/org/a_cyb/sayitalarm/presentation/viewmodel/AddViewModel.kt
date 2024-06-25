@@ -53,9 +53,8 @@ internal class AddViewModel(
 
     private fun updateSuccessOrError(update: AlarmUI.() -> AlarmUI) {
         when (_state.value) {
-            is Success -> Success(alarmUI = (_state.value as Success).alarmUI.update())
-            is Initial -> Success(alarmUI = (_state.value as Initial).alarmUI.update())
-            is Error -> Error(alarmUI = (_state.value as Error).alarmUI.update())
+            is Success, is Initial -> Success(_state.value.alarmUI.update())
+            is Error -> Error(_state.value.alarmUI.update())
         }.updateState()
     }
 
@@ -66,7 +65,11 @@ internal class AddViewModel(
     override fun setTime(hour: Hour, minute: Minute) {
         updateSuccessOrError {
             copy(
-                timeUI = TimeUI(hour.hour, minute.minute, timeFormatter.format(hour, minute))
+                timeUI = TimeUI(
+                    hour.hour,
+                    minute.minute,
+                    timeFormatter.format(hour, minute)
+                )
             )
         }
     }
@@ -74,13 +77,17 @@ internal class AddViewModel(
     override fun setWeeklyRepeat(selectableRepeats: List<SelectableRepeat>) {
         updateSuccessOrError {
             copy(
-                weeklyRepeatUI = WeeklyRepeatUI(selectableRepeats.format(), selectableRepeats)
+                weeklyRepeatUI = WeeklyRepeatUI(
+                    selectableRepeats.format(),
+                    selectableRepeats
+                )
             )
         }
     }
 
     private fun List<SelectableRepeat>.format(): String {
-        val codes = filter { it.selected }.map { it.code }
+        val codes = filter { it.selected }
+            .map { it.code }
 
         return weeklyRepeatFormatter.formatAbbr(codes.toSet())
     }
