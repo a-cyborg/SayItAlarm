@@ -20,9 +20,14 @@ interface InteractorContract {
         fun save(alarm: Alarm, scope: CoroutineScope)
     }
 
+    interface EditInteractor {
+        fun update(alarm: Alarm, scope: CoroutineScope)
+    }
+
     interface ListInteractor {
         val alarms: SharedFlow<Result<List<Alarm>>>
 
+        fun load(scope: CoroutineScope)
         fun setEnabled(id: Long, enabled: Boolean, scope: CoroutineScope)
         fun deleteAlarm(id: Long, scope: CoroutineScope)
     }
