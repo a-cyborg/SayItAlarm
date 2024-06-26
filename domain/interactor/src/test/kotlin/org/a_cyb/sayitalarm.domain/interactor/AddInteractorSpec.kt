@@ -6,11 +6,13 @@
 
 package org.a_cyb.sayitalarm.domain.interactor
 
+import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
+import org.a_cyb.sayitalarm.alarm_service.AlarmSchedulerContract
 import org.a_cyb.sayitalarm.domain.repository.RepositoryContract
 import org.a_cyb.sayitalarm.entity.Alarm
 import org.a_cyb.sayitalarm.entity.AlarmType
@@ -28,11 +30,12 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class AddInteractorSpec {
     private val alarmRepository: RepositoryContract.AlarmRepository = mockk(relaxed = true)
+    private val alarmScheduler: AlarmSchedulerContract = mockk(relaxed = true)
 
     @Test
     fun `When save is called it triggers AlarmRepository save`() = runTest {
         // Given
-        val interactor = AddInteractor(alarmRepository)
+        val interactor = AddInteractor(alarmRepository, alarmScheduler)
 
         // When
         interactor.save(alarm, this)
@@ -41,6 +44,18 @@ class AddInteractorSpec {
 
         // Then
         verify(exactly = 1) { alarmRepository.save(any(), any()) }
+    }
+
+    @Test
+    fun `When save is called it triggers AlarmScheduler setAlarm`() = runTest {
+        // Given
+        val interactor = AddInteractor(alarmRepository, alarmScheduler)
+
+        // When
+        interactor.save(alarm, this)
+
+        // Then
+        coVerify(exactly = 1) { alarmScheduler.setAlarm(any()) }
     }
 
     private val alarm = Alarm(
@@ -58,6 +73,9 @@ class AddInteractorSpec {
 
     @Test
     fun `It fulfills AddInteractor`() {
-        AddInteractor(alarmRepository) fulfils InteractorContract.AddInteractor::class
+        AddInteractor(
+            alarmRepository,
+            alarmScheduler
+        ) fulfils InteractorContract.AddInteractor::class
     }
 }

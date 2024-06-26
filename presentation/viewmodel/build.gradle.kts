@@ -50,7 +50,6 @@ dependencies {
     implementation(project(":presentation"))
     implementation(project(":presentation:interactor"))
     implementation(project(":formatter"))
-    implementation(project(":alarm-service"))
     implementation(project(":ringtone-manager"))
     implementation(project(":util"))
 }

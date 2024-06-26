@@ -14,5 +14,6 @@ dependencies {
     implementation(project(":entity"))
     implementation(project(":domain:repository"))
     implementation(project(":presentation:interactor"))
+    implementation(project(":alarm-service"))
     implementation(project(":util"))
 }

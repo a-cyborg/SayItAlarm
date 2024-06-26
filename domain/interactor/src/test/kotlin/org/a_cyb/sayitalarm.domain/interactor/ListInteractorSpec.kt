@@ -15,11 +15,13 @@ import java.util.Calendar.THURSDAY
 import java.util.Calendar.TUESDAY
 import java.util.Calendar.WEDNESDAY
 import app.cash.turbine.test
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.async
 import kotlinx.coroutines.test.runTest
+import org.a_cyb.sayitalarm.alarm_service.AlarmSchedulerContract
 import org.a_cyb.sayitalarm.domain.repository.RepositoryContract
 import org.a_cyb.sayitalarm.entity.Alarm
 import org.a_cyb.sayitalarm.entity.AlarmType
@@ -38,12 +40,13 @@ import org.junit.Test
 class ListInteractorSpec {
 
     private val alarmRepository: RepositoryContract.AlarmRepository = mockk(relaxed = true)
+    private val alarmSchedular: AlarmSchedulerContract = mockk(relaxed = true)
 
     private lateinit var interactor: ListInteractor
 
     @BeforeTest
     fun setup() {
-        interactor = ListInteractor(alarmRepository)
+        interactor = ListInteractor(alarmRepository, alarmSchedular)
     }
 
     @Test
@@ -132,7 +135,38 @@ class ListInteractorSpec {
     }
 
     @Test
-    fun `When delete is called it propagates success with updated alarms`() = runTest {
+    fun `When setEnable is called with enabled true it triggers AlarmScheduler setAlarm`() = runTest {
+        // Given
+        every { alarmRepository.load(any()) } returns async { Result.success(emptyList()) }
+
+        interactor.alarms.test {
+            // When
+            interactor.setEnabled(3L, true, this)
+
+            skipItems(1)
+        }
+
+        coVerify(exactly = 1) { alarmSchedular.setAlarm(any()) }
+
+    }
+
+    @Test
+    fun `When setEnable is called with enabled false it triggers AlarmScheduler cancelAlarm`() = runTest {
+        // Given
+        every { alarmRepository.load(any()) } returns async { Result.success(emptyList()) }
+
+        interactor.alarms.test {
+            // When
+            interactor.setEnabled(3L, false, this)
+
+            skipItems(1)
+        }
+
+        coVerify(exactly = 1) { alarmSchedular.cancelAlarm(any(), any()) }
+    }
+
+    @Test
+    fun `When deleteAlarm is called it propagates success with updated alarms`() = runTest {
         // Given
         val alarms = alarms.drop(1)
 
@@ -148,7 +182,7 @@ class ListInteractorSpec {
     }
 
     @Test
-    fun `When delete is called it triggers AlarmRepository delete and load`() = runTest {
+    fun `When deleteAlarm is called it triggers AlarmRepository delete and load`() = runTest {
         // Given
         every { alarmRepository.load(any()) } returns async { Result.success(emptyList()) }
 
@@ -168,8 +202,24 @@ class ListInteractorSpec {
     }
 
     @Test
+    fun `When deleteAlarm is called it triggers AlarmScheduler cancelAlarm`() = runTest {
+        // Given
+        every { alarmRepository.load(any()) } returns async { Result.success(emptyList()) }
+
+        interactor.alarms.test {
+            // When
+            interactor.deleteAlarm(3L, this)
+
+            skipItems(1)
+        }
+
+        // Then
+        coVerify(exactly = 1) { alarmSchedular.cancelAlarm(any(), any()) }
+    }
+
+    @Test
     fun `It fulfills ListInteractor`() {
-        ListInteractor(alarmRepository) fulfils InteractorContract.ListInteractor::class
+        interactor fulfils InteractorContract.ListInteractor::class
     }
 
     private val alarms = listOf(

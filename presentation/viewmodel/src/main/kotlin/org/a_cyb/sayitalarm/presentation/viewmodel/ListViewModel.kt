@@ -11,23 +11,22 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
-import org.a_cyb.sayitalarm.alarm_service.AlarmSchedulerContract
 import org.a_cyb.sayitalarm.entity.Alarm
 import org.a_cyb.sayitalarm.formatter.time.TimeFormatterContract
 import org.a_cyb.sayitalarm.formatter.weekday.WeekdayFormatterContract
 import org.a_cyb.sayitalarm.presentation.ListContract
-import org.a_cyb.sayitalarm.presentation.ListContract.*
+import org.a_cyb.sayitalarm.presentation.ListContract.AlarmInfo
+import org.a_cyb.sayitalarm.presentation.ListContract.ListState
 import org.a_cyb.sayitalarm.presentation.ListContract.ListState.Error
 import org.a_cyb.sayitalarm.presentation.ListContract.ListState.Initial
 import org.a_cyb.sayitalarm.presentation.ListContract.ListState.InitialError
 import org.a_cyb.sayitalarm.presentation.ListContract.ListState.Success
+import org.a_cyb.sayitalarm.presentation.ListContract.ListStateWithContent
 import org.a_cyb.sayitalarm.presentation.command.CommandContract
 import org.a_cyb.sayitalarm.presentation.interactor.InteractorContract
 
 internal class ListViewModel(
     private val interactor: InteractorContract.ListInteractor,
-    private val alarmScheduler: AlarmSchedulerContract,
     private val timeFormatter: TimeFormatterContract,
     private val weekdayFormatter: WeekdayFormatterContract,
 ) : ListContract.ListViewModel, ViewModel() {
@@ -72,17 +71,11 @@ internal class ListViewModel(
     }
 
     override fun setEnabled(id: Long, enabled: Boolean) {
-        scope.launch {
-            interactor.setEnabled(id, enabled, this)
-            alarmScheduler.setAlarm(this)
-        }
+        interactor.setEnabled(id, enabled, scope)
     }
 
     override fun deleteAlarm(id: Long) {
-        scope.launch {
-            interactor.deleteAlarm(id, this)
-            alarmScheduler.cancelAlarm(id, this)
-        }
+        interactor.deleteAlarm(id, scope)
     }
 
     override fun <T : CommandContract.CommandReceiver> runCommand(command: CommandContract.Command<T>) {
