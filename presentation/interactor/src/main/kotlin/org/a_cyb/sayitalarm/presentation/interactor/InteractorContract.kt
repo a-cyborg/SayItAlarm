@@ -21,6 +21,7 @@ interface InteractorContract {
     }
 
     interface EditInteractor {
+        fun getAlarm(id: Long, scope: CoroutineScope): Result<Alarm>
         fun update(alarm: Alarm, scope: CoroutineScope)
     }
 

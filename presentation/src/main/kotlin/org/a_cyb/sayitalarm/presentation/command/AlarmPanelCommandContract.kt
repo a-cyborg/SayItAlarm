@@ -40,6 +40,10 @@ interface AlarmPanelCommandContract {
     fun interface SetScripts : CommandContract.CommandReceiver {
         fun setScripts(scripts: SayItScripts)
     }
+
+    fun interface Save : CommandContract.CommandReceiver {
+        fun save()
+    }
 }
 
 interface AlarmPanelCommandContractAll :
@@ -49,7 +53,8 @@ interface AlarmPanelCommandContractAll :
     AlarmPanelCommandContract.SetAlertType,
     AlarmPanelCommandContract.SetRingtone,
     // AlarmPanelCommandContract.SetAlarmType,
-    AlarmPanelCommandContract.SetScripts
+    AlarmPanelCommandContract.SetScripts,
+    AlarmPanelCommandContract.Save
 
 data class SetTimeCommand(val hour: Hour, val minute: Minute) :
     CommandContract.Command<AlarmPanelCommandContract.SetTime> {
@@ -97,5 +102,11 @@ data class SetScriptsCommand(val sayItScripts: SayItScripts) :
     CommandContract.Command<AlarmPanelCommandContract.SetScripts> {
     override fun execute(receiver: AlarmPanelCommandContract.SetScripts) {
         receiver.setScripts(sayItScripts)
+    }
+}
+
+data object SaveCommand : CommandContract.Command<AlarmPanelCommandContract.Save> {
+    override fun execute(receiver: AlarmPanelCommandContract.Save) {
+        receiver.save()
     }
 }

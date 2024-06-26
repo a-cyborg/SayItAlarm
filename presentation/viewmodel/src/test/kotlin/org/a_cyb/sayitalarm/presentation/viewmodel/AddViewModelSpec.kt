@@ -255,8 +255,9 @@ class AddViewModelSpec {
         // Given
         val command = SaveCommand
 
+        viewModel.setLabel("Change state to success")
+
         // When
-        viewModel.setLabel("label")
         viewModel.runCommand(command)
 
         // Then

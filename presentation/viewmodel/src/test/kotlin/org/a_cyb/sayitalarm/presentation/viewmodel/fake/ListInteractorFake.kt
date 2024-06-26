@@ -30,7 +30,7 @@ class ListInteractorFake(
         scope.launch { load(scope) }
     }
 
-    private fun load(scope: CoroutineScope) {
+    override fun load(scope: CoroutineScope) {
         scope.launch {
             _alarm.emit(results.removeFirst())
         }

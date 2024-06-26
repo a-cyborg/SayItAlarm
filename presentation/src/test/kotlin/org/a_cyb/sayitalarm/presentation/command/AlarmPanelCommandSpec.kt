@@ -137,4 +137,21 @@ class AlarmPanelCommandSpec {
         // Then
         verify(exactly = 1) { receiver.setScripts(SayItScripts()) }
     }
+
+    @Test
+    fun `SaveCommand fulfils Command`() {
+        SaveCommand fulfils CommandContract.Command::class
+    }
+
+    @Test
+    fun `Given SaveCommand executes it runs save`() {
+        // Given
+        val receiver: AlarmPanelCommandContract.Save = mockk(relaxed = true)
+
+        // When
+        SaveCommand.execute(receiver)
+
+        // Then
+        verify(exactly = 1) { receiver.save() }
+    }
 }

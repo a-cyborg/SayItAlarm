@@ -7,12 +7,12 @@
 package org.a_cyb.sayitalarm.presentation
 
 import kotlinx.coroutines.flow.StateFlow
+import org.a_cyb.sayitalarm.presentation.command.AlarmPanelCommandContractAll
 import org.a_cyb.sayitalarm.presentation.command.CommandContract
-import org.a_cyb.sayitalarm.presentation.command.AddCommandContract
 
 interface AddContract {
 
-    interface AddViewModel : AlarmPanelContract, AddCommandContract.Save, CommandContract.CommandExecutor {
+    interface AddViewModel : AlarmPanelCommandContractAll, CommandContract.CommandExecutor {
         val state: StateFlow<AddState>
     }
 

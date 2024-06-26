@@ -23,6 +23,8 @@ import org.a_cyb.sayitalarm.entity.Minute
 import org.a_cyb.sayitalarm.entity.Ringtone
 import org.a_cyb.sayitalarm.entity.SayItScripts
 import org.a_cyb.sayitalarm.entity.WeeklyRepeat
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.SelectableAlertType
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.SelectableRepeat
 
 object FakeAlarmData {
     val alarms = listOf(
@@ -63,7 +65,7 @@ object FakeAlarmData {
             id = 3,
             hour = Hour(9),
             minute = Minute(0),
-            weeklyRepeat = WeeklyRepeat(SATURDAY, SUNDAY),
+            weeklyRepeat = WeeklyRepeat(SUNDAY, SATURDAY),
             label = Label("Passion Hour"),
             enabled = false,
             alertType = AlertType.SOUND_AND_VIBRATE,
@@ -77,11 +79,20 @@ object FakeAlarmData {
         )
     )
 
-    val selectableRepeat: Map<String, Int>
-        get() = (Calendar.SUNDAY..Calendar.SATURDAY)
-            .associateBy { WeekdayFormatterFake().formatFull(it) }
+    val selectableRepeats: List<SelectableRepeat>
+        get() = (Calendar.SUNDAY..Calendar.SATURDAY).map {
+            SelectableRepeat(
+                WeekdayFormatterFake().formatFull(it),
+                it,
+                false
+            )
+        }
 
-    val selectableAlertType: Map<String, AlertType>
-        get() = AlertType.entries
-            .associateBy { AlertTypeFormatterFake().format(it) }
+    val selectableAlertTypes: List<SelectableAlertType>
+        get() = AlertType.entries.map {
+            SelectableAlertType(
+                AlertTypeFormatterFake().format(it),
+                it == AlertType.SOUND_AND_VIBRATE
+            )
+        }
 }
