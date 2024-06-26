@@ -12,7 +12,7 @@ import org.a_cyb.sayitalarm.entity.AlertType
 import org.a_cyb.sayitalarm.formatter.enum.EnumFormatterContract
 import org.a_cyb.sayitalarm.formatter.time.TimeFormatterContract
 import org.a_cyb.sayitalarm.formatter.weekday.WeekdayFormatterContract
-import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract.*
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.*
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.AlertTypeFormatterFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.FakeAlarmData
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.RingtoneManagerFake

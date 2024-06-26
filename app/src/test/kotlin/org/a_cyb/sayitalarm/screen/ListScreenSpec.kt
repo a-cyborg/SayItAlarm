@@ -23,8 +23,8 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.a_cyb.sayitalarm.R
 import org.a_cyb.sayitalarm.RoborazziTest
-import org.a_cyb.sayitalarm.presentation.CommandContract
-import org.a_cyb.sayitalarm.presentation.list.ListContract
+import org.a_cyb.sayitalarm.presentation.command.CommandContract
+import org.a_cyb.sayitalarm.presentation.ListContract
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
@@ -84,7 +84,6 @@ class ListScreenSpec : RoborazziTest() {
         subjectUnderTest.setContent {
             ListScreen(viewModel = viewModel)
         }
-        advanceUntilIdle()
 
         // Then
         subjectUnderTest.onNodeWithText(getString(org.a_cyb.sayitalarm.R.string.info_list_no_alarm))

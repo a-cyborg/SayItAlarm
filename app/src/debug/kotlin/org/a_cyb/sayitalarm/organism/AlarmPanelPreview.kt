@@ -8,8 +8,7 @@ package org.a_cyb.sayitalarm.organism
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import org.a_cyb.sayitalarm.entity.AlertType
-import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract.*
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.*
 
 @Preview
 @Composable
@@ -20,15 +19,12 @@ fun AlarmPanelPreview() {
     )
 }
 
-private val defaultAlarmUI = AlarmUI(
-    time = TimeUI(8, 0, "8:00 AM"),
-    weeklyRepeat = WeeklyRepeatUI(emptySet(), "Never", mapOf()),
-    label = "",
-    alertType = AlertTypeUI(
-        selected = AlertType.SOUND_AND_VIBRATE,
-        formattedAlertType = "Sound and vibration",
-        selectableAlertType = mapOf()
-    ),
-    ringtone = RingtoneUI("Radial", "file:://Radial.mp3"),
-    sayItScripts = emptyList()
-)
+private val defaultAlarmUI: AlarmUI =
+    AlarmUI(
+        timeUI = TimeUI(8, 0, "8:00 AM"),
+        weeklyRepeatUI = WeeklyRepeatUI("", emptyList()),
+        label = "",
+        alertTypeUI = AlertTypeUI(listOf(SelectableAlertType("Sound only", true))),
+        ringtoneUI = RingtoneUI("Radial", "file://Radial.mp3"),
+        sayItScripts = emptyList()
+    )

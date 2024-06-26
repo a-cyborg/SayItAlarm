@@ -22,14 +22,14 @@ import org.a_cyb.sayitalarm.entity.SayItScripts
 import org.a_cyb.sayitalarm.entity.WeeklyRepeat
 import org.a_cyb.sayitalarm.formatter.time.TimeFormatterContract
 import org.a_cyb.sayitalarm.formatter.weekday.WeekdayFormatterContract
-import org.a_cyb.sayitalarm.presentation.CommandContract.Command
-import org.a_cyb.sayitalarm.presentation.CommandContract.CommandReceiver
-import org.a_cyb.sayitalarm.presentation.add.AddContract
-import org.a_cyb.sayitalarm.presentation.add.AddContract.AddState
-import org.a_cyb.sayitalarm.presentation.add.AddContract.AddState.Error
-import org.a_cyb.sayitalarm.presentation.add.AddContract.AddState.Initial
-import org.a_cyb.sayitalarm.presentation.add.AddContract.AddState.Success
-import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract.*
+import org.a_cyb.sayitalarm.presentation.command.CommandContract.Command
+import org.a_cyb.sayitalarm.presentation.command.CommandContract.CommandReceiver
+import org.a_cyb.sayitalarm.presentation.AddContract
+import org.a_cyb.sayitalarm.presentation.AddContract.AddState
+import org.a_cyb.sayitalarm.presentation.AddContract.AddState.Error
+import org.a_cyb.sayitalarm.presentation.AddContract.AddState.Initial
+import org.a_cyb.sayitalarm.presentation.AddContract.AddState.Success
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.*
 import org.a_cyb.sayitalarm.presentation.interactor.InteractorContract
 import org.a_cyb.sayitalarm.presentation.viewmodel.mapper.AlarmMapperContract
 

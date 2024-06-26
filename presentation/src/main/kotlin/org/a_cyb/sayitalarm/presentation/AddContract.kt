@@ -4,11 +4,11 @@
  * Use of this source code is governed by Apache v2.0
  */
 
-package org.a_cyb.sayitalarm.presentation.add
+package org.a_cyb.sayitalarm.presentation
 
 import kotlinx.coroutines.flow.StateFlow
-import org.a_cyb.sayitalarm.presentation.CommandContract
-import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract
+import org.a_cyb.sayitalarm.presentation.command.CommandContract
+import org.a_cyb.sayitalarm.presentation.command.AddCommandContract
 
 interface AddContract {
 

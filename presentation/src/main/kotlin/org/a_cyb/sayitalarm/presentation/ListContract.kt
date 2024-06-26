@@ -4,12 +4,12 @@
  * Use of this source code is governed by Apache v2.0
  */
 
-package org.a_cyb.sayitalarm.presentation.list
+package org.a_cyb.sayitalarm.presentation
 
 import kotlinx.coroutines.flow.StateFlow
-import org.a_cyb.sayitalarm.presentation.CommandContract
-import org.a_cyb.sayitalarm.presentation.list.ListCommandContract.DeleteAlarm
-import org.a_cyb.sayitalarm.presentation.list.ListCommandContract.SetEnabled
+import org.a_cyb.sayitalarm.presentation.command.CommandContract
+import org.a_cyb.sayitalarm.presentation.command.ListCommandContract.DeleteAlarm
+import org.a_cyb.sayitalarm.presentation.command.ListCommandContract.SetEnabled
 
 interface ListContract {
     interface ListViewModel : SetEnabled, DeleteAlarm, CommandContract.CommandExecutor {

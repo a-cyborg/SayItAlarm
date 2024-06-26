@@ -15,18 +15,17 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
-import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.a_cyb.sayitalarm.alarm_service.AlarmSchedulerContract
-import org.a_cyb.sayitalarm.presentation.CommandContract
+import org.a_cyb.sayitalarm.presentation.command.CommandContract
 import org.a_cyb.sayitalarm.presentation.interactor.InteractorContract.ListInteractor
-import org.a_cyb.sayitalarm.presentation.list.ListContract
-import org.a_cyb.sayitalarm.presentation.list.ListContract.AlarmInfo
-import org.a_cyb.sayitalarm.presentation.list.ListContract.Initial
-import org.a_cyb.sayitalarm.presentation.list.ListContract.InitialError
-import org.a_cyb.sayitalarm.presentation.list.ListContract.Success
+import org.a_cyb.sayitalarm.presentation.ListContract
+import org.a_cyb.sayitalarm.presentation.ListContract.AlarmInfo
+import org.a_cyb.sayitalarm.presentation.ListContract.Initial
+import org.a_cyb.sayitalarm.presentation.ListContract.InitialError
+import org.a_cyb.sayitalarm.presentation.ListContract.Success
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.AlarmSchedulerFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.FakeAlarmData
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.ListInteractorFake
@@ -135,7 +134,6 @@ class ListViewModelSpec {
 
         viewModel.state.test {
             skipItems(2)
-            advanceUntilIdle()
 
             // When
             viewModel.setEnabled(3, false)
@@ -163,7 +161,6 @@ class ListViewModelSpec {
 
         viewModel.state.test {
             skipItems(2)
-            advanceUntilIdle()
 
             // When
             viewModel.deleteAlarm(2)

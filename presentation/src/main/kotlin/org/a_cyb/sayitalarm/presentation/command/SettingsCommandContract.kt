@@ -4,11 +4,10 @@
  * Use of this source code is governed by Apache v2.0
  */
 
-package org.a_cyb.sayitalarm.presentation.settings
+package org.a_cyb.sayitalarm.presentation.command
 
 import org.a_cyb.sayitalarm.entity.Snooze
 import org.a_cyb.sayitalarm.entity.TimeOut
-import org.a_cyb.sayitalarm.presentation.CommandContract
 
 interface SettingsCommandContract {
     fun interface SetTimeOut : CommandContract.CommandReceiver {

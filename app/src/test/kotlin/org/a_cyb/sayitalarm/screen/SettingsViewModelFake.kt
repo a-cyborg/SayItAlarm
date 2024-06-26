@@ -14,12 +14,12 @@ import kotlinx.coroutines.launch
 import org.a_cyb.sayitalarm.entity.Snooze
 import org.a_cyb.sayitalarm.entity.Theme
 import org.a_cyb.sayitalarm.entity.TimeOut
-import org.a_cyb.sayitalarm.presentation.CommandContract
-import org.a_cyb.sayitalarm.presentation.settings.SettingsContract
-import org.a_cyb.sayitalarm.presentation.settings.SettingsContract.SettingsState
-import org.a_cyb.sayitalarm.presentation.settings.SettingsContract.SettingsStateWithContent
-import org.a_cyb.sayitalarm.presentation.settings.SettingsContract.SettingsViewModel
-import org.a_cyb.sayitalarm.presentation.settings.SettingsContract.TimeInput
+import org.a_cyb.sayitalarm.presentation.command.CommandContract
+import org.a_cyb.sayitalarm.presentation.SettingsContract
+import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState
+import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsStateWithContent
+import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsViewModel
+import org.a_cyb.sayitalarm.presentation.SettingsContract.TimeInput
 
 @Suppress("EmptyFunctionBlock")
 internal class SettingsViewModelFake(

@@ -19,13 +19,13 @@ import org.a_cyb.sayitalarm.entity.WeeklyRepeat
 import org.a_cyb.sayitalarm.formatter.enum.EnumFormatterContract
 import org.a_cyb.sayitalarm.formatter.time.TimeFormatterContract
 import org.a_cyb.sayitalarm.formatter.weekday.WeekdayFormatterContract
-import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract.AlarmUI
-import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract.AlertTypeUI
-import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract.RingtoneUI
-import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract.SelectableAlertType
-import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract.SelectableRepeat
-import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract.TimeUI
-import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract.WeeklyRepeatUI
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.AlarmUI
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.AlertTypeUI
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.RingtoneUI
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.SelectableAlertType
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.SelectableRepeat
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.TimeUI
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.WeeklyRepeatUI
 import org.a_cyb.sayitalarm.ringtone_manager.RingtoneManagerContract
 
 class AlarmMapper(

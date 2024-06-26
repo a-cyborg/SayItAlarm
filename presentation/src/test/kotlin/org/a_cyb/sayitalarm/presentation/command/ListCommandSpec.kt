@@ -4,12 +4,11 @@
  * Use of this source code is governed by Apache v2.0
  */
 
-package org.a_cyb.sayitalarm.presentation.list
+package org.a_cyb.sayitalarm.presentation.command
 
 import kotlin.test.Test
 import io.mockk.mockk
 import io.mockk.verify
-import org.a_cyb.sayitalarm.presentation.CommandContract
 import org.a_cyb.sayitalarm.util.fulfils
 
 class ListCommandSpec {

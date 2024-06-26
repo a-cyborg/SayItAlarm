@@ -4,14 +4,13 @@
  * Use of this source code is governed by Apache v2.0
  */
 
-package org.a_cyb.sayitalarm.presentation.alarm_panel
+package org.a_cyb.sayitalarm.presentation.command
 
 import org.a_cyb.sayitalarm.entity.AlarmType
 import org.a_cyb.sayitalarm.entity.Hour
 import org.a_cyb.sayitalarm.entity.Minute
 import org.a_cyb.sayitalarm.entity.SayItScripts
-import org.a_cyb.sayitalarm.presentation.CommandContract
-import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract.*
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.*
 
 interface AlarmPanelCommandContract {
     fun interface SetTime : CommandContract.CommandReceiver {

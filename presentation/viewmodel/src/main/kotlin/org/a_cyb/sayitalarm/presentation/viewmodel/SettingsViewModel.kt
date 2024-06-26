@@ -18,14 +18,14 @@ import org.a_cyb.sayitalarm.entity.Snooze
 import org.a_cyb.sayitalarm.entity.Theme
 import org.a_cyb.sayitalarm.entity.TimeOut
 import org.a_cyb.sayitalarm.formatter.duration.DurationFormatterContract
-import org.a_cyb.sayitalarm.presentation.CommandContract
+import org.a_cyb.sayitalarm.presentation.command.CommandContract
 import org.a_cyb.sayitalarm.presentation.interactor.InteractorContract
-import org.a_cyb.sayitalarm.presentation.settings.SettingsContract
-import org.a_cyb.sayitalarm.presentation.settings.SettingsContract.Initial
-import org.a_cyb.sayitalarm.presentation.settings.SettingsContract.InitialError
-import org.a_cyb.sayitalarm.presentation.settings.SettingsContract.SettingsState
-import org.a_cyb.sayitalarm.presentation.settings.SettingsContract.SettingsStateWithContent
-import org.a_cyb.sayitalarm.presentation.settings.SettingsContract.TimeInput
+import org.a_cyb.sayitalarm.presentation.SettingsContract
+import org.a_cyb.sayitalarm.presentation.SettingsContract.Initial
+import org.a_cyb.sayitalarm.presentation.SettingsContract.InitialError
+import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState
+import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsStateWithContent
+import org.a_cyb.sayitalarm.presentation.SettingsContract.TimeInput
 
 internal class SettingsViewModel(
     private val interactor: InteractorContract.SettingsInteractor,

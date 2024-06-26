@@ -22,7 +22,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.a_cyb.sayitalarm.R
-import org.a_cyb.sayitalarm.presentation.settings.SettingsContract
+import org.a_cyb.sayitalarm.presentation.SettingsContract
 import org.a_cyb.sayitalarm.roborazziOf
 import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Rule

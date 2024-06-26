@@ -4,7 +4,7 @@
  * Use of this source code is governed by Apache v2.0
  */
 
-package org.a_cyb.sayitalarm.presentation
+package org.a_cyb.sayitalarm.presentation.command
 
 interface CommandContract {
 

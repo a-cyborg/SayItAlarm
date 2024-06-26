@@ -16,16 +16,16 @@ import org.a_cyb.sayitalarm.alarm_service.AlarmSchedulerContract
 import org.a_cyb.sayitalarm.entity.Alarm
 import org.a_cyb.sayitalarm.formatter.time.TimeFormatterContract
 import org.a_cyb.sayitalarm.formatter.weekday.WeekdayFormatterContract
-import org.a_cyb.sayitalarm.presentation.CommandContract
+import org.a_cyb.sayitalarm.presentation.command.CommandContract
 import org.a_cyb.sayitalarm.presentation.interactor.InteractorContract
-import org.a_cyb.sayitalarm.presentation.list.ListContract
-import org.a_cyb.sayitalarm.presentation.list.ListContract.AlarmInfo
-import org.a_cyb.sayitalarm.presentation.list.ListContract.Error
-import org.a_cyb.sayitalarm.presentation.list.ListContract.Initial
-import org.a_cyb.sayitalarm.presentation.list.ListContract.InitialError
-import org.a_cyb.sayitalarm.presentation.list.ListContract.ListState
-import org.a_cyb.sayitalarm.presentation.list.ListContract.ListStateWithContent
-import org.a_cyb.sayitalarm.presentation.list.ListContract.Success
+import org.a_cyb.sayitalarm.presentation.ListContract
+import org.a_cyb.sayitalarm.presentation.ListContract.AlarmInfo
+import org.a_cyb.sayitalarm.presentation.ListContract.Error
+import org.a_cyb.sayitalarm.presentation.ListContract.Initial
+import org.a_cyb.sayitalarm.presentation.ListContract.InitialError
+import org.a_cyb.sayitalarm.presentation.ListContract.ListState
+import org.a_cyb.sayitalarm.presentation.ListContract.ListStateWithContent
+import org.a_cyb.sayitalarm.presentation.ListContract.Success
 
 internal class ListViewModel(
     private val interactor: InteractorContract.ListInteractor,
@@ -75,7 +75,7 @@ internal class ListViewModel(
 
     override fun setEnabled(id: Long, enabled: Boolean) {
         scope.launch {
-            interactor.setEnabled(id, enabled, this) // First alarm db updated and after that  scheduler should run.
+            interactor.setEnabled(id, enabled, this)
             alarmScheduler.setAlarm(this)
         }
     }

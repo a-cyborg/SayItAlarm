@@ -24,10 +24,10 @@ import org.a_cyb.sayitalarm.entity.Minute
 import org.a_cyb.sayitalarm.formatter.enum.EnumFormatterContract
 import org.a_cyb.sayitalarm.formatter.time.TimeFormatterContract
 import org.a_cyb.sayitalarm.formatter.weekday.WeekdayFormatterContract
-import org.a_cyb.sayitalarm.presentation.add.AddContract
-import org.a_cyb.sayitalarm.presentation.add.AddContract.AddState.*
-import org.a_cyb.sayitalarm.presentation.add.SaveCommand
-import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract.*
+import org.a_cyb.sayitalarm.presentation.AddContract
+import org.a_cyb.sayitalarm.presentation.AddContract.AddState.*
+import org.a_cyb.sayitalarm.presentation.command.SaveCommand
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.*
 import org.a_cyb.sayitalarm.presentation.interactor.InteractorContract
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.AlertTypeFormatterFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.FakeAlarmData
@@ -216,7 +216,7 @@ class AddViewModelSpec {
         }
 
     @Test
-    fun `Given save is called it maps AlarmUI to Alarm and trigger interactor save`() = runTest {
+    fun `When save is called it maps AlarmUI to Alarm and trigger interactor save`() = runTest {
         // Given
         val alarm = FakeAlarmData.alarms[1].copy(id = 0)
         val weeklyRepeatUI = defaultAlarmUI.weeklyRepeatUI.selectableRepeats.map {

@@ -25,8 +25,8 @@ import org.a_cyb.sayitalarm.entity.Settings
 import org.a_cyb.sayitalarm.entity.Snooze
 import org.a_cyb.sayitalarm.entity.Theme
 import org.a_cyb.sayitalarm.entity.TimeOut
-import org.a_cyb.sayitalarm.presentation.CommandContract
-import org.a_cyb.sayitalarm.presentation.settings.SettingsContract
+import org.a_cyb.sayitalarm.presentation.command.CommandContract
+import org.a_cyb.sayitalarm.presentation.SettingsContract
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.DurationFormatterFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.SettingsInteractorFake
 import org.a_cyb.sayitalarm.util.fulfils
@@ -116,7 +116,6 @@ class SettingsViewModelSpec {
 
         viewModel.state.test {
             skipItems(2)
-            advanceUntilIdle()
 
             // When
             viewModel.setTimeOut(timeOut)

@@ -41,17 +41,17 @@ import org.a_cyb.sayitalarm.molecule.PopupPickerRingtone
 import org.a_cyb.sayitalarm.molecule.PopupPickerSayItScript
 import org.a_cyb.sayitalarm.molecule.PopupPickerTime
 import org.a_cyb.sayitalarm.molecule.TextRowInfo
-import org.a_cyb.sayitalarm.presentation.CommandContract
-import org.a_cyb.sayitalarm.presentation.CommandContract.CommandReceiver
-import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract.AlarmUI
-import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract.RingtoneUI
-import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract.TimeUI
-import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract.WeeklyRepeatUI
-import org.a_cyb.sayitalarm.presentation.alarm_panel.SetLabelCommand
-import org.a_cyb.sayitalarm.presentation.alarm_panel.SetRingtoneCommand
-import org.a_cyb.sayitalarm.presentation.alarm_panel.SetScriptsCommand
-import org.a_cyb.sayitalarm.presentation.alarm_panel.SetTimeCommand
-import org.a_cyb.sayitalarm.presentation.alarm_panel.SetWeeklyRepeatCommand
+import org.a_cyb.sayitalarm.presentation.command.CommandContract
+import org.a_cyb.sayitalarm.presentation.command.CommandContract.CommandReceiver
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.AlarmUI
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.RingtoneUI
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.TimeUI
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.WeeklyRepeatUI
+import org.a_cyb.sayitalarm.presentation.command.SetLabelCommand
+import org.a_cyb.sayitalarm.presentation.command.SetRingtoneCommand
+import org.a_cyb.sayitalarm.presentation.command.SetScriptsCommand
+import org.a_cyb.sayitalarm.presentation.command.SetTimeCommand
+import org.a_cyb.sayitalarm.presentation.command.SetWeeklyRepeatCommand
 
 @Composable
 fun AlarmPanel(
@@ -187,6 +187,7 @@ private fun SayItScriptsPanel(
 ) {
     val scripts = remember { value.toMutableStateList() }
     val selectedIdx = remember { mutableIntStateOf(0) }
+
     var showInfoText by rememberSaveable { mutableStateOf(false) }
     var showPopUpPicker by rememberSaveable { mutableStateOf(false) }
 

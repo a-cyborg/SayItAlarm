@@ -4,13 +4,13 @@
  * Use of this source code is governed by Apache v2.0
  */
 
-package org.a_cyb.sayitalarm.presentation.settings
+package org.a_cyb.sayitalarm.presentation
 
 import kotlinx.coroutines.flow.StateFlow
-import org.a_cyb.sayitalarm.presentation.CommandContract
-import org.a_cyb.sayitalarm.presentation.settings.SettingsCommandContract.SetSnooze
-import org.a_cyb.sayitalarm.presentation.settings.SettingsCommandContract.SetTheme
-import org.a_cyb.sayitalarm.presentation.settings.SettingsCommandContract.SetTimeOut
+import org.a_cyb.sayitalarm.presentation.command.CommandContract
+import org.a_cyb.sayitalarm.presentation.command.SettingsCommandContract.SetSnooze
+import org.a_cyb.sayitalarm.presentation.command.SettingsCommandContract.SetTheme
+import org.a_cyb.sayitalarm.presentation.command.SettingsCommandContract.SetTimeOut
 
 interface SettingsContract {
     interface SettingsViewModel : SetTimeOut, SetSnooze, SetTheme, CommandContract.CommandExecutor {

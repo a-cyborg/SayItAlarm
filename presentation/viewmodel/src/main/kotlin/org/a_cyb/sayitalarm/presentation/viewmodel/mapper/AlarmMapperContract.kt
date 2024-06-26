@@ -7,7 +7,7 @@
 package org.a_cyb.sayitalarm.presentation.viewmodel.mapper
 
 import org.a_cyb.sayitalarm.entity.Alarm
-import org.a_cyb.sayitalarm.presentation.alarm_panel.AlarmPanelContract.AlarmUI
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.AlarmUI
 
 interface AlarmMapperContract {
 

@@ -10,8 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import org.a_cyb.sayitalarm.presentation.CommandContract
-import org.a_cyb.sayitalarm.presentation.list.ListContract
+import org.a_cyb.sayitalarm.presentation.command.CommandContract
+import org.a_cyb.sayitalarm.presentation.ListContract
 
 @Preview
 @Composable
@@ -47,9 +47,6 @@ private val success = ListContract.Success(
         ),
     )
 )
-
-
-
 
 private class ListViewModelFake(
     initState: ListContract.ListState = success,

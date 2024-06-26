@@ -4,7 +4,9 @@
  * Use of this source code is governed by Apache v2.0
  */
 
-package org.a_cyb.sayitalarm.presentation.alarm_panel
+package org.a_cyb.sayitalarm.presentation
+
+import org.a_cyb.sayitalarm.presentation.command.AlarmPanelCommandContractAll
 
 interface AlarmPanelContract : AlarmPanelCommandContractAll {
 
@@ -23,24 +25,24 @@ interface AlarmPanelContract : AlarmPanelCommandContractAll {
         val formattedTime: String
     )
 
+    data class WeeklyRepeatUI(
+        val formatted: String,
+        val selectableRepeats: List<SelectableRepeat>
+    )
+
     data class SelectableRepeat(
         val name: String,
         val code: Int,
         val selected: Boolean
     )
 
-    data class WeeklyRepeatUI(
-        val formatted: String,
-        val selectableRepeats: List<SelectableRepeat>
+    data class AlertTypeUI(
+        val selectableAlertType: List<SelectableAlertType>
     )
 
     data class SelectableAlertType(
         val name: String,
         val selected: Boolean
-    )
-
-    data class AlertTypeUI(
-        val selectableAlertType: List<SelectableAlertType>
     )
 
     data class RingtoneUI(

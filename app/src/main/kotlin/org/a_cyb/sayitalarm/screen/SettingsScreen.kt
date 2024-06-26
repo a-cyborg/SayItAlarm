@@ -25,15 +25,15 @@ import org.a_cyb.sayitalarm.molecule.PanelItemStandard
 import org.a_cyb.sayitalarm.molecule.PanelItemWithPopupPickerStandardWheel
 import org.a_cyb.sayitalarm.molecule.TextRowWarning
 import org.a_cyb.sayitalarm.molecule.TopAppBarGlobal
-import org.a_cyb.sayitalarm.presentation.CommandContract
-import org.a_cyb.sayitalarm.presentation.CommandContract.CommandReceiver
-import org.a_cyb.sayitalarm.presentation.settings.SetSnoozeCommand
-import org.a_cyb.sayitalarm.presentation.settings.SetThemeCommand
-import org.a_cyb.sayitalarm.presentation.settings.SetTimeOutCommand
-import org.a_cyb.sayitalarm.presentation.settings.SettingsContract
-import org.a_cyb.sayitalarm.presentation.settings.SettingsContract.InitialError
-import org.a_cyb.sayitalarm.presentation.settings.SettingsContract.SettingsStateWithContent
-import org.a_cyb.sayitalarm.presentation.settings.SettingsContract.SettingsViewModel
+import org.a_cyb.sayitalarm.presentation.command.CommandContract
+import org.a_cyb.sayitalarm.presentation.command.CommandContract.CommandReceiver
+import org.a_cyb.sayitalarm.presentation.command.SetSnoozeCommand
+import org.a_cyb.sayitalarm.presentation.command.SetThemeCommand
+import org.a_cyb.sayitalarm.presentation.command.SetTimeOutCommand
+import org.a_cyb.sayitalarm.presentation.SettingsContract
+import org.a_cyb.sayitalarm.presentation.SettingsContract.InitialError
+import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsStateWithContent
+import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsViewModel
 
 @Composable
 fun SettingsScreen(viewModel: SettingsViewModel) {
