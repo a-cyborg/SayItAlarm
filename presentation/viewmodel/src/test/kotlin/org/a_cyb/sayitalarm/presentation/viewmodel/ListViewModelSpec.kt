@@ -22,10 +22,8 @@ import org.a_cyb.sayitalarm.alarm_service.AlarmSchedulerContract
 import org.a_cyb.sayitalarm.presentation.command.CommandContract
 import org.a_cyb.sayitalarm.presentation.interactor.InteractorContract.ListInteractor
 import org.a_cyb.sayitalarm.presentation.ListContract
-import org.a_cyb.sayitalarm.presentation.ListContract.AlarmInfo
-import org.a_cyb.sayitalarm.presentation.ListContract.Initial
-import org.a_cyb.sayitalarm.presentation.ListContract.InitialError
-import org.a_cyb.sayitalarm.presentation.ListContract.Success
+import org.a_cyb.sayitalarm.presentation.ListContract.*
+import org.a_cyb.sayitalarm.presentation.ListContract.ListState.*
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.AlarmSchedulerFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.FakeAlarmData
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.ListInteractorFake

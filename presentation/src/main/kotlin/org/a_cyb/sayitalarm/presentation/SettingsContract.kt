@@ -8,12 +8,10 @@ package org.a_cyb.sayitalarm.presentation
 
 import kotlinx.coroutines.flow.StateFlow
 import org.a_cyb.sayitalarm.presentation.command.CommandContract
-import org.a_cyb.sayitalarm.presentation.command.SettingsCommandContract.SetSnooze
-import org.a_cyb.sayitalarm.presentation.command.SettingsCommandContract.SetTheme
-import org.a_cyb.sayitalarm.presentation.command.SettingsCommandContract.SetTimeOut
+import org.a_cyb.sayitalarm.presentation.command.SettingsCommandContractAll
 
 interface SettingsContract {
-    interface SettingsViewModel : SetTimeOut, SetSnooze, SetTheme, CommandContract.CommandExecutor {
+    interface SettingsViewModel : SettingsCommandContractAll, CommandContract.CommandExecutor {
         val state: StateFlow<SettingsState>
 
         val timeOuts: List<TimeInput>
@@ -21,15 +19,17 @@ interface SettingsContract {
         val themes: List<String>
     }
 
-    interface SettingsState
-    data object Initial : SettingsState
-    data object InitialError : SettingsState
+    sealed interface SettingsState {
+        data object Initial : SettingsState
+        data class Success(val settingsUI: SettingsUI) : SettingsState
+        data object Error : SettingsState
+    }
 
-    data class SettingsStateWithContent(
+    data class SettingsUI(
         val timeOut: TimeInput,
         val snooze: TimeInput,
         val theme: String,
-    ) : SettingsState
+    )
 
     data class TimeInput(
         val input: Int,

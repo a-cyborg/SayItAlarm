@@ -17,6 +17,11 @@ interface ListCommandContract {
     }
 }
 
+interface ListCommandContractAll :
+    ListCommandContract.SetEnabled,
+    ListCommandContract.DeleteAlarm
+
+
 data class SetEnabledCommand(val id: Long, val enabled: Boolean) :
     CommandContract.Command<ListCommandContract.SetEnabled> {
     override fun execute(receiver: ListCommandContract.SetEnabled) {

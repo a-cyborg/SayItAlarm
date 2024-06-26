@@ -18,14 +18,15 @@ import org.a_cyb.sayitalarm.entity.Snooze
 import org.a_cyb.sayitalarm.entity.Theme
 import org.a_cyb.sayitalarm.entity.TimeOut
 import org.a_cyb.sayitalarm.formatter.duration.DurationFormatterContract
+import org.a_cyb.sayitalarm.presentation.SettingsContract
+import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState
+import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState.Error
+import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState.Initial
+import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState.Success
+import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsUI
+import org.a_cyb.sayitalarm.presentation.SettingsContract.TimeInput
 import org.a_cyb.sayitalarm.presentation.command.CommandContract
 import org.a_cyb.sayitalarm.presentation.interactor.InteractorContract
-import org.a_cyb.sayitalarm.presentation.SettingsContract
-import org.a_cyb.sayitalarm.presentation.SettingsContract.Initial
-import org.a_cyb.sayitalarm.presentation.SettingsContract.InitialError
-import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState
-import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsStateWithContent
-import org.a_cyb.sayitalarm.presentation.SettingsContract.TimeInput
 
 internal class SettingsViewModel(
     private val interactor: InteractorContract.SettingsInteractor,
@@ -44,14 +45,16 @@ internal class SettingsViewModel(
     private fun updateState(settingsResult: Result<Settings>) {
         settingsResult
             .onSuccess { settings -> _state.update { settings.toStateWithContent() } }
-            .onFailure { _: Throwable -> _state.update { InitialError } }
+            .onFailure { _: Throwable -> _state.update { Error } }
     }
 
-    private fun Settings.toStateWithContent(): SettingsStateWithContent =
-        SettingsStateWithContent(
-            timeOut = toTimeInput(timeOut.timeOut),
-            snooze = toTimeInput(snooze.snooze),
-            theme = theme.name.toCamelCase(),
+    private fun Settings.toStateWithContent(): Success =
+        Success(
+            SettingsUI(
+                timeOut = toTimeInput(timeOut.timeOut),
+                snooze = toTimeInput(snooze.snooze),
+                theme = theme.name.toCamelCase(),
+            )
         )
 
     private fun toTimeInput(time: Int): TimeInput {

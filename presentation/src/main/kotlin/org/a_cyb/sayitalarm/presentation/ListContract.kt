@@ -8,29 +8,25 @@ package org.a_cyb.sayitalarm.presentation
 
 import kotlinx.coroutines.flow.StateFlow
 import org.a_cyb.sayitalarm.presentation.command.CommandContract
-import org.a_cyb.sayitalarm.presentation.command.ListCommandContract.DeleteAlarm
-import org.a_cyb.sayitalarm.presentation.command.ListCommandContract.SetEnabled
+import org.a_cyb.sayitalarm.presentation.command.ListCommandContractAll
 
 interface ListContract {
-    interface ListViewModel : SetEnabled, DeleteAlarm, CommandContract.CommandExecutor {
+
+    interface ListViewModel : ListCommandContractAll, CommandContract.CommandExecutor {
         val state: StateFlow<ListState>
     }
 
-    interface ListState
-    data object Initial : ListState
-    data object InitialError : ListState
+    sealed interface ListState {
+        data object Initial : ListState
+        data object InitialError : ListState
+
+        data class Success(override val alarmData: List<AlarmInfo>) : ListStateWithContent
+        data class Error(override val alarmData: List<AlarmInfo>) : ListStateWithContent
+    }
 
     interface ListStateWithContent : ListState {
         val alarmData: List<AlarmInfo>
     }
-
-    data class Error(
-        override val alarmData: List<AlarmInfo>
-    ) : ListStateWithContent
-
-    data class Success(
-        override val alarmData: List<AlarmInfo>
-    ) : ListStateWithContent
 
     data class AlarmInfo(
         val id: Long,

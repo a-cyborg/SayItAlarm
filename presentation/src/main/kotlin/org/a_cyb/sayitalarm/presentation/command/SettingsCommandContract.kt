@@ -23,6 +23,11 @@ interface SettingsCommandContract {
     }
 }
 
+interface SettingsCommandContractAll :
+    SettingsCommandContract.SetTimeOut,
+    SettingsCommandContract.SetSnooze,
+    SettingsCommandContract.SetTheme
+
 data class SetTimeOutCommand(val timeOut: Int) : CommandContract.Command<SettingsCommandContract.SetTimeOut> {
     override fun execute(receiver: SettingsCommandContract.SetTimeOut) {
         receiver.setTimeOut(TimeOut(timeOut))

@@ -14,17 +14,16 @@ import kotlinx.coroutines.launch
 import org.a_cyb.sayitalarm.entity.Snooze
 import org.a_cyb.sayitalarm.entity.Theme
 import org.a_cyb.sayitalarm.entity.TimeOut
-import org.a_cyb.sayitalarm.presentation.command.CommandContract
-import org.a_cyb.sayitalarm.presentation.SettingsContract
 import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState
-import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsStateWithContent
+import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState.*
 import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsViewModel
 import org.a_cyb.sayitalarm.presentation.SettingsContract.TimeInput
+import org.a_cyb.sayitalarm.presentation.command.CommandContract
 
 @Suppress("EmptyFunctionBlock")
 internal class SettingsViewModelFake(
     private val viewModelScope: CoroutineScope,
-    initState: SettingsState = SettingsContract.InitialError,
+    initState: SettingsState = Error,
 ) : SettingsViewModel {
 
     private val _state: MutableStateFlow<SettingsState> = MutableStateFlow(initState)
@@ -37,10 +36,16 @@ internal class SettingsViewModelFake(
     override fun setTimeOut(timeOut: TimeOut) {
         _executedCommand = ExecutedCommand.SET_TIMEOUT
 
+        val settingsUI = (_state.value as Success).settingsUI.copy(
+            timeOut = TimeInput(
+                timeOut.timeOut,
+                timeOut.timeOut.formatAsDuration()
+            )
+        )
+
         viewModelScope.launch {
             _state.update {
-                (_state.value as SettingsStateWithContent)
-                    .copy(timeOut = TimeInput(timeOut.timeOut, timeOut.timeOut.formatAsDuration()))
+                Success(settingsUI)
             }
         }
     }

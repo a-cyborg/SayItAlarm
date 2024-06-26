@@ -11,18 +11,21 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.a_cyb.sayitalarm.entity.Snooze
 import org.a_cyb.sayitalarm.entity.TimeOut
-import org.a_cyb.sayitalarm.presentation.command.CommandContract
-import org.a_cyb.sayitalarm.presentation.SettingsContract
 import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState
+import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState.Success
+import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsUI
 import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsViewModel
 import org.a_cyb.sayitalarm.presentation.SettingsContract.TimeInput
+import org.a_cyb.sayitalarm.presentation.command.CommandContract
 
 @Suppress("EmptyFunctionBlock")
 class SettingsViewModelFake(
-    initState: SettingsState = SettingsContract.SettingsStateWithContent(
-        timeOut = TimeInput(180, formatted = "3 hr"),
-        snooze = TimeInput(15, formatted = "15 min"),
-        theme = "Light",
+    initState: SettingsState = Success(
+        SettingsUI(
+            timeOut = TimeInput(180, formatted = "3 hr"),
+            snooze = TimeInput(15, formatted = "15 min"),
+            theme = "Light",
+        )
     ),
 ) : SettingsViewModel, ViewModel() {
 

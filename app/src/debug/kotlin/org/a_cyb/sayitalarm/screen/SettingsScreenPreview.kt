@@ -21,7 +21,7 @@ fun SettingsScreenPreview() {
 @Preview
 @Composable
 fun SettingsScreenErrorStatePreview() {
-    val settingsStateWithContent = SettingsContract.InitialError
+    val settingsStateWithContent = SettingsContract.SettingsState.Error
 
     SettingsScreen(
         viewModel = SettingsViewModelFake(settingsStateWithContent),

@@ -42,8 +42,8 @@ import org.a_cyb.sayitalarm.presentation.command.CommandContract
 import org.a_cyb.sayitalarm.presentation.command.CommandContract.CommandReceiver
 import org.a_cyb.sayitalarm.presentation.command.DeleteAlarmCommand
 import org.a_cyb.sayitalarm.presentation.ListContract
+import org.a_cyb.sayitalarm.presentation.ListContract.ListState.*
 import org.a_cyb.sayitalarm.presentation.ListContract.ListViewModel
-import org.a_cyb.sayitalarm.presentation.ListContract.Success
 import org.a_cyb.sayitalarm.presentation.command.SetEnabledCommand
 import org.a_cyb.sayitalarm.screen.ListScreenMode.EDIT
 import org.a_cyb.sayitalarm.screen.ListScreenMode.VIEW
@@ -156,9 +156,12 @@ fun ListScreen(viewModel: ListViewModel) {
                 }
             }
 
-            is ListContract.InitialError -> {
+            is InitialError -> {
                 TextRowInfo(text = stringResource(id = R.string.info_list_initialize_error))
             }
+
+            is Error -> {}
+            else -> {}
         }
     }
 }

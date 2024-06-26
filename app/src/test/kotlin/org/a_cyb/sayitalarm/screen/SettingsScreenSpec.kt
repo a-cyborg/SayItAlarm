@@ -22,7 +22,10 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.a_cyb.sayitalarm.R
-import org.a_cyb.sayitalarm.presentation.SettingsContract
+import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState.Error
+import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState.Success
+import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsUI
+import org.a_cyb.sayitalarm.presentation.SettingsContract.TimeInput
 import org.a_cyb.sayitalarm.roborazziOf
 import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Rule
@@ -43,10 +46,12 @@ class SettingsScreenSpec {
     @get:Rule
     val roborazziRule = roborazziOf(composeTestRule, RoborazziRule.CaptureType.None)
 
-    private val stateWithContent = SettingsContract.SettingsStateWithContent(
-        timeOut = SettingsContract.TimeInput(180, "3 hr"),
-        snooze = SettingsContract.TimeInput(15, "15 min"),
-        theme = "Light",
+    private val stateWithContent = Success(
+        SettingsUI(
+            timeOut = TimeInput(180, "3 hr"),
+            snooze = TimeInput(15, "15 min"),
+            theme = "Light",
+        )
     )
 
     private fun getString(id: Int) = composeTestRule.activity.getString(id)
@@ -212,7 +217,7 @@ class SettingsScreenSpec {
     @Test
     fun `Given the viewModel state Error it displays info panel`() = runTest {
         // Given
-        val viewModel = SettingsViewModelFake(this, SettingsContract.InitialError)
+        val viewModel = SettingsViewModelFake(this, Error)
 
         composeTestRule.setContent {
             // When
@@ -234,7 +239,7 @@ class SettingsScreenSpec {
     @Test
     fun `Given viewModel state error it displays error message`() = runTest {
         // Given
-        val state = SettingsContract.InitialError
+        val state = Error
         val viewModel = SettingsViewModelFake(this, state)
 
         // When

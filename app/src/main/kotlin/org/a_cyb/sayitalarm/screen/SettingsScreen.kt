@@ -25,15 +25,14 @@ import org.a_cyb.sayitalarm.molecule.PanelItemStandard
 import org.a_cyb.sayitalarm.molecule.PanelItemWithPopupPickerStandardWheel
 import org.a_cyb.sayitalarm.molecule.TextRowWarning
 import org.a_cyb.sayitalarm.molecule.TopAppBarGlobal
+import org.a_cyb.sayitalarm.presentation.SettingsContract
+import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState.Success
+import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsViewModel
 import org.a_cyb.sayitalarm.presentation.command.CommandContract
 import org.a_cyb.sayitalarm.presentation.command.CommandContract.CommandReceiver
 import org.a_cyb.sayitalarm.presentation.command.SetSnoozeCommand
 import org.a_cyb.sayitalarm.presentation.command.SetThemeCommand
 import org.a_cyb.sayitalarm.presentation.command.SetTimeOutCommand
-import org.a_cyb.sayitalarm.presentation.SettingsContract
-import org.a_cyb.sayitalarm.presentation.SettingsContract.InitialError
-import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsStateWithContent
-import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsViewModel
 
 @Composable
 fun SettingsScreen(viewModel: SettingsViewModel) {
@@ -43,8 +42,8 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
         SettingsTopAppBar(onNavigateBack = {})
         SpacerLarge()
         when (state.value) {
-            is SettingsStateWithContent -> {
-                val settings = (state.value as SettingsStateWithContent)
+            is Success -> {
+                val settings = (state.value as Success).settingsUI
                 SettingsPanel(
                     currentTimeOut = settings.timeOut,
                     currentSnooze = settings.snooze,
@@ -56,9 +55,11 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
                 )
             }
 
-            is InitialError -> {
+            is Error -> {
                 TextRowWarning(text = stringResource(R.string.info_settings_initialize_error))
             }
+
+            else -> {}
         }
         SpacerXLarge()
         InfoPanel()

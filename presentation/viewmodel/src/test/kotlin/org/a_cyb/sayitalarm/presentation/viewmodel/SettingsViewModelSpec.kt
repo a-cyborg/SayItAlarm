@@ -27,6 +27,8 @@ import org.a_cyb.sayitalarm.entity.Theme
 import org.a_cyb.sayitalarm.entity.TimeOut
 import org.a_cyb.sayitalarm.presentation.command.CommandContract
 import org.a_cyb.sayitalarm.presentation.SettingsContract
+import org.a_cyb.sayitalarm.presentation.SettingsContract.*
+import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState.*
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.DurationFormatterFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.SettingsInteractorFake
 import org.a_cyb.sayitalarm.util.fulfils
@@ -40,9 +42,9 @@ class SettingsViewModelSpec {
         snooze = Snooze(15),
         theme = Theme.LIGHT,
     )
-    private val settingsStateWithContent = SettingsContract.SettingsStateWithContent(
-        timeOut = SettingsContract.TimeInput(settings.timeOut.timeOut, "3 hr"),
-        snooze = SettingsContract.TimeInput(settings.snooze.snooze, "15 min"),
+    private val settingsUI = SettingsUI(
+        timeOut = TimeInput(settings.timeOut.timeOut, "3 hr"),
+        snooze = TimeInput(settings.snooze.snooze, "15 min"),
         theme = "Light",
     )
 
@@ -68,7 +70,7 @@ class SettingsViewModelSpec {
     @Test
     fun `It is in the initial state`() {
         SettingsViewModel(interactor, durationFormatter)
-            .state.value mustBe SettingsContract.Initial
+            .state.value mustBe Initial
     }
 
     @Test
@@ -82,12 +84,12 @@ class SettingsViewModelSpec {
             skipItems(1)
 
             // Then
-            awaitItem() mustBe SettingsContract.InitialError
+            awaitItem() mustBe Error
         }
     }
 
     @Test
-    fun `Given interactor success result with Settings it sets SettingsStateWithContent`() = runTest {
+    fun `Given interactor success result with Settings it is in success state`() = runTest {
         // Given
         val results = listOf(Result.success(settings))
         val interactor = SettingsInteractorFake(results, this)
@@ -98,7 +100,7 @@ class SettingsViewModelSpec {
             skipItems(1) // Initial state
 
             // Then
-            awaitItem() mustBe settingsStateWithContent
+            awaitItem() mustBe Success(settingsUI)
         }
     }
 
@@ -106,6 +108,9 @@ class SettingsViewModelSpec {
     fun `Given setTimeOut is called it propagates SettingsStateWithContent`() = runTest {
         // Given
         val timeOut = TimeOut(60)
+        val settingsUI = settingsUI.copy(
+            timeOut = TimeInput(timeOut.timeOut, "1 hr"),
+        )
 
         val results = listOf(
             Result.success(settings),
@@ -121,10 +126,7 @@ class SettingsViewModelSpec {
             viewModel.setTimeOut(timeOut)
 
             // Then
-            awaitItem() mustBe settingsStateWithContent.copy(
-                timeOut = SettingsContract.TimeInput(timeOut.timeOut, "1 hr"),
-            )
-
+            awaitItem() mustBe Success(settingsUI)
             interactor.invoked mustBe SettingsInteractorFake.InvokedType.SET_TIMEOUT
         }
     }
@@ -133,6 +135,9 @@ class SettingsViewModelSpec {
     fun `Given setSnooze is called it propagates SettingsStateWithContent`() = runTest {
         // Given
         val snooze = Snooze(20)
+        val settingsUI = settingsUI.copy(
+            snooze = TimeInput(snooze.snooze, "20 min"),
+        )
 
         val results = listOf(
             Result.success(settings),
@@ -149,9 +154,7 @@ class SettingsViewModelSpec {
             viewModel.setSnooze(snooze)
 
             // Then
-            awaitItem() mustBe settingsStateWithContent.copy(
-                snooze = SettingsContract.TimeInput(snooze.snooze, "20 min")
-            )
+            awaitItem() mustBe Success(settingsUI)
 
             interactor.invoked mustBe SettingsInteractorFake.InvokedType.SET_SNOOZE
         }
@@ -161,6 +164,7 @@ class SettingsViewModelSpec {
     fun `Given setTheme is called it propagates SettingsStateWithContent`() = runTest {
         // Given
         val theme = Theme.DARK
+        val settingsUI = settingsUI.copy(theme = "Dark")
 
         val results = listOf(
             Result.success(settings),
@@ -177,10 +181,7 @@ class SettingsViewModelSpec {
             viewModel.setTheme("Dark")
 
             // Then
-            awaitItem() mustBe settingsStateWithContent.copy(
-                theme = "Dark"
-            )
-
+            awaitItem() mustBe Success(settingsUI)
             interactor.invoked mustBe SettingsInteractorFake.InvokedType.SET_THEME
         }
     }

@@ -12,6 +12,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.a_cyb.sayitalarm.presentation.command.CommandContract
 import org.a_cyb.sayitalarm.presentation.ListContract
+import org.a_cyb.sayitalarm.presentation.ListContract.ListState
+import org.a_cyb.sayitalarm.presentation.ListContract.ListState.*
 
 @Preview
 @Composable
@@ -22,10 +24,10 @@ fun ListScreenPreview() {
 @Preview
 @Composable
 fun ListScreenInitPreview() {
-    ListScreen(viewModel = ListViewModelFake(ListContract.Success(listOf())))
+    ListScreen(viewModel = ListViewModelFake(Success(listOf())))
 }
 
-private val success = ListContract.Success(
+private val success = Success(
     listOf(
         ListContract.AlarmInfo(
             id = 1,
@@ -49,10 +51,10 @@ private val success = ListContract.Success(
 )
 
 private class ListViewModelFake(
-    initState: ListContract.ListState = success,
+    initState: ListState = success,
 ) : ListContract.ListViewModel {
 
-    override val state: StateFlow<ListContract.ListState> = MutableStateFlow(initState)
+    override val state: StateFlow<ListState> = MutableStateFlow(initState)
     override fun setEnabled(id: Long, enabled: Boolean) {}
     override fun deleteAlarm(id: Long) {}
     override fun <T : CommandContract.CommandReceiver> runCommand(command: CommandContract.Command<T>) {}

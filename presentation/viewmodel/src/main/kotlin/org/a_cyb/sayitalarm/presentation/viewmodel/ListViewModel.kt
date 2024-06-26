@@ -16,16 +16,14 @@ import org.a_cyb.sayitalarm.alarm_service.AlarmSchedulerContract
 import org.a_cyb.sayitalarm.entity.Alarm
 import org.a_cyb.sayitalarm.formatter.time.TimeFormatterContract
 import org.a_cyb.sayitalarm.formatter.weekday.WeekdayFormatterContract
+import org.a_cyb.sayitalarm.presentation.ListContract
+import org.a_cyb.sayitalarm.presentation.ListContract.*
+import org.a_cyb.sayitalarm.presentation.ListContract.ListState.Error
+import org.a_cyb.sayitalarm.presentation.ListContract.ListState.Initial
+import org.a_cyb.sayitalarm.presentation.ListContract.ListState.InitialError
+import org.a_cyb.sayitalarm.presentation.ListContract.ListState.Success
 import org.a_cyb.sayitalarm.presentation.command.CommandContract
 import org.a_cyb.sayitalarm.presentation.interactor.InteractorContract
-import org.a_cyb.sayitalarm.presentation.ListContract
-import org.a_cyb.sayitalarm.presentation.ListContract.AlarmInfo
-import org.a_cyb.sayitalarm.presentation.ListContract.Error
-import org.a_cyb.sayitalarm.presentation.ListContract.Initial
-import org.a_cyb.sayitalarm.presentation.ListContract.InitialError
-import org.a_cyb.sayitalarm.presentation.ListContract.ListState
-import org.a_cyb.sayitalarm.presentation.ListContract.ListStateWithContent
-import org.a_cyb.sayitalarm.presentation.ListContract.Success
 
 internal class ListViewModel(
     private val interactor: InteractorContract.ListInteractor,
