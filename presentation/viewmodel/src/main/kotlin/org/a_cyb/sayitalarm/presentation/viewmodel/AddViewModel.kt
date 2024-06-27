@@ -98,10 +98,19 @@ internal class AddViewModel(
         }
     }
 
-    override fun setAlertType(alertTypeUI: AlertTypeUI) {
+    override fun setAlertType(alertTypeName: String) {
         updateSuccessOrError {
-            copy(alertTypeUI = alertTypeUI)
+            copy(alertTypeUI = getUpdatedAlertTypeUI(alertTypeName))
         }
+    }
+
+    private fun getUpdatedAlertTypeUI(chosenName: String): AlertTypeUI {
+        val selectableAlertTypes = _state.value.alarmUI.alertTypeUI
+            .selectableAlertType.map {
+                SelectableAlertType(it.name, it.name == chosenName)
+            }
+
+        return AlertTypeUI(selectableAlertTypes)
     }
 
     override fun setRingtone(ringtoneUI: RingtoneUI) {

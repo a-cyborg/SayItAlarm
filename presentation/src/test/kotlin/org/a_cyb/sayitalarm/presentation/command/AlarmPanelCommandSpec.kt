@@ -13,7 +13,6 @@ import org.a_cyb.sayitalarm.entity.AlarmType
 import org.a_cyb.sayitalarm.entity.Hour
 import org.a_cyb.sayitalarm.entity.Minute
 import org.a_cyb.sayitalarm.entity.SayItScripts
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.AlertTypeUI
 import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.RingtoneUI
 import org.a_cyb.sayitalarm.util.fulfils
 
@@ -72,7 +71,7 @@ class AlarmPanelCommandSpec {
 
     @Test
     fun `SetAlertTypeCommand fulfills Command`() {
-        SetAlertTypeCommand(AlertTypeUI(emptyList())) fulfils CommandContract.Command::class
+        SetAlertTypeCommand("") fulfils CommandContract.Command::class
     }
 
     @Test
@@ -81,7 +80,7 @@ class AlarmPanelCommandSpec {
         val receiver: AlarmPanelCommandContract.SetAlertType = mockk(relaxed = true)
 
         // When
-        SetAlertTypeCommand(AlertTypeUI(emptyList())).execute(receiver)
+        SetAlertTypeCommand("").execute(receiver)
 
         // Then
         verify(exactly = 1) { receiver.setAlertType(any()) }

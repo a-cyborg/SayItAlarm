@@ -26,7 +26,7 @@ interface AlarmPanelCommandContract {
     }
 
     fun interface SetAlertType : CommandContract.CommandReceiver {
-        fun setAlertType(alertTypeUI: AlertTypeUI)
+        fun setAlertType(alertTypeName: String)
     }
 
     fun interface SetRingtone : CommandContract.CommandReceiver {
@@ -77,10 +77,10 @@ data class SetLabelCommand(val label: String) :
     }
 }
 
-data class SetAlertTypeCommand(val alertTypeUI: AlertTypeUI) :
+data class SetAlertTypeCommand(val alertTypeName: String) :
     CommandContract.Command<AlarmPanelCommandContract.SetAlertType> {
     override fun execute(receiver: AlarmPanelCommandContract.SetAlertType) {
-        receiver.setAlertType(alertTypeUI)
+        receiver.setAlertType(alertTypeName)
     }
 }
 

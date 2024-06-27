@@ -19,6 +19,7 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import org.a_cyb.sayitalarm.entity.AlertType
 import org.a_cyb.sayitalarm.entity.Hour
 import org.a_cyb.sayitalarm.entity.Minute
 import org.a_cyb.sayitalarm.formatter.enum.EnumFormatterContract
@@ -152,7 +153,7 @@ class AddViewModelSpec {
         runTest {
             // Given
             val selected = "Sound only"
-            val selectable = defaultAlarmUI.alertTypeUI.selectableAlertType.map {
+            val alertTypes = defaultAlarmUI.alertTypeUI.selectableAlertType.map {
                 SelectableAlertType(it.name, it.name == selected)
             }
 
@@ -160,12 +161,12 @@ class AddViewModelSpec {
                 skipItems(1)
 
                 // When
-                viewModel.setAlertType(AlertTypeUI(selectable))
+                viewModel.setAlertType(selected)
 
                 // Then
                 awaitItem() mustBe Success(
                     defaultAlarmUI.copy(
-                        alertTypeUI = AlertTypeUI(selectable)
+                        alertTypeUI = AlertTypeUI(alertTypes)
                     )
                 )
             }
@@ -222,9 +223,7 @@ class AddViewModelSpec {
         val weeklyRepeatUI = defaultAlarmUI.weeklyRepeatUI.selectableRepeats.map {
             it.copy(selected = alarm.weeklyRepeat.weekdays.contains(it.code))
         }
-        val alertTypeUI = AlertTypeUI(defaultAlarmUI.alertTypeUI.selectableAlertType.map {
-            it.copy(selected = it.name == alertTypeFormatter.format(alarm.alertType))
-        })
+        val alertTypeName = alertTypeFormatter.format(AlertType.VIBRATE_ONLY)
         val ringtoneUI = RingtoneUI(
             ringtoneManager.getRingtoneTitle(alarm.ringtone.ringtone),
             alarm.ringtone.ringtone
@@ -236,7 +235,7 @@ class AddViewModelSpec {
             viewModel.setTime(alarm.hour, alarm.minute)
             viewModel.setWeeklyRepeat(weeklyRepeatUI)
             viewModel.setLabel(alarm.label.label)
-            viewModel.setAlertType(alertTypeUI)
+            viewModel.setAlertType(alertTypeName)
             viewModel.setRingtone(ringtoneUI)
             viewModel.setScripts(alarm.sayItScripts)
 

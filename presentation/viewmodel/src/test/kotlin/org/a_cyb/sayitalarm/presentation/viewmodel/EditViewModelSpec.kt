@@ -10,7 +10,6 @@ import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import java.util.Calendar
 import app.cash.turbine.test
-import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -240,7 +239,7 @@ class EditViewModelSpec {
                 skipItems(2)
 
                 // When
-                viewModel.setAlertType(AlertTypeUI(selectable))
+                viewModel.setAlertType("Sound only")
 
                 // Then
                 awaitItem() mustBe Success(
