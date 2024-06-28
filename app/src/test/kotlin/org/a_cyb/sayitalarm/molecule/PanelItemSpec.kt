@@ -21,7 +21,9 @@ import org.a_cyb.sayitalarm.R
 import org.a_cyb.sayitalarm.atom.DialogStandardFitContent
 import org.a_cyb.sayitalarm.atom.IconButtonEdit
 import org.a_cyb.sayitalarm.atom.TextDisplayStandardLarge
+import org.a_cyb.sayitalarm.atom.TextTitleDangerMedium
 import org.a_cyb.sayitalarm.roborazziOf
+import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -140,5 +142,51 @@ class PanelItemSpec {
 
         // Then
         composeTestRule.onNodeWithText(text).assertDoesNotExist()
+    }
+
+    @Test
+    fun `When PanelItemStandardClickable is clicked it runs onClick action`() {
+        var hasBeenCalled = false
+
+        with(composeTestRule) {
+            // Given
+            setContent {
+                PanelItemStandardClickable(
+                    valueLabel = "Test",
+                    onClick = { hasBeenCalled = true }
+                )
+            }
+
+            // When
+            onNodeWithText("Test")
+                .performClick()
+
+            // Then
+            hasBeenCalled mustBe true
+        }
+    }
+
+    @Test
+    fun `When PanelItemClickableBordered is clicked it runs onClick action`() {
+        var hasBeenCalled: Boolean = false
+
+        with(composeTestRule) {
+            // Given
+            setContent {
+                PanelItemClickableBordered(
+                    contentDescription = "",
+                    onClick = { hasBeenCalled = true },
+                ) {
+                    TextTitleDangerMedium(text = "Test")
+                }
+            }
+
+            // When
+            onNodeWithText("Test")
+                .performClick()
+
+            // Then
+            hasBeenCalled mustBe true
+        }
     }
 }

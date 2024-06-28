@@ -34,3 +34,6 @@ captures/
 *.njsproj
 *.sln
 *.sw?
+
+# Dev mode
+screenshots/*

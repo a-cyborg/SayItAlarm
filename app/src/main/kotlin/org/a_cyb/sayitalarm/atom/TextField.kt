@@ -19,6 +19,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -34,14 +35,15 @@ import org.a_cyb.sayitalarm.token.Color
 import org.a_cyb.sayitalarm.token.Font
 
 @Composable
-fun TextFieldStandard(
+fun TextFieldLabel(
     value: String,
     hint: String = "",
     textAlign: TextAlign = TextAlign.Start,
     onDone: (String) -> Unit,
 ) {
     val focusManager = LocalFocusManager.current
-    var text by remember { mutableStateOf(value) }
+
+    var text by rememberSaveable(value) { mutableStateOf(value) }
 
     TextField(
         value = text,

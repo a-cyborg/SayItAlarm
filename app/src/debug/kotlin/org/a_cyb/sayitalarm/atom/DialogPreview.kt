@@ -9,7 +9,7 @@ package org.a_cyb.sayitalarm.atom
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import org.a_cyb.sayitalarm.molecule.TopAppBarGlobal
+import org.a_cyb.sayitalarm.molecule.TopAppBarSmall
 
 @Preview
 @Composable
@@ -17,7 +17,7 @@ fun DialogStandardFillMaxPreview() {
     DialogStandardFillMax(
         onDismiss = {},
         topAppBar = {
-            TopAppBarGlobal(
+            TopAppBarSmall(
                 title = "Dialog",
                 firstIcon = { IconButtonClose {} },
                 secondIcon = { },

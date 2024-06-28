@@ -80,7 +80,7 @@ fun PanelItemStandardClickable(
 }
 
 @Composable
-fun PanelItemStandardClickableBordered(
+fun PanelItemClickableBordered(
     contentDescription: String,
     onClick: () -> Unit,
     content: @Composable () -> Unit,

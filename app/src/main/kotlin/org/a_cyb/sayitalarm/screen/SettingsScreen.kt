@@ -24,9 +24,9 @@ import org.a_cyb.sayitalarm.atom.SpacerXLarge
 import org.a_cyb.sayitalarm.molecule.PanelItemStandard
 import org.a_cyb.sayitalarm.molecule.PanelItemWithPopupPickerStandardWheel
 import org.a_cyb.sayitalarm.molecule.TextRowWarning
-import org.a_cyb.sayitalarm.molecule.TopAppBarGlobal
+import org.a_cyb.sayitalarm.molecule.TopAppBarMedium
 import org.a_cyb.sayitalarm.presentation.SettingsContract
-import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState.Success
+import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState.*
 import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsViewModel
 import org.a_cyb.sayitalarm.presentation.command.CommandContract
 import org.a_cyb.sayitalarm.presentation.command.CommandContract.CommandReceiver
@@ -39,7 +39,7 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
     val state = viewModel.state.collectAsState()
 
     ColumnScreenStandardScrollable {
-        SettingsTopAppBar(onNavigateBack = {})
+        SettingSTopAppBar(onNavigateBack = {})  // Navigation Impl.
         SpacerLarge()
         when (state.value) {
             is Success -> {
@@ -55,11 +55,11 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
                 )
             }
 
-            is Error -> {
+            Error -> {
                 TextRowWarning(text = stringResource(R.string.info_settings_initialize_error))
             }
 
-            else -> {}
+            Initial -> {}
         }
         SpacerXLarge()
         InfoPanel()
@@ -67,10 +67,10 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
 }
 
 @Composable
-private fun SettingsTopAppBar(onNavigateBack: () -> Unit) {
-    TopAppBarGlobal(
+private fun SettingSTopAppBar(onNavigateBack: () -> Unit) {
+    TopAppBarMedium(
         title = stringResource(id = R.string.settings),
-        firstIcon = { IconButtonNavigateBack { onNavigateBack() } },
+        navigationIcon = { IconButtonNavigateBack { onNavigateBack() } },
     )
 }
 

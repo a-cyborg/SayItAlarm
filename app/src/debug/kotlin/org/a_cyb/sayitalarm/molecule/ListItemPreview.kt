@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import org.a_cyb.sayitalarm.app.atom.SwitchStandard
+import org.a_cyb.sayitalarm.atom.SwitchStandard
 import org.a_cyb.sayitalarm.atom.IconButtonDelete
 import org.a_cyb.sayitalarm.atom.IconButtonEdit
 import org.a_cyb.sayitalarm.atom.SpacerMedium

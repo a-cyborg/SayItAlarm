@@ -17,6 +17,12 @@ fun TextDisplayStandardLargePreview() {
 
 @Preview
 @Composable
+fun TextDisplayStandardSmallPreview() {
+    TextDisplayStandardSmall(text = "SayIt")
+}
+
+@Preview
+@Composable
 fun TextHeadlineStandardPreview() {
     TextHeadlineStandardSmall(text = "SayIt")
 }

@@ -22,7 +22,7 @@ object Font {
 
     object Display {
         val l = base.copy(
-            fontWeight = FontWeight.Bold,
+            fontWeight = FontWeight.Light,
             fontSize = 57.sp,
             lineHeight = 64.sp,
             letterSpacing = (-0.25).sp,
@@ -36,8 +36,8 @@ object Font {
         )
 
         val s = base.copy(
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 36.sp,
+            fontWeight = FontWeight.ExtraLight,
+            fontSize = 33.sp,
             lineHeight = 44.sp,
             letterSpacing = 0.sp,
         )
@@ -46,9 +46,10 @@ object Font {
     val display = Display
 
     object Headline {
-        private val headlineBase = base.copy(fontWeight = FontWeight.Medium)
+        private val headlineBase = TextStyle(fontFamily = aliceFontFamily)
 
         val l = headlineBase.copy(
+            fontWeight = FontWeight.Light,
             fontSize = 32.sp,
             lineHeight = 40.sp,
             letterSpacing = 0.sp,

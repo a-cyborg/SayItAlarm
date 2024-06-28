@@ -4,7 +4,7 @@
  * Use of this source code is governed by Apache v2.0
  */
 
-package org.a_cyb.sayitalarm.app.atom
+package org.a_cyb.sayitalarm.atom
 
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
@@ -21,9 +21,10 @@ fun SwitchStandard(
         onCheckedChange = onCheckedChange,
         colors = SwitchDefaults.colors(
             checkedThumbColor = Color.surface.attention,
-            checkedTrackColor = Color.surface.success,
+            checkedTrackColor = Color.surface.standard,
+            checkedBorderColor = Color.surface.attention,
             uncheckedThumbColor = Color.surface.strong,
-            uncheckedTrackColor = Color.surface.subtle,
+            uncheckedTrackColor = Color.surface.standard,
         ),
     )
 }

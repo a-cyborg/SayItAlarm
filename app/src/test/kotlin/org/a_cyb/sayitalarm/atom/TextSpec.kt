@@ -33,6 +33,13 @@ class TextSpec : RoborazziTest() {
     }
 
     @Test
+    fun `It renders TextDisplaySubtleSmall`() {
+        subjectUnderTest.setContent {
+            TextDisplaySubtleSmall(text = "DisplayStandardSmall")
+        }
+    }
+
+    @Test
     fun `It renders TextHeadlineStandardLarge`() {
         subjectUnderTest.setContent {
             TextHeadlineStandardLarge(text = "HeadlineStandardLarge")

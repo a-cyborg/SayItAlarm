@@ -16,14 +16,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import org.a_cyb.sayitalarm.R
-import org.a_cyb.sayitalarm.app.atom.SwitchStandard
 import org.a_cyb.sayitalarm.atom.ColumnScreenStandard
-import org.a_cyb.sayitalarm.atom.DividerMedium
 import org.a_cyb.sayitalarm.atom.DividerStandard
 import org.a_cyb.sayitalarm.atom.IconButtonAdd
 import org.a_cyb.sayitalarm.atom.IconButtonDelete
@@ -31,23 +29,74 @@ import org.a_cyb.sayitalarm.atom.IconButtonDone
 import org.a_cyb.sayitalarm.atom.IconButtonEdit
 import org.a_cyb.sayitalarm.atom.IconButtonEditText
 import org.a_cyb.sayitalarm.atom.IconButtonSettings
+import org.a_cyb.sayitalarm.atom.SpacerLarge
 import org.a_cyb.sayitalarm.atom.SpacerMedium
-import org.a_cyb.sayitalarm.atom.SpacerXLarge
+import org.a_cyb.sayitalarm.atom.SpacerSmall
+import org.a_cyb.sayitalarm.atom.SpacerXSmall
+import org.a_cyb.sayitalarm.atom.SwitchStandard
 import org.a_cyb.sayitalarm.atom.TextHeadlineStandardLarge
 import org.a_cyb.sayitalarm.atom.TextTitleStandardMedium
 import org.a_cyb.sayitalarm.molecule.ListItemStandard
 import org.a_cyb.sayitalarm.molecule.TextRowInfo
-import org.a_cyb.sayitalarm.molecule.TopAppBarGlobal
+import org.a_cyb.sayitalarm.molecule.TopAppBarMedium
+import org.a_cyb.sayitalarm.presentation.ListContract
+import org.a_cyb.sayitalarm.presentation.ListContract.ListState.Error
+import org.a_cyb.sayitalarm.presentation.ListContract.ListState.InitialError
+import org.a_cyb.sayitalarm.presentation.ListContract.ListState.Success
+import org.a_cyb.sayitalarm.presentation.ListContract.ListViewModel
 import org.a_cyb.sayitalarm.presentation.command.CommandContract
 import org.a_cyb.sayitalarm.presentation.command.CommandContract.CommandReceiver
 import org.a_cyb.sayitalarm.presentation.command.DeleteAlarmCommand
-import org.a_cyb.sayitalarm.presentation.ListContract
-import org.a_cyb.sayitalarm.presentation.ListContract.ListState.*
-import org.a_cyb.sayitalarm.presentation.ListContract.ListViewModel
 import org.a_cyb.sayitalarm.presentation.command.SetEnabledCommand
 import org.a_cyb.sayitalarm.screen.ListScreenMode.EDIT
 import org.a_cyb.sayitalarm.screen.ListScreenMode.VIEW
 import org.a_cyb.sayitalarm.token.Color
+
+enum class ListScreenMode { EDIT, VIEW }
+
+@Composable
+fun ListScreen(viewModel: ListViewModel) {
+
+    val state = viewModel.state.collectAsState()
+
+    var mode by rememberSaveable { mutableStateOf(VIEW) }
+
+    ColumnScreenStandard {
+        ListTopAppBar(
+            screenMode = mode,
+            onEditClick = { mode = EDIT },
+            onDoneClick = { mode = VIEW },
+            onAddClick = {},
+            onSettingsClick = {}
+        )
+        SpacerLarge()
+        when (state.value) {
+            is Success -> {
+                val alarms = (state.value as Success).alarmData
+
+                if (alarms.isEmpty()) {
+                    TextRowInfo(text = stringResource(id = R.string.info_list_no_alarm))
+                }
+
+                LazyColumn(modifier = Modifier.background(Color.surface.standard)) {
+                    items(alarms) {
+                        AlarmListItem(
+                            alarmInfo = it,
+                            screenMode = mode,
+                            executor = { command -> viewModel.runCommand(command) }
+                        )
+                    }
+                }
+            }
+
+            is InitialError, is Error -> {
+                TextRowInfo(text = stringResource(id = R.string.info_list_initialize_error))
+            }
+
+            else -> {}
+        }
+    }
+}
 
 @Composable
 private fun ListTopAppBar(
@@ -57,29 +106,17 @@ private fun ListTopAppBar(
     onAddClick: () -> Unit,
     onSettingsClick: () -> Unit,
 ) {
-    TopAppBarGlobal(
-        title = stringResource(id = R.string.say_it),
-        firstIcon = {
+    TopAppBarMedium(
+        title = "SayIt",
+        actions = {
             when (screenMode) {
                 VIEW -> IconButtonEditText { onEditClick() }
                 EDIT -> IconButtonDone { onDoneClick() }
             }
-        },
-        secondIcon = { IconButtonAdd { onAddClick() } },
-        thirdIcon = { IconButtonSettings { onSettingsClick() } },
+            IconButtonAdd { onAddClick() }
+            IconButtonSettings { onSettingsClick() }
+        }
     )
-}
-
-@Composable
-private fun RowScope.AlarmInfo(time: String, labelAndRepeat: String) {
-    Column(
-        modifier = Modifier.weight(1f),
-        verticalArrangement = Arrangement.Center,
-    ) {
-        TextHeadlineStandardLarge(text = time)
-        TextTitleStandardMedium(text = labelAndRepeat)
-        SpacerMedium()
-    }
 }
 
 @Composable
@@ -115,53 +152,19 @@ private fun AlarmListItem(
             }
         }
     )
-    DividerMedium()
+    DividerStandard()
+    SpacerLarge()
 }
 
-enum class ListScreenMode { EDIT, VIEW }
-
 @Composable
-fun ListScreen(viewModel: ListViewModel) {
-    val state = viewModel.state.collectAsState()
-
-    var mode by remember { mutableStateOf(VIEW) }
-
-    ColumnScreenStandard {
-        ListTopAppBar(
-            screenMode = mode,
-            onEditClick = { mode = EDIT },
-            onDoneClick = { mode = VIEW },
-            onAddClick = {},
-            onSettingsClick = {}
-        )
-        DividerStandard()
-        SpacerXLarge()
-
-        when (state.value) {
-            is Success -> {
-                val alarms = (state.value as Success).alarmData
-
-                if (alarms.isEmpty()) {
-                    TextRowInfo(text = stringResource(id = R.string.info_list_no_alarm))
-                }
-
-                LazyColumn(modifier = Modifier.background(Color.surface.standard)) {
-                    items(alarms) {
-                        AlarmListItem(
-                            alarmInfo = it,
-                            screenMode = mode,
-                            executor = { command -> viewModel.runCommand(command) }
-                        )
-                    }
-                }
-            }
-
-            is InitialError -> {
-                TextRowInfo(text = stringResource(id = R.string.info_list_initialize_error))
-            }
-
-            is Error -> {}
-            else -> {}
-        }
+private fun RowScope.AlarmInfo(time: String, labelAndRepeat: String) {
+    Column(
+        modifier = Modifier.weight(1f),
+        verticalArrangement = Arrangement.Center,
+    ) {
+        TextHeadlineStandardLarge(text = time)
+        SpacerSmall()
+        TextTitleStandardMedium(text = labelAndRepeat)
+        SpacerXSmall()
     }
 }

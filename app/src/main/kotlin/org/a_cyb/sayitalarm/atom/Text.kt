@@ -30,6 +30,15 @@ fun TextDisplayStandardSmall(text: String) {
 }
 
 @Composable
+fun TextDisplaySubtleSmall(text: String) {
+    Text(
+        text = text,
+        color = Color.text.subtle,
+        style = Font.display.s,
+    )
+}
+
+@Composable
 fun TextHeadlineStandardLarge(text: String) {
     Text(
         text = text,

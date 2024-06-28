@@ -132,7 +132,7 @@ fun IconButtonCollapse(onClick: () -> Unit) {
 
 @Composable
 fun IconButtonSaveText(onClick: () -> Unit) {
-    IconButton(onClick = onClick) {
+    TextButton(onClick = onClick) {
         TextTitleAttentionMedium(text = stringResource(id = R.string.save))
     }
 }

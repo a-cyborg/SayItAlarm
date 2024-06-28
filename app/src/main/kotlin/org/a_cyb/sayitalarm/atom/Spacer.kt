@@ -13,6 +13,11 @@ import androidx.compose.ui.Modifier
 import org.a_cyb.sayitalarm.token.Spacing
 
 @Composable
+fun SpacerXSmall() {
+    Spacer(modifier = Modifier.size(Spacing.xs))
+}
+
+@Composable
 fun SpacerSmall() {
     Spacer(modifier = Modifier.size(Spacing.s))
 }

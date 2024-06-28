@@ -26,9 +26,8 @@ import org.a_cyb.sayitalarm.atom.IconButtonAdd
 import org.a_cyb.sayitalarm.atom.IconButtonInfo
 import org.a_cyb.sayitalarm.atom.PanelStandard
 import org.a_cyb.sayitalarm.atom.SpacerLarge
-import org.a_cyb.sayitalarm.atom.SpacerXLarge
 import org.a_cyb.sayitalarm.atom.TextDisplayStandardLarge
-import org.a_cyb.sayitalarm.atom.TextFieldStandard
+import org.a_cyb.sayitalarm.atom.TextFieldLabel
 import org.a_cyb.sayitalarm.atom.TextTitleStandardLarge
 import org.a_cyb.sayitalarm.entity.Hour
 import org.a_cyb.sayitalarm.entity.Minute
@@ -36,7 +35,7 @@ import org.a_cyb.sayitalarm.entity.SayItScripts
 import org.a_cyb.sayitalarm.molecule.ActionRowCollapse
 import org.a_cyb.sayitalarm.molecule.PanelItemStandard
 import org.a_cyb.sayitalarm.molecule.PanelItemStandardClickable
-import org.a_cyb.sayitalarm.molecule.PanelItemStandardClickableBordered
+import org.a_cyb.sayitalarm.molecule.PanelItemClickableBordered
 import org.a_cyb.sayitalarm.molecule.PanelItemWithPopupPicker
 import org.a_cyb.sayitalarm.molecule.PanelItemWithPopupPickerStandardWheel
 import org.a_cyb.sayitalarm.molecule.PopupPickerRepeat
@@ -68,7 +67,6 @@ fun AlarmPanel(
     ColumnScreenStandardScrollableTapDetectable(
         onTap = { _ -> focusManager.clearFocus() }  // Clear focus from the label text field
     ) {
-        SpacerXLarge()
         TimePanel(
             time = alarmUI.timeUI,
             onConfirm = { hour, minute ->
@@ -106,7 +104,7 @@ private fun TimePanel(
     var showPopUpPicker by rememberSaveable { mutableStateOf(false) }
 
     PanelStandard {
-        PanelItemStandardClickableBordered(
+        PanelItemClickableBordered(
             contentDescription = stringResource(id = R.string.action_set_alarm_time),
             onClick = { showPopUpPicker = true }
         ) {
@@ -146,7 +144,7 @@ private fun PanelItemLabel(
     executor: (CommandContract.Command<out CommandReceiver>) -> Unit,
 ) {
     PanelItemStandard(valueLabel = stringResource(id = R.string.label)) {
-        TextFieldStandard(
+        TextFieldLabel(
             value = label,
             hint = stringResource(id = R.string.label),
             textAlign = TextAlign.End,

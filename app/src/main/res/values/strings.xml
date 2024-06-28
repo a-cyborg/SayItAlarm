@@ -6,8 +6,9 @@
     <string name="info_next_alarm_time">After %s hours and %s minutes,\n the alarm will go off.</string>
     <string name="info_timeout">The alarm will stop ringing after</string>
     <string name="info_snooze">Alarm will ring again after"</string>
-    <string name="info_settings_initialize_error">Oops! Something went wrong while loading the settings. Please restart the application to try again.</string>
-    <string name="info_list_initialize_error">Oops! Something went wrong while loading the alarms. Please restart the application to try again.</string>
+    <string name="info_add_initialize_error">Oops! Something went wrong. Please restart the application and try again.</string>
+    <string name="info_settings_initialize_error">Oops! Something went wrong while loading the settings. Please restart the application and try again.</string>
+    <string name="info_list_initialize_error">Oops! Something went wrong while loading the alarms. Please restart the application and try again.</string>
     <string name="info_list_no_alarm">Hey there! Just tap the + button to get started.</string>
     <string name="info_scripts">Please write down texts that uplift your spirits, improve your mental state, or something you want to achieve. One tip I\'d like to share is that it\'s proven affirming and focusing on these goals as if you have already achieved them can help you accomplish them more effectively.</string>
     <string name="info_scripts_only_letter">Please write the text using only letters. Text should be pronounceable.</string>
@@ -15,6 +16,7 @@
     <string name="alarms">Alarms</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
+    <string name="add">Add</string>
     <string name="edit">Edit</string>
     <string name="done">Done</string>
     <string name="delete">Delete</string>

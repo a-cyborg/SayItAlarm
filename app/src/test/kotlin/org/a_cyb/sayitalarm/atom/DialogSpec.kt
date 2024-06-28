@@ -17,7 +17,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.takahirom.roborazzi.RoborazziRule
 import com.github.takahirom.roborazzi.captureRoboImage
 import org.a_cyb.sayitalarm.R
-import org.a_cyb.sayitalarm.molecule.TopAppBarGlobal
+import org.a_cyb.sayitalarm.molecule.TopAppBarSmall
 import org.a_cyb.sayitalarm.roborazziOf
 import org.junit.Rule
 import org.junit.Test
@@ -42,7 +42,7 @@ class DialogSpec {
         composeTestRule.setContent {
             DialogStandardFillMax(
                 topAppBar = {
-                    TopAppBarGlobal(
+                    TopAppBarSmall(
                         title = "Dialog",
                         firstIcon = { IconButtonClose {} },
                         secondIcon = {},
@@ -67,7 +67,7 @@ class DialogSpec {
         composeTestRule.setContent {
             DialogStandardFillMax(
                 topAppBar = {
-                    TopAppBarGlobal(
+                    TopAppBarSmall(
                         title = "Add Alarm",
                         firstIcon = { IconButtonClose {} },
                         secondIcon = { IconButtonSaveText {} },

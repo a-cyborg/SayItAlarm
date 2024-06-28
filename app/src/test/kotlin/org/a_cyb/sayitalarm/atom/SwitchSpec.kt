@@ -14,7 +14,6 @@ import androidx.compose.ui.test.assertIsOn
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.a_cyb.sayitalarm.RoborazziTest
-import org.a_cyb.sayitalarm.app.atom.SwitchStandard
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config

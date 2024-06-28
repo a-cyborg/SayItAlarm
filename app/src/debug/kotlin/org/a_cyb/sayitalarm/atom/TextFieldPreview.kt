@@ -12,7 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 @Preview
 @Composable
 fun TextFieldStandardPreview() {
-    TextFieldStandard(
+    TextFieldLabel(
         value = "",
         hint = "TextField",
         onDone = { _ -> },
@@ -22,7 +22,6 @@ fun TextFieldStandardPreview() {
 @Preview
 @Composable
 fun TextFieldSayItScriptsPreview() {
-
     TextFieldSayItScript(
         text = "",
         onValueChange = { _ -> },

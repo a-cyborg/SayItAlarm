@@ -14,11 +14,24 @@ import org.a_cyb.sayitalarm.atom.IconButtonSettings
 
 @Preview
 @Composable
-fun TopAppBarGlobalPreview() {
-    TopAppBarGlobal(
+fun TopAppBarSmallPreview() {
+    TopAppBarSmall(
         title = "SayIt",
         firstIcon = { IconButtonEditText {} },
         secondIcon = { IconButtonAdd {} },
         thirdIcon = { IconButtonSettings {} },
+    )
+}
+
+@Preview
+@Composable
+fun TopAppBarMediumPreview() {
+    TopAppBarMedium(
+        title = "SayIt",
+        actions = {
+            IconButtonEditText {}
+            IconButtonAdd {}
+            IconButtonSettings {}
+        }
     )
 }
