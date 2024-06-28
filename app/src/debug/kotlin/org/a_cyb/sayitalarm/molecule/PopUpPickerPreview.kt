@@ -11,6 +11,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import org.a_cyb.sayitalarm.R
 import org.a_cyb.sayitalarm.atom.TextDisplayStandardSmall
+import org.a_cyb.sayitalarm.organism.FakeAlarmUIData
 
 @Preview
 @Composable
@@ -48,15 +49,11 @@ fun PopupPickerTimePreview() {
 @Preview
 @Composable
 fun PopupPickerRepeatPreview() {
-    val selectableRepeat = mapOf(
-        "Sunday" to 1, "Monday" to 2, "Tuesday" to 3, "Wednesday" to 4,
-        "Thursday" to 5, "Friday" to 6, "Saturday" to 7,
-    )
+    val selectableRepeats = FakeAlarmUIData.defaultSelectableRepeats
 
     PopupPickerRepeat(
         title = stringResource(id = R.string.repeat),
-        selectedRepeat = emptySet(),
-        selectableRepeat = selectableRepeat,
+        selectableRepeats = selectableRepeats,
         onConfirm = { _ -> },
         onCancel = {}
     )

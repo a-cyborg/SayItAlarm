@@ -16,12 +16,15 @@ import org.a_cyb.sayitalarm.token.Color
 import org.a_cyb.sayitalarm.token.Icon
 
 @Composable
-fun IconButtonAdd(onClick: () -> Unit) {
+fun IconButtonAdd(
+    contentDescription: String = stringResource(id = R.string.action_add_alarm),
+    onClick: () -> Unit
+) {
     IconButton(onClick = onClick) {
         Icon(
             imageVector = Icon.add,
             tint = Color.text.attention,
-            contentDescription = stringResource(id = R.string.action_add_alarm),
+            contentDescription = contentDescription,
         )
     }
 }

@@ -7,6 +7,7 @@
 package org.a_cyb.sayitalarm.atom
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -20,25 +21,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
 import org.a_cyb.sayitalarm.R
 import org.a_cyb.sayitalarm.token.Color
-
-@Composable
-fun ColumnScreenStandardScrollable(content: @Composable ColumnScope.() -> Unit) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top,
-        modifier = Modifier
-            .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.safeDrawing)
-            .verticalScroll(rememberScrollState())
-            .background(Color.surface.standard),
-    ) {
-        content()
-        Footer()
-    }
-}
 
 @Composable
 fun ColumnScreenStandard(content: @Composable ColumnScope.() -> Unit) {
@@ -60,4 +47,42 @@ fun ColumnScope.Footer() {
     Spacer(modifier = Modifier.weight(1f))
     TextBodyStandardSmall(text = stringResource(R.string.say_it))
     SpacerMedium()
+}
+
+@Composable
+fun ColumnScreenStandardScrollable(content: @Composable ColumnScope.() -> Unit) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top,
+        modifier = Modifier
+            .fillMaxSize()
+            .windowInsetsPadding(WindowInsets.safeDrawing)
+            .verticalScroll(rememberScrollState())
+            .background(Color.surface.standard),
+    ) {
+        content()
+        Footer()
+    }
+}
+
+@Composable
+fun ColumnScreenStandardScrollableTapDetectable(
+    onTap: (Offset) -> Unit,
+    content: @Composable ColumnScope.() -> Unit,
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top,
+        modifier = Modifier
+            .fillMaxSize()
+            .windowInsetsPadding(WindowInsets.safeDrawing)
+            .verticalScroll(rememberScrollState())
+            .pointerInput(Unit) {
+                detectTapGestures(onTap = onTap)
+            }
+            .background(Color.surface.standard),
+    ) {
+        content()
+        Footer()
+    }
 }

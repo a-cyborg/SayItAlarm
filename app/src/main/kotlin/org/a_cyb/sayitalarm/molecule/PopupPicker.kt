@@ -28,20 +28,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.net.toUri
 import kotlinx.coroutines.launch
 import org.a_cyb.sayitalarm.R
-import org.a_cyb.sayitalarm.atom.ColumnScreenStandardScrollable
-import org.a_cyb.sayitalarm.atom.DialogStandardFillMax
 import org.a_cyb.sayitalarm.atom.DialogStandardFitContent
+import org.a_cyb.sayitalarm.atom.DialogStandardFitContentScrollable
 import org.a_cyb.sayitalarm.atom.IconButtonDeleteText
 import org.a_cyb.sayitalarm.atom.PanelStandardLazy
-import org.a_cyb.sayitalarm.atom.SpacerLarge
 import org.a_cyb.sayitalarm.atom.SpacerMedium
-import org.a_cyb.sayitalarm.atom.SpacerXLarge
 import org.a_cyb.sayitalarm.atom.TextFieldSayItScript
 import org.a_cyb.sayitalarm.atom.TextTitleStandardLarge
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.SelectableRepeat
 
 @Composable
 fun <T> PopUpPickerStandardWheel(
@@ -86,47 +85,44 @@ fun PopupPickerTime(
         initialMinute = minute
     )
 
-    DialogStandardFitContent(onDismiss = onCancel) {
-        ColumnScreenStandardScrollable {
-            TimePicker(state = timePickerState)
-            ActionRowCancelAndConfirm(
-                onCancel = onCancel,
-                onConfirm = {
-                    onConfirm(timePickerState.hour, timePickerState.minute)
-                    onCancel()
-                },
-            )
-        }
+    DialogStandardFitContentScrollable(onDismiss = onCancel) {
+        TimePicker(state = timePickerState)
+        ActionRowCancelAndConfirm(
+            onCancel = onCancel,
+            onConfirm = {
+                onConfirm(timePickerState.hour, timePickerState.minute)
+                onCancel()
+            },
+        )
     }
 }
 
 @Composable
 fun PopupPickerRepeat(
     title: String,
-    selectedRepeat: Set<Int>,
-    selectableRepeat: Map<String, Int>,
-    onConfirm: (Set<Int>) -> Unit,
+    selectableRepeats: List<SelectableRepeat>,
+    onConfirm: (List<SelectableRepeat>) -> Unit,
     onCancel: () -> Unit
 ) {
     val selections: MutableMap<String, Boolean> = remember {
         mutableStateMapOf(
-            *selectableRepeat.keys.map {
-                it to selectedRepeat.contains(selectableRepeat[it])
-            }.toTypedArray()
+            *selectableRepeats
+                .map { it.name to it.selected }
+                .toTypedArray()
         )
     }
 
     DialogStandardFitContent(onDismiss = onCancel) {
         PanelStandardLazy {
             item { TextRowTitleAndInfo(title = title, info = "") }
-            items(selectableRepeat.keys.toList()) {
-                PanelItemStandard(valueLabel = it) {
+            items(selectableRepeats) {
+                PanelItemStandard(valueLabel = it.name) {
                     RadioButton(
-                        selected = selections[it] ?: false,
+                        selected = selections[it.name] ?: false,
                         onClick = {
-                            when (selections[it]) {
-                                true -> selections[it] = false
-                                else -> selections[it] = true
+                            when (selections[it.name]) {
+                                true -> selections[it.name] = false
+                                else -> selections[it.name] = true
                             }
                         }
                     )
@@ -137,11 +133,11 @@ fun PopupPickerRepeat(
                 ActionRowCancelAndConfirm(
                     onCancel = onCancel,
                     onConfirm = {
-                        val selected: Set<Int> = selections
-                            .filterValues { it }
-                            .keys
-                            .map { selectableRepeat[it]!! }
-                            .toSortedSet()
+                        val selected: List<SelectableRepeat> =
+                            selectableRepeats.map { selectable ->
+                                selectable
+                                    .copy(selected = selections[selectable.name] ?: false)
+                            }
 
                         onConfirm(selected)
                         onCancel()
@@ -155,11 +151,12 @@ fun PopupPickerRepeat(
 @Composable
 fun PopupPickerRingtone(
     selectedUri: String,
-    onConfirm: (Uri) -> Unit,
+    onConfirm: (title: String, Uri) -> Unit,
     onCancel: () -> Unit,
 ) {
     // TODO: All below logic should be moved to ringtoneManager module.
     //  Receive all selectable ringtone and view should only displays received lists.
+    val context = LocalContext.current
     val ringtonePickerLauncher =
         rememberLauncherForActivityResult(
             contract = ActivityResultContracts.StartActivityForResult(),
@@ -172,19 +169,21 @@ fun PopupPickerRingtone(
                         result.data?.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI)
                     }
 
-                    uri?.let(onConfirm)
+                    uri?.let {
+                        val title = RingtoneManager.getRingtone(context, uri).getTitle(context)
+                        onConfirm(title, it)
+                    }
                 }
                 onCancel()
             }
         )
 
-    val intent = Intent(RingtoneManager.ACTION_RINGTONE_PICKER)
-        .apply {
-            putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALL)
-            putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false)
-            putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true)
-            putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, selectedUri.toUri())
-        }
+    val intent = Intent(RingtoneManager.ACTION_RINGTONE_PICKER).apply {
+        putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALL)
+        putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false)
+        putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true)
+        putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, selectedUri.toUri())
+    }
 
     SideEffect {
         ringtonePickerLauncher.launch(intent)
@@ -200,32 +199,29 @@ fun PopupPickerSayItScript(
 ) {
     var text by rememberSaveable { mutableStateOf(script) }
 
-    DialogStandardFillMax(onDismiss = onCancel, topAppBar = {}) {
-        ColumnScreenStandardScrollable {
-            SpacerLarge()
-            TextTitleStandardLarge(text = stringResource(id = R.string.say_it))
-            SpacerMedium()
-            TextFieldSayItScript(
-                text = text,
-                onValueChange = { it ->
-                    text = it.filter { it.isLetter() || it.isWhitespace() }
-                }
-            )
-            SpacerMedium()
-            ActionRowCancelAndConfirm(
-                onCancel = onCancel,
-                onConfirm = {
-                    onConfirm(text)
-                    onCancel()
-                }
-            )
-            SpacerMedium()
-            TextRowWarning(text = stringResource(id = R.string.info_scripts_only_letter))
-            IconButtonDeleteText {
-                onDelete()
+    DialogStandardFitContentScrollable(onDismiss = onCancel) {
+        TextTitleStandardLarge(text = stringResource(id = R.string.say_it))
+        SpacerMedium()
+        TextFieldSayItScript(
+            text = text,
+            onValueChange = { it ->
+                text = it
+                    .filter { it.isLetter() || it.isWhitespace() }
+            }
+        )
+        SpacerMedium()
+        ActionRowCancelAndConfirm(
+            onCancel = onCancel,
+            onConfirm = {
+                onConfirm(text)
                 onCancel()
             }
-            SpacerXLarge()
+        )
+        SpacerMedium()
+        TextRowWarning(text = stringResource(id = R.string.info_scripts_only_letter))
+        IconButtonDeleteText {
+            onDelete()
+            onCancel()
         }
     }
 }

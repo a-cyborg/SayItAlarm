@@ -9,6 +9,8 @@ package org.a_cyb.sayitalarm.atom
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
@@ -41,6 +43,23 @@ fun CardStandardCentered(content: @Composable () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(Spacing.l),
+        shape = Shape.Card.primary,
+        colors = CardDefaults.cardColors(containerColor = Color.surface.standard),
+        elevation = CardDefaults.cardElevation(defaultElevation = Elevation.secondLevel),
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            content()
+        }
+    }
+}
+
+@Composable
+fun CardStandardCenteredScrollable(content: @Composable () -> Unit) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(Spacing.l)
+            .verticalScroll(rememberScrollState()),
         shape = Shape.Card.primary,
         colors = CardDefaults.cardColors(containerColor = Color.surface.standard),
         elevation = CardDefaults.cardElevation(defaultElevation = Elevation.secondLevel),

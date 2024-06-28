@@ -8,10 +8,10 @@ package org.a_cyb.sayitalarm.molecule
 
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.test.isRoot
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
 import androidx.test.espresso.Espresso
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -73,7 +73,7 @@ class PanelItemSpec {
             )
         }
 
-        composeTestRule.onNode(isRoot())
+        composeTestRule.onRoot()
             .captureRoboImage()
     }
 

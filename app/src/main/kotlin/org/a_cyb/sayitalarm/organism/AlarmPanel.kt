@@ -16,10 +16,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import org.a_cyb.sayitalarm.R
-import org.a_cyb.sayitalarm.atom.ColumnScreenStandardScrollable
+import org.a_cyb.sayitalarm.atom.ColumnScreenStandardScrollableTapDetectable
 import org.a_cyb.sayitalarm.atom.DividerStandard
 import org.a_cyb.sayitalarm.atom.IconButtonAdd
 import org.a_cyb.sayitalarm.atom.IconButtonInfo
@@ -28,6 +29,7 @@ import org.a_cyb.sayitalarm.atom.SpacerLarge
 import org.a_cyb.sayitalarm.atom.SpacerXLarge
 import org.a_cyb.sayitalarm.atom.TextDisplayStandardLarge
 import org.a_cyb.sayitalarm.atom.TextFieldStandard
+import org.a_cyb.sayitalarm.atom.TextTitleStandardLarge
 import org.a_cyb.sayitalarm.entity.Hour
 import org.a_cyb.sayitalarm.entity.Minute
 import org.a_cyb.sayitalarm.entity.SayItScripts
@@ -36,17 +38,20 @@ import org.a_cyb.sayitalarm.molecule.PanelItemStandard
 import org.a_cyb.sayitalarm.molecule.PanelItemStandardClickable
 import org.a_cyb.sayitalarm.molecule.PanelItemStandardClickableBordered
 import org.a_cyb.sayitalarm.molecule.PanelItemWithPopupPicker
+import org.a_cyb.sayitalarm.molecule.PanelItemWithPopupPickerStandardWheel
 import org.a_cyb.sayitalarm.molecule.PopupPickerRepeat
 import org.a_cyb.sayitalarm.molecule.PopupPickerRingtone
 import org.a_cyb.sayitalarm.molecule.PopupPickerSayItScript
 import org.a_cyb.sayitalarm.molecule.PopupPickerTime
 import org.a_cyb.sayitalarm.molecule.TextRowInfo
-import org.a_cyb.sayitalarm.presentation.command.CommandContract
-import org.a_cyb.sayitalarm.presentation.command.CommandContract.CommandReceiver
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract
 import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.AlarmUI
 import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.RingtoneUI
 import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.TimeUI
 import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.WeeklyRepeatUI
+import org.a_cyb.sayitalarm.presentation.command.CommandContract
+import org.a_cyb.sayitalarm.presentation.command.CommandContract.CommandReceiver
+import org.a_cyb.sayitalarm.presentation.command.SetAlertTypeCommand
 import org.a_cyb.sayitalarm.presentation.command.SetLabelCommand
 import org.a_cyb.sayitalarm.presentation.command.SetRingtoneCommand
 import org.a_cyb.sayitalarm.presentation.command.SetScriptsCommand
@@ -58,7 +63,11 @@ fun AlarmPanel(
     alarmUI: AlarmUI,
     executor: (CommandContract.Command<out CommandReceiver>) -> Unit,
 ) {
-    ColumnScreenStandardScrollable {
+    val focusManager = LocalFocusManager.current
+
+    ColumnScreenStandardScrollableTapDetectable(
+        onTap = { _ -> focusManager.clearFocus() }  // Clear focus from the label text field
+    ) {
         SpacerXLarge()
         TimePanel(
             time = alarmUI.timeUI,
@@ -70,7 +79,8 @@ fun AlarmPanel(
         AdvancedConfigurationPanel(
             repeat = alarmUI.weeklyRepeatUI,
             label = alarmUI.label,
-            ringtone = alarmUI.ringtoneUI,
+            ringtoneUI = alarmUI.ringtoneUI,
+            alertTypeUI = alarmUI.alertTypeUI,
             executor = executor
         )
         SpacerLarge()
@@ -118,13 +128,15 @@ private fun TimePanel(
 private fun AdvancedConfigurationPanel(
     repeat: WeeklyRepeatUI,
     label: String,
-    ringtone: RingtoneUI,
+    ringtoneUI: RingtoneUI,
+    alertTypeUI: AlarmPanelContract.AlertTypeUI,
     executor: (CommandContract.Command<out CommandReceiver>) -> Unit,
 ) {
     PanelStandard(
         { PanelItemLabel(label = label, executor = executor) },
         { PanelItemRepeat(repeat = repeat, executor = executor) },
-        { PanelItemRingtone(ringtoneUI = ringtone, executor = executor) },
+        { PanelItemRingtone(ringtoneUI = ringtoneUI, executor = executor) },
+        { PanelItemAlertType(alertTypeUI = alertTypeUI, executor = executor) },
     )
 }
 
@@ -150,7 +162,7 @@ private fun PanelItemRepeat(
 ) {
     PanelItemWithPopupPicker(
         valueLabel = stringResource(id = R.string.repeat),
-        value = repeat.selectableRepeats.first { it.selected }.name
+        value = repeat.formatted
     ) { onCancel ->
         PopupPickerRepeat(
             title = stringResource(id = R.string.repeat),
@@ -178,6 +190,28 @@ private fun PanelItemRingtone(
             onCancel = onCancel,
         )
     }
+}
+
+@Composable
+private fun PanelItemAlertType(
+    alertTypeUI: AlarmPanelContract.AlertTypeUI,
+    executor: (CommandContract.Command<out CommandReceiver>) -> Unit,
+) {
+    val selectableTypes = alertTypeUI.selectableAlertType
+
+    val wheelPickerValues = selectableTypes.map { it.name }
+    val selectedIdx = selectableTypes.indexOfFirst { it.selected }
+
+    PanelItemWithPopupPickerStandardWheel(
+        title = stringResource(id = R.string.alert_type),
+        values = wheelPickerValues,
+        pickerItemRow = { TextTitleStandardLarge(text = it) },
+        selectedItemIdx = selectedIdx,
+        popUpPickerOnConfirm = { idx ->
+            val selected = selectableTypes[idx].name
+            executor(SetAlertTypeCommand(selected))
+        }
+    )
 }
 
 @Composable
@@ -211,7 +245,9 @@ private fun SayItScriptsPanel(
             DividerStandard()
         }
 
-        IconButtonAdd {
+        IconButtonAdd(
+            contentDescription = stringResource(id = R.string.action_add_script)
+        ) {
             selectedIdx.intValue = scripts.lastIndex + 1
             showPopUpPicker = true
         }

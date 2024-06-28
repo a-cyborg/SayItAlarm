@@ -105,6 +105,7 @@ fun PanelItemWithPopupPickerStandardWheel(
     title: String,
     info: String = "",
     values: List<String>,
+    pickerItemRow: @Composable (String) -> Unit = @Composable { TextDisplayStandardSmall(text = it) },
     selectedItemIdx: Int,
     popUpPickerOnConfirm: (idx: Int) -> Unit,
 ) {
@@ -123,7 +124,7 @@ fun PanelItemWithPopupPickerStandardWheel(
             info = info,
             pickerValues = values,
             pickerInitIdx = selectedItemIdx,
-            pickerItemRow = { TextDisplayStandardSmall(text = it) },
+            pickerItemRow = pickerItemRow,
             onCancel = { showPopUpPicker = false },
             onConfirm = { popUpPickerOnConfirm(it) },
         )

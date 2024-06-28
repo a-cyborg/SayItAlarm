@@ -49,3 +49,20 @@ fun DialogStandardFitContent(
         }
     }
 }
+
+@Composable
+fun DialogStandardFitContentScrollable(
+    onDismiss: () -> Unit,
+    content: @Composable () -> Unit,
+) {
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(usePlatformDefaultWidth = false),
+    ) {
+        CardStandardCenteredScrollable {
+            SpacerXLarge()
+            content()
+            SpacerXLarge()
+        }
+    }
+}

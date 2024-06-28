@@ -8,23 +8,13 @@ package org.a_cyb.sayitalarm.organism
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.*
 
 @Preview
 @Composable
 fun AlarmPanelPreview() {
+    val alarmUI = FakeAlarmUIData.defaultAlarmUI
     AlarmPanel(
-        alarmUI = defaultAlarmUI,
+        alarmUI = alarmUI,
         executor = { _ -> }
     )
 }
-
-private val defaultAlarmUI: AlarmUI =
-    AlarmUI(
-        timeUI = TimeUI(8, 0, "8:00 AM"),
-        weeklyRepeatUI = WeeklyRepeatUI("", emptyList()),
-        label = "",
-        alertTypeUI = AlertTypeUI(listOf(SelectableAlertType("Sound only", true))),
-        ringtoneUI = RingtoneUI("Radial", "file://Radial.mp3"),
-        sayItScripts = emptyList()
-    )

@@ -17,10 +17,10 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.espresso.Espresso
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.github.takahirom.roborazzi.ExperimentalRoborazziApi
 import com.github.takahirom.roborazzi.RobolectricDeviceQualifiers
 import com.github.takahirom.roborazzi.RoborazziRule
 import com.github.takahirom.roborazzi.captureRoboImage
+import org.a_cyb.sayitalarm.FakeAlarmUIData
 import org.a_cyb.sayitalarm.R
 import org.a_cyb.sayitalarm.atom.TextDisplayStandardSmall
 import org.a_cyb.sayitalarm.roborazziOf
@@ -248,16 +248,12 @@ class PopupPickerSpec {
 
     @Test
     fun `It renders PopupPickerRepeat`() {
-        val selectableRepeat = mapOf(
-            "Sunday" to 1, "Monday" to 2, "Tuesday" to 3, "Wednesday" to 4,
-            "Thursday" to 5, "Friday" to 6, "Saturday" to 7,
-        )
+        val selectableRepeats = FakeAlarmUIData.defaultSelectableRepeats
 
         composeTestRule.setContent {
             PopupPickerRepeat(
                 title = stringResource(id = R.string.repeat),
-                selectedRepeat = emptySet(),
-                selectableRepeat = selectableRepeat,
+                selectableRepeats = selectableRepeats,
                 onConfirm = { _ -> },
                 onCancel = {}
             )
