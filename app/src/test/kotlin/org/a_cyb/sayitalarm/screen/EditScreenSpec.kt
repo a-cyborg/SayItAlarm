@@ -6,10 +6,10 @@
 
 package org.a_cyb.sayitalarm.screen
 
-import androidx.compose.ui.test.hasSetTextAction
+import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.onLast
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performImeAction
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.takahirom.roborazzi.RobolectricDeviceQualifiers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,12 +21,14 @@ import org.a_cyb.sayitalarm.RoborazziTest
 import org.a_cyb.sayitalarm.entity.Hour
 import org.a_cyb.sayitalarm.entity.Minute
 import org.a_cyb.sayitalarm.entity.SayItScripts
-import org.a_cyb.sayitalarm.presentation.AddContract
-import org.a_cyb.sayitalarm.presentation.AddContract.AddState
-import org.a_cyb.sayitalarm.presentation.AddContract.AddState.Error
-import org.a_cyb.sayitalarm.presentation.AddContract.AddState.Initial
-import org.a_cyb.sayitalarm.presentation.AddContract.AddState.Success
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.*
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.RingtoneUI
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.SelectableRepeat
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.TimeUI
+import org.a_cyb.sayitalarm.presentation.EditContract.EditViewModel
+import org.a_cyb.sayitalarm.presentation.EditContract.EditViewModel.EditState
+import org.a_cyb.sayitalarm.presentation.EditContract.EditViewModel.EditState.Error
+import org.a_cyb.sayitalarm.presentation.EditContract.EditViewModel.EditState.Initial
+import org.a_cyb.sayitalarm.presentation.EditContract.EditViewModel.EditState.Success
 import org.a_cyb.sayitalarm.presentation.command.CommandContract.Command
 import org.a_cyb.sayitalarm.presentation.command.CommandContract.CommandReceiver
 import org.a_cyb.sayitalarm.util.mustBe
@@ -38,58 +40,41 @@ import org.robolectric.annotation.GraphicsMode
 @RunWith(AndroidJUnit4::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(sdk = [33], qualifiers = RobolectricDeviceQualifiers.ResizableExperimental)
-class AddScreenSpec : RoborazziTest() {
+class EditScreenSpec : RoborazziTest() {
 
     private val alarmUI = FakeAlarmUIData.defaultAlarmUI
 
     private fun stringRes(id: Int) = subjectUnderTest.activity.getString(id)
 
     @Test
-    fun `When AddViewModel is in Initial state it displays AlarmUI`() {
+    fun `When EditViewModel is in Success state it displays AlarmUI`() {
         // Given
-        val state = Initial(alarmUI)
-        val viewModel = AddViewModelFake(state)
+        val alarmUI = alarmUI.copy(
+            timeUI = TimeUI(3, 33, "3: 33 AM")
+        )
+        val viewModel = EditViewModelFake(Success(alarmUI))
 
         with(subjectUnderTest) {
             // When
             setContent {
-                AddScreen(viewModel = viewModel)
+                EditScreen(viewModel = viewModel)
             }
 
             // Then
-            onNodeWithText("8:00 AM")
+            onNodeWithText("3: 33 AM")
                 .assertExists()
         }
     }
 
     @Test
-    fun `When AddViewModel is in Success state it displays AlarmUI`() {
+    fun `When EditViewModel is in Error state it displays error message`() {
         // Given
-        val state = Success(alarmUI.copy(label = "Success"))
-        val viewModel = AddViewModelFake(state)
+        val viewModel = EditViewModelFake(Error)
 
         with(subjectUnderTest) {
             // When
             setContent {
-                AddScreen(viewModel = viewModel)
-            }
-
-            // Then
-            onNodeWithText("Success")
-                .assertExists()
-        }
-    }
-
-    @Test
-    fun `When AddViewModel is in Error state it displays info text`() {
-        // Given
-        val state = Error(alarmUI)
-        val viewModel = AddViewModelFake(state)
-
-        with(subjectUnderTest) {
-            // When
-            setContent {
-                AddScreen(viewModel = viewModel)
+                EditScreen(viewModel = viewModel)
             }
 
             // Then
@@ -99,41 +84,44 @@ class AddScreenSpec : RoborazziTest() {
     }
 
     @Test
-    fun `When AddViewModel state is updated it displays new data`() {
+    fun `When EditViewModel success state is updated it displays updated data`() {
         // Given
-        val viewModel = AddViewModelFake(
-            Initial(alarmUI),
-            Success(alarmUI.copy(label = "Hi, there"))
+        val viewModel = EditViewModelFake(
+            Success(alarmUI),
+            Success(alarmUI.copy(timeUI = TimeUI(6, 0, "6:00 AM")))
         )
 
         with(subjectUnderTest) {
             setContent {
-                AddScreen(viewModel = viewModel)
+                EditScreen(viewModel = viewModel)
             }
 
-            // When
-            onNode(hasSetTextAction())
+
+            onNodeWithText("8:00 AM")
                 .performClick()
-                .performImeAction() // It triggers SetLabelCommand execute.
+
+            // When
+            onAllNodesWithText(stringRes(R.string.confirm)).onLast()
+                .performClick()
 
             // Then
-            onNodeWithText("Hi, there")
+            onNodeWithText("6:00 AM")
                 .assertExists()
         }
     }
 
     @Test
-    fun `When viewModel is in Success state and save is clicked it executes SaveCommand`() {
+    fun `When EditViewModel is in Success state and confirm is clicked it executes SaveCommand`() {
         // Given
-        val viewModel = AddViewModelFake(Success(alarmUI))
+        val viewModel = EditViewModelFake(Success(alarmUI))
 
         with(subjectUnderTest) {
             setContent {
-                AddScreen(viewModel = viewModel)
+                EditScreen(viewModel = viewModel)
             }
 
             // When
-            onNodeWithText(stringRes(R.string.save))
+            onNodeWithText(stringRes(R.string.confirm))
                 .performClick()
 
             // Then
@@ -142,12 +130,12 @@ class AddScreenSpec : RoborazziTest() {
     }
 }
 
-private class AddViewModelFake(vararg states: AddState) : AddContract.AddViewModel {
+private class EditViewModelFake(vararg states: EditState) : EditViewModel {
 
     private val states = states.toMutableList()
 
-    private val _state: MutableStateFlow<AddState> = MutableStateFlow(Initial(FakeAlarmUIData.defaultAlarmUI))
-    override val state: StateFlow<AddState> = _state
+    private val _state: MutableStateFlow<EditState> = MutableStateFlow(Initial)
+    override val state: StateFlow<EditState> = _state
 
     private var _saveHasBeenCalled: Boolean = false
     val saveHasBeenCalled: Boolean
@@ -163,13 +151,12 @@ private class AddViewModelFake(vararg states: AddState) : AddContract.AddViewMod
         }
     }
 
-    override fun setTime(hour: Hour, minute: Minute) {}
-    override fun setWeeklyRepeat(selectableRepeats: List<SelectableRepeat>) {}
-
-    override fun setLabel(label: String) {
+    override fun setTime(hour: Hour, minute: Minute) {
         updateState()
     }
 
+    override fun setWeeklyRepeat(selectableRepeats: List<SelectableRepeat>) {}
+    override fun setLabel(label: String) {}
     override fun setAlertType(alertTypeName: String) {}
     override fun setRingtone(ringtoneUI: RingtoneUI) {}
     override fun setScripts(scripts: SayItScripts) {}

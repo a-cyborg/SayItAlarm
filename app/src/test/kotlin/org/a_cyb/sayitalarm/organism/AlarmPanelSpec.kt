@@ -34,6 +34,8 @@ import com.github.takahirom.roborazzi.captureScreenRoboImage
 import org.a_cyb.sayitalarm.FakeAlarmUIData
 import org.a_cyb.sayitalarm.R
 import org.a_cyb.sayitalarm.organism.CommandExecutorFake.InvokedType
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.SelectableRepeat
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.WeeklyRepeatUI
 import org.a_cyb.sayitalarm.roborazziOf
 import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Rule
@@ -70,6 +72,41 @@ class AlarmPanelSpec {
 
             onRoot()
                 .captureRoboImage()
+        }
+    }
+
+    @Test
+    fun `It displays AlarmUI`() {
+        val everyday = alarmUI.weeklyRepeatUI.selectableRepeats
+            .map { SelectableRepeat(it.name, it.code, true) }
+        val alarmUI = alarmUI.copy(
+            weeklyRepeatUI = WeeklyRepeatUI("Everyday", everyday),
+            label = "Test Label",
+            sayItScripts = listOf("Test script.")
+        )
+
+        with(composeTestRule) {
+            // When
+            setContent {
+                AlarmPanel(
+                    alarmUI = alarmUI,
+                    executor = {}
+                )
+            }
+
+            // Then
+            onNodeWithText("8:00 AM")
+                .assertExists()
+            onNodeWithText("Everyday")
+                .assertExists()
+            onNodeWithText("Test Label")
+                .assertExists()
+            onNodeWithText("Drip")
+                .assertExists()
+            onNodeWithText("Sound and vibration")
+                .assertExists()
+            onNodeWithText("Test script.")
+                .assertExists()
         }
     }
 

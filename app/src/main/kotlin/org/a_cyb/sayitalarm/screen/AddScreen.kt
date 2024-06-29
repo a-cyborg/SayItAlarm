@@ -13,7 +13,7 @@ import org.a_cyb.sayitalarm.R
 import org.a_cyb.sayitalarm.atom.ColumnScreenStandard
 import org.a_cyb.sayitalarm.atom.IconButtonNavigateBack
 import org.a_cyb.sayitalarm.atom.IconButtonSaveText
-import org.a_cyb.sayitalarm.atom.SpacerLarge
+import org.a_cyb.sayitalarm.atom.SpacerMedium
 import org.a_cyb.sayitalarm.molecule.TextRowWarning
 import org.a_cyb.sayitalarm.molecule.TopAppBarMedium
 import org.a_cyb.sayitalarm.organism.AlarmPanel
@@ -31,10 +31,10 @@ fun AddScreen(viewModel: AddContract.AddViewModel) {
             onCancel = {},  // TODO: Navigation impl
             onSave = { viewModel.runCommand(SaveCommand) }
         )
-        SpacerLarge()
+        SpacerMedium()
 
         if (state.value is Error) {
-            TextRowWarning(text = stringResource(id = R.string.info_add_initialize_error))
+            TextRowWarning(text = stringResource(id = R.string.info_add_and_edit_initialize_error))
         }
 
         AlarmPanel(
@@ -50,13 +50,12 @@ private fun AddTopAppBar(
     onSave: () -> Unit,
 ) {
     TopAppBarMedium(
-
         title = stringResource(id = R.string.add),
         navigationIcon = {
-            IconButtonNavigateBack { onCancel() }
+            IconButtonNavigateBack(onCancel)
         },
         actions = {
-            IconButtonSaveText { onSave() }
+            IconButtonSaveText(onSave)
         }
     )
 }

@@ -6,7 +6,7 @@
     <string name="info_next_alarm_time">After %s hours and %s minutes,\n the alarm will go off.</string>
     <string name="info_timeout">The alarm will stop ringing after</string>
     <string name="info_snooze">Alarm will ring again after"</string>
-    <string name="info_add_initialize_error">Oops! Something went wrong. Please restart the application and try again.</string>
+    <string name="info_add_and_edit_initialize_error">Oops! Something went wrong. Please restart the application and try again.</string>
     <string name="info_settings_initialize_error">Oops! Something went wrong while loading the settings. Please restart the application and try again.</string>
     <string name="info_list_initialize_error">Oops! Something went wrong while loading the alarms. Please restart the application and try again.</string>
     <string name="info_list_no_alarm">Hey there! Just tap the + button to get started.</string>

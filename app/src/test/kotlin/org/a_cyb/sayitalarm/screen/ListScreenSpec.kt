@@ -6,7 +6,6 @@
 
 package org.a_cyb.sayitalarm.screen
 
-import androidx.compose.ui.test.assertIsOn
 import androidx.compose.ui.test.isToggleable
 import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onLast
@@ -14,12 +13,9 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.takahirom.roborazzi.RobolectricDeviceQualifiers
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.test.runTest
 import org.a_cyb.sayitalarm.R
 import org.a_cyb.sayitalarm.RoborazziTest
@@ -29,12 +25,12 @@ import org.a_cyb.sayitalarm.presentation.ListContract.ListState.Initial
 import org.a_cyb.sayitalarm.presentation.ListContract.ListState.InitialError
 import org.a_cyb.sayitalarm.presentation.ListContract.ListState.Success
 import org.a_cyb.sayitalarm.presentation.command.CommandContract
+import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(AndroidJUnit4::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(sdk = [33], qualifiers = RobolectricDeviceQualifiers.SmallPhone)
@@ -43,133 +39,150 @@ class ListScreenSpec : RoborazziTest() {
     private fun getString(id: Int) = subjectUnderTest.activity.getString(id)
 
     @Test
-    fun `Given ListViewModel with success state it displays alarms`() = runTest {
+    fun `When ListViewModel is in success state with alarm data it displays them`() {
         // Given
-        val viewModel = ListViewModelFake(this, listOf(Success(alarmData)))
+        val states = listOf(Success(alarmData))
+        val viewModel = ListViewModelFake(states)
 
-        // When
-        subjectUnderTest.setContent {
-            ListScreen(viewModel = viewModel)
+        with(subjectUnderTest) {
+            // When
+            setContent {
+                ListScreen(viewModel = viewModel)
+            }
+
+            // Then
+            onNodeWithText("6:00 AM")
+                .assertExists()
         }
-        advanceUntilIdle()
-
-        // Then
-        subjectUnderTest.onNodeWithText("6:00 AM").assertExists()
     }
 
     @Test
-    fun `Given ListViewModel with success state it displays info text`() = runTest {
+    fun `When ListViewModel with success state without alarm data it displays info text`() = runTest {
         // Given
-        val viewModel = ListViewModelFake(this, listOf(Success(alarmData)))
+        val states = listOf(Success(emptyList()))
+        val viewModel = ListViewModelFake(states)
 
-        // When
-        subjectUnderTest.setContent {
-            ListScreen(viewModel = viewModel)
+        with(subjectUnderTest) {
+            // When
+            setContent {
+                ListScreen(viewModel = viewModel)
+            }
+
+            // Then
+            onNodeWithText(getString(R.string.info_list_no_alarm))
+                .assertExists()
         }
-
-        // Then
-        subjectUnderTest.onNodeWithText(getString(R.string.info_list_no_alarm))
     }
 
     @Test
-    fun `Given ListViewModel with InitialError state it displays info text`() = runTest {
+    fun `When ListViewModel is in InitialError state it displays error text`() = runTest {
         // Given
-        val viewModel = ListViewModelFake(this, listOf(InitialError))
+        val states = listOf(InitialError)
+        val viewModel = ListViewModelFake(states)
 
-        // When
-        subjectUnderTest.setContent {
-            ListScreen(viewModel = viewModel)
+        with(subjectUnderTest) {
+            // When
+            setContent {
+                ListScreen(viewModel = viewModel)
+            }
+
+            // Then
+            onNodeWithText(getString(R.string.info_list_initialize_error))
+                .assertExists()
         }
-        advanceUntilIdle()
-
-        // Then
-        subjectUnderTest.onNodeWithText(getString(R.string.info_list_initialize_error)).assertExists()
     }
 
     @Test
-    fun `Given edit button is clicked it goes into edit mode`() = runTest {
+    fun `When edit button is clicked it goes into edit mode`() = runTest {
         // Given
-        val viewModel = ListViewModelFake(this, listOf(Success(alarmData)))
+        val states = listOf(Success(alarmData))
+        val viewModel = ListViewModelFake(states)
 
-        subjectUnderTest.setContent {
-            ListScreen(viewModel = viewModel)
+        with(subjectUnderTest) {
+            setContent {
+                ListScreen(viewModel = viewModel)
+            }
+
+            // When
+            onNodeWithText(getString(R.string.edit))
+                .performClick()
+
+            // Then
+            onNodeWithText(getString(R.string.done))
+                .assertExists()
         }
-        advanceUntilIdle()
-
-        // When
-        subjectUnderTest.onNodeWithText(getString(R.string.edit)).performClick()
-
-        // Then
-        subjectUnderTest.onNodeWithText(getString(R.string.done)).assertExists()
     }
 
     @Test
-    fun `Given it in an edit mode and done button is clicked it goes back to view mode`() = runTest {
+    fun `When in edit mode and done button is clicked return to view mode`() = runTest {
         // Given
-        val viewModel = ListViewModelFake(this, listOf(Success(alarmData)))
+        val states = listOf(Success(alarmData))
+        val viewModel = ListViewModelFake(states)
 
-        subjectUnderTest.setContent {
-            ListScreen(viewModel = viewModel)
+        with((subjectUnderTest)) {
+            setContent {
+                ListScreen(viewModel = viewModel)
+            }
+
+            onNodeWithText(getString(R.string.edit))
+                .performClick()
+
+            // When
+            onNodeWithText(getString(R.string.done))
+                .performClick()
+
+            // Then
+            onNodeWithText(getString(R.string.edit))
+                .assertExists()
         }
-
-        advanceUntilIdle()
-
-        subjectUnderTest.onNodeWithText(getString(R.string.edit)).performClick()
-
-        // When
-        subjectUnderTest.onNodeWithText(getString(R.string.done)).performClick()
-
-        // Then
-        subjectUnderTest.onNodeWithText(getString(R.string.edit)).assertExists()
     }
 
     @Test
-    fun `Given switch checked is changed it executes SetEnabledCommand`() = runTest {
-        // When
-        val updatedAlamData = alarmData
-            .toMutableList().apply { set(2, alarmData[2].copy(enabled = true)) }
-            .toList()
-        val viewModel = ListViewModelFake(
-            this,
-            listOf(Success(alarmData), Success(updatedAlamData))
+    fun `When switch is clicked it executes SetEnabledCommand`() = runTest {
+        // Given
+        val states = listOf(Success(alarmData), Success(alarmData))
+        val viewModel = ListViewModelFake(states)
+
+        with(subjectUnderTest) {
+            setContent {
+                ListScreen(viewModel = viewModel)
+            }
+
+            // When
+            onAllNodes(isToggleable()).onLast()
+                .performClick()
+
+            // Then
+            viewModel.invokedType mustBe ListViewModelFake.InvokedType.SET_ENABELD
+        }
+    }
+
+    @Test
+    fun `When delete button is clicked it executes DeleteAlarmCommand`() = runTest {
+        // Given
+        val states = listOf(
+            Success(alarmData),
+            Success(alarmData.toMutableList().dropLast(1))
         )
+        val viewModel = ListViewModelFake(states)
 
-        subjectUnderTest.setContent {
-            ListScreen(viewModel = viewModel)
-            advanceUntilIdle()
+        with(subjectUnderTest) {
+            setContent {
+                ListScreen(viewModel = viewModel)
+            }
+
+            onNodeWithText(getString(R.string.edit))
+                .performClick()
+
+            // When
+            onAllNodesWithContentDescription(getString(R.string.action_delete_alarm)).onLast()
+                .performClick()
+
+            // Then
+            viewModel.invokedType mustBe ListViewModelFake.InvokedType.DELETE_ALARM
+            onNodeWithText(alarmData.last().time)
+                .assertDoesNotExist()
         }
-
-        // When
-        subjectUnderTest.onAllNodes(isToggleable()).onLast().performClick()
-        advanceUntilIdle()
-
-        // Then
-        subjectUnderTest.onAllNodes(isToggleable()).onLast().assertIsOn()
-    }
-
-    @Test
-    fun `Given delete button is clicked it executes DeleteAlarmCommand`() = runTest {
-        // Given
-        val updatedAlamData = alarmData.toMutableList().dropLast(1)
-        val viewModel = ListViewModelFake(
-            this,
-            listOf(Success(alarmData), Success(updatedAlamData))
-        )
-
-        subjectUnderTest.setContent {
-            ListScreen(viewModel = viewModel)
-        }
-        advanceUntilIdle()
-
-        subjectUnderTest.onNodeWithText(getString(R.string.edit)).performClick()
-
-        // When
-        subjectUnderTest.onAllNodesWithContentDescription(getString(R.string.action_delete_alarm)).onLast()
-            .performClick()
-        advanceUntilIdle()
-
-        // Then
-        subjectUnderTest.onNodeWithText(alarmData.last().time).assertDoesNotExist()
     }
 
     private val alarmData = listOf(
@@ -195,7 +208,7 @@ class ListScreenSpec : RoborazziTest() {
 }
 
 private class ListViewModelFake(
-    private val viewModelScope: CoroutineScope,
+    // private val viewModelScope: CoroutineScope,
     states: List<ListState>,
 ) : ListContract.ListViewModel {
     private val states = states.toMutableList()
@@ -203,30 +216,44 @@ private class ListViewModelFake(
     private val _state: MutableStateFlow<ListState> = MutableStateFlow(Initial)
     override val state: StateFlow<ListState> = _state
 
+    private var _invokedType: InvokedType = InvokedType.NONE
+    val invokedType: InvokedType
+        get() = _invokedType
+
     init {
         load()
     }
 
-    private fun load() {
-        viewModelScope.launch {
-            _state.emit(states.removeFirst())
+    private fun updateState() {
+        _state.update {
+            states.removeFirst()
         }
+    }
+
+    private fun load() {
+        updateState()
     }
 
     override fun setEnabled(id: Long, enabled: Boolean) {
-        viewModelScope.launch {
-            _state.emit(states.removeFirst())
-        }
+        _invokedType = InvokedType.SET_ENABELD
+
+        updateState()
     }
 
     override fun deleteAlarm(id: Long) {
-        viewModelScope.launch {
-            _state.emit(states.removeFirst())
-        }
+        _invokedType = InvokedType.DELETE_ALARM
+
+        updateState()
     }
 
     override fun <T : CommandContract.CommandReceiver> runCommand(command: CommandContract.Command<T>) {
         @Suppress("UNCHECKED_CAST")
         command.execute(this as T)
+    }
+
+    enum class InvokedType {
+        SET_ENABELD,
+        DELETE_ALARM,
+        NONE
     }
 }
