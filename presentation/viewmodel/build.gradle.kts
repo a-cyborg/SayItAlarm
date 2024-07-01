@@ -47,8 +47,8 @@ dependencies {
     testImplementation("io.mockk:mockk:$mockkVersion")
 
     implementation(project(":entity"))
+    implementation(project(":domain"))
     implementation(project(":presentation"))
-    implementation(project(":presentation:interactor"))
     implementation(project(":formatter"))
     implementation(project(":ringtone-manager"))
     implementation(project(":util"))

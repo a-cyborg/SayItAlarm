@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
 import org.a_cyb.sayitalarm.entity.Settings
 import org.a_cyb.sayitalarm.entity.Snooze
 import org.a_cyb.sayitalarm.entity.Theme
@@ -26,7 +27,6 @@ import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState.Success
 import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsUI
 import org.a_cyb.sayitalarm.presentation.SettingsContract.TimeInput
 import org.a_cyb.sayitalarm.presentation.command.CommandContract
-import org.a_cyb.sayitalarm.presentation.interactor.InteractorContract
 
 internal class SettingsViewModel(
     private val interactor: InteractorContract.SettingsInteractor,

@@ -4,69 +4,64 @@
  * Use of this source code is governed by Apache v2.0
  */
 
-package org.a_cyb.sayitalarm.presentation.viewmodel.fake
+package org.a_cyb.sayitalarm.domain.interactor
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
-import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
+import org.a_cyb.sayitalarm.domain.repository.RepositoryContract
 import org.a_cyb.sayitalarm.entity.Settings
 import org.a_cyb.sayitalarm.entity.Snooze
 import org.a_cyb.sayitalarm.entity.Theme
 import org.a_cyb.sayitalarm.entity.TimeOut
 
-class SettingsInteractorFake(
-    results: List<Result<Settings>>,
-    scope: CoroutineScope,
+class SettingsInteractor(
+    private val settingsRepository: RepositoryContract.SettingsRepository
 ) : InteractorContract.SettingsInteractor {
-    private val results = results.toMutableList()
 
     private val _settings: MutableSharedFlow<Result<Settings>> = MutableSharedFlow()
     override val settings: SharedFlow<Result<Settings>> = _settings
 
-    private var _invoked: InvokedType = InvokedType.NONE
-    val invoked: InvokedType
-        get() = _invoked
-
-    init {
-        scope.launch { load(this) }
-    }
-
     override fun load(scope: CoroutineScope) {
         scope.launch {
-            _settings.emit(results.removeFirst())
+            settingsRepository
+                .load(this)
+                .await()
+                .emitResult()
         }
+    }
+
+    private suspend fun Result<Settings>.emitResult() {
+        this
+            .onSuccess { _settings.emit(Result.success(it)) }
+            .onFailure { _settings.emit(Result.failure(it)) }
     }
 
     override fun setTimeOut(timeOut: TimeOut, scope: CoroutineScope) {
         scope.launch {
-            _settings.emit(results.removeFirst())
-        }
+            settingsRepository
+                .setTimeOut(timeOut, this)
 
-        _invoked = InvokedType.SET_TIMEOUT
+            load(this)
+        }
     }
 
     override fun setSnooze(snooze: Snooze, scope: CoroutineScope) {
         scope.launch {
-            _settings.emit(results.removeFirst())
-        }
+            settingsRepository
+                .setSnooze(snooze, this)
 
-        _invoked = InvokedType.SET_SNOOZE
+            load(this)
+        }
     }
 
     override fun setTheme(theme: Theme, scope: CoroutineScope) {
         scope.launch {
-            _settings.emit(results.removeFirst())
+            settingsRepository
+                .setTheme(theme, this)
+
+            load(this)
         }
-
-        _invoked = InvokedType.SET_THEME
-    }
-
-    enum class InvokedType {
-        SET_TIMEOUT,
-        SET_SNOOZE,
-        SET_THEME,
-        NONE,
     }
 }

@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
 import org.a_cyb.sayitalarm.entity.Alarm
 import org.a_cyb.sayitalarm.formatter.time.TimeFormatterContract
 import org.a_cyb.sayitalarm.formatter.weekday.WeekdayFormatterContract
@@ -23,7 +24,6 @@ import org.a_cyb.sayitalarm.presentation.ListContract.ListState.InitialError
 import org.a_cyb.sayitalarm.presentation.ListContract.ListState.Success
 import org.a_cyb.sayitalarm.presentation.ListContract.ListStateWithContent
 import org.a_cyb.sayitalarm.presentation.command.CommandContract
-import org.a_cyb.sayitalarm.presentation.interactor.InteractorContract
 
 internal class ListViewModel(
     private val interactor: InteractorContract.ListInteractor,

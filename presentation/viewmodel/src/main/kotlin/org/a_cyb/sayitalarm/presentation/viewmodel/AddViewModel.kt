@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
 import org.a_cyb.sayitalarm.entity.Alarm
 import org.a_cyb.sayitalarm.entity.AlarmType
 import org.a_cyb.sayitalarm.entity.AlertType
@@ -30,7 +31,6 @@ import org.a_cyb.sayitalarm.presentation.AddContract.AddState.Error
 import org.a_cyb.sayitalarm.presentation.AddContract.AddState.Initial
 import org.a_cyb.sayitalarm.presentation.AddContract.AddState.Success
 import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.*
-import org.a_cyb.sayitalarm.presentation.interactor.InteractorContract
 import org.a_cyb.sayitalarm.presentation.viewmodel.mapper.AlarmMapperContract
 
 internal class AddViewModel(

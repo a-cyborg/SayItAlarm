@@ -16,6 +16,7 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
 import org.a_cyb.sayitalarm.entity.Hour
 import org.a_cyb.sayitalarm.entity.Minute
 import org.a_cyb.sayitalarm.formatter.enum.EnumFormatterContract
@@ -33,7 +34,6 @@ import org.a_cyb.sayitalarm.presentation.EditContract.EditViewModel.EditState.Er
 import org.a_cyb.sayitalarm.presentation.EditContract.EditViewModel.EditState.Initial
 import org.a_cyb.sayitalarm.presentation.EditContract.EditViewModel.EditState.Success
 import org.a_cyb.sayitalarm.presentation.command.SaveCommand
-import org.a_cyb.sayitalarm.presentation.interactor.InteractorContract.EditInteractor
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.AlertTypeFormatterFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.EditInteractorFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.EditInteractorFake.InvokedType
@@ -62,7 +62,7 @@ class EditViewModelSpec {
     private val mapper: AlarmMapperContract =
         AlarmMapper(timeFormatter, weeklyRepeatFormatter, alertTypeFormatter, ringtoneManager)
 
-    private val viewModel: (Long, EditInteractor) -> EditViewModel = { alarmId, interactor ->
+    private val viewModel: (Long, InteractorContract.EditInteractor) -> EditViewModel = { alarmId, interactor ->
         EditViewModel(
             alarmId,
             interactor,

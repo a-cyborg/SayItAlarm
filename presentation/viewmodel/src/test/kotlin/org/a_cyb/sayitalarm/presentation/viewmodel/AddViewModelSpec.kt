@@ -19,6 +19,7 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
 import org.a_cyb.sayitalarm.entity.AlertType
 import org.a_cyb.sayitalarm.entity.Hour
 import org.a_cyb.sayitalarm.entity.Minute
@@ -26,10 +27,15 @@ import org.a_cyb.sayitalarm.formatter.enum.EnumFormatterContract
 import org.a_cyb.sayitalarm.formatter.time.TimeFormatterContract
 import org.a_cyb.sayitalarm.formatter.weekday.WeekdayFormatterContract
 import org.a_cyb.sayitalarm.presentation.AddContract
-import org.a_cyb.sayitalarm.presentation.AddContract.AddState.*
+import org.a_cyb.sayitalarm.presentation.AddContract.AddState.Initial
+import org.a_cyb.sayitalarm.presentation.AddContract.AddState.Success
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.AlarmUI
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.AlertTypeUI
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.RingtoneUI
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.SelectableAlertType
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.TimeUI
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.WeeklyRepeatUI
 import org.a_cyb.sayitalarm.presentation.command.SaveCommand
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.*
-import org.a_cyb.sayitalarm.presentation.interactor.InteractorContract
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.AlertTypeFormatterFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.FakeAlarmData
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.RingtoneManagerFake

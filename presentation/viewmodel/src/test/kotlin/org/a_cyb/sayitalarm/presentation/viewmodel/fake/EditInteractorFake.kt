@@ -7,8 +7,8 @@
 package org.a_cyb.sayitalarm.presentation.viewmodel.fake
 
 import kotlinx.coroutines.CoroutineScope
+import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
 import org.a_cyb.sayitalarm.entity.Alarm
-import org.a_cyb.sayitalarm.presentation.interactor.InteractorContract
 
 class EditInteractorFake(
     private val result: Result<Alarm>
