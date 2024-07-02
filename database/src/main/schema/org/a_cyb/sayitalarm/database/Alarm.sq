@@ -1,0 +1,40 @@
+import kotlin.Boolean;
+
+CREATE TABLE IF NOT EXISTS Alarm(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    hour INTEGER NOT NULL,
+    minute INTEGER NOT NULL,
+    weeklyRepeat INTEGER NOT NULL,
+    label TEXT NOT NULL,
+    enabled INTEGER AS Boolean DEFAULT 0,
+    alertType INTEGER NOT NULL,
+    ringtone TEXT NOT NULL,
+    alarmType INTEGER NOT NULL,
+    sayItScripts TEXT NOT NULL
+);
+
+insert:
+INSERT INTO Alarm (hour, minute, weeklyRepeat, label, enabled, alertType, ringtone, alarmType, sayItScripts )
+VALUES (?, ?, ?, ?, ?,?, ?,?,? );
+
+update:
+UPDATE Alarm
+SET hour = ?, minute = ?, weeklyRepeat = ?, label = ?, enabled = ?, alarmType = ?, ringtone = ?, alarmType = ?, sayItScripts =?
+WHERE id = ?;
+
+updateEnabled:
+UPDATE Alarm
+SET enabled = ?
+WHERE id = ?;
+
+getAllByTimeAsc:
+SELECT * FROM Alarm
+ORDER BY hour, minute ASC;
+
+getById:
+SELECT * FROM Alarm
+WHERE id = ?;
+
+delete:
+DELETE FROM Alarm
+WHERE id = ?;

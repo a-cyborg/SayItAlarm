@@ -19,6 +19,7 @@ android {
         }
     }
 
+    @Suppress("UnstableApiUsage")
     testOptions {
         unitTests.isReturnDefaultValues = true
     }
@@ -34,6 +35,11 @@ android {
 }
 
 dependencies {
+    implementation(project(":entity"))
+    implementation(project(":domain"))
+    implementation(project(":presentation"))
+    implementation(project(":formatter"))
+    implementation(project(":ringtone-manager"))
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-android:2.8.0")
 
@@ -45,11 +51,5 @@ dependencies {
     testImplementation("tech.antibytes.kfixture:core:0.4.0")
     val mockkVersion = "1.13.11"
     testImplementation("io.mockk:mockk:$mockkVersion")
-
-    implementation(project(":entity"))
-    implementation(project(":domain"))
-    implementation(project(":presentation"))
-    implementation(project(":formatter"))
-    implementation(project(":ringtone-manager"))
-    implementation(project(":util"))
+    testImplementation(project(":util"))
 }

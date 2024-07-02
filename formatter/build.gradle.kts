@@ -31,6 +31,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":entity"))
+
     // Debug
     implementation("androidx.test:core-ktx:1.5.0")
     implementation("androidx.test.ext:junit-ktx:1.1.5")
@@ -39,7 +41,5 @@ dependencies {
     val mockkVersion = "1.13.11"
     testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("tech.antibytes.kfixture:core:0.4.0")
-
-    implementation(project(":entity"))
-    implementation(project(":util"))
+    testImplementation(project(":util"))
 }

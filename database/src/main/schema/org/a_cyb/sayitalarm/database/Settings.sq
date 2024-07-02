@@ -1,0 +1,30 @@
+import kotlin.Boolean;
+
+CREATE TABLE IF NOT EXISTS Settings(
+    id INTEGER AS Boolean PRIMARY KEY DEFAULT 1,
+    timeOut INTEGER NOT NULL,
+    snooze INTEGER NOT NULL,
+    theme INTEGER NOT NULL
+
+    CONSTRAINT id CHECK (id)
+);
+
+insert:
+INSERT INTO Settings(timeOut, snooze, theme)
+VALUES (?, ?, ?);
+
+updateTimeOut:
+UPDATE Settings
+SET timeOut = ?;
+
+updateSnooze:
+UPDATE Settings
+SET snooze = ?;
+
+updateTheme:
+UPDATE Settings
+SET theme = ?;
+
+get:
+SELECT timeOut, snooze, theme FROM Settings
+LIMIT 1;

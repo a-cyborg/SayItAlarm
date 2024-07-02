@@ -18,13 +18,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    @Suppress("UnstableApiUsage")
-    testOptions {
-        unitTests {
-            isIncludeAndroidResources = true
-        }
-    }
-
     kotlinOptions {
         jvmTarget = "17"
     }

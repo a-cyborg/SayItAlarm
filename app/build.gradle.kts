@@ -68,6 +68,7 @@ android {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }
 
+    @Suppress("UnstableApiUsage")
     testOptions {
         unitTests {
             isReturnDefaultValues = true
@@ -77,6 +78,10 @@ android {
 }
 
 dependencies {
+    implementation(project(":entity"))
+    implementation(project(":presentation"))
+    implementation(project(":presentation:viewmodel"))
+
     // Core
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.0")
@@ -88,7 +93,7 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.2.1")
     implementation("androidx.compose.material3:material3-window-size-class:1.2.1")
 
-    // Test
+    // Debug
     implementation(kotlin("test"))
     implementation("androidx.compose.ui:ui-test-junit4-android:1.6.7")
     testImplementation("junit:junit:4.13.2")
@@ -101,13 +106,9 @@ dependencies {
     testImplementation("io.github.takahirom.roborazzi:roborazzi:$roborazziVersion")
     testImplementation("io.github.takahirom.roborazzi:roborazzi-compose:$roborazziVersion")
     testImplementation("io.github.takahirom.roborazzi:roborazzi-junit-rule:$roborazziVersion")
+    testImplementation(project(":util"))
 
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.6.7")
     debugImplementation("androidx.compose.ui:ui-test-manifest:1.6.7")
-
-    implementation(project(":entity"))
-    implementation(project(":presentation"))
-    implementation(project(":presentation:viewmodel"))
-    implementation(project(":util"))
 }

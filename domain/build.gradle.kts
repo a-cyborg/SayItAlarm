@@ -9,7 +9,7 @@ dependencies {
 
     // Debug
     implementation(kotlin("test"))
-    implementation(project(":util"))
+    testImplementation(project(":util"))
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
     testImplementation("app.cash.turbine:turbine:1.1.0")
     testImplementation("io.mockk:mockk:1.13.11")
