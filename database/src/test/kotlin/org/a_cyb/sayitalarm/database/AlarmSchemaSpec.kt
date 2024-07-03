@@ -12,8 +12,8 @@ import kotlin.test.Test
 import kotlin.test.assertNull
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
-import org.a_cyb.sayitalarm.database.model.AlarmEntity
 import org.a_cyb.sayitalarm.util.mustBe
+import org.acyb.sayitalarm.database.Alarm
 import tech.antibytes.kfixture.fixture
 import tech.antibytes.kfixture.kotlinFixture
 
@@ -36,30 +36,6 @@ class AlarmSchemaSpec {
     fun cleanUp() {
         driver.close()
     }
-
-    private fun getRandomAlarmEntity(
-        hour: Long = fixture.fixture(range = 0..23),
-        minute: Long = fixture.fixture(range = 0..59),
-        weeklyRepeat: Long = fixture.fixture(),
-        label: String = fixture.fixture(),
-        enabled: Boolean = fixture.fixture(),
-        alertType: Long = fixture.fixture(),
-        ringtone: String = fixture.fixture(),
-        alarmType: Long = fixture.fixture(),
-        sayItScripts: String = fixture.fixture(),
-    ): AlarmEntity =
-        AlarmEntity(
-            id = 0L,
-            hour,
-            minute,
-            weeklyRepeat,
-            label,
-            enabled,
-            alertType,
-            ringtone,
-            alarmType,
-            sayItScripts
-        )
 
     @Test
     fun `When insert query is executed it stores an alarm`() {
@@ -309,7 +285,6 @@ class AlarmSchemaSpec {
             .firstOrNull { it.id == idToDelete } mustBe null
     }
 
-    // when_delete_query_is_executed_with_non_existent_id_nothing_should_change
     @Test
     fun `When delete query is executed with non existent id nothing changes`() {
         // Given
@@ -343,4 +318,28 @@ class AlarmSchemaSpec {
         // Then
         initialEntities mustBe entitiesAfterDelete
     }
+
+    private fun getRandomAlarmEntity(
+        hour: Long = fixture.fixture(range = 0..23),
+        minute: Long = fixture.fixture(range = 0..59),
+        weeklyRepeat: Long = fixture.fixture(),
+        label: String = fixture.fixture(),
+        enabled: Boolean = fixture.fixture(),
+        alertType: Long = fixture.fixture(),
+        ringtone: String = fixture.fixture(),
+        alarmType: Long = fixture.fixture(),
+        sayItScripts: String = fixture.fixture(),
+    ): Alarm =
+        Alarm(
+            id = 0L,
+            hour,
+            minute,
+            weeklyRepeat,
+            label,
+            enabled,
+            alertType,
+            ringtone,
+            alarmType,
+            sayItScripts
+        )
 }

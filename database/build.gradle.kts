@@ -36,7 +36,7 @@ sqldelight {
 }
 
 dependencies {
-    implementation("app.cash.sqldelight:android-driver:2.0.0-rc02")
+    implementation("app.cash.sqldelight:android-driver:2.0.2")
 
     // Debug
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.8.10")

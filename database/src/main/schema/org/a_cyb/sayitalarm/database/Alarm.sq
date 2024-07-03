@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS Alarm(
     minute INTEGER NOT NULL,
     weeklyRepeat INTEGER NOT NULL,
     label TEXT NOT NULL,
-    enabled INTEGER AS Boolean DEFAULT 0,
+    enabled INTEGER AS Boolean NOT NULL DEFAULT 0,
     alertType INTEGER NOT NULL,
     ringtone TEXT NOT NULL,
     alarmType INTEGER NOT NULL,
@@ -19,7 +19,7 @@ VALUES (?, ?, ?, ?, ?,?, ?,?,? );
 
 update:
 UPDATE Alarm
-SET hour = ?, minute = ?, weeklyRepeat = ?, label = ?, enabled = ?, alarmType = ?, ringtone = ?, alarmType = ?, sayItScripts =?
+SET hour = ?, minute = ?, weeklyRepeat = ?, label = ?, enabled = ?, alertType = ?, ringtone = ?, alarmType = ?, sayItScripts =?
 WHERE id = ?;
 
 updateEnabled:

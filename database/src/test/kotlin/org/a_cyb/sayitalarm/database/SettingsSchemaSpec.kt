@@ -12,8 +12,8 @@ import kotlin.test.Test
 import kotlin.test.assertNotNull
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
-import org.a_cyb.sayitalarm.database.model.SettingsEntity
 import org.a_cyb.sayitalarm.util.mustBe
+import org.acyb.sayitalarm.database.Settings
 import tech.antibytes.kfixture.fixture
 import tech.antibytes.kfixture.kotlinFixture
 
@@ -38,7 +38,8 @@ class SettingsSchemaSpec {
     }
 
     private fun getDefaultSettings() =
-        SettingsEntity(
+        Settings(
+            true,
             180,
             15,
             0
