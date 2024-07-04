@@ -6,13 +6,14 @@
 
 package org.a_cyb.sayitalarm.data.datasource
 
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import org.a_cyb.sayitalarm.data.model.AlarmEntity
 
 interface DataSourceContract {
 
     interface AlarmDataSource {
-        fun getAllByTimeAsc(): Flow<Result<List<AlarmEntity>>>
+        fun getAllByTimeAsc(dispatcher: CoroutineDispatcher): Flow<Result<List<AlarmEntity>>>
         suspend fun getById(id: Long): Result<AlarmEntity>
         suspend fun insert(alarm: AlarmEntity)
         suspend fun update(alarm: AlarmEntity)

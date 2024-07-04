@@ -11,6 +11,7 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import java.util.Calendar
 import app.cash.turbine.test
+import io.mockk.clearMocks
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
@@ -75,6 +76,7 @@ class AddViewModelSpec {
     @AfterTest
     fun tearDown() {
         Dispatchers.resetMain()
+        clearMocks(interactor)
     }
 
     @Test

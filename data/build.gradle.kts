@@ -41,7 +41,9 @@ dependencies {
     // Debug
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.8.10")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    testImplementation("app.cash.turbine:turbine:1.1.0")
     testImplementation("app.cash.sqldelight:sqlite-driver:2.0.0")
+    testImplementation("io.mockk:mockk:1.13.11")
     testImplementation("tech.antibytes.kfixture:core:0.4.0")
     testImplementation(project(":util"))
 }

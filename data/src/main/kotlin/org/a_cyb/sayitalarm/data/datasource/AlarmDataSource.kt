@@ -6,43 +6,43 @@
 
 package org.a_cyb.sayitalarm.data.datasource
 
-import kotlin.coroutines.CoroutineContext
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import org.a_cyb.sayitalarm.data.model.AlarmEntity
+import org.acyb.sayitalarm.database.Alarm
 import org.acyb.sayitalarm.database.AlarmQueries
 import org.acyb.sayitalarm.database.Alarm as DTO
 
 class AlarmDataSource(
     private val alarmQueries: AlarmQueries,
-    private val coroutineContext: CoroutineContext,
 ) : DataSourceContract.AlarmDataSource {
 
-    override fun getAllByTimeAsc(): Flow<Result<List<AlarmEntity>>> {
+    override fun getAllByTimeAsc(dispatcher: CoroutineDispatcher): Flow<Result<List<AlarmEntity>>> {
         return alarmQueries.getAllByTimeAsc()
             .asFlow()
-            .mapToList(coroutineContext)
+            .mapToList(dispatcher)
             .map(::toSuccessResult)
             .catch { emit(Result.failure(it)) }
     }
 
     private fun toSuccessResult(alarms: List<DTO>): Result<List<AlarmEntity>> {
         return Result.success(
-            alarms.map { it.toAlarmEntity() }
+            alarms.map(::toAlarmEntity)
         )
     }
 
     override suspend fun getById(id: Long): Result<AlarmEntity> {
-        val alarm = alarmQueries.getById(id)
+        val dto = alarmQueries.getById(id)
             .executeAsOneOrNull()
 
-        return if (alarm == null) {
+        return if (dto == null) {
             Result.failure(IllegalStateException())
         } else {
-            Result.success(alarm.toAlarmEntity())
+            Result.success(toAlarmEntity(dto))
         }
     }
 
@@ -86,18 +86,18 @@ class AlarmDataSource(
         alarmQueries.delete(id)
     }
 
-    private fun DTO.toAlarmEntity(): AlarmEntity {
+    private fun toAlarmEntity(dto: Alarm): AlarmEntity {
         return AlarmEntity(
-            id = this.id,
-            hour = this.hour,
-            minute = this.minute,
-            weeklyRepeat = this.weeklyRepeat,
-            label = this.label,
-            enabled = this.enabled,
-            alertType = this.alertType,
-            ringtone = this.ringtone,
-            alarmType = this.alarmType,
-            sayItScripts = this.sayItScripts,
+            id = dto.id,
+            hour = dto.hour,
+            minute = dto.minute,
+            weeklyRepeat = dto.weeklyRepeat,
+            label = dto.label,
+            enabled = dto.enabled,
+            alertType = dto.alertType,
+            ringtone = dto.ringtone,
+            alarmType = dto.alarmType,
+            sayItScripts = dto.sayItScripts,
         )
     }
 }

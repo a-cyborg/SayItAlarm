@@ -11,8 +11,8 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.a_cyb.sayitalarm.data.model.AlarmEntity
 import org.a_cyb.sayitalarm.database.SayItDB
@@ -27,7 +27,6 @@ class AlarmDataSourceSpec {
     private lateinit var sayItDB: SayItDB
     private lateinit var dataSource: AlarmDataSource
 
-    private val coroutineContext = Dispatchers.IO
     private val fixture = kotlinFixture()
 
     @BeforeTest
@@ -36,7 +35,7 @@ class AlarmDataSourceSpec {
         SayItDB.Schema.create(driver)
 
         sayItDB = SayItDB(driver)
-        dataSource = AlarmDataSource(sayItDB.alarmQueries, coroutineContext)
+        dataSource = AlarmDataSource(sayItDB.alarmQueries)
     }
 
     @AfterTest
@@ -48,6 +47,7 @@ class AlarmDataSourceSpec {
     fun `When getAllByTimeAsc is called it returns flow of success result with stored alarms`() = runTest {
         // Given
         val alarms = List(3) { getRandomAlarm() }
+        val dispatcher = StandardTestDispatcher(this.testScheduler)
 
         alarms.forEach {
             sayItDB.alarmQueries.insert(
@@ -64,7 +64,7 @@ class AlarmDataSourceSpec {
         }
 
         // When
-        val item = dataSource.getAllByTimeAsc().first()
+        val item = dataSource.getAllByTimeAsc(dispatcher).first()
 
         // Then
         val alarmEntities = alarms.mapIndexed { index, alarm ->
