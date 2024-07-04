@@ -14,18 +14,21 @@ import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import org.a_cyb.sayitalarm.entity.Alarm
 import org.a_cyb.sayitalarm.formatter.time.TimeFormatterContract
 import org.a_cyb.sayitalarm.formatter.weekday.WeekdayFormatterContract
 import org.a_cyb.sayitalarm.presentation.ListContract
-import org.a_cyb.sayitalarm.presentation.ListContract.*
-import org.a_cyb.sayitalarm.presentation.ListContract.ListState.*
+import org.a_cyb.sayitalarm.presentation.ListContract.AlarmInfo
+import org.a_cyb.sayitalarm.presentation.ListContract.ListState.Initial
+import org.a_cyb.sayitalarm.presentation.ListContract.ListState.InitialError
+import org.a_cyb.sayitalarm.presentation.ListContract.ListState.Success
 import org.a_cyb.sayitalarm.presentation.command.CommandContract
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.FakeAlarmData
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.ListInteractorFake
+import org.a_cyb.sayitalarm.presentation.viewmodel.fake.ListInteractorFake.*
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.TimeFormatterFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.WeekdayFormatterFake
 import org.a_cyb.sayitalarm.util.fulfils
@@ -51,7 +54,7 @@ class ListViewModelSpec {
     @Test
     fun `It is in the Initial State`() {
         val viewModel = ListViewModel(
-            ListInteractorFake(TestScope()),
+            ListInteractorFake(),
             timeFormatter,
             weekdayFormatter
         )
@@ -60,9 +63,11 @@ class ListViewModelSpec {
     }
 
     @Test
-    fun `When interactor initialization fails it is in InitialError`() = runTest {
+    fun `When interactor initialization fails it is in InitialError state`() = runTest {
         // Given
-        val interactor = ListInteractorFake(this, listOf(Result.failure(IllegalStateException())))
+        val results = listOf(Result.failure<List<Alarm>>(IllegalStateException()))
+        val interactor = ListInteractorFake(results)
+
         val viewModel = ListViewModel(interactor, timeFormatter, weekdayFormatter)
 
         // When
@@ -77,7 +82,8 @@ class ListViewModelSpec {
     @Test
     fun `Given interactor success with alarm it sets Success`() = runTest {
         // Given
-        val interactor = ListInteractorFake(this, listOf(Result.success(alarms)))
+        val result = listOf(Result.success(alarms))
+        val interactor = ListInteractorFake(result)
         val viewModel = ListViewModel(interactor, timeFormatter, weekdayFormatter)
 
         // When
@@ -95,24 +101,26 @@ class ListViewModelSpec {
         val updatedAlarms = alarms.toMutableList().apply {
             set(2, alarms[2].copy(enabled = true))
         }
-        val results = listOf(Result.success(alarms), Result.success(updatedAlarms))
-        val interactor = ListInteractorFake(this, results)
+        val results = listOf(
+            Result.success(alarms),
+            Result.success(updatedAlarms)
+        )
+        val interactor = ListInteractorFake(results)
         val viewModel = ListViewModel(interactor, timeFormatter, weekdayFormatter)
 
         viewModel.state.test {
-            skipItems(2)
+            skipItems(2)  // Initial
 
             // When
             viewModel.setEnabled(3, false)
 
-            // Then
-            awaitItem() mustBe Success(
-                alarmInfo
-                    .toMutableList()
-                    .apply { set(2, alarmInfo[2].copy(enabled = true)) }
-            )
+            val expected = alarmInfo.toMutableList()
+                .apply { set(2, alarmInfo[2].copy(enabled = true)) }
 
-            interactor.invokedType mustBe ListInteractorFake.InvokedType.SET_ENABLED
+            // Then
+            awaitItem() mustBe Success(expected)
+
+            interactor.invokedType mustBe InvokedType.SET_ENABLED
         }
     }
 
@@ -120,8 +128,11 @@ class ListViewModelSpec {
     fun `Given deleteAlarm is called it propagates success`() = runTest {
         // Given
         val updatedAlarms = alarms.toMutableList().apply { removeLast() }
-        val results = listOf(Result.success(alarms), Result.success(updatedAlarms))
-        val interactor = ListInteractorFake(this, results)
+        val results = listOf(
+            Result.success(alarms),
+            Result.success(updatedAlarms)
+        )
+        val interactor = ListInteractorFake(results)
         val viewModel = ListViewModel(interactor, timeFormatter, weekdayFormatter)
 
         viewModel.state.test {
@@ -130,21 +141,20 @@ class ListViewModelSpec {
             // When
             viewModel.deleteAlarm(2)
 
-            // Then
-            awaitItem() mustBe Success(
-                alarmInfo
-                    .toMutableList()
-                    .apply { removeLast() }
-            )
+            val expected = alarmInfo.toMutableList()
+                .apply { removeLast() }
 
-            interactor.invokedType mustBe ListInteractorFake.InvokedType.DELETE_ALARM
+            // Then
+            awaitItem() mustBe Success(expected)
+
+            interactor.invokedType mustBe InvokedType.DELETE_ALARM
         }
     }
 
     @Test
     fun `Given runCommand is called it executes the given command`() {
         // Given
-        val interactor = ListInteractorFake(TestScope())
+        val interactor = ListInteractorFake()
         val viewModel = ListViewModel(interactor, timeFormatter, weekdayFormatter)
         val command: CommandContract.Command<ListViewModel> = mockk(relaxed = true)
 
@@ -157,7 +167,7 @@ class ListViewModelSpec {
 
     @Test
     fun `It fulfills ListViewModel`() {
-        val interactor = ListInteractorFake(TestScope())
+        val interactor = ListInteractorFake()
         val viewModel = ListViewModel(interactor, timeFormatter, weekdayFormatter)
 
         viewModel fulfils ListContract.ListViewModel::class

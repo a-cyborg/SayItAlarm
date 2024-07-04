@@ -6,13 +6,14 @@
 
 package org.a_cyb.sayitalarm.presentation.viewmodel
 
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
 import org.a_cyb.sayitalarm.entity.Alarm
+import org.a_cyb.sayitalarm.entity.Label
+import org.a_cyb.sayitalarm.entity.WeeklyRepeat
 import org.a_cyb.sayitalarm.formatter.time.TimeFormatterContract
 import org.a_cyb.sayitalarm.formatter.weekday.WeekdayFormatterContract
 import org.a_cyb.sayitalarm.presentation.ListContract
@@ -31,44 +32,39 @@ internal class ListViewModel(
     private val weekdayFormatter: WeekdayFormatterContract,
 ) : ListContract.ListViewModel, ViewModel() {
 
-    private val _state: MutableStateFlow<ListState> = MutableStateFlow(Initial)
-    override val state: StateFlow<ListState> = _state
-
-    init {
-        interactor.alarms
-            .onEach(::updateState)
-            .launchIn(scope)
-    }
-
-    private fun updateState(result: Result<List<Alarm>>) {
-        _state.update { result.toUiState() }
-    }
-
-    private fun Result<List<Alarm>>.toUiState(): ListState {
-        return getOrNull()
-            ?.let(::toSuccess) ?: toError()
-    }
-
-    private fun toSuccess(alarms: List<Alarm>): ListState {
-        return Success(alarms.map { it.toAlarmInfo() })
-    }
-
-    private fun Alarm.toAlarmInfo(): AlarmInfo {
-        return AlarmInfo(
-            id = id,
-            time = timeFormatter.format(hour, minute),
-            labelAndWeeklyRepeat = "${label.label}, ${weekdayFormatter.formatAbbr(weeklyRepeat.weekdays)}",
-            enabled = enabled
+    override val state: StateFlow<ListState> = interactor.getAllAlarms()
+        .map(::toState)
+        .stateIn(
+            scope = scope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = Initial
         )
-    }
 
-    private fun toError(): ListState {
-        return if (_state.value is ListStateWithContent) {
-            Error((_state.value as ListStateWithContent).alarmData)
-        } else {
-            InitialError
+    private fun toState(result: Result<List<Alarm>>): ListState =
+        result.getOrNull()
+            ?.let(::toSuccess) ?: toError()
+
+    private fun toError(): ListState =
+        when (state.value is ListStateWithContent) {
+            true -> Error((state.value as ListStateWithContent).alarmData)
+            else -> InitialError
         }
-    }
+
+    private fun toSuccess(alarms: List<Alarm>): ListState =
+        Success(
+            alarms.map(::toAlarmInfo)
+        )
+
+    private fun toAlarmInfo(alarm: Alarm): AlarmInfo =
+        AlarmInfo(
+            id = alarm.id,
+            time = timeFormatter.format(alarm.hour, alarm.minute),
+            labelAndWeeklyRepeat = formatLabelAndWeeklyRepeat(alarm.label, alarm.weeklyRepeat),
+            enabled = alarm.enabled
+        )
+
+    private fun formatLabelAndWeeklyRepeat(label: Label, weeklyRepeat: WeeklyRepeat): String =
+        "${label.label}, ${weekdayFormatter.formatAbbr(weeklyRepeat.weekdays)}"
 
     override fun setEnabled(id: Long, enabled: Boolean) {
         interactor.setEnabled(id, enabled, scope)

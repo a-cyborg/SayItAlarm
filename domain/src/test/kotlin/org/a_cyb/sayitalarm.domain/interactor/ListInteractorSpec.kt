@@ -6,6 +6,7 @@
 
 package org.a_cyb.sayitalarm.domain.interactor
 
+import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import java.util.Calendar.FRIDAY
 import java.util.Calendar.MONDAY
@@ -15,12 +16,19 @@ import java.util.Calendar.THURSDAY
 import java.util.Calendar.TUESDAY
 import java.util.Calendar.WEDNESDAY
 import app.cash.turbine.test
+import io.mockk.clearAllMocks
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import kotlinx.coroutines.async
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
 import org.a_cyb.sayitalarm.domain.repository.RepositoryContract
 import org.a_cyb.sayitalarm.entity.Alarm
@@ -36,6 +44,7 @@ import org.a_cyb.sayitalarm.util.fulfils
 import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Test
 
+@ExperimentalCoroutinesApi
 class ListInteractorSpec {
 
     private val alarmRepository: RepositoryContract.AlarmRepository = mockk(relaxed = true)
@@ -46,111 +55,70 @@ class ListInteractorSpec {
     @BeforeTest
     fun setup() {
         interactor = ListInteractor(alarmRepository, alarmScheduler)
+        Dispatchers.setMain(StandardTestDispatcher())
+    }
+
+    @AfterTest
+    fun clear() {
+        clearAllMocks()
+        Dispatchers.resetMain()
     }
 
     @Test
-    fun `When load is called it propagates failure with exception`() = runTest {
+    fun `When getAllAlarms is called it starts to collect flow`() = runTest {
         // Given
         val exception = IllegalStateException()
 
-        every { alarmRepository.load(any()) } returns async { Result.failure(exception) }
+        every { alarmRepository.getAllAlarms() } returns flow {
+            emit(Result.failure(exception))
+        }
 
-        interactor.alarms.test {
-            // When
-            interactor.load(this)
-
+        // When
+        interactor.getAllAlarms().test {
             // Then
             awaitItem() mustBe Result.failure(exception)
+
+            awaitComplete()
         }
+
+        coVerify(exactly = 1) { alarmRepository.getAllAlarms() }
     }
 
     @Test
-    fun `When load is called it propagates success with alarms`() = runTest {
+    fun `When getAllAlarms is called it propagates success with alarms`() = runTest {
         // Given
-        every { alarmRepository.load(any()) } returns async { Result.success(alarms) }
+        every { alarmRepository.getAllAlarms() } returns flow {
+            emit(Result.success(alarms))
+        }
 
-        interactor.alarms.test {
-            // When
-            interactor.load(this)
-
+        // When
+        interactor.getAllAlarms().test {
             // Then
             awaitItem() mustBe Result.success(alarms)
+
+            awaitComplete()
         }
     }
 
     @Test
-    fun `When load is called it triggers AlarmRepository load`() = runTest {
-        // Given
-        every { alarmRepository.load(any()) } returns async { Result.success(emptyList()) }
-
-        interactor.alarms.test {
-            // When
-            interactor.load(this)
-
-            skipItems(1)
-        }
-
-        // Then
-        verify(exactly = 1) {
-            @Suppress("DeferredResultUnused")
-            alarmRepository.load(any())
-        }
-    }
-
-    @Test
-    fun `When setEnable is called it propagates success with updated alarms`() = runTest {
-        // Given
-        val alarms = alarms.map {
-            it.copy(
-                enabled = !it.enabled
-            )
-        }
-
-        every { alarmRepository.load(any()) } returns async { Result.success(alarms) }
-
-        interactor.alarms.test {
-            // When
-            interactor.setEnabled(2, false, this)
-
-            // Then
-            awaitItem() mustBe Result.success(alarms)
-        }
-    }
-
-    @Test
-    fun `When setEnable is called it triggers AlarmRepository updatedEnabled and load`() = runTest {
-        // Given
-        every { alarmRepository.load(any()) } returns async { Result.success(emptyList()) }
-
-        interactor.alarms.test {
-            // When
-            interactor.setEnabled(3L, true, this)
-
-            skipItems(1)
-        }
+    fun `When setEnable is called it triggers AlarmRepository updatedEnabled`() = runTest {
+        // When
+        interactor.setEnabled(3L, true, this)
+        runCurrent()
 
         // Then
         verify(exactly = 1) {
             alarmRepository.updateEnabled(any(), any(), any())
         }
-        verify(exactly = 1) {
-            @Suppress("DeferredResultUnused")
-            alarmRepository.load(any())
-        }
     }
 
     @Test
     fun `When setEnable is called with enabled true it triggers AlarmScheduler setAlarm`() = runTest {
-        // Given
-        every { alarmRepository.load(any()) } returns async { Result.success(emptyList()) }
+        // When
+        interactor.setEnabled(3L, true, this)
+        runCurrent()
 
-        interactor.alarms.test {
-            // When
-            interactor.setEnabled(3L, true, this)
-
-            skipItems(1)
-        }
-
+        // Then
         coVerify(exactly = 1) {
             alarmScheduler.setAlarm(any())
         }
@@ -158,15 +126,9 @@ class ListInteractorSpec {
 
     @Test
     fun `When setEnable is called with enabled false it triggers AlarmScheduler cancelAlarm`() = runTest {
-        // Given
-        every { alarmRepository.load(any()) } returns async { Result.success(emptyList()) }
-
-        interactor.alarms.test {
-            // When
-            interactor.setEnabled(3L, false, this)
-
-            skipItems(1)
-        }
+        // When
+        interactor.setEnabled(3L, false, this)
+        runCurrent()
 
         // Then
         coVerify(exactly = 1) {
@@ -175,54 +137,22 @@ class ListInteractorSpec {
     }
 
     @Test
-    fun `When deleteAlarm is called it propagates success with updated alarms`() = runTest {
-        // Given
-        val alarms = alarms.drop(1)
-
-        every { alarmRepository.load(any()) } returns async { Result.success(alarms) }
-
-        interactor.alarms.test {
-            // When
-            interactor.deleteAlarm(1, this)
-
-            // Then
-            awaitItem() mustBe Result.success(alarms)
-        }
-    }
-
-    @Test
-    fun `When deleteAlarm is called it triggers AlarmRepository delete and load`() = runTest {
-        // Given
-        every { alarmRepository.load(any()) } returns async { Result.success(emptyList()) }
-
-        interactor.alarms.test {
-            // When
-            interactor.deleteAlarm(3L, this)
-
-            skipItems(1)
-        }
+    fun `When deleteAlarm is called it triggers AlarmRepository delete`() = runTest {
+        // When
+        interactor.deleteAlarm(3L, this)
+        this.testScheduler.runCurrent()
 
         // Then
         verify(exactly = 1) {
             alarmRepository.delete(any(), any())
         }
-        verify(exactly = 1) {
-            @Suppress("DeferredResultUnused")
-            alarmRepository.load(any())
-        }
     }
 
     @Test
     fun `When deleteAlarm is called it triggers AlarmScheduler cancelAlarm`() = runTest {
-        // Given
-        every { alarmRepository.load(any()) } returns async { Result.success(emptyList()) }
-
-        interactor.alarms.test {
-            // When
-            interactor.deleteAlarm(3L, this)
-
-            skipItems(1)
-        }
+        // When
+        interactor.deleteAlarm(3L, this)
+        this.testScheduler.runCurrent()
 
         // Then
         coVerify(exactly = 1) {

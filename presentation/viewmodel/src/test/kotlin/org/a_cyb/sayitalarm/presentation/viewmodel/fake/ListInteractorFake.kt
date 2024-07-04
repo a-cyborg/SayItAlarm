@@ -7,48 +7,28 @@
 package org.a_cyb.sayitalarm.presentation.viewmodel.fake
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
 import org.a_cyb.sayitalarm.entity.Alarm
 
 class ListInteractorFake(
-    scope: CoroutineScope,
     results: List<Result<List<Alarm>>> = listOf(Result.failure(IllegalStateException())),
 ) : InteractorContract.ListInteractor {
     private val results = results.toMutableList()
-
-    private val _alarm: MutableSharedFlow<Result<List<Alarm>>> = MutableSharedFlow()
-    override val alarms: SharedFlow<Result<List<Alarm>>> = _alarm
 
     private var _invokedType = InvokedType.NONE
     val invokedType: InvokedType
         get() = _invokedType
 
-    init {
-        scope.launch { load(scope) }
-    }
-
-    override fun load(scope: CoroutineScope) {
-        scope.launch {
-            _alarm.emit(results.removeFirst())
-        }
-    }
+    override fun getAllAlarms(): Flow<Result<List<Alarm>>> =
+        flow { results.forEach { emit(it) } }
 
     override fun setEnabled(id: Long, enabled: Boolean, scope: CoroutineScope) {
-        scope.launch {
-            _alarm.emit(results.removeFirst())
-        }
-
         _invokedType = InvokedType.SET_ENABLED
     }
 
     override fun deleteAlarm(id: Long, scope: CoroutineScope) {
-        scope.launch {
-            _alarm.emit(results.removeFirst())
-        }
-
         _invokedType = InvokedType.DELETE_ALARM
     }
 

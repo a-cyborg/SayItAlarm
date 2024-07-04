@@ -19,7 +19,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import org.a_cyb.sayitalarm.data.datasource.DataSourceContract
 import org.a_cyb.sayitalarm.data.model.AlarmEntity
@@ -175,8 +175,7 @@ class AlarmRepositorySpec {
 
         // When
         repository.save(alarm, this)
-
-        advanceUntilIdle()
+        runCurrent()
 
         // Then
         coVerify(exactly = 1) { dataSource.insert(any()) }
@@ -191,8 +190,7 @@ class AlarmRepositorySpec {
 
         // When
         repository.update(alarm, this)
-
-        advanceUntilIdle()
+        runCurrent()
 
         // Then
         coVerify(exactly = 1) { dataSource.update(any()) }
@@ -206,8 +204,7 @@ class AlarmRepositorySpec {
 
         // When
         repository.updateEnabled(3L, true, this)
-
-        advanceUntilIdle()
+        runCurrent()
 
         // Then
         coVerify(exactly = 1) { dataSource.updateEnabled(any(), any()) }
@@ -221,8 +218,7 @@ class AlarmRepositorySpec {
 
         // When
         repository.delete(3, this)
-
-        advanceUntilIdle()
+        runCurrent()
 
         // Then
         coVerify(exactly = 1) { dataSource.delete(any()) }

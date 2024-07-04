@@ -51,10 +51,14 @@ internal class AddViewModel(
         return mapper.mapToAlarmUI(defaultAlarm)
     }
 
-    private fun updateSuccessOrError(update: AlarmUI.() -> AlarmUI) {
+    private fun updateSuccessOrError(setValueAction: AlarmUI.() -> AlarmUI) {
+        val updated = _state.value
+            .alarmUI
+            .setValueAction()
+
         when (_state.value) {
-            is Success, is Initial -> Success(_state.value.alarmUI.update())
-            is Error -> Error(_state.value.alarmUI.update())
+            is Success, is Initial -> Success(updated)
+            is Error -> Error(updated)
         }.updateState()
     }
 
@@ -88,8 +92,9 @@ internal class AddViewModel(
     private fun List<SelectableRepeat>.format(): String {
         val codes = filter { it.selected }
             .map { it.code }
+            .toSet()
 
-        return weeklyRepeatFormatter.formatAbbr(codes.toSet())
+        return weeklyRepeatFormatter.formatAbbr(codes)
     }
 
     override fun setLabel(label: String) {
@@ -105,9 +110,14 @@ internal class AddViewModel(
     }
 
     private fun getUpdatedAlertTypeUI(chosenName: String): AlertTypeUI {
-        val selectableAlertTypes = _state.value.alarmUI.alertTypeUI
-            .selectableAlertType.map {
-                SelectableAlertType(it.name, it.name == chosenName)
+        val selectableAlertTypes = _state.value.alarmUI
+            .alertTypeUI
+            .selectableAlertType
+            .map {
+                SelectableAlertType(
+                    it.name,
+                    it.name == chosenName
+                )
             }
 
         return AlertTypeUI(selectableAlertTypes)

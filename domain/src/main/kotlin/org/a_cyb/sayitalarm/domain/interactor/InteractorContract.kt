@@ -7,6 +7,7 @@
 package org.a_cyb.sayitalarm.domain.interactor
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import org.a_cyb.sayitalarm.entity.Alarm
 import org.a_cyb.sayitalarm.entity.Settings
@@ -26,9 +27,7 @@ interface InteractorContract {
     }
 
     interface ListInteractor {
-        val alarms: SharedFlow<Result<List<Alarm>>>
-
-        fun load(scope: CoroutineScope)
+        fun getAllAlarms(): Flow<Result<List<Alarm>>>
         fun setEnabled(id: Long, enabled: Boolean, scope: CoroutineScope)
         fun deleteAlarm(id: Long, scope: CoroutineScope)
     }

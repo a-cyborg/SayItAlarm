@@ -6,12 +6,19 @@
 
 package org.a_cyb.sayitalarm.domain.interactor
 
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import io.mockk.clearAllMocks
 import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
 import org.a_cyb.sayitalarm.domain.repository.RepositoryContract
 import org.a_cyb.sayitalarm.entity.Alarm
@@ -31,6 +38,17 @@ class AddInteractorSpec {
     private val alarmRepository: RepositoryContract.AlarmRepository = mockk(relaxed = true)
     private val alarmScheduler: AlarmServiceContract.AlarmScheduler = mockk(relaxed = true)
 
+    @BeforeTest
+    fun setup() {
+        Dispatchers.setMain(StandardTestDispatcher())
+    }
+
+    @AfterTest
+    fun clear() {
+        Dispatchers.resetMain()
+        clearAllMocks()
+    }
+
     @Test
     fun `When save is called it triggers AlarmRepository save`() = runTest {
         // Given
@@ -38,8 +56,7 @@ class AddInteractorSpec {
 
         // When
         interactor.save(alarm, this)
-
-        advanceUntilIdle()
+        runCurrent()
 
         // Then
         verify(exactly = 1) {
@@ -54,8 +71,7 @@ class AddInteractorSpec {
 
         // When
         interactor.save(alarm, this)
-
-        advanceUntilIdle()
+        runCurrent()
 
         // Then
         coVerify(exactly = 1) {
