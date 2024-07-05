@@ -9,12 +9,15 @@ package org.a_cyb.sayitalarm.domain.interactor
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import io.mockk.clearAllMocks
+import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.coVerifyOrder
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
@@ -75,6 +78,21 @@ class AddInteractorSpec {
 
         // Then
         coVerify(exactly = 1) {
+            alarmScheduler.setAlarm(any())
+        }
+    }
+
+    @Test
+    fun `When save is called it runs repository save and scheduler setAlarm in order`() = runTest {
+        // Given
+        val interactor = AddInteractor(alarmRepository, alarmScheduler)
+
+        // When
+        interactor.save(alarm, this)
+        advanceUntilIdle()
+
+        coVerifyOrder {
+            alarmRepository.save(any(), any())
             alarmScheduler.setAlarm(any())
         }
     }

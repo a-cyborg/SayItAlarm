@@ -75,14 +75,14 @@ class AlarmDataSourceSpec {
         item mustBe Result.success(alarmEntities)
     }
 
-    // @Test
-    // fun `When getById is called it returns failure result`() = runTest {
-    //     // When
-    //     val result = dataSource.getById(8L)
-    //
-    //     // Then
-    //     result mustBe Result.failure(IllegalStateException())
-    // }
+    @Test
+    fun `When getById is called it returns failure result`() = runTest {
+        // When
+        val result = dataSource.getById(8L)
+
+        // Then
+        result.isFailure mustBe true
+    }
 
     @Test
     fun `When getById is called it returns success result with alarmEntity`() = runTest {

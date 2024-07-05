@@ -18,12 +18,14 @@ import java.util.Calendar.WEDNESDAY
 import app.cash.turbine.test
 import io.mockk.clearAllMocks
 import io.mockk.coVerify
+import io.mockk.coVerifyOrder
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runCurrent
@@ -68,32 +70,23 @@ class ListInteractorSpec {
     fun `When getAllAlarms is called it starts to collect flow`() = runTest {
         // Given
         val exception = IllegalStateException()
+        val results = listOf(
+            Result.success(alarms),
+            Result.failure(exception),
+            Result.success(alarms)
+        )
 
         every { alarmRepository.getAllAlarms() } returns flow {
-            emit(Result.failure(exception))
+            results.forEach {
+                emit(it)
+            }
         }
 
         // When
         interactor.getAllAlarms().test {
             // Then
+            awaitItem() mustBe Result.success(alarms)
             awaitItem() mustBe Result.failure(exception)
-
-            awaitComplete()
-        }
-
-        coVerify(exactly = 1) { alarmRepository.getAllAlarms() }
-    }
-
-    @Test
-    fun `When getAllAlarms is called it propagates success with alarms`() = runTest {
-        // Given
-        every { alarmRepository.getAllAlarms() } returns flow {
-            emit(Result.success(alarms))
-        }
-
-        // When
-        interactor.getAllAlarms().test {
-            // Then
             awaitItem() mustBe Result.success(alarms)
 
             awaitComplete()
@@ -101,9 +94,20 @@ class ListInteractorSpec {
     }
 
     @Test
+    fun `When getAllAlarms is called it triggers alarmRepository getAllAlarms`() = runTest {
+        // When
+        interactor.getAllAlarms()
+            .launchIn(this)
+
+        // Then
+        coVerify(exactly = 1) { alarmRepository.getAllAlarms() }
+    }
+
+    @Test
     fun `When setEnable is called it triggers AlarmRepository updatedEnabled`() = runTest {
         // When
         interactor.setEnabled(3L, true, this)
+
         runCurrent()
 
         // Then
@@ -116,6 +120,7 @@ class ListInteractorSpec {
     fun `When setEnable is called with enabled true it triggers AlarmScheduler setAlarm`() = runTest {
         // When
         interactor.setEnabled(3L, true, this)
+
         runCurrent()
 
         // Then
@@ -128,11 +133,26 @@ class ListInteractorSpec {
     fun `When setEnable is called with enabled false it triggers AlarmScheduler cancelAlarm`() = runTest {
         // When
         interactor.setEnabled(3L, false, this)
+
         runCurrent()
 
         // Then
         coVerify(exactly = 1) {
             alarmScheduler.cancelAlarm(any(), any())
+        }
+    }
+
+    @Test
+    fun `When setEnabled is called it sequentially executes repository and scheduler coroutines`() = runTest {
+        // When
+        interactor.setEnabled(3L, true, this)
+
+        runCurrent()
+
+        // Then
+        coVerifyOrder {
+            alarmRepository.updateEnabled(any(), any(), any())
+            alarmScheduler.setAlarm(any())
         }
     }
 
@@ -156,6 +176,20 @@ class ListInteractorSpec {
 
         // Then
         coVerify(exactly = 1) {
+            alarmScheduler.cancelAlarm(any(), any())
+        }
+    }
+
+    @Test
+    fun `When deleteAlarm is called it sequentially executes repository and scheduler coroutines`() = runTest {
+        // When
+        interactor.deleteAlarm(3L ,this)
+
+        runCurrent()
+
+        // Then
+        coVerifyOrder {
+            alarmRepository.delete(any(), any())
             alarmScheduler.cancelAlarm(any(), any())
         }
     }
