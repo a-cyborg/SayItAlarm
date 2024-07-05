@@ -14,11 +14,11 @@ interface EnumFormatterContract {
 
     fun getStringRes(id: Int) = Resources.getSystem().getString(id)
 
-    fun interface AlertTypeFormatter: EnumFormatterContract {
+    fun interface AlertTypeFormatter : EnumFormatterContract {
         fun format(alertType: AlertType): String
     }
 
-    fun interface AlarmTypeFormatter: EnumFormatterContract {
+    fun interface AlarmTypeFormatter : EnumFormatterContract {
         fun format(alarmType: AlarmType): String
     }
 }

@@ -25,4 +25,9 @@ android {
 
 dependencies {
     implementation("androidx.core:core-ktx:1.13.1")
+    implementation("io.insert-koin:koin-android:3.5.6")
+
+    // Debug
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.8.10")
+    testImplementation("io.mockk:mockk:1.13.11")
 }

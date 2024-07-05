@@ -37,6 +37,7 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
     implementation("app.cash.sqldelight:coroutines-extensions:2.0.2")
+    implementation("io.insert-koin:koin-android:3.5.6")
 
     // Debug
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.8.10")

@@ -53,7 +53,7 @@ class AddInteractorSpec {
     }
 
     @Test
-    fun `When save is called it triggers AlarmRepository save`() = runTest {
+    fun `When save is called it triggers alarmRepository save`() = runTest {
         // Given
         val interactor = AddInteractor(alarmRepository, alarmScheduler)
 
@@ -68,7 +68,7 @@ class AddInteractorSpec {
     }
 
     @Test
-    fun `When save is called it triggers AlarmScheduler setAlarm`() = runTest {
+    fun `When save is called it triggers alarmScheduler setAlarm`() = runTest {
         // Given
         val interactor = AddInteractor(alarmRepository, alarmScheduler)
 
@@ -83,7 +83,7 @@ class AddInteractorSpec {
     }
 
     @Test
-    fun `When save is called it runs repository save and scheduler setAlarm in order`() = runTest {
+    fun `When save is called it sequentially executes repository and scheduler coroutines`() = runTest {
         // Given
         val interactor = AddInteractor(alarmRepository, alarmScheduler)
 

@@ -10,7 +10,6 @@ import org.a_cyb.sayitalarm.entity.Alarm
 import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.AlarmUI
 
 interface AlarmMapperContract {
-
     fun mapToAlarm(alarmUI: AlarmUI): Alarm
     fun mapToAlarmUI(alarm: Alarm): AlarmUI
 }

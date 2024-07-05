@@ -45,25 +45,25 @@ class AlarmRepository(
         }
 
     override fun save(alarm: Alarm, scope: CoroutineScope) {
-        scope.launch {
+        scope.launch(context = dispatcher) {
             dataSource.insert(alarm.toAlarmEntity())
         }
     }
 
     override fun update(alarm: Alarm, scope: CoroutineScope) {
-        scope.launch {
+        scope.launch(context = dispatcher) {
             dataSource.update(alarm.toAlarmEntity())
         }
     }
 
     override fun updateEnabled(id: Long, enabled: Boolean, scope: CoroutineScope) {
-        scope.launch {
+        scope.launch(context = dispatcher) {
             dataSource.updateEnabled(id, enabled)
         }
     }
 
     override fun delete(id: Long, scope: CoroutineScope) {
-        scope.launch {
+        scope.launch(context = dispatcher) {
             dataSource.delete(id)
         }
     }

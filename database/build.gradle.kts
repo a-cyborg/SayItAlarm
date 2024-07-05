@@ -37,10 +37,12 @@ sqldelight {
 
 dependencies {
     implementation("app.cash.sqldelight:android-driver:2.0.2")
+    implementation("io.insert-koin:koin-android:3.5.6")
 
     // Debug
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.8.10")
     testImplementation("app.cash.sqldelight:sqlite-driver:2.0.0")
     testImplementation("tech.antibytes.kfixture:core:0.4.0")
+    testImplementation("io.mockk:mockk:1.13.11")
     testImplementation(project(":util"))
 }

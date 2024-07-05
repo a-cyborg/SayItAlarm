@@ -81,8 +81,12 @@ dependencies {
     implementation(project(":entity"))
     implementation(project(":presentation"))
     implementation(project(":presentation:viewmodel"))
+    implementation(project(":data"))
+    implementation(project(":database"))
+    implementation(project(":domain"))
+    implementation(project(":formatter"))
+    implementation(project(":ringtone-manager"))
 
-    // Core
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.0")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.0")
@@ -92,6 +96,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3:1.2.1")
     implementation("androidx.compose.material3:material3-window-size-class:1.2.1")
+    implementation("io.insert-koin:koin-android:3.5.6")
 
     // Debug
     implementation(kotlin("test"))

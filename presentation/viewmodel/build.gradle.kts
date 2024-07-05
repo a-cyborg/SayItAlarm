@@ -42,6 +42,7 @@ dependencies {
     implementation(project(":ringtone-manager"))
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-android:2.8.0")
+    implementation("io.insert-koin:koin-android:3.5.6")
 
     // Debug
     testImplementation("junit:junit:4.13.2")
@@ -49,7 +50,6 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
     testImplementation("app.cash.turbine:turbine:1.1.0")
     testImplementation("tech.antibytes.kfixture:core:0.4.0")
-    val mockkVersion = "1.13.11"
-    testImplementation("io.mockk:mockk:$mockkVersion")
+    testImplementation("io.mockk:mockk:1.13.11")
     testImplementation(project(":util"))
 }
