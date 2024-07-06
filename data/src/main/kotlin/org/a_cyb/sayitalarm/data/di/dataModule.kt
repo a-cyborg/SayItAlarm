@@ -7,8 +7,10 @@
 package org.a_cyb.sayitalarm.data.di
 
 import org.a_cyb.sayitalarm.data.AlarmRepository
+import org.a_cyb.sayitalarm.data.SettingsRepository
 import org.a_cyb.sayitalarm.data.datasource.AlarmDataSource
 import org.a_cyb.sayitalarm.data.datasource.DataSourceContract
+import org.a_cyb.sayitalarm.data.datasource.SettingsDataSource
 import org.a_cyb.sayitalarm.domain.repository.RepositoryContract
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -18,7 +20,15 @@ val dataModule = module {
         AlarmDataSource(get())
     }
 
+    single<DataSourceContract.SettingsDataSource> {
+        SettingsDataSource(get())
+    }
+
     single<RepositoryContract.AlarmRepository> {
         AlarmRepository(get(), get(named("io")))
+    }
+
+    single<RepositoryContract.SettingsRepository> {
+        SettingsRepository(get(), get(named("io")))
     }
 }

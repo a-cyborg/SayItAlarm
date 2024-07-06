@@ -7,9 +7,7 @@
 package org.a_cyb.sayitalarm.domain.interactor
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.a_cyb.sayitalarm.domain.repository.RepositoryContract
 import org.a_cyb.sayitalarm.entity.Settings
@@ -21,29 +19,14 @@ class SettingsInteractor(
     private val settingsRepository: RepositoryContract.SettingsRepository
 ) : InteractorContract.SettingsInteractor {
 
-    private val _settings: MutableSharedFlow<Result<Settings>> = MutableSharedFlow()
-    override val settings: SharedFlow<Result<Settings>> = _settings
-
-    override fun load(scope: CoroutineScope) {
-        scope.launch {
-            settingsRepository
-                .getSettings()
-                .map { it.emitResult() }
-        }
-    }
-
-    private suspend fun Result<Settings>.emitResult() {
-        this
-            .onSuccess { _settings.emit(Result.success(it)) }
-            .onFailure { _settings.emit(Result.failure(it)) }
+    override fun getSettings(): Flow<Result<Settings>> {
+        return settingsRepository.getSettings()
     }
 
     override fun setTimeOut(timeOut: TimeOut, scope: CoroutineScope) {
         scope.launch {
             settingsRepository
                 .setTimeOut(timeOut, this)
-
-            load(this)
         }
     }
 
@@ -51,8 +34,6 @@ class SettingsInteractor(
         scope.launch {
             settingsRepository
                 .setSnooze(snooze, this)
-
-            load(this)
         }
     }
 
@@ -60,8 +41,6 @@ class SettingsInteractor(
         scope.launch {
             settingsRepository
                 .setTheme(theme, this)
-
-            load(this)
         }
     }
 }

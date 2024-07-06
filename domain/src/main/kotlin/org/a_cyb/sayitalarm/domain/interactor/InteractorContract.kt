@@ -33,9 +33,7 @@ interface InteractorContract {
     }
 
     interface SettingsInteractor {
-        val settings: SharedFlow<Result<Settings>>
-
-        fun load(scope: CoroutineScope)
+        fun getSettings(): Flow<Result<Settings>>
         fun setTimeOut(timeOut: TimeOut, scope: CoroutineScope)
         fun setSnooze(snooze: Snooze, scope: CoroutineScope)
         fun setTheme(theme: Theme, scope: CoroutineScope)

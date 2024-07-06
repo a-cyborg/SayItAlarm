@@ -6,12 +6,16 @@
 
 package org.a_cyb.sayitalarm.domain.interactor
 
+import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import app.cash.turbine.test
+import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import kotlinx.coroutines.async
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import org.a_cyb.sayitalarm.domain.repository.RepositoryContract
 import org.a_cyb.sayitalarm.entity.Settings
@@ -22,174 +26,100 @@ import org.a_cyb.sayitalarm.util.fulfils
 import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Test
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class SettingsInteractorSpec {
 
     private val settingsRepository: RepositoryContract.SettingsRepository = mockk(relaxed = true)
 
     private lateinit var interactor: SettingsInteractor
 
+    private val settings = Settings(
+        timeOut = TimeOut(180),
+        snooze = Snooze(15),
+        theme = Theme.LIGHT,
+    )
+
     @BeforeTest
     fun setup() {
         interactor = SettingsInteractor((settingsRepository))
     }
 
+    @AfterTest
+    fun clear() {
+        clearAllMocks()
+    }
+
     @Test
-    fun `When load is called it propagates success with settings`() = runTest {
+    fun `When getSettings is called it returns flow`() = runTest {
         // Given
-        every { settingsRepository.load(any()) } returns async { Result.success(settings) }
+        val results = listOf(
+            Result.failure(IllegalStateException()),
+            Result.success(settings),
+            Result.failure(IllegalStateException()),
+        )
 
-        interactor.settings.test {
-            // When
-            interactor.load(this)
+        every { settingsRepository.getSettings() } returns
+            flow {
+                results.forEach { emit(it) }
+            }
 
+        // When
+        interactor.getSettings().test {
             // Then
+            awaitItem() mustBe results[0]
             awaitItem() mustBe Result.success(settings)
+            awaitItem() mustBe results[2]
+
+            awaitComplete()
         }
     }
 
     @Test
-    fun `When load is called it propagates failure with exception`() = runTest {
-        // Given
-        val exception = IllegalStateException()
-        every { settingsRepository.load(any()) } returns async { Result.failure(exception) }
-
-        interactor.settings.test {
-            // When
-            interactor.load(this)
-
-            // Then
-            awaitItem() mustBe Result.failure(exception)
-        }
-
-    }
-
-    @Test
-    fun `When load is called it triggers SettingsRepository load`() = runTest {
-        // Given
-        every { settingsRepository.load(any()) } returns async { Result.success(settings) }
-
-        interactor.settings.test {
-            // When
-            interactor.load(this)
-
-            skipItems(1)
-        }
-
-        // Then
-        verify(exactly = 1) {
-            @Suppress("DeferredResultUnused")
-            settingsRepository.load(any())
-        }
-    }
-
-    @Test
-    fun `When setTimeout is called it propagates success with settings`() = runTest {
+    fun `When setTimeout is called triggers repository setTimeOut`() = runTest {
         // Given
         val timeOut = TimeOut(300)
         val settings = settings.copy(timeOut = timeOut)
 
-        every { settingsRepository.load(any()) } returns async { Result.success(settings) }
+        // When
+        interactor.setTimeOut(timeOut, this)
 
-        interactor.settings.test {
-            // When
-            interactor.setTimeOut(timeOut, this)
-
-            // Then
-            awaitItem() mustBe Result.success(settings)
-        }
-    }
-
-    @Test
-    fun `When setTimeout is called it triggers SettingsRepository setTimeOut and load`() = runTest {
-        // Given
-        every { settingsRepository.load(any()) } returns async { Result.success(settings) }
-
-        interactor.settings.test {
-            // When
-            interactor.setTimeOut(settings.timeOut, this)
-
-            skipItems(1)
-        }
+        runCurrent()
 
         // Then
-        verify(exactly = 1) { settingsRepository.setTimeOut(any(), any()) }
         verify(exactly = 1) {
-            @Suppress("DeferredResultUnused")
-            settingsRepository.load(any())
+            settingsRepository.setTimeOut(timeOut, any())
         }
     }
 
     @Test
-    fun `When setSnooze is called it propagates success with settings`() = runTest {
+    fun `When setSnooze is called it triggers repository setSnooze`() = runTest {
         // Given
         val snooze = Snooze(33)
-        val settings = settings.copy(snooze = snooze)
 
-        every { settingsRepository.load(any()) } returns async { Result.success(settings) }
+        // When
+        interactor.setSnooze(snooze, this)
 
-        interactor.settings.test {
-            // When
-            interactor.setSnooze(snooze, this)
-
-            // Then
-            awaitItem() mustBe Result.success(settings)
-        }
-    }
-
-    @Test
-    fun `When setSnooze is called it triggers SettingsRepository setSnooze and load`() = runTest {
-        // Given
-        every { settingsRepository.load(any()) } returns async { Result.success(settings) }
-
-        interactor.settings.test {
-            // When
-            interactor.setSnooze(settings.snooze, this)
-
-            skipItems(1)
-        }
+        runCurrent()
 
         // Then
-        verify(exactly = 1) { settingsRepository.setSnooze(any(), any()) }
         verify(exactly = 1) {
-            @Suppress("DeferredResultUnused")
-            settingsRepository.load(any())
+            settingsRepository.setSnooze(snooze, any())
         }
     }
 
     @Test
-    fun `When setTheme is called it triggers SettingsRepository setTheme and load`() = runTest {
-        // Given
-        every { settingsRepository.load(any()) } returns async { Result.success(settings) }
-
-        interactor.settings.test {
-            // When
-            interactor.setTheme(settings.theme, this)
-
-            skipItems(1)
-        }
-
-        // Then
-        verify(exactly = 1) { settingsRepository.setTheme(any(), any()) }
-        verify(exactly = 1) {
-            @Suppress("DeferredResultUnused")
-            settingsRepository.load(any())
-        }
-    }
-
-    @Test
-    fun `When setTheme is called it propagates success with settings`() = runTest {
+    fun `When setTheme is called it triggers repository setTheme`() = runTest {
         // Given
         val theme = Theme.DARK
-        val settings = settings.copy(theme = theme)
 
-        every { settingsRepository.load(any()) } returns async { Result.success(settings) }
+        // When
+        interactor.setTheme(theme, this)
 
-        interactor.settings.test {
-            // When
-            interactor.setTheme(theme, this)
+        runCurrent()
 
-            // Then
-            awaitItem() mustBe Result.success(settings)
+        // Then
+        verify(exactly = 1) {
+            settingsRepository.setTheme(theme, any())
         }
     }
 
@@ -197,10 +127,4 @@ class SettingsInteractorSpec {
     fun `It fulfills SettingsInteractor`() {
         interactor fulfils InteractorContract.SettingsInteractor::class
     }
-
-    private val settings = Settings(
-        timeOut = TimeOut(180),
-        snooze = Snooze(15),
-        theme = Theme.LIGHT,
-    )
 }

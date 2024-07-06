@@ -4,8 +4,6 @@
  * Use of this source code is governed by Apache v2.0
  */
 
-@file:OptIn(ExperimentalCoroutinesApi::class)
-
 package org.a_cyb.sayitalarm.presentation.viewmodel
 
 import kotlin.test.AfterTest
@@ -16,7 +14,6 @@ import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -35,6 +32,7 @@ import org.a_cyb.sayitalarm.util.fulfils
 import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Test
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class SettingsViewModelSpec {
 
     private val settings = Settings(
@@ -48,7 +46,7 @@ class SettingsViewModelSpec {
         theme = "Light",
     )
 
-    private val interactor = SettingsInteractorFake(listOf(Result.failure(IllegalStateException())), TestScope())
+    private val interactor = SettingsInteractorFake(listOf(Result.failure(IllegalStateException())))
     private val durationFormatter = DurationFormatterFake()
 
     @BeforeTest
@@ -62,12 +60,6 @@ class SettingsViewModelSpec {
     }
 
     @Test
-    fun `It fulfils SettingsViewModel`() {
-        SettingsViewModel(interactor, durationFormatter) fulfils
-            SettingsContract.SettingsViewModel::class
-    }
-
-    @Test
     fun `It is in the initial state`() {
         SettingsViewModel(interactor, durationFormatter)
             .state.value mustBe Initial
@@ -76,7 +68,7 @@ class SettingsViewModelSpec {
     @Test
     fun `Given interactor fails it sets InitialError state`() = runTest {
         val result = listOf(Result.failure<Settings>(RuntimeException()))
-        val interactor = SettingsInteractorFake(result, this)
+        val interactor = SettingsInteractorFake(result)
         val viewModel = SettingsViewModel(interactor, durationFormatter)
 
         viewModel.state.test {
@@ -92,7 +84,7 @@ class SettingsViewModelSpec {
     fun `Given interactor success result with Settings it is in success state`() = runTest {
         // Given
         val results = listOf(Result.success(settings))
-        val interactor = SettingsInteractorFake(results, this)
+        val interactor = SettingsInteractorFake(results)
         val viewModel = SettingsViewModel(interactor, durationFormatter)
 
         viewModel.state.test {
@@ -116,7 +108,7 @@ class SettingsViewModelSpec {
             Result.success(settings),
             Result.success(settings.copy(timeOut = timeOut)),
         )
-        val interactor = SettingsInteractorFake(results, this)
+        val interactor = SettingsInteractorFake(results)
         val viewModel = SettingsViewModel(interactor, durationFormatter)
 
         viewModel.state.test {
@@ -143,7 +135,7 @@ class SettingsViewModelSpec {
             Result.success(settings),
             Result.success(settings.copy(snooze = snooze)),
         )
-        val interactor = SettingsInteractorFake(results, this)
+        val interactor = SettingsInteractorFake(results)
         val viewModel = SettingsViewModel(interactor, durationFormatter)
 
         viewModel.state.test {
@@ -170,7 +162,7 @@ class SettingsViewModelSpec {
             Result.success(settings),
             Result.success(settings.copy(theme = theme)),
         )
-        val interactor = SettingsInteractorFake(results, this)
+        val interactor = SettingsInteractorFake(results)
         val viewModel = SettingsViewModel(interactor, durationFormatter)
 
         viewModel.state.test {
@@ -196,5 +188,11 @@ class SettingsViewModelSpec {
 
         // Then
         verify(exactly = 1) { command.execute(any()) }
+    }
+
+    @Test
+    fun `It fulfils SettingsViewModel`() {
+        SettingsViewModel(interactor, durationFormatter) fulfils
+            SettingsContract.SettingsViewModel::class
     }
 }

@@ -7,12 +7,10 @@
 package org.a_cyb.sayitalarm.presentation.viewmodel
 
 import kotlin.time.Duration.Companion.minutes
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
 import org.a_cyb.sayitalarm.entity.Settings
 import org.a_cyb.sayitalarm.entity.Snooze
@@ -28,24 +26,23 @@ import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsUI
 import org.a_cyb.sayitalarm.presentation.SettingsContract.TimeInput
 import org.a_cyb.sayitalarm.presentation.command.CommandContract
 
-internal class SettingsViewModel(
+class SettingsViewModel(
     private val interactor: InteractorContract.SettingsInteractor,
     private val durationFormatter: DurationFormatterContract,
 ) : SettingsContract.SettingsViewModel, ViewModel() {
 
-    private var _state: MutableStateFlow<SettingsState> = MutableStateFlow(Initial)
-    override val state: StateFlow<SettingsState> = _state.asStateFlow()
+    override val state: StateFlow<SettingsState> = interactor.getSettings()
+        .map(::mapToState)
+        .stateIn(
+            scope = scope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = Initial
+        )
 
-    init {
-        interactor.settings
-            .onEach(::updateState)
-            .launchIn(scope)
-    }
-
-    private fun updateState(settingsResult: Result<Settings>) {
-        settingsResult
-            .onSuccess { settings -> _state.update { settings.toStateWithContent() } }
-            .onFailure { _: Throwable -> _state.update { Error } }
+    private fun mapToState(result: Result<Settings>): SettingsState {
+        return result.getOrNull()
+            ?.toStateWithContent()
+            ?: Error
     }
 
     private fun Settings.toStateWithContent(): Success =
