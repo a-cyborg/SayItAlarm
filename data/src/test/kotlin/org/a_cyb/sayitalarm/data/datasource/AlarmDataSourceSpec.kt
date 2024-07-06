@@ -11,6 +11,7 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
+import app.cash.turbine.test
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
@@ -153,17 +154,21 @@ class AlarmDataSourceSpec {
             .copy(id = 1L, hour = 3, minute = 3)
             .toAlarmEntity()
 
-        // When
-        dataSource.update(updated)
+        dataSource
+            .getAllByTimeAsc(dispatcher = StandardTestDispatcher(this.testScheduler))
+            .test {
+                skipItems(1)
 
-        val actual = sayItDB.alarmQueries
-            .getById(1)
-            .executeAsOne()
+                // When
+                dataSource.update(updated)
 
-        // Then
-        actual.hour mustBe 3
-        actual.minute mustBe 3
-        actual.weeklyRepeat mustBe alarm.weeklyRepeat
+                val actual = awaitItem().getOrNull()!!.first()
+
+                // Then
+                actual.hour mustBe 3
+                actual.minute mustBe 3
+                actual.weeklyRepeat mustBe alarm.weeklyRepeat
+            }
     }
 
     @Test

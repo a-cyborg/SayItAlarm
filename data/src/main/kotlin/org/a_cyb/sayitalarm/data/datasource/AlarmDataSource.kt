@@ -86,8 +86,8 @@ class AlarmDataSource(
         alarmQueries.delete(id)
     }
 
-    private fun toAlarmEntity(dto: Alarm): AlarmEntity {
-        return AlarmEntity(
+    private fun toAlarmEntity(dto: Alarm): AlarmEntity =
+        AlarmEntity(
             id = dto.id,
             hour = dto.hour,
             minute = dto.minute,
@@ -99,5 +99,4 @@ class AlarmDataSource(
             alarmType = dto.alarmType,
             sayItScripts = dto.sayItScripts,
         )
-    }
 }

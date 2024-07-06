@@ -21,7 +21,8 @@ interface RepositoryContract {
     }
 
     interface SettingsRepository {
-        fun load(scope: CoroutineScope): Deferred<Result<Settings>>
+        fun getSettings(): Flow<Result<Settings>>
+        fun insert(settings: Settings, scope: CoroutineScope)
         fun setTimeOut(timeOut: TimeOut, scope: CoroutineScope)
         fun setSnooze(snooze: Snooze, scope: CoroutineScope)
         fun setTheme(theme: Theme, scope: CoroutineScope)

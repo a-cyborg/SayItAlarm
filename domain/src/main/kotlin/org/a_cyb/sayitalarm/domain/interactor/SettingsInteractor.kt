@@ -9,6 +9,7 @@ package org.a_cyb.sayitalarm.domain.interactor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.a_cyb.sayitalarm.domain.repository.RepositoryContract
 import org.a_cyb.sayitalarm.entity.Settings
@@ -26,9 +27,8 @@ class SettingsInteractor(
     override fun load(scope: CoroutineScope) {
         scope.launch {
             settingsRepository
-                .load(this)
-                .await()
-                .emitResult()
+                .getSettings()
+                .map { it.emitResult() }
         }
     }
 

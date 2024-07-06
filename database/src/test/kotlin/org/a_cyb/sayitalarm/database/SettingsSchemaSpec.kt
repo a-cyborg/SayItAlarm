@@ -10,6 +10,7 @@ import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import org.a_cyb.sayitalarm.util.mustBe
@@ -67,6 +68,17 @@ class SettingsSchemaSpec {
         fetched.timeOut mustBe settingsEntity.timeOut
         fetched.snooze mustBe settingsEntity.snooze
         fetched.theme mustBe settingsEntity.theme
+    }
+
+    @Test
+    fun `When get query is called it returns null`() {
+        // When
+        val settingsEntity = sayItDB.settingsQueries
+            .get()
+            .executeAsOneOrNull()
+
+        // Then
+        assertNull(settingsEntity)
     }
 
     @Test

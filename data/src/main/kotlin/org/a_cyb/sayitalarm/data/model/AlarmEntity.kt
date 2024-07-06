@@ -56,11 +56,13 @@ private fun Long.asSetOfDayCode(): Set<Int> {
 }
 
 private fun Long.asAlertType(): AlertType {
-    return AlertType.entries[this.toInt()]
+    return AlertType.entries
+        .getOrElse(toInt()) { AlertType.SOUND_AND_VIBRATE }
 }
 
 private fun Long.asAlarmType(): AlarmType {
-    return AlarmType.entries[this.toInt()]
+    return AlarmType.entries
+        .getOrElse(toInt()) { AlarmType.SAY_IT }
 }
 
 private fun String.toScripts(): List<String> {

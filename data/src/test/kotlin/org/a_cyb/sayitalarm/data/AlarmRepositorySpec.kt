@@ -24,6 +24,7 @@ import kotlinx.coroutines.test.runTest
 import org.a_cyb.sayitalarm.data.datasource.DataSourceContract
 import org.a_cyb.sayitalarm.data.model.AlarmEntity
 import org.a_cyb.sayitalarm.data.model.toAlarm
+import org.a_cyb.sayitalarm.domain.repository.RepositoryContract
 import org.a_cyb.sayitalarm.entity.Alarm
 import org.a_cyb.sayitalarm.entity.AlarmType
 import org.a_cyb.sayitalarm.entity.AlertType
@@ -33,6 +34,7 @@ import org.a_cyb.sayitalarm.entity.Minute
 import org.a_cyb.sayitalarm.entity.Ringtone
 import org.a_cyb.sayitalarm.entity.SayItScripts
 import org.a_cyb.sayitalarm.entity.WeeklyRepeat
+import org.a_cyb.sayitalarm.util.fulfils
 import org.a_cyb.sayitalarm.util.mustBe
 import tech.antibytes.kfixture.fixture
 import tech.antibytes.kfixture.kotlinFixture
@@ -222,6 +224,14 @@ class AlarmRepositorySpec {
 
         // Then
         coVerify(exactly = 1) { dataSource.delete(any()) }
+    }
+
+    @Test
+    fun `It fulfills AlarmRepositoryContract`() {
+        val dispatcher = StandardTestDispatcher()
+
+        AlarmRepository(dataSource, dispatcher) fulfils
+            RepositoryContract.AlarmRepository::class
     }
 
     private fun getRandomAlarmEntity(
