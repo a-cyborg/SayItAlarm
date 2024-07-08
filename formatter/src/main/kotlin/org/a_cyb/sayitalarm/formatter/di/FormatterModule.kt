@@ -23,11 +23,11 @@ val formatterModule = module {
     }
 
     single<EnumFormatterContract.AlertTypeFormatter> {
-        AlertTypeFormatter()
+        AlertTypeFormatter(get())
     }
 
     single<EnumFormatterContract.AlarmTypeFormatter> {
-        AlarmTypeFormatter()
+        AlarmTypeFormatter(get())
     }
 
     single<TimeFormatterContract> {

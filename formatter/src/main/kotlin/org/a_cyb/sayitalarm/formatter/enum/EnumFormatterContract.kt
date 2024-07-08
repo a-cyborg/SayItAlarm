@@ -6,13 +6,10 @@
 
 package org.a_cyb.sayitalarm.formatter.enum
 
-import android.content.res.Resources
 import org.a_cyb.sayitalarm.entity.AlarmType
 import org.a_cyb.sayitalarm.entity.AlertType
 
 interface EnumFormatterContract {
-
-    fun getStringRes(id: Int) = Resources.getSystem().getString(id)
 
     fun interface AlertTypeFormatter : EnumFormatterContract {
         fun format(alertType: AlertType): String

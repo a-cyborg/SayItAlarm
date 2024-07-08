@@ -6,10 +6,13 @@
 
 package org.a_cyb.sayitalarm.formatter.enum
 
+import android.content.Context
 import org.a_cyb.sayitalarm.entity.AlertType
 import org.a_cyb.sayitalarm.formatter.R
 
-class AlertTypeFormatter: EnumFormatterContract.AlertTypeFormatter {
+class AlertTypeFormatter(private val context: Context) : EnumFormatterContract.AlertTypeFormatter {
+
+    private fun getStringRes(id: Int) = context.getString(id)
 
     override fun format(alertType: AlertType): String = when (alertType) {
         AlertType.SOUND_ONLY -> getStringRes(R.string.sound_only)

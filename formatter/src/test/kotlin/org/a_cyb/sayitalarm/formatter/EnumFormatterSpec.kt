@@ -7,53 +7,24 @@
 package org.a_cyb.sayitalarm.formatter
 
 import android.content.Context
-import android.content.res.Resources
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.mockkStatic
-import io.mockk.unmockkStatic
 import org.a_cyb.sayitalarm.entity.AlarmType
 import org.a_cyb.sayitalarm.entity.AlertType
 import org.a_cyb.sayitalarm.formatter.enum.AlarmTypeFormatter
 import org.a_cyb.sayitalarm.formatter.enum.AlertTypeFormatter
 import org.a_cyb.sayitalarm.util.mustBe
-import org.junit.After
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class EnumFormatterSpec {
 
-    @Before
-    fun setup() {
-        mockkStatic(Resources::class)
-        setupMockk()
-    }
-
-    @After
-    fun teatDown() {
-        unmockkStatic(Resources::class)
-    }
-
-    private fun setupMockk() {
-        val context: Context = ApplicationProvider.getApplicationContext()
-
-        every { Resources.getSystem() } answers {
-            mockk {
-                every { getString(any()) } answers {
-                    context.getString(arg(0) as Int)
-                }
-            }
-        }
-    }
-
     @Test
     fun `Given AlertTypeFormatter when format is called it maps to formatted string`() {
         // Given
-        val formatter = AlertTypeFormatter()
+        val context: Context = ApplicationProvider.getApplicationContext()
+        val formatter = AlertTypeFormatter(context)
 
         // When & Then
         formatter.format(AlertType.SOUND_ONLY) mustBe "Sound only"
@@ -64,7 +35,8 @@ class EnumFormatterSpec {
     @Test
     fun `Given AlarmTypeFormatter when format is called it maps to formatted string`() {
         // Given
-        val formatter = AlarmTypeFormatter()
+        val context: Context = ApplicationProvider.getApplicationContext()
+        val formatter = AlarmTypeFormatter(context)
 
         // When & Then
         formatter.format(AlarmType.SAY_IT) mustBe "Turn off the alarm by reading scripts out."
