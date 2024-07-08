@@ -39,6 +39,28 @@ class InteractorModuleSpec {
     }
 
     @Test
+    fun `It injects EditInteractor`() {
+        // Given
+        val externalModule = module {
+            single<RepositoryContract.AlarmRepository> { mockk() }
+            single<AlarmServiceContract.AlarmScheduler> { mockk() }
+        }
+
+        val koinApp = koinApplication {
+            modules(
+                interactorModule,
+                externalModule,
+            )
+        }
+
+        // When
+        val editInteractor = koinApp.koin.getOrNull<InteractorContract.EditInteractor>()
+
+        // Then
+        assertNotNull(editInteractor)
+    }
+
+    @Test
     fun `It injects ListInteractor`() {
         // Given
         val externalModule = module {

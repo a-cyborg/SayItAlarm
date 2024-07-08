@@ -7,6 +7,7 @@
 package org.a_cyb.sayitalarm.domain.interactor.di
 
 import org.a_cyb.sayitalarm.domain.interactor.AddInteractor
+import org.a_cyb.sayitalarm.domain.interactor.EditInteractor
 import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
 import org.a_cyb.sayitalarm.domain.interactor.ListInteractor
 import org.a_cyb.sayitalarm.domain.interactor.SettingsInteractor
@@ -15,6 +16,10 @@ import org.koin.dsl.module
 val interactorModule = module {
     single<InteractorContract.AddInteractor> {
         AddInteractor(get(), get())
+    }
+
+    single<InteractorContract.EditInteractor> {
+        EditInteractor(get(), get())
     }
 
     single<InteractorContract.ListInteractor> {

@@ -26,7 +26,7 @@ import org.a_cyb.sayitalarm.presentation.ListContract.ListState.Success
 import org.a_cyb.sayitalarm.presentation.ListContract.ListStateWithContent
 import org.a_cyb.sayitalarm.presentation.command.CommandContract
 
-internal class ListViewModel(
+class ListViewModel(
     private val interactor: InteractorContract.ListInteractor,
     private val timeFormatter: TimeFormatterContract,
     private val weekdayFormatter: WeekdayFormatterContract,
