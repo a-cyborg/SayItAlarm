@@ -23,17 +23,23 @@ import org.a_cyb.sayitalarm.entity.SayItScripts
 import org.a_cyb.sayitalarm.entity.WeeklyRepeat
 import org.a_cyb.sayitalarm.formatter.time.TimeFormatterContract
 import org.a_cyb.sayitalarm.formatter.weekday.WeekdayFormatterContract
-import org.a_cyb.sayitalarm.presentation.command.CommandContract.Command
-import org.a_cyb.sayitalarm.presentation.command.CommandContract.CommandReceiver
 import org.a_cyb.sayitalarm.presentation.AddContract
 import org.a_cyb.sayitalarm.presentation.AddContract.AddState
 import org.a_cyb.sayitalarm.presentation.AddContract.AddState.Error
 import org.a_cyb.sayitalarm.presentation.AddContract.AddState.Initial
 import org.a_cyb.sayitalarm.presentation.AddContract.AddState.Success
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.*
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.AlarmUI
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.AlertTypeUI
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.RingtoneUI
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.SelectableAlertType
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.SelectableRepeat
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.TimeUI
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.WeeklyRepeatUI
+import org.a_cyb.sayitalarm.presentation.command.CommandContract.Command
+import org.a_cyb.sayitalarm.presentation.command.CommandContract.CommandReceiver
 import org.a_cyb.sayitalarm.presentation.viewmodel.mapper.AlarmMapperContract
 
-internal class AddViewModel(
+class AddViewModel(
     private val interactor: InteractorContract.AddInteractor,
     private val timeFormatter: TimeFormatterContract,
     private val weeklyRepeatFormatter: WeekdayFormatterContract,
@@ -58,7 +64,7 @@ internal class AddViewModel(
 
         when (_state.value) {
             is Success, is Initial -> Success(updated)
-            is Error -> Error(updated)
+            else -> Error(updated)
         }.updateState()
     }
 

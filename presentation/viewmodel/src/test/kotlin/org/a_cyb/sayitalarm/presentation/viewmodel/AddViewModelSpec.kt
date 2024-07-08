@@ -58,9 +58,9 @@ class AddViewModelSpec {
     private val timeFormatter: TimeFormatterContract = TimeFormatterFake()
     private val weeklyRepeatFormatter: WeekdayFormatterContract = WeekdayFormatterFake()
     private val alertTypeFormatter: EnumFormatterContract.AlertTypeFormatter = AlertTypeFormatterFake()
-    private val ringtoneManager: RingtoneResolverContract = RingtoneResolverFake()
+    private val ringtoneResolver: RingtoneResolverContract = RingtoneResolverFake()
     private val mapper: AlarmMapperContract =
-        AlarmMapper(timeFormatter, weeklyRepeatFormatter, alertTypeFormatter, ringtoneManager)
+        AlarmMapper(timeFormatter, weeklyRepeatFormatter, alertTypeFormatter, ringtoneResolver)
 
     private val interactor: InteractorContract.AddInteractor = mockk(relaxed = true)
 
@@ -186,7 +186,7 @@ class AddViewModelSpec {
             // Given
             val selected = FakeAlarmData.alarms[1].ringtone
             val ringtoneUI = RingtoneUI(
-                ringtoneManager.getRingtoneTitle(selected.ringtone),
+                ringtoneResolver.getRingtoneTitle(selected.ringtone).getOrNull()!!,
                 selected.ringtone
             )
 
@@ -233,7 +233,7 @@ class AddViewModelSpec {
         }
         val alertTypeName = alertTypeFormatter.format(AlertType.VIBRATE_ONLY)
         val ringtoneUI = RingtoneUI(
-            ringtoneManager.getRingtoneTitle(alarm.ringtone.ringtone),
+            ringtoneResolver.getRingtoneTitle(alarm.ringtone.ringtone).getOrNull()!!,
             alarm.ringtone.ringtone
         )
 

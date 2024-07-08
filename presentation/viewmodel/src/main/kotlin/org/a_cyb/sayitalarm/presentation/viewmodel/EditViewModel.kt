@@ -25,7 +25,7 @@ import org.a_cyb.sayitalarm.presentation.EditContract.EditViewModel.EditState.*
 import org.a_cyb.sayitalarm.presentation.command.CommandContract
 import org.a_cyb.sayitalarm.presentation.viewmodel.mapper.AlarmMapperContract
 
-internal class EditViewModel(
+class EditViewModel(
     private val alarmId: Long,
     private val interactor: InteractorContract.EditInteractor,
     private val timeFormatter: TimeFormatterContract,

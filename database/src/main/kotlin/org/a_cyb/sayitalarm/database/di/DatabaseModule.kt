@@ -9,6 +9,7 @@ package org.a_cyb.sayitalarm.database.di
 import org.a_cyb.sayitalarm.database.DatabaseFactory
 import org.a_cyb.sayitalarm.database.SayItDB
 import org.acyb.sayitalarm.database.AlarmQueries
+import org.acyb.sayitalarm.database.SettingsQueries
 import org.koin.dsl.module
 
 val databaseModule = module {
@@ -18,5 +19,9 @@ val databaseModule = module {
 
     single<AlarmQueries> {
         get<SayItDB>().alarmQueries
+    }
+
+    single<SettingsQueries> {
+        get<SayItDB>().settingsQueries
     }
 }

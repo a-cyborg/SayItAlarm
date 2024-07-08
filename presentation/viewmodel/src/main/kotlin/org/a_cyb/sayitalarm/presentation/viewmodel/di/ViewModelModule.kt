@@ -14,23 +14,31 @@ import org.a_cyb.sayitalarm.presentation.viewmodel.AddViewModel
 import org.a_cyb.sayitalarm.presentation.viewmodel.EditViewModel
 import org.a_cyb.sayitalarm.presentation.viewmodel.ListViewModel
 import org.a_cyb.sayitalarm.presentation.viewmodel.SettingsViewModel
+import org.a_cyb.sayitalarm.presentation.viewmodel.mapper.AlarmMapper
+import org.a_cyb.sayitalarm.presentation.viewmodel.mapper.AlarmMapperContract
+import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.module.Module
+import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val viewModelModule: Module = module {
-    single<AddContract.AddViewModel> {
+    viewModel {
         AddViewModel(get(), get(), get(), get())
-    }
+    } bind AddContract.AddViewModel::class
 
-    single<EditContract.EditViewModel> {
+    viewModel {
         EditViewModel(get(), get(), get(), get(), get())
-    }
+    } bind EditContract.EditViewModel::class
 
-    single<ListContract.ListViewModel> {
+    viewModel {
         ListViewModel(get(), get(), get())
-    }
+    } bind ListContract.ListViewModel::class
 
-    single<SettingsContract.SettingsViewModel> {
+    viewModel {
         SettingsViewModel(get(), get())
+    } bind SettingsContract.SettingsViewModel::class
+
+    single<AlarmMapperContract> {
+        AlarmMapper(get(), get(), get(), get())
     }
 }

@@ -10,6 +10,6 @@ import kotlinx.coroutines.CoroutineScope
 import androidx.lifecycle.ViewModel as AndroidViewModel
 import androidx.lifecycle.viewModelScope
 
-internal abstract class ViewModel : AndroidViewModel() {
+abstract class ViewModel : AndroidViewModel() {
     val scope: CoroutineScope = viewModelScope
 }
