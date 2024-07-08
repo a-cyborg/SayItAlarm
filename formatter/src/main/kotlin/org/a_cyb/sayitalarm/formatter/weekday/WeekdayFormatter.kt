@@ -7,15 +7,20 @@
 package org.a_cyb.sayitalarm.formatter.weekday
 
 import java.util.Locale
-import android.content.res.Resources
+import android.content.Context
 import android.icu.text.DateFormatSymbols
+import android.icu.text.ListFormatter
 import org.a_cyb.sayitalarm.formatter.R
 
 class WeekdayFormatter(
+    private val context: Context,
     locale: Locale = Locale.getDefault(),
 ) : WeekdayFormatterContract {
 
     private val dateFormatSymbols = DateFormatSymbols.getInstance(locale)
+    private val listFormatter = ListFormatter.getInstance(locale)
+
+    private fun getStringRes(id: Int) = context.getString(id)
 
     override fun formatAbbr(days: Set<Int>): String = format(days.toSortedSet(), isAbbr = true)
     override fun formatFull(days: Set<Int>): String = format(days.toSortedSet(), isAbbr = false)
@@ -31,41 +36,20 @@ class WeekdayFormatter(
         }
     }
 
-    private fun getStringRes(id: Int) = Resources.getSystem().getString(id)
+    private fun Set<Int>.toAbbrNames(): String =
+        map { dateFormatSymbols.shortWeekdays[it] }
+            .concatDayNames()
 
-    private fun Set<Int>.toAbbrNames(): String {
-        val displayNames = this.map {
-            dateFormatSymbols.shortWeekdays[it]
+    private fun Set<Int>.toFullNames(): String =
+        map { dateFormatSymbols.weekdays[it] }
+            .concatDayNames()
+
+    private fun List<String>.concatDayNames(): String =
+        when (size) {
+            0 -> ""
+            1 -> first()
+            else -> listFormatter.format(this)
         }
-
-        return concatDayNames(displayNames)
-    }
-
-    private fun Set<Int>.toFullNames(): String {
-        val displayNames = this.map {
-            dateFormatSymbols.weekdays[it]
-        }
-
-        return concatDayNames(displayNames)
-    }
-
-    private fun concatDayNames(dayNames: List<String>): String {
-        when (dayNames.size) {
-            0 -> return ""
-            1 -> return dayNames.first()
-            else -> {
-                val first = dayNames.dropLast(1).joinToString(", ")
-                val last = "$lastItemSeparator${dayNames.last()}"
-
-                return "$first$last"
-            }
-        }
-    }
-
-    private val lastItemSeparator = when(locale) {
-        Locale.ENGLISH -> ", and "
-        else -> ", "
-    }
 
     companion object {
         val EVERYDAY = (1..7).toSet()

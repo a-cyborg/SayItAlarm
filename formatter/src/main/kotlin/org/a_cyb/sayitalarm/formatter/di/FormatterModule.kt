@@ -35,6 +35,6 @@ val formatterModule = module {
     }
 
     single<WeekdayFormatterContract> {
-        WeekdayFormatter()
+        WeekdayFormatter(get())
     }
 }

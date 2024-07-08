@@ -119,7 +119,9 @@ class FormatterModuleSpec {
         every { DateFormatSymbols.getInstance(any() as Locale) } answers { mockk() }
 
         // Given
+        val context: Context = mockk(relaxed = true)
         val koinApp = koinApplication {
+            androidContext(context)
             modules(
                 formatterModule,
             )

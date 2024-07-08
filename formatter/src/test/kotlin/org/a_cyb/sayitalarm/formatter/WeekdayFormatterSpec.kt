@@ -81,7 +81,7 @@ class WeekdayFormatterSpec {
 
         setupMock(locale)
 
-        WeekdayFormatter(locale) fulfils WeekdayFormatterContract::class
+        WeekdayFormatter(context, locale) fulfils WeekdayFormatterContract::class
     }
 
     @Test
@@ -91,7 +91,7 @@ class WeekdayFormatterSpec {
 
         setupMock(locale)
 
-        val formatter = WeekdayFormatter(locale)
+        val formatter = WeekdayFormatter(context, locale)
 
         // When
         val formatted = formatter.formatAbbr(setOf(MONDAY, WEDNESDAY, FRIDAY))
@@ -107,7 +107,7 @@ class WeekdayFormatterSpec {
 
         setupMock(locale)
 
-        val formatter = WeekdayFormatter(locale)
+        val formatter = WeekdayFormatter(context, locale)
 
         // When
         val formatted = formatter.formatFull(setOf(TUESDAY, THURSDAY, SATURDAY))
@@ -123,7 +123,7 @@ class WeekdayFormatterSpec {
 
         setupMock(locale)
 
-        val formatter = WeekdayFormatter(locale)
+        val formatter = WeekdayFormatter(context, locale)
 
         // When
         val formatted = formatter.formatFull(setOf(FRIDAY))
@@ -139,7 +139,7 @@ class WeekdayFormatterSpec {
 
         setupMock(locale)
 
-        val formatter = WeekdayFormatter(locale)
+        val formatter = WeekdayFormatter(context, locale)
 
         // When
         val formatted = formatter.formatAbbr(
@@ -157,7 +157,7 @@ class WeekdayFormatterSpec {
 
         setupMock(locale)
 
-        val formatter = WeekdayFormatter(locale)
+        val formatter = WeekdayFormatter(context, locale)
 
         // when
         val formatted = formatter.formatFull(setOf(FRIDAY, THURSDAY, WEDNESDAY, TUESDAY, MONDAY))
@@ -173,7 +173,7 @@ class WeekdayFormatterSpec {
 
         setupMock(locale)
 
-        val formatter = WeekdayFormatter(locale)
+        val formatter = WeekdayFormatter(context, locale)
 
         // when
         val formatted = formatter.formatFull(setOf(SATURDAY, SUNDAY))
@@ -189,7 +189,7 @@ class WeekdayFormatterSpec {
 
         setupMock(locale)
 
-        val formatter = WeekdayFormatter(locale)
+        val formatter = WeekdayFormatter(context, locale)
 
         // When
         val formatted = formatter.formatFull(emptySet())
@@ -199,35 +199,37 @@ class WeekdayFormatterSpec {
     }
 
     @Test
+    @Config(qualifiers = "ko")
     fun `When formatAbbr is called it maps to abbreviated day names in korean`() {
         // Given
         val locale = Locale.KOREAN
 
         setupMock(locale)
 
-        val formatter = WeekdayFormatter(locale)
+        val formatter = WeekdayFormatter(context, locale)
 
         // When
         val formatted = formatter.formatAbbr(setOf(MONDAY, WEDNESDAY, FRIDAY))
 
         // Then
-        formatted mustBe "월, 수, 금"
+        formatted mustBe "월, 수 및 금"
     }
 
     @Test
+    @Config(qualifiers = "ko")
     fun `When formatFull is called it maps to full day names in korean`() {
         // Given
         val locale = Locale.KOREAN
 
         setupMock(locale)
 
-        val formatter = WeekdayFormatter(locale)
+        val formatter = WeekdayFormatter(context, locale)
 
         // When
         val formatted = formatter.formatFull(setOf(MONDAY, WEDNESDAY, FRIDAY))
 
         // Then
-        formatted mustBe "월요일, 수요일, 금요일"
+        formatted mustBe "월요일, 수요일 및 금요일"
     }
 
     @Test
@@ -238,7 +240,7 @@ class WeekdayFormatterSpec {
 
         setupMock(locale)
 
-        val formatter = WeekdayFormatter(locale)
+        val formatter = WeekdayFormatter(context, locale)
 
         // When
         val formatted = formatter.formatAbbr(
@@ -257,7 +259,7 @@ class WeekdayFormatterSpec {
 
         setupMock(locale)
 
-        val formatter = WeekdayFormatter(locale)
+        val formatter = WeekdayFormatter(context, locale)
 
         // When
         val formatted = formatter.formatFull(setOf(MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY))
@@ -274,7 +276,7 @@ class WeekdayFormatterSpec {
 
         setupMock(locale)
 
-        val formatter = WeekdayFormatter(locale)
+        val formatter = WeekdayFormatter(context, locale)
 
         // When
         val formatted = formatter.formatFull(setOf(SUNDAY, SATURDAY))
