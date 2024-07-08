@@ -6,27 +6,35 @@
 
 package org.a_cyb.sayitalarm.di
 
+import android.content.Context
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import org.a_cyb.sayitalarm.alarm_service.di.alarmServiceModule
 import org.a_cyb.sayitalarm.data.di.dataModule
 import org.a_cyb.sayitalarm.database.di.databaseModule
-import org.a_cyb.sayitalarm.domain.di.domainModule
+import org.a_cyb.sayitalarm.domain.interactor.di.interactorModule
 import org.a_cyb.sayitalarm.formatter.di.formatterModule
 import org.a_cyb.sayitalarm.presentation.viewmodel.di.viewModelModule
 import org.a_cyb.sayitalarm.ringtone_resolver.di.ringtoneResolverModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
-val appModule = module {
+fun initKoin(context: Context) = startKoin {
+    androidContext(context)
+    modules(appModule)
+}
+
+private val appModule = module {
     includes(
         viewModelModule,
+        interactorModule,
         dataModule,
         databaseModule,
-        domainModule,
+        alarmServiceModule,
         formatterModule,
         ringtoneResolverModule,
-        alarmServiceModule,
         module {
             single<CoroutineDispatcher>(named("io")) { Dispatchers.IO }
         },
