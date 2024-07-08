@@ -7,34 +7,35 @@
 package org.a_cyb.sayitalarm.ringtone_resolver
 
 import android.content.Context
+import android.content.res.Resources.NotFoundException
 import android.media.RingtoneManager
 import android.net.Uri
 import android.provider.Settings
 import androidx.core.net.toUri
 
-class RingtoneResolver(
-    private val context: Context,
-) : RingtoneResolverContract {
+class RingtoneResolver(private val context: Context) : RingtoneResolverContract {
 
-    override fun getRingtoneTitle(ringtone: String): String {
-        val uri = if (ringtone.isEmpty()) {
-            getSystemDefaultRingtone()
+    override fun getRingtoneTitle(ringtone: String): Result<String> {
+        val ringtone = RingtoneManager.getRingtone(context, ringtone.toUri())
+
+        return if (ringtone != null) {
+            Result.success(ringtone.getTitle(context))
         } else {
-            ringtone.toUri()
+            Result.failure(NotFoundException())
         }
-
-        val title = RingtoneManager
-            .getRingtone(context, uri)
-            .getTitle(context)
-
-        return title ?: "NO NAME"
     }
 
-    override fun getDefaultRingtone(): String {
-        return getSystemDefaultRingtone().toString()
+    override fun getDefaultRingtone(): Result<String> {
+        val uri = getSystemDefaultRingtone()
+
+        return if (uri != null) {
+            Result.success(uri.toString())
+        } else {
+            Result.failure(NotFoundException())
+        }
     }
 
-    private fun getSystemDefaultRingtone(): Uri {
-        return Settings.System.DEFAULT_RINGTONE_URI
+    private fun getSystemDefaultRingtone(): Uri? {
+        return Settings.System.DEFAULT_ALARM_ALERT_URI
     }
 }

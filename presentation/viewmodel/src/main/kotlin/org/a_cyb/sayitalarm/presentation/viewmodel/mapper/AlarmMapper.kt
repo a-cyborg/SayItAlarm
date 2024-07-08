@@ -32,7 +32,7 @@ class AlarmMapper(
     private val timeFormatter: TimeFormatterContract,
     private val weeklyRepeatFormatter: WeekdayFormatterContract,
     private val alertTypeFormatter: EnumFormatterContract.AlertTypeFormatter,
-    private val ringtoneManager: RingtoneResolverContract,
+    private val ringtoneResolver: RingtoneResolverContract,
 ) : AlarmMapperContract {
 
     override fun mapToAlarm(alarmUI: AlarmUI): Alarm =
@@ -119,9 +119,15 @@ class AlarmMapper(
     }
 
     private fun Ringtone.toRingtoneUI(): RingtoneUI {
-        val uri = ringtone.ifEmpty { ringtoneManager.getDefaultRingtone() }
+        val uri = ringtone.ifEmpty { ringtoneResolver.getDefaultRingtone().getOrNull() }
 
-        return RingtoneUI(title = ringtoneManager.getRingtoneTitle(uri), uri = uri)
+        return if (uri != null) {
+            val title = ringtoneResolver.getRingtoneTitle(uri).getOrNull()
+
+            RingtoneUI(title ?: "No title", uri)
+        } else {
+            RingtoneUI("", "")
+        }
     }
 
     companion object {

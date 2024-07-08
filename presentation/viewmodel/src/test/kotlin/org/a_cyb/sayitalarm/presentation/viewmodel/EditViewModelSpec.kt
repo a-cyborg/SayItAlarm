@@ -261,7 +261,7 @@ class EditViewModelSpec {
 
             val selected = FakeAlarmData.alarms[1].ringtone
             val ringtoneUI = RingtoneUI(
-                ringtoneManager.getRingtoneTitle(selected.ringtone),
+                ringtoneManager.getRingtoneTitle(selected.ringtone).getOrNull()!!,
                 selected.ringtone
             )
 
@@ -383,7 +383,7 @@ class EditViewModelSpec {
             label = alarm.label.label,
             alertTypeUI = AlertTypeUI(FakeAlarmData.selectableAlertTypes),
             ringtoneUI = RingtoneUI(
-                ringtoneManager.getRingtoneTitle(alarm.ringtone.ringtone),
+                ringtoneManager.getRingtoneTitle(alarm.ringtone.ringtone).getOrNull()!!,
                 alarm.ringtone.ringtone
             ),
             sayItScripts = alarm.sayItScripts.scripts

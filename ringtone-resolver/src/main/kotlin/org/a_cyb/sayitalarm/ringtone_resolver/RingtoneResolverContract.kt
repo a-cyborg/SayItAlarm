@@ -7,6 +7,6 @@
 package org.a_cyb.sayitalarm.ringtone_resolver
 
 interface RingtoneResolverContract {
-    fun getRingtoneTitle(ringtone: String): String
-    fun getDefaultRingtone(): String
+    fun getRingtoneTitle(ringtone: String): Result<String>
+    fun getDefaultRingtone(): Result<String>
 }
