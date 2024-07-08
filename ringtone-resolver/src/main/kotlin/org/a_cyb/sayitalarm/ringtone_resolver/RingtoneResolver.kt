@@ -4,20 +4,21 @@
  * Use of this source code is governed by Apache v2.0
  */
 
-package org.a_cyb.sayitalarm.ringtone_manager
+package org.a_cyb.sayitalarm.ringtone_resolver
 
 import android.content.Context
 import android.media.RingtoneManager
 import android.net.Uri
+import android.provider.Settings
 import androidx.core.net.toUri
 
-class RingtoneManager(
+class RingtoneResolver(
     private val context: Context,
-) : RingtoneManagerContract {
+) : RingtoneResolverContract {
 
     override fun getRingtoneTitle(ringtone: String): String {
         val uri = if (ringtone.isEmpty()) {
-            getDefaultRingtoneUri()
+            getSystemDefaultRingtone()
         } else {
             ringtone.toUri()
         }
@@ -26,15 +27,14 @@ class RingtoneManager(
             .getRingtone(context, uri)
             .getTitle(context)
 
-        return title
+        return title ?: "NO NAME"
     }
 
     override fun getDefaultRingtone(): String {
-        return getDefaultRingtoneUri().toString()
+        return getSystemDefaultRingtone().toString()
     }
 
-    private fun getDefaultRingtoneUri(): Uri {
-        return RingtoneManager
-            .getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_ALARM)
+    private fun getSystemDefaultRingtone(): Uri {
+        return Settings.System.DEFAULT_RINGTONE_URI
     }
 }

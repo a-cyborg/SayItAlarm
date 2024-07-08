@@ -22,10 +22,9 @@ include(
     ":database",
     ":presentation",
     ":presentation:viewmodel",
-    ":presentation:interactor",
     ":formatter",
     ":alarm-service",
-    ":ringtone-manager",
+    ":ringtone-resolver",
     ":util",
 )
 

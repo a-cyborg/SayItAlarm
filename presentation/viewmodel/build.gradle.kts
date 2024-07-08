@@ -38,11 +38,13 @@ dependencies {
     implementation(project(":entity"))
     implementation(project(":domain"))
     implementation(project(":presentation"))
+    implementation(project(":ringtone-resolver"))
     implementation(project(":formatter"))
-    implementation(project(":ringtone-manager"))
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-android:2.8.0")
-    implementation("io.insert-koin:koin-android:3.5.6")
+    val koinVersion = "3.5.6"
+    implementation("io.insert-koin:koin-android:$koinVersion")
+    implementation("io.insert-koin:koin-androidx-compose:$koinVersion")
 
     // Debug
     testImplementation("junit:junit:4.13.2")

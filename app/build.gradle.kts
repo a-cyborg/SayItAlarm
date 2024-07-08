@@ -79,13 +79,14 @@ android {
 
 dependencies {
     implementation(project(":entity"))
+    implementation(project(":domain"))
+    implementation(project(":database"))
+    implementation(project(":data"))
     implementation(project(":presentation"))
     implementation(project(":presentation:viewmodel"))
-    implementation(project(":data"))
-    implementation(project(":database"))
-    implementation(project(":domain"))
+    implementation(project(":alarm-service"))
     implementation(project(":formatter"))
-    implementation(project(":ringtone-manager"))
+    implementation(project(":ringtone-resolver"))
 
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.0")
@@ -96,12 +97,14 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3:1.2.1")
     implementation("androidx.compose.material3:material3-window-size-class:1.2.1")
-    implementation("io.insert-koin:koin-android:3.5.6")
+    val nav_version = "2.7.7"
+    implementation("androidx.navigation:navigation-compose:$nav_version")
+    val koinVersion = "3.5.6"
+    implementation("io.insert-koin:koin-android:$koinVersion")
+    implementation("io.insert-koin:koin-androidx-compose:$koinVersion")
 
     // Debug
-    implementation(kotlin("test"))
-    implementation("androidx.compose.ui:ui-test-junit4-android:1.6.7")
-    testImplementation("junit:junit:4.13.2")
+    testImplementation("androidx.compose.ui:ui-test-junit4-android:1.6.7")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.9.24")
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
     testImplementation("org.robolectric:robolectric:4.12")
@@ -114,6 +117,5 @@ dependencies {
     testImplementation(project(":util"))
 
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.6.7")
     debugImplementation("androidx.compose.ui:ui-test-manifest:1.6.7")
 }

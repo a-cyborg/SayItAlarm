@@ -6,9 +6,9 @@
 
 package org.a_cyb.sayitalarm.presentation.viewmodel.fake
 
-import org.a_cyb.sayitalarm.ringtone_manager.RingtoneManagerContract
+import org.a_cyb.sayitalarm.ringtone_resolver.RingtoneResolverContract
 
-class RingtoneManagerFake : RingtoneManagerContract {
+class RingtoneResolverFake : RingtoneResolverContract {
 
     override fun getRingtoneTitle(ringtone: String): String =
         ringtone.split("//")

@@ -39,12 +39,12 @@ import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.WeeklyRepeatUI
 import org.a_cyb.sayitalarm.presentation.command.SaveCommand
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.AlertTypeFormatterFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.FakeAlarmData
-import org.a_cyb.sayitalarm.presentation.viewmodel.fake.RingtoneManagerFake
+import org.a_cyb.sayitalarm.presentation.viewmodel.fake.RingtoneResolverFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.TimeFormatterFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.WeekdayFormatterFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.mapper.AlarmMapper
 import org.a_cyb.sayitalarm.presentation.viewmodel.mapper.AlarmMapperContract
-import org.a_cyb.sayitalarm.ringtone_manager.RingtoneManagerContract
+import org.a_cyb.sayitalarm.ringtone_resolver.RingtoneResolverContract
 import org.a_cyb.sayitalarm.util.fulfils
 import org.a_cyb.sayitalarm.util.mustBe
 import tech.antibytes.kfixture.fixture
@@ -58,7 +58,7 @@ class AddViewModelSpec {
     private val timeFormatter: TimeFormatterContract = TimeFormatterFake()
     private val weeklyRepeatFormatter: WeekdayFormatterContract = WeekdayFormatterFake()
     private val alertTypeFormatter: EnumFormatterContract.AlertTypeFormatter = AlertTypeFormatterFake()
-    private val ringtoneManager: RingtoneManagerContract = RingtoneManagerFake()
+    private val ringtoneManager: RingtoneResolverContract = RingtoneResolverFake()
     private val mapper: AlarmMapperContract =
         AlarmMapper(timeFormatter, weeklyRepeatFormatter, alertTypeFormatter, ringtoneManager)
 

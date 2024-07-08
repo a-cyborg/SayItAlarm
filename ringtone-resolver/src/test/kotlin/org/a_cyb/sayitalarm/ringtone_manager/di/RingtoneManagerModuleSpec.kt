@@ -9,7 +9,8 @@ package org.a_cyb.sayitalarm.ringtone_manager.di
 import kotlin.test.assertNotNull
 import android.content.Context
 import io.mockk.mockk
-import org.a_cyb.sayitalarm.ringtone_manager.RingtoneManagerContract
+import org.a_cyb.sayitalarm.ringtone_resolver.RingtoneResolverContract
+import org.a_cyb.sayitalarm.ringtone_resolver.di.ringtoneResolverModule
 import org.junit.Test
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.koinApplication
@@ -23,12 +24,12 @@ class RingtoneManagerModuleSpec {
         val koinApp = koinApplication {
             androidContext(context)
             modules(
-                ringtoneManagerModule,
+                ringtoneResolverModule,
             )
         }
 
         // When
-        val ringtoneManager = koinApp.koin.get<RingtoneManagerContract>()
+        val ringtoneManager = koinApp.koin.get<RingtoneResolverContract>()
 
         // Then
         assertNotNull(ringtoneManager)

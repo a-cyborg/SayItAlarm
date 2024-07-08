@@ -26,13 +26,13 @@ import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.SelectableAlertType
 import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.SelectableRepeat
 import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.TimeUI
 import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.WeeklyRepeatUI
-import org.a_cyb.sayitalarm.ringtone_manager.RingtoneManagerContract
+import org.a_cyb.sayitalarm.ringtone_resolver.RingtoneResolverContract
 
 class AlarmMapper(
     private val timeFormatter: TimeFormatterContract,
     private val weeklyRepeatFormatter: WeekdayFormatterContract,
     private val alertTypeFormatter: EnumFormatterContract.AlertTypeFormatter,
-    private val ringtoneManager: RingtoneManagerContract,
+    private val ringtoneManager: RingtoneResolverContract,
 ) : AlarmMapperContract {
 
     override fun mapToAlarm(alarmUI: AlarmUI): Alarm =

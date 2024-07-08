@@ -14,7 +14,7 @@ import android.icu.text.NumberFormat
 import android.icu.text.RelativeDateTimeFormatter
 import android.icu.util.ULocale
 import android.text.format.DateFormat
-import android.text.format.DateFormat.*
+import android.text.format.DateFormat.getTimeFormat
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
@@ -56,7 +56,9 @@ class FormatterModuleSpec {
     @Test
     fun `It injects AlertTypeFormatter`() {
         // Given
+        val context: Context = mockk()
         val koinApp = koinApplication {
+            androidContext(context)
             modules(
                 formatterModule,
             )
@@ -72,7 +74,9 @@ class FormatterModuleSpec {
     @Test
     fun `It injects AlarmTypeFormatter`() {
         // Given
+        val context: Context = mockk(relaxed = true)
         val koinApp = koinApplication {
+            androidContext(context)
             modules(
                 formatterModule,
             )

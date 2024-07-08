@@ -3,7 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
-val projectPackage = "org.a_cyb.sayitalarm.formatter"
+val projectPackage = "org.a_cyb.sayitalarm.ringtoneresolver"
 
 android {
     namespace = projectPackage
@@ -29,5 +29,7 @@ dependencies {
 
     // Debug
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.8.10")
+    implementation("androidx.test.ext:junit-ktx:1.1.5")
+    testImplementation("org.robolectric:robolectric:4.12")
     testImplementation("io.mockk:mockk:1.13.11")
 }
