@@ -24,10 +24,8 @@ class SettingsInteractorFake(
     val invoked: InvokedType
         get() = _invoked
 
-    override fun getSettings(): Flow<Result<Settings>> =
-        flow {
-            results.forEach { emit(it) }
-        }
+    override val settings: Flow<Result<Settings>>
+        get() = flow { results.forEach { emit(it) } }
 
     override fun setTimeOut(timeOut: TimeOut, scope: CoroutineScope) {
         _invoked = InvokedType.SET_TIMEOUT

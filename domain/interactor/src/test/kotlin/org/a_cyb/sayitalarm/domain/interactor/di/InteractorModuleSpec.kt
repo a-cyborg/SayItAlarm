@@ -4,7 +4,7 @@
  * Use of this source code is governed by Apache v2.0
  */
 
-package org.a_cyb.sayitalarm.domain.di
+package org.a_cyb.sayitalarm.domain.interactor.di
 
 import kotlin.test.assertNotNull
 import io.mockk.mockk
@@ -15,7 +15,7 @@ import org.junit.Test
 import org.koin.dsl.koinApplication
 import org.koin.dsl.module
 
-class DomainModuleSpec {
+class InteractorModuleSpec {
     @Test
     fun `It injects AddInteractor`() {
         // Given
@@ -26,7 +26,7 @@ class DomainModuleSpec {
 
         val koinApp = koinApplication {
             modules(
-                domainModule,
+                interactorModule,
                 externalModule,
             )
         }
@@ -48,7 +48,7 @@ class DomainModuleSpec {
 
         val koinApp = koinApplication {
             modules(
-                domainModule,
+                interactorModule,
                 externalModule,
             )
         }
@@ -69,7 +69,7 @@ class DomainModuleSpec {
 
         val koinApp = koinApplication {
             modules(
-                domainModule,
+                interactorModule,
                 externalModule,
             )
         }

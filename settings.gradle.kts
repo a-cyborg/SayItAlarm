@@ -17,7 +17,9 @@ dependencyResolutionManagement {
 include(
     ":app",
     ":entity",
-    ":domain",
+    ":domain:interactor",
+    ":domain:repository",
+    ":domain:alarm-service",
     ":data",
     ":database",
     ":presentation",

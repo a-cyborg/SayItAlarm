@@ -32,7 +32,7 @@ internal class ListViewModel(
     private val weekdayFormatter: WeekdayFormatterContract,
 ) : ListContract.ListViewModel, ViewModel() {
 
-    override val state: StateFlow<ListState> = interactor.getAllAlarms()
+    override val state: StateFlow<ListState> = interactor.alarms
         .map(::toState)
         .stateIn(
             scope = scope,

@@ -31,7 +31,7 @@ class SettingsViewModel(
     private val durationFormatter: DurationFormatterContract,
 ) : SettingsContract.SettingsViewModel, ViewModel() {
 
-    override val state: StateFlow<SettingsState> = interactor.getSettings()
+    override val state: StateFlow<SettingsState> = interactor.settings
         .map(::mapToState)
         .stateIn(
             scope = scope,

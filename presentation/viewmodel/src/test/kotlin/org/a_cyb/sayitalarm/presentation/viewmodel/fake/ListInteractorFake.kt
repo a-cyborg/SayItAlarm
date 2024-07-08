@@ -21,8 +21,8 @@ class ListInteractorFake(
     val invokedType: InvokedType
         get() = _invokedType
 
-    override fun getAllAlarms(): Flow<Result<List<Alarm>>> =
-        flow { results.forEach { emit(it) } }
+    override val alarms: Flow<Result<List<Alarm>>>
+        get() = flow { results.forEach { emit(it) } }
 
     override fun setEnabled(id: Long, enabled: Boolean, scope: CoroutineScope) {
         _invokedType = InvokedType.SET_ENABLED

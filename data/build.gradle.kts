@@ -32,7 +32,7 @@ android {
 
 dependencies {
     implementation(project(":entity"))
-    implementation(project(":domain"))
+    implementation(project(":domain:repository"))
     implementation(project(":database"))
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")

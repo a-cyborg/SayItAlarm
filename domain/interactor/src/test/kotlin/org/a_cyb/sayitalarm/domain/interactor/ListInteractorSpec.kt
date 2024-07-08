@@ -183,7 +183,7 @@ class ListInteractorSpec {
     @Test
     fun `When deleteAlarm is called it sequentially executes repository and scheduler coroutines`() = runTest {
         // When
-        interactor.deleteAlarm(3L ,this)
+        interactor.deleteAlarm(3L, this)
 
         runCurrent()
 

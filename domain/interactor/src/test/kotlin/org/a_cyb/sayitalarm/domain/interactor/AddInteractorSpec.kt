@@ -9,7 +9,6 @@ package org.a_cyb.sayitalarm.domain.interactor
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import io.mockk.clearAllMocks
-import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.coVerifyOrder
 import io.mockk.mockk

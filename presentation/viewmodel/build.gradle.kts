@@ -36,8 +36,8 @@ android {
 
 dependencies {
     implementation(project(":entity"))
-    implementation(project(":domain"))
     implementation(project(":presentation"))
+    implementation(project(":domain:interactor"))
     implementation(project(":ringtone-resolver"))
     implementation(project(":formatter"))
 

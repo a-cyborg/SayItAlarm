@@ -79,7 +79,7 @@ android {
 
 dependencies {
     implementation(project(":entity"))
-    implementation(project(":domain"))
+    implementation(project(":domain:interactor"))
     implementation(project(":database"))
     implementation(project(":data"))
     implementation(project(":presentation"))
