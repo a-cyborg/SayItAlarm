@@ -19,9 +19,8 @@ class SettingsInteractor(
     private val settingsRepository: RepositoryContract.SettingsRepository
 ) : InteractorContract.SettingsInteractor {
 
-    override fun getSettings(): Flow<Result<Settings>> {
-        return settingsRepository.getSettings()
-    }
+    override val settings: Flow<Result<Settings>>
+        get() = settingsRepository.getSettings()
 
     override fun setTimeOut(timeOut: TimeOut, scope: CoroutineScope) {
         scope.launch {

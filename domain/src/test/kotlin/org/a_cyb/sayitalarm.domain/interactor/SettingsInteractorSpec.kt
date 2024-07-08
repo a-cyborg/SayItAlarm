@@ -64,7 +64,7 @@ class SettingsInteractorSpec {
             }
 
         // When
-        interactor.getSettings().test {
+        interactor.settings.test {
             // Then
             awaitItem() mustBe results[0]
             awaitItem() mustBe Result.success(settings)
@@ -78,7 +78,6 @@ class SettingsInteractorSpec {
     fun `When setTimeout is called triggers repository setTimeOut`() = runTest {
         // Given
         val timeOut = TimeOut(300)
-        val settings = settings.copy(timeOut = timeOut)
 
         // When
         interactor.setTimeOut(timeOut, this)

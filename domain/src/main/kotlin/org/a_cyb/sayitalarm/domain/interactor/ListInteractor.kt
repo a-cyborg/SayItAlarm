@@ -18,8 +18,8 @@ class ListInteractor(
     private val alarmScheduler: AlarmServiceContract.AlarmScheduler,
 ) : InteractorContract.ListInteractor {
 
-    override fun getAllAlarms(): Flow<Result<List<Alarm>>> =
-        alarmRepository.getAllAlarms()
+    override val alarms: Flow<Result<List<Alarm>>>
+        get() = alarmRepository.getAllAlarms()
 
     override fun setEnabled(id: Long, enabled: Boolean, scope: CoroutineScope) {
         scope.launch {

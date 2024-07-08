@@ -83,7 +83,7 @@ class ListInteractorSpec {
         }
 
         // When
-        interactor.getAllAlarms().test {
+        interactor.alarms.test {
             // Then
             awaitItem() mustBe Result.success(alarms)
             awaitItem() mustBe Result.failure(exception)
@@ -96,7 +96,7 @@ class ListInteractorSpec {
     @Test
     fun `When getAllAlarms is called it triggers alarmRepository getAllAlarms`() = runTest {
         // When
-        interactor.getAllAlarms()
+        interactor.alarms
             .launchIn(this)
 
         // Then

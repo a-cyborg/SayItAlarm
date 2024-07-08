@@ -8,7 +8,6 @@ package org.a_cyb.sayitalarm.domain.interactor
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharedFlow
 import org.a_cyb.sayitalarm.entity.Alarm
 import org.a_cyb.sayitalarm.entity.Settings
 import org.a_cyb.sayitalarm.entity.Snooze
@@ -27,13 +26,13 @@ interface InteractorContract {
     }
 
     interface ListInteractor {
-        fun getAllAlarms(): Flow<Result<List<Alarm>>>
+        val alarms: Flow<Result<List<Alarm>>>
         fun setEnabled(id: Long, enabled: Boolean, scope: CoroutineScope)
         fun deleteAlarm(id: Long, scope: CoroutineScope)
     }
 
     interface SettingsInteractor {
-        fun getSettings(): Flow<Result<Settings>>
+        val settings: Flow<Result<Settings>>
         fun setTimeOut(timeOut: TimeOut, scope: CoroutineScope)
         fun setSnooze(snooze: Snooze, scope: CoroutineScope)
         fun setTheme(theme: Theme, scope: CoroutineScope)
