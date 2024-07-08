@@ -15,9 +15,9 @@ import org.a_cyb.sayitalarm.data.datasource.DataSourceContract
 import org.a_cyb.sayitalarm.domain.repository.RepositoryContract
 import org.acyb.sayitalarm.database.AlarmQueries
 import org.acyb.sayitalarm.database.SettingsQueries
+import org.koin.core.qualifier.named
 import org.koin.dsl.koinApplication
 import org.koin.dsl.module
-import org.koin.core.qualifier.named
 
 class DataModuleSpec {
     @Test
@@ -35,7 +35,9 @@ class DataModuleSpec {
         }
 
         // When
-        val alarmDataSource = koinApp.koin.get<DataSourceContract.AlarmDataSource>()
+        val alarmDataSource = koinApp
+            .koin
+            .getOrNull<DataSourceContract.AlarmDataSource>()
 
         // Then
         assertNotNull(alarmDataSource)
@@ -57,7 +59,9 @@ class DataModuleSpec {
         }
 
         // When
-        val alarmRepository = koinApp.koin.get<RepositoryContract.AlarmRepository>()
+        val alarmRepository = koinApp
+            .koin
+            .getOrNull<RepositoryContract.AlarmRepository>()
 
         // Then
         assertNotNull(alarmRepository)
@@ -78,7 +82,9 @@ class DataModuleSpec {
         }
 
         // When
-        val settingsDataSource = koinApp.koin.get<DataSourceContract.SettingsDataSource>()
+        val settingsDataSource = koinApp
+            .koin
+            .getOrNull<DataSourceContract.SettingsDataSource>()
 
         // Then
         assertNotNull(settingsDataSource)
@@ -100,7 +106,9 @@ class DataModuleSpec {
         }
 
         // When
-        val settingsRepository = koinApp.koin.get<RepositoryContract.SettingsRepository>()
+        val settingsRepository = koinApp
+            .koin
+            .getOrNull<RepositoryContract.SettingsRepository>()
 
         // Then
         assertNotNull(settingsRepository)

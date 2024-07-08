@@ -32,7 +32,7 @@ class InteractorModuleSpec {
         }
 
         // When
-        val addInteractor = koinApp.koin.get<InteractorContract.AddInteractor>()
+        val addInteractor = koinApp.koin.getOrNull<InteractorContract.AddInteractor>()
 
         // Then
         assertNotNull(addInteractor)
@@ -54,7 +54,7 @@ class InteractorModuleSpec {
         }
 
         // When
-        val listInteractor = koinApp.koin.get<InteractorContract.ListInteractor>()
+        val listInteractor = koinApp.koin.getOrNull<InteractorContract.ListInteractor>()
 
         // Then
         assertNotNull(listInteractor)
@@ -75,7 +75,7 @@ class InteractorModuleSpec {
         }
 
         // When
-        val settingsInteractor = koinApp.koin.get<InteractorContract.SettingsInteractor>()
+        val settingsInteractor = koinApp.koin.getOrNull<InteractorContract.SettingsInteractor>()
 
         // Then
         assertNotNull(settingsInteractor)

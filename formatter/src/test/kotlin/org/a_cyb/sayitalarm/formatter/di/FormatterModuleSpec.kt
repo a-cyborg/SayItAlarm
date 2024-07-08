@@ -31,13 +31,12 @@ class FormatterModuleSpec {
 
     @Test
     fun `It injects DurationFormatter`() {
-        // Mockk
+        // Given
         mockkStatic(RelativeDateTimeFormatter::class, NumberFormat::class, ULocale::class)
         every { ULocale.forLocale(any()) } answers { mockk {} }
         every { NumberFormat.getInstance(any() as Locale) } answers { mockk {} }
         every { RelativeDateTimeFormatter.getInstance(any(), any(), any(), any()) } answers { mockk() }
 
-        // Given
         val koinApp = koinApplication {
             modules(
                 formatterModule,
@@ -45,7 +44,7 @@ class FormatterModuleSpec {
         }
 
         // When
-        val formatter = koinApp.koin.get<DurationFormatterContract>()
+        val formatter = koinApp.koin.getOrNull<DurationFormatterContract>()
 
         // Then
         assertNotNull(formatter)
@@ -56,7 +55,7 @@ class FormatterModuleSpec {
     @Test
     fun `It injects AlertTypeFormatter`() {
         // Given
-        val context: Context = mockk()
+        val context: Context = mockk(relaxed = true)
         val koinApp = koinApplication {
             androidContext(context)
             modules(
@@ -65,7 +64,7 @@ class FormatterModuleSpec {
         }
 
         // When
-        val formatter = koinApp.koin.get<EnumFormatterContract.AlertTypeFormatter>()
+        val formatter = koinApp.koin.getOrNull<EnumFormatterContract.AlertTypeFormatter>()
 
         // Then
         assertNotNull(formatter)
@@ -83,7 +82,7 @@ class FormatterModuleSpec {
         }
 
         // When
-        val formatter = koinApp.koin.get<EnumFormatterContract.AlarmTypeFormatter>()
+        val formatter = koinApp.koin.getOrNull<EnumFormatterContract.AlarmTypeFormatter>()
 
         // Then
         assertNotNull(formatter)
@@ -91,11 +90,10 @@ class FormatterModuleSpec {
 
     @Test
     fun `It injects TimeFormatter`() {
-        // Mockk
+        // Given
         mockkStatic(DateFormat::class)
         every { getTimeFormat(any()) } answers { mockk() }
 
-        // Given
         val context: Context = mockk(relaxed = true)
         val koinApp = koinApplication {
             androidContext(context)
@@ -105,7 +103,7 @@ class FormatterModuleSpec {
         }
 
         // When
-        val formatter = koinApp.koin.get<TimeFormatterContract>()
+        val formatter = koinApp.koin.getOrNull<TimeFormatterContract>()
 
         // Then
         assertNotNull(formatter)
@@ -128,7 +126,7 @@ class FormatterModuleSpec {
         }
 
         // When
-        val formatter = koinApp.koin.get<WeekdayFormatterContract>()
+        val formatter = koinApp.koin.getOrNull<WeekdayFormatterContract>()
 
         // Then
         assertNotNull(formatter)

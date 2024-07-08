@@ -15,9 +15,9 @@ import org.junit.Test
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.koinApplication
 
-class RingtoneManagerModuleSpec {
+class RingtoneResolverModuleSpec {
     @Test
-    fun `It injects RingtoneManager`() {
+    fun `It injects RingtoneResolver`() {
         // Given
         val context: Context = mockk()
 
@@ -29,9 +29,9 @@ class RingtoneManagerModuleSpec {
         }
 
         // When
-        val ringtoneManager = koinApp.koin.get<RingtoneResolverContract>()
+        val ringtoneResolver = koinApp.koin.getOrNull<RingtoneResolverContract>()
 
         // Then
-        assertNotNull(ringtoneManager)
+        assertNotNull(ringtoneResolver)
     }
 }

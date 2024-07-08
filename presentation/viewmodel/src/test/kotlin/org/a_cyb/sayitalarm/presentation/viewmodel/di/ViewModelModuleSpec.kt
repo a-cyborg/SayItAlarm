@@ -10,11 +10,6 @@ import kotlin.test.Test
 import kotlin.test.assertNotNull
 import io.mockk.every
 import io.mockk.mockk
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
 import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
 import org.a_cyb.sayitalarm.formatter.duration.DurationFormatterContract
 import org.a_cyb.sayitalarm.formatter.time.TimeFormatterContract
@@ -28,7 +23,6 @@ import org.koin.core.parameter.parametersOf
 import org.koin.dsl.koinApplication
 import org.koin.dsl.module
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class ViewModelModuleSpec {
 
     private val formatterModule = module {
@@ -40,20 +34,20 @@ class ViewModelModuleSpec {
     @Test
     fun `It injects AddViewModel`() {
         // Given
-        val externalModule = module {
+        val addInteractorModule = module {
             single<InteractorContract.AddInteractor> { mockk() }
         }
 
         val koinApp = koinApplication {
             modules(
                 viewModelModule,
-                externalModule,
+                addInteractorModule,
                 formatterModule,
             )
         }
 
         // When
-        val viewModel = koinApp.koin.get<AddContract.AddViewModel>()
+        val viewModel = koinApp.koin.getOrNull<AddContract.AddViewModel>()
 
         // Then
         assertNotNull(viewModel)
@@ -63,19 +57,17 @@ class ViewModelModuleSpec {
     fun `It injects EditViewModel`() {
         // Given
         val interactor: InteractorContract.EditInteractor = mockk(relaxed = true)
-
-        //
         every { interactor.getAlarm(any(), any()) } returns
             Result.failure(IllegalStateException())
 
-        val externalModule = module {
+        val interactorModule = module {
             single<InteractorContract.EditInteractor> { interactor }
         }
 
         val koinApp = koinApplication {
             modules(
                 viewModelModule,
-                externalModule,
+                interactorModule,
                 formatterModule,
             )
         }
@@ -93,20 +85,20 @@ class ViewModelModuleSpec {
     @Test
     fun `It injects ListViewModel`() {
         // Given
-        val externalModule = module {
+        val interactorModule = module {
             single<InteractorContract.ListInteractor> { mockk(relaxed = true) }
         }
 
         val koinApp = koinApplication {
             modules(
                 viewModelModule,
-                externalModule,
+                interactorModule,
                 formatterModule,
             )
         }
 
         // When
-        val listViewModel = koinApp.koin.get<ListContract.ListViewModel>()
+        val listViewModel = koinApp.koin.getOrNull<ListContract.ListViewModel>()
 
         // Then
         assertNotNull(listViewModel)
@@ -114,9 +106,6 @@ class ViewModelModuleSpec {
 
     @Test
     fun `It injects SettingsViewModel`() {
-        // TODO: After `state.launchIn` change to stateIn under Dispatcher setup should be removed.
-        Dispatchers.setMain(StandardTestDispatcher())
-
         // Given
         val externalModule = module {
             single<InteractorContract.SettingsInteractor> { mockk(relaxed = true) }
@@ -131,11 +120,9 @@ class ViewModelModuleSpec {
         }
 
         // When
-        val settingsViewModel = koinApp.koin.get<SettingsContract.SettingsViewModel>()
+        val settingsViewModel = koinApp.koin.getOrNull<SettingsContract.SettingsViewModel>()
 
         // Then
         assertNotNull(settingsViewModel)
-
-        Dispatchers.resetMain()
     }
 }

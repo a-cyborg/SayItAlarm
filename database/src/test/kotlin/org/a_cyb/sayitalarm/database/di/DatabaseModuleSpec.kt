@@ -12,6 +12,7 @@ import android.content.Context
 import io.mockk.mockk
 import org.a_cyb.sayitalarm.database.SayItDB
 import org.acyb.sayitalarm.database.AlarmQueries
+import org.acyb.sayitalarm.database.SettingsQueries
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.koinApplication
 
@@ -27,7 +28,7 @@ class DatabaseModuleSpec {
         }
 
         // When
-        val sayItDB = koinApp.koin.get<SayItDB>()
+        val sayItDB = koinApp.koin.getOrNull<SayItDB>()
 
         // Then
         assertNotNull(sayItDB)
@@ -41,13 +42,29 @@ class DatabaseModuleSpec {
         val koinApp = koinApplication {
             androidContext(context)
             modules(databaseModule)
-
         }
 
         // When
-        val alarmQueries = koinApp.koin.get<AlarmQueries>()
+        val alarmQueries = koinApp.koin.getOrNull<AlarmQueries>()
 
         // Then
         assertNotNull(alarmQueries)
+    }
+
+    @Test
+    fun `It inject SettingsQueries`() {
+        // Given
+        val context: Context = mockk(relaxed = true)
+
+        val koinApp = koinApplication {
+            androidContext(context)
+            modules(databaseModule)
+        }
+
+        // When
+        val settingsQueries = koinApp.koin.getOrNull<SettingsQueries>()
+
+        // Then
+        assertNotNull(settingsQueries)
     }
 }
