@@ -77,6 +77,10 @@ android {
     }
 }
 
+roborazzi {
+    outputDir.set(project.layout.projectDirectory.dir("src/test/snapshots/roborazzi/images"))
+}
+
 dependencies {
     implementation(project(":entity"))
     implementation(project(":domain:interactor"))
@@ -97,8 +101,9 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3:1.2.1")
     implementation("androidx.compose.material3:material3-window-size-class:1.2.1")
-    val nav_version = "2.7.7"
-    implementation("androidx.navigation:navigation-compose:$nav_version")
+
+    val navigationVersion = "2.7.7"
+    implementation("androidx.navigation:navigation-compose:$navigationVersion")
     val koinVersion = "3.5.6"
     implementation("io.insert-koin:koin-android:$koinVersion")
     implementation("io.insert-koin:koin-androidx-compose:$koinVersion")
@@ -108,6 +113,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.9.24")
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
     testImplementation("org.robolectric:robolectric:4.12")
+    testImplementation("androidx.navigation:navigation-testing:$navigationVersion")
     debugImplementation("androidx.compose.ui:ui-tooling:1.6.7")
 
     val roborazziVersion = "1.15.0"
@@ -115,6 +121,7 @@ dependencies {
     testImplementation("io.github.takahirom.roborazzi:roborazzi-compose:$roborazziVersion")
     testImplementation("io.github.takahirom.roborazzi:roborazzi-junit-rule:$roborazziVersion")
     testImplementation(project(":util"))
+
 
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0")
     debugImplementation("androidx.compose.ui:ui-test-manifest:1.6.7")

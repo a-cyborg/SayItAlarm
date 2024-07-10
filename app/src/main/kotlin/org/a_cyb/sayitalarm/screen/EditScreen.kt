@@ -24,14 +24,20 @@ import org.a_cyb.sayitalarm.presentation.EditContract.EditViewModel.EditState.Su
 import org.a_cyb.sayitalarm.presentation.command.SaveCommand
 
 @Composable
-fun EditScreen(viewModel: EditContract.EditViewModel) {
+fun EditScreen(
+    viewModel: EditContract.EditViewModel,
+    navigateToList: () -> Unit,
+) {
 
     val state = viewModel.state.collectAsState()
 
     ColumnScreenStandard {
         EditTopAppBar(
-            onCancel = {},  // TODO: Navigation impl
-            onConfirm = { viewModel.runCommand(SaveCommand) }
+            onCancel = navigateToList,
+            onConfirm = {
+                viewModel.runCommand(SaveCommand)
+                navigateToList()
+            }
         )
         SpacerMedium()
 

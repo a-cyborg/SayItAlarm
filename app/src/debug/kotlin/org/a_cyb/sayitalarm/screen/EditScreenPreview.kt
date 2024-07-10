@@ -17,14 +17,16 @@ import org.a_cyb.sayitalarm.organism.FakeAlarmUIData
 import org.a_cyb.sayitalarm.presentation.AlarmPanelContract
 import org.a_cyb.sayitalarm.presentation.EditContract.EditViewModel
 import org.a_cyb.sayitalarm.presentation.EditContract.EditViewModel.EditState
-import org.a_cyb.sayitalarm.presentation.EditContract.EditViewModel.EditState.*
+import org.a_cyb.sayitalarm.presentation.EditContract.EditViewModel.EditState.Success
 import org.a_cyb.sayitalarm.presentation.command.CommandContract
 
 @Preview
 @Composable
 fun EditScreenPreview() {
-    EditScreen(viewModel = EditViewModelFake())
-
+    EditScreen(
+        viewModel = EditViewModelFake(),
+        navigateToList = {},
+    )
 }
 
 private class EditViewModelFake: EditViewModel {

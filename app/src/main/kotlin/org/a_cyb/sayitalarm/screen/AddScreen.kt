@@ -22,14 +22,20 @@ import org.a_cyb.sayitalarm.presentation.AddContract.AddState.Error
 import org.a_cyb.sayitalarm.presentation.command.SaveCommand
 
 @Composable
-fun AddScreen(viewModel: AddContract.AddViewModel) {
+fun AddScreen(
+    viewModel: AddContract.AddViewModel,
+    navigateToList: () -> Unit,
+) {
 
     val state = viewModel.state.collectAsState()
 
     ColumnScreenStandard {
         AddTopAppBar(
-            onCancel = {},  // TODO: Navigation impl
-            onSave = { viewModel.runCommand(SaveCommand) }
+            onCancel = navigateToList,
+            onSave = {
+                viewModel.runCommand(SaveCommand)
+                navigateToList()
+            }
         )
         SpacerMedium()
 

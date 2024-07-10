@@ -15,6 +15,7 @@ import org.a_cyb.sayitalarm.presentation.SettingsContract
 fun SettingsScreenPreview() {
     SettingsScreen(
         viewModel = SettingsViewModelFake(),
+        navigateToList = {},
     )
 }
 
@@ -25,5 +26,6 @@ fun SettingsScreenErrorStatePreview() {
 
     SettingsScreen(
         viewModel = SettingsViewModelFake(settingsStateWithContent),
+        navigateToList = {},
     )
 }

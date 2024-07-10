@@ -34,6 +34,7 @@ import org.a_cyb.sayitalarm.presentation.command.CommandContract.CommandReceiver
 import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.core.context.stopKoin
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 
@@ -43,6 +44,10 @@ import org.robolectric.annotation.GraphicsMode
 class EditScreenSpec : RoborazziTest() {
 
     private val alarmUI = FakeAlarmUIData.defaultAlarmUI
+
+    init {
+        stopKoin()
+    }
 
     private fun stringRes(id: Int) = subjectUnderTest.activity.getString(id)
 
@@ -57,7 +62,10 @@ class EditScreenSpec : RoborazziTest() {
         with(subjectUnderTest) {
             // When
             setContent {
-                EditScreen(viewModel = viewModel)
+                EditScreen(
+                    viewModel = viewModel,
+                    navigateToList = {}
+                )
             }
 
             // Then
@@ -74,7 +82,10 @@ class EditScreenSpec : RoborazziTest() {
         with(subjectUnderTest) {
             // When
             setContent {
-                EditScreen(viewModel = viewModel)
+                EditScreen(
+                    viewModel = viewModel,
+                    navigateToList = {},
+                )
             }
 
             // Then
@@ -93,7 +104,10 @@ class EditScreenSpec : RoborazziTest() {
 
         with(subjectUnderTest) {
             setContent {
-                EditScreen(viewModel = viewModel)
+                EditScreen(
+                    viewModel = viewModel,
+                    navigateToList = {},
+                )
             }
 
 
@@ -117,7 +131,10 @@ class EditScreenSpec : RoborazziTest() {
 
         with(subjectUnderTest) {
             setContent {
-                EditScreen(viewModel = viewModel)
+                EditScreen(
+                    viewModel = viewModel,
+                    navigateToList = {},
+                )
             }
 
             // When

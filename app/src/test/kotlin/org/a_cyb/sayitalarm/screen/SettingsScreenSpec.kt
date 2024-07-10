@@ -64,7 +64,10 @@ class SettingsScreenSpec {
         with(composeTestRule) {
             // When
             setContent {
-                SettingsScreen(viewModel = viewModel)
+                SettingsScreen(
+                    viewModel = viewModel,
+                    navigateToList = {}
+                )
             }
 
             // Then
@@ -93,7 +96,10 @@ class SettingsScreenSpec {
         // When
         with(composeTestRule) {
             setContent {
-                SettingsScreen(viewModel = viewModel)
+                SettingsScreen(
+                    viewModel = viewModel,
+                    navigateToList = {}
+                )
             }
 
             // Then
@@ -113,7 +119,10 @@ class SettingsScreenSpec {
         with(composeTestRule) {
             setContent {
                 // When
-                SettingsScreen(viewModel = viewModel)
+                SettingsScreen(
+                    viewModel = viewModel,
+                    navigateToList = {}
+                )
             }
 
             onNodeWithText(getString(R.string.timeout))
@@ -139,7 +148,10 @@ class SettingsScreenSpec {
 
         with(composeTestRule) {
             setContent {
-                SettingsScreen(viewModel = viewModel)
+                SettingsScreen(
+                    viewModel = viewModel,
+                    navigateToList = {},
+                )
             }
 
             // When
@@ -161,7 +173,10 @@ class SettingsScreenSpec {
 
         with(composeTestRule) {
             setContent {
-                SettingsScreen(viewModel = viewModel)
+                SettingsScreen(
+                    viewModel = viewModel,
+                    navigateToList = {}
+                )
             }
 
             // When
@@ -184,7 +199,10 @@ class SettingsScreenSpec {
         val viewModel = SettingsViewModelFake(this, successSate)
 
         composeTestRule.setContent {
-            SettingsScreen(viewModel = viewModel)
+            SettingsScreen(
+                viewModel = viewModel,
+                navigateToList = {}
+            )
         }
 
         with(composeTestRule) {
@@ -211,7 +229,10 @@ class SettingsScreenSpec {
 
         with(composeTestRule) {
             setContent {
-                SettingsScreen(viewModel = viewModel)
+                SettingsScreen(
+                    viewModel = viewModel,
+                    navigateToList = {}
+                )
             }
 
             onAllNodesWithContentDescription(getString(R.string.action_edit))[0]
@@ -233,7 +254,10 @@ class SettingsScreenSpec {
 
         with(composeTestRule) {
             setContent {
-                SettingsScreen(viewModel = viewModel)
+                SettingsScreen(
+                    viewModel = viewModel,
+                    navigateToList = {}
+                )
             }
 
             onAllNodesWithContentDescription(getString(R.string.action_edit))[1]

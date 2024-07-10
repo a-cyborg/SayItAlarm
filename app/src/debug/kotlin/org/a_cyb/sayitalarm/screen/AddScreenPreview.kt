@@ -16,14 +16,17 @@ import org.a_cyb.sayitalarm.entity.SayItScripts
 import org.a_cyb.sayitalarm.organism.FakeAlarmUIData
 import org.a_cyb.sayitalarm.presentation.AddContract
 import org.a_cyb.sayitalarm.presentation.AddContract.AddState
-import org.a_cyb.sayitalarm.presentation.AddContract.AddState.*
+import org.a_cyb.sayitalarm.presentation.AddContract.AddState.Success
 import org.a_cyb.sayitalarm.presentation.AlarmPanelContract
 import org.a_cyb.sayitalarm.presentation.command.CommandContract
 
 @Preview
 @Composable
 fun AddScreenPreview() {
-    AddScreen(viewModel = AddViewModelFake())
+    AddScreen(
+        viewModel = AddViewModelFake(),
+        navigateToList = {}
+    )
 }
 
 private class AddViewModelFake : AddContract.AddViewModel {

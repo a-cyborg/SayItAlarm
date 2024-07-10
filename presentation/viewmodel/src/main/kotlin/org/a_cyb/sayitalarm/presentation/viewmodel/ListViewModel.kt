@@ -64,7 +64,12 @@ class ListViewModel(
         )
 
     private fun formatLabelAndWeeklyRepeat(label: Label, weeklyRepeat: WeeklyRepeat): String =
-        "${label.label}, ${weekdayFormatter.formatAbbr(weeklyRepeat.weekdays)}"
+        when {
+            label.label.isEmpty() && weeklyRepeat.weekdays.isEmpty() -> ""
+            label.label.isEmpty() -> weekdayFormatter.formatAbbr(weeklyRepeat.weekdays)
+            weeklyRepeat.weekdays.isEmpty() -> label.label
+            else -> "${label.label}, ${weekdayFormatter.formatAbbr(weeklyRepeat.weekdays)}"
+        }
 
     override fun setEnabled(id: Long, enabled: Boolean) {
         interactor.setEnabled(id, enabled, scope)

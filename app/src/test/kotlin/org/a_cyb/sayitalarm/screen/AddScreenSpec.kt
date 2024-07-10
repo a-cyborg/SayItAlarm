@@ -26,7 +26,8 @@ import org.a_cyb.sayitalarm.presentation.AddContract.AddState
 import org.a_cyb.sayitalarm.presentation.AddContract.AddState.Error
 import org.a_cyb.sayitalarm.presentation.AddContract.AddState.Initial
 import org.a_cyb.sayitalarm.presentation.AddContract.AddState.Success
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.*
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.RingtoneUI
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.SelectableRepeat
 import org.a_cyb.sayitalarm.presentation.command.CommandContract.Command
 import org.a_cyb.sayitalarm.presentation.command.CommandContract.CommandReceiver
 import org.a_cyb.sayitalarm.util.mustBe
@@ -53,7 +54,10 @@ class AddScreenSpec : RoborazziTest() {
         with(subjectUnderTest) {
             // When
             setContent {
-                AddScreen(viewModel = viewModel)
+                AddScreen(
+                    viewModel = viewModel,
+                    navigateToList = {},
+                )
             }
 
             // Then
@@ -71,7 +75,10 @@ class AddScreenSpec : RoborazziTest() {
         with(subjectUnderTest) {
             // When
             setContent {
-                AddScreen(viewModel = viewModel)
+                AddScreen(
+                    viewModel = viewModel,
+                    navigateToList = {}
+                )
             }
 
             // Then
@@ -89,7 +96,10 @@ class AddScreenSpec : RoborazziTest() {
         with(subjectUnderTest) {
             // When
             setContent {
-                AddScreen(viewModel = viewModel)
+                AddScreen(
+                    viewModel = viewModel,
+                    navigateToList = {}
+                )
             }
 
             // Then
@@ -108,7 +118,10 @@ class AddScreenSpec : RoborazziTest() {
 
         with(subjectUnderTest) {
             setContent {
-                AddScreen(viewModel = viewModel)
+                AddScreen(
+                    viewModel = viewModel,
+                    navigateToList = {},
+                )
             }
 
             // When
@@ -129,7 +142,10 @@ class AddScreenSpec : RoborazziTest() {
 
         with(subjectUnderTest) {
             setContent {
-                AddScreen(viewModel = viewModel)
+                AddScreen(
+                    viewModel = viewModel,
+                    navigateToList = {}
+                )
             }
 
             // When

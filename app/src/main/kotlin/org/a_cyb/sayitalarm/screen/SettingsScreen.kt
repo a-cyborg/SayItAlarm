@@ -26,7 +26,9 @@ import org.a_cyb.sayitalarm.molecule.PanelItemWithPopupPickerStandardWheel
 import org.a_cyb.sayitalarm.molecule.TextRowWarning
 import org.a_cyb.sayitalarm.molecule.TopAppBarMedium
 import org.a_cyb.sayitalarm.presentation.SettingsContract
-import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState.*
+import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState.Error
+import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState.Initial
+import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState.Success
 import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsViewModel
 import org.a_cyb.sayitalarm.presentation.command.CommandContract
 import org.a_cyb.sayitalarm.presentation.command.CommandContract.CommandReceiver
@@ -35,11 +37,14 @@ import org.a_cyb.sayitalarm.presentation.command.SetThemeCommand
 import org.a_cyb.sayitalarm.presentation.command.SetTimeOutCommand
 
 @Composable
-fun SettingsScreen(viewModel: SettingsViewModel) {
+fun SettingsScreen(
+    viewModel: SettingsViewModel,
+    navigateToList: () -> Unit,
+) {
     val state = viewModel.state.collectAsState()
 
     ColumnScreenStandardScrollable {
-        SettingSTopAppBar(onNavigateBack = {})  // Navigation Impl.
+        SettingSTopAppBar(onNavigateBack = navigateToList)
         SpacerLarge()
         when (state.value) {
             is Success -> {

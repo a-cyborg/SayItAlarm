@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -55,19 +56,27 @@ import org.a_cyb.sayitalarm.token.Color
 enum class ListScreenMode { EDIT, VIEW }
 
 @Composable
-fun ListScreen(viewModel: ListViewModel) {
-
+fun ListScreen(
+    viewModel: ListViewModel,
+    navigateToAdd: () -> Unit,
+    navigateToEdit: (Long) -> Unit,
+    navigateToSettings: () -> Unit,
+) {
     val state = viewModel.state.collectAsState()
 
     var mode by rememberSaveable { mutableStateOf(VIEW) }
+
+    LaunchedEffect(Unit) {
+        mode = VIEW
+    }
 
     ColumnScreenStandard {
         ListTopAppBar(
             screenMode = mode,
             onEditClick = { mode = EDIT },
             onDoneClick = { mode = VIEW },
-            onAddClick = {},
-            onSettingsClick = {}
+            onAddClick = navigateToAdd,
+            onSettingsClick = navigateToSettings
         )
         SpacerLarge()
         when (state.value) {
@@ -83,6 +92,7 @@ fun ListScreen(viewModel: ListViewModel) {
                         AlarmListItem(
                             alarmInfo = it,
                             screenMode = mode,
+                            navigateToEdit = { navigateToEdit(it.id) },
                             executor = { command -> viewModel.runCommand(command) }
                         )
                     }
@@ -123,6 +133,7 @@ private fun ListTopAppBar(
 private fun AlarmListItem(
     alarmInfo: ListContract.AlarmInfo,
     screenMode: ListScreenMode,
+    navigateToEdit: () -> Unit,
     executor: (CommandContract.Command<out CommandReceiver>) -> Unit,
 ) {
     ListItemStandard(
@@ -140,7 +151,7 @@ private fun AlarmListItem(
         afterContent = {
             when (screenMode) {
                 EDIT -> {
-                    IconButtonEdit {}
+                    IconButtonEdit { navigateToEdit() }
                 }
 
                 VIEW -> {

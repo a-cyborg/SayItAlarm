@@ -28,6 +28,7 @@ import org.a_cyb.sayitalarm.presentation.command.CommandContract
 import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.core.context.stopKoin
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 
@@ -38,6 +39,10 @@ class ListScreenSpec : RoborazziTest() {
 
     private fun getString(id: Int) = subjectUnderTest.activity.getString(id)
 
+    init {
+        stopKoin()
+    }
+
     @Test
     fun `When ListViewModel is in success state with alarm data it displays them`() {
         // Given
@@ -47,7 +52,12 @@ class ListScreenSpec : RoborazziTest() {
         with(subjectUnderTest) {
             // When
             setContent {
-                ListScreen(viewModel = viewModel)
+                ListScreen(
+                    viewModel = viewModel,
+                    navigateToSettings = {},
+                    navigateToAdd = {},
+                    navigateToEdit = {},
+                )
             }
 
             // Then
@@ -65,7 +75,12 @@ class ListScreenSpec : RoborazziTest() {
         with(subjectUnderTest) {
             // When
             setContent {
-                ListScreen(viewModel = viewModel)
+                ListScreen(
+                    viewModel = viewModel,
+                    navigateToSettings = {},
+                    navigateToAdd = {},
+                    navigateToEdit = {},
+                )
             }
 
             // Then
@@ -83,7 +98,12 @@ class ListScreenSpec : RoborazziTest() {
         with(subjectUnderTest) {
             // When
             setContent {
-                ListScreen(viewModel = viewModel)
+                ListScreen(
+                    viewModel = viewModel,
+                    navigateToSettings = {},
+                    navigateToAdd = {},
+                    navigateToEdit = {},
+                )
             }
 
             // Then
@@ -100,7 +120,12 @@ class ListScreenSpec : RoborazziTest() {
 
         with(subjectUnderTest) {
             setContent {
-                ListScreen(viewModel = viewModel)
+                ListScreen(
+                    viewModel = viewModel,
+                    navigateToSettings = {},
+                    navigateToAdd = {},
+                    navigateToEdit = {},
+                )
             }
 
             // When
@@ -121,7 +146,12 @@ class ListScreenSpec : RoborazziTest() {
 
         with((subjectUnderTest)) {
             setContent {
-                ListScreen(viewModel = viewModel)
+                ListScreen(
+                    viewModel = viewModel,
+                    navigateToSettings = {},
+                    navigateToAdd = {},
+                    navigateToEdit = {},
+                )
             }
 
             onNodeWithText(getString(R.string.edit))
@@ -145,7 +175,12 @@ class ListScreenSpec : RoborazziTest() {
 
         with(subjectUnderTest) {
             setContent {
-                ListScreen(viewModel = viewModel)
+                ListScreen(
+                    viewModel = viewModel,
+                    navigateToSettings = {},
+                    navigateToAdd = {},
+                    navigateToEdit = {},
+                )
             }
 
             // When
@@ -153,7 +188,7 @@ class ListScreenSpec : RoborazziTest() {
                 .performClick()
 
             // Then
-            viewModel.invokedType mustBe ListViewModelFake.InvokedType.SET_ENABELD
+            viewModel.invokedType mustBe ListViewModelFake.InvokedType.SET_ENABLED
         }
     }
 
@@ -168,7 +203,12 @@ class ListScreenSpec : RoborazziTest() {
 
         with(subjectUnderTest) {
             setContent {
-                ListScreen(viewModel = viewModel)
+                ListScreen(
+                    viewModel = viewModel,
+                    navigateToSettings = {},
+                    navigateToAdd = {},
+                    navigateToEdit = {},
+                )
             }
 
             onNodeWithText(getString(R.string.edit))
@@ -235,7 +275,7 @@ private class ListViewModelFake(
     }
 
     override fun setEnabled(id: Long, enabled: Boolean) {
-        _invokedType = InvokedType.SET_ENABELD
+        _invokedType = InvokedType.SET_ENABLED
 
         updateState()
     }
@@ -252,7 +292,7 @@ private class ListViewModelFake(
     }
 
     enum class InvokedType {
-        SET_ENABELD,
+        SET_ENABLED,
         DELETE_ALARM,
         NONE
     }
