@@ -12,8 +12,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
-import org.a_cyb.sayitalarm.data.model.AlarmEntity
-import org.acyb.sayitalarm.database.Alarm
 import org.acyb.sayitalarm.database.AlarmQueries
 import org.acyb.sayitalarm.database.Alarm as DTO
 
@@ -21,57 +19,53 @@ class AlarmDataSource(
     private val alarmQueries: AlarmQueries,
 ) : DataSourceContract.AlarmDataSource {
 
-    override fun getAllByTimeAsc(dispatcher: CoroutineDispatcher): Flow<Result<List<AlarmEntity>>> {
+    override fun getAllByTimeAsc(dispatcher: CoroutineDispatcher): Flow<Result<List<DTO>>> {
         return alarmQueries.getAllByTimeAsc()
             .asFlow()
             .mapToList(dispatcher)
-            .map(::toSuccessResult)
+            .map { Result.success(it) }
             .catch { emit(Result.failure(it)) }
     }
 
-    private fun toSuccessResult(alarms: List<DTO>): Result<List<AlarmEntity>> {
-        return Result.success(
-            alarms.map(::toAlarmEntity)
-        )
-    }
-
-    override suspend fun getById(id: Long): Result<AlarmEntity> {
-        val dto = alarmQueries.getById(id)
+    override suspend fun getById(id: Long): Result<DTO> =
+        alarmQueries
+            .getById(id)
             .executeAsOneOrNull()
+            .resolveToResult()
 
-        return if (dto == null) {
-            Result.failure(IllegalStateException())
+    private fun DTO?.resolveToResult(): Result<DTO> =
+        if (this != null) {
+            Result.success(this)
         } else {
-            Result.success(toAlarmEntity(dto))
+            Result.failure(IllegalStateException())
         }
-    }
 
-    override suspend fun insert(alarm: AlarmEntity) {
+    override suspend fun insert(alarmDto: DTO) {
         alarmQueries.insert(
-            alarm.hour,
-            alarm.minute,
-            alarm.weeklyRepeat,
-            alarm.label,
-            alarm.enabled,
-            alarm.alertType,
-            alarm.ringtone,
-            alarm.alarmType,
-            alarm.sayItScripts,
+            alarmDto.hour,
+            alarmDto.minute,
+            alarmDto.weeklyRepeat,
+            alarmDto.label,
+            alarmDto.enabled,
+            alarmDto.alertType,
+            alarmDto.ringtone,
+            alarmDto.alarmType,
+            alarmDto.sayItScripts,
         )
     }
 
-    override suspend fun update(alarm: AlarmEntity) {
+    override suspend fun update(alarmDto: DTO) {
         alarmQueries.update(
-            hour = alarm.hour,
-            minute = alarm.minute,
-            weeklyRepeat = alarm.weeklyRepeat,
-            label = alarm.label,
-            enabled = alarm.enabled,
-            alertType = alarm.alertType,
-            ringtone = alarm.ringtone,
-            alarmType = alarm.alarmType,
-            sayItScripts = alarm.sayItScripts,
-            id = alarm.id,
+            hour = alarmDto.hour,
+            minute = alarmDto.minute,
+            weeklyRepeat = alarmDto.weeklyRepeat,
+            label = alarmDto.label,
+            enabled = alarmDto.enabled,
+            alertType = alarmDto.alertType,
+            ringtone = alarmDto.ringtone,
+            alarmType = alarmDto.alarmType,
+            sayItScripts = alarmDto.sayItScripts,
+            id = alarmDto.id,
         )
     }
 
@@ -85,18 +79,4 @@ class AlarmDataSource(
     override suspend fun delete(id: Long) {
         alarmQueries.delete(id)
     }
-
-    private fun toAlarmEntity(dto: Alarm): AlarmEntity =
-        AlarmEntity(
-            id = dto.id,
-            hour = dto.hour,
-            minute = dto.minute,
-            weeklyRepeat = dto.weeklyRepeat,
-            label = dto.label,
-            enabled = dto.enabled,
-            alertType = dto.alertType,
-            ringtone = dto.ringtone,
-            alarmType = dto.alarmType,
-            sayItScripts = dto.sayItScripts,
-        )
 }

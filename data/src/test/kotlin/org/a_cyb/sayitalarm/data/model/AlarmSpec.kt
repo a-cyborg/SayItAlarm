@@ -18,11 +18,12 @@ import org.a_cyb.sayitalarm.entity.Ringtone
 import org.a_cyb.sayitalarm.entity.SayItScripts
 import org.a_cyb.sayitalarm.entity.WeeklyRepeat
 import org.a_cyb.sayitalarm.util.mustBe
+import org.acyb.sayitalarm.database.Alarm as AlarmDTO
 
-class AlarmEntitySpec {
+class AlarmSpec {
 
     @Test
-    fun `When toAlarm is called it maps AlarmEntity to Alarm`() {
+    fun `When toAlarm is called it maps DTO to Alarm`() {
         // Given
         val hour = 3
         val minute = 33
@@ -34,8 +35,8 @@ class AlarmEntitySpec {
         val alarmType: Long = AlarmType.SAY_IT.ordinal.toLong()
         val sayItScripts = "script A,script B,script C"
 
-        val alarmEntity =
-            AlarmEntity(
+        val dto =
+            AlarmDTO(
                 id = 0L,
                 hour.toLong(),
                 minute.toLong(),
@@ -49,7 +50,7 @@ class AlarmEntitySpec {
             )
 
         // When
-        val actual = alarmEntity.toAlarm()
+        val actual = dto.toAlarm()
 
         // Then
         actual mustBe
@@ -99,11 +100,11 @@ class AlarmEntitySpec {
             )
 
         // When
-        val actual = alarm.toAlarmEntity()
+        val actual = alarm.toDTO()
 
         // Then
         actual mustBe
-            AlarmEntity(
+            AlarmDTO(
                 id = 0L,
                 hour = 3,
                 minute = 3,

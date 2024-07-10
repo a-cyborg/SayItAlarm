@@ -12,29 +12,28 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
-import org.a_cyb.sayitalarm.data.model.SettingsEntity
 import org.acyb.sayitalarm.database.SettingsQueries
-import org.acyb.sayitalarm.database.Get as DTO  // This is an SQL(delight) generated Data Transfer Object for the get query.
+import org.acyb.sayitalarm.database.Get as SettingsDTO
 
 class SettingsDataSource(
     private val settingsQueries: SettingsQueries
 ) : DataSourceContract.SettingsDataSource {
 
-    override fun getSettings(dispatcher: CoroutineDispatcher): Flow<Result<SettingsEntity>> {
+    override fun getSettings(dispatcher: CoroutineDispatcher): Flow<Result<SettingsDTO>> {
         return settingsQueries.get()
             .asFlow()
             .mapToOneOrNull(dispatcher)
-            .map(::mapToEntity)
+            .map(::mapToResult)
             .catch { emit(Result.failure(it)) }
     }
 
-    private fun mapToEntity(settings: DTO?): Result<SettingsEntity> {
+    private fun mapToResult(settings: SettingsDTO?): Result<SettingsDTO> {
         return settings
-            ?.let { Result.success(toSettingsEntity(it)) }
+            ?.let { Result.success(it) }
             ?: Result.failure(NoSuchElementException())
     }
 
-    override suspend fun insert(settings: SettingsEntity) {
+    override suspend fun insert(settings: SettingsDTO) {
         settingsQueries.insert(
             settings.timeOut,
             settings.snooze,
@@ -53,11 +52,4 @@ class SettingsDataSource(
     override suspend fun setTheme(theme: Long) {
         settingsQueries.updateTheme(theme)
     }
-
-    private fun toSettingsEntity(settings: DTO): SettingsEntity =
-        SettingsEntity(
-            settings.timeOut,
-            settings.snooze,
-            settings.theme,
-        )
 }

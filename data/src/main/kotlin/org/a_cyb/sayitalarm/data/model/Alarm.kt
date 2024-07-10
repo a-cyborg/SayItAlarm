@@ -15,21 +15,9 @@ import org.a_cyb.sayitalarm.entity.Minute
 import org.a_cyb.sayitalarm.entity.Ringtone
 import org.a_cyb.sayitalarm.entity.SayItScripts
 import org.a_cyb.sayitalarm.entity.WeeklyRepeat
+import org.acyb.sayitalarm.database.Alarm as AlarmDTO
 
-data class AlarmEntity(
-    val id: Long,
-    val hour: Long,
-    val minute: Long,
-    val weeklyRepeat: Long,
-    val label: String,
-    val enabled: Boolean,
-    val alertType: Long,
-    val ringtone: String,
-    val alarmType: Long,
-    val sayItScripts: String,
-)
-
-fun AlarmEntity.toAlarm(): Alarm =
+fun AlarmDTO.toAlarm(): Alarm =
     Alarm(
         id = id,
         hour = Hour(hour.toInt()),
@@ -69,8 +57,8 @@ private fun String.toScripts(): List<String> {
     return split(",")
 }
 
-fun Alarm.toAlarmEntity() =
-    AlarmEntity(
+fun Alarm.toDTO() =
+    AlarmDTO(
         id = id,
         hour = hour.hour.toLong(),
         minute = minute.minute.toLong(),

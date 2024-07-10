@@ -18,7 +18,6 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import org.a_cyb.sayitalarm.data.datasource.DataSourceContract
-import org.a_cyb.sayitalarm.data.model.SettingsEntity
 import org.a_cyb.sayitalarm.data.model.toSettings
 import org.a_cyb.sayitalarm.domain.repository.RepositoryContract
 import org.a_cyb.sayitalarm.entity.Settings
@@ -28,6 +27,7 @@ import org.a_cyb.sayitalarm.entity.TimeOut
 import org.a_cyb.sayitalarm.util.fulfils
 import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Test
+import org.acyb.sayitalarm.database.Get as SettingsDTO
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SettingsRepositorySpec {
@@ -44,7 +44,7 @@ class SettingsRepositorySpec {
             // Given
             val results = listOf(
                 Result.failure(NoSuchElementException()),
-                Result.success(getSettingsEntity()),
+                Result.success(getSettingsDTO()),
                 Result.failure(IllegalStateException()),
             )
             every { dataSource.getSettings(any()) } returns
@@ -75,7 +75,7 @@ class SettingsRepositorySpec {
     @Test
     fun `When insert is called it invoke dataSource insert`() = runTest {
         // Given
-        val settingsToInsert = getSettingsEntity().toSettings()
+        val settingsToInsert = getSettingsDTO().toSettings()
 
         val dispatcher = StandardTestDispatcher(this.testScheduler)
         val repository = SettingsRepository(dataSource, dispatcher)
@@ -86,7 +86,7 @@ class SettingsRepositorySpec {
         runCurrent()
 
         // Then
-        coVerify(exactly = 1) { dataSource.insert(getSettingsEntity()) }
+        coVerify(exactly = 1) { dataSource.insert(getSettingsDTO()) }
     }
 
     @Test
@@ -142,8 +142,8 @@ class SettingsRepositorySpec {
             RepositoryContract.SettingsRepository::class
     }
 
-    private fun getSettingsEntity(): SettingsEntity =
-        SettingsEntity(
+    private fun getSettingsDTO(): SettingsDTO =
+        SettingsDTO(
             timeOut = 300,
             snooze = 15,
             theme = 0

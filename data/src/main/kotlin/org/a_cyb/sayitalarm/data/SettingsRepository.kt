@@ -12,14 +12,14 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.a_cyb.sayitalarm.data.datasource.DataSourceContract
-import org.a_cyb.sayitalarm.data.model.SettingsEntity
 import org.a_cyb.sayitalarm.data.model.toSettings
-import org.a_cyb.sayitalarm.data.model.toSettingsEntity
+import org.a_cyb.sayitalarm.data.model.toSettingsDTO
 import org.a_cyb.sayitalarm.domain.repository.RepositoryContract
 import org.a_cyb.sayitalarm.entity.Settings
 import org.a_cyb.sayitalarm.entity.Snooze
 import org.a_cyb.sayitalarm.entity.Theme
 import org.a_cyb.sayitalarm.entity.TimeOut
+import org.acyb.sayitalarm.database.Get as SettingsDTO
 
 class SettingsRepository(
     private val dataSource: DataSourceContract.SettingsDataSource,
@@ -32,13 +32,13 @@ class SettingsRepository(
             .map(::map)
     }
 
-    private fun map(result: Result<SettingsEntity>): Result<Settings> {
+    private fun map(result: Result<SettingsDTO>): Result<Settings> {
         return result.map { it.toSettings() }
     }
 
     override fun insertOrIgnore(settings: Settings, scope: CoroutineScope) {
         scope.launch(dispatcher) {
-            dataSource.insert(settings.toSettingsEntity())
+            dataSource.insert(settings.toSettingsDTO())
         }
     }
 

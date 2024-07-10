@@ -22,7 +22,6 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import org.a_cyb.sayitalarm.data.datasource.DataSourceContract
-import org.a_cyb.sayitalarm.data.model.AlarmEntity
 import org.a_cyb.sayitalarm.data.model.toAlarm
 import org.a_cyb.sayitalarm.domain.repository.RepositoryContract
 import org.a_cyb.sayitalarm.entity.Alarm
@@ -38,6 +37,7 @@ import org.a_cyb.sayitalarm.util.fulfils
 import org.a_cyb.sayitalarm.util.mustBe
 import tech.antibytes.kfixture.fixture
 import tech.antibytes.kfixture.kotlinFixture
+import org.acyb.sayitalarm.database.Alarm as AlarmDTO
 
 class AlarmRepositorySpec {
     private val dataSource: DataSourceContract.AlarmDataSource = mockk(relaxed = true)
@@ -54,7 +54,7 @@ class AlarmRepositorySpec {
         // Given
         val results = listOf(
             Result.failure(IllegalStateException()),
-            Result.success(listOf(getRandomAlarmEntity())),
+            Result.success(listOf(getRandomDTO())),
             Result.failure(IllegalStateException()),
         )
         val dispatcher = StandardTestDispatcher()
@@ -79,7 +79,7 @@ class AlarmRepositorySpec {
     @Test
     fun `GetAllAlarm receives data from dataSource and perform mapping before sending it downstream`() = runTest {
         // Given
-        val alarmEntity = getRandomAlarmEntity(
+        val dto = getRandomDTO(
             weeklyRepeat = 127,  // 0b1111111 : Everyday
             alertType = AlertType.SOUND_AND_VIBRATE.ordinal.toLong(),
             alarmType = AlarmType.SAY_IT.ordinal.toLong(),
@@ -90,7 +90,7 @@ class AlarmRepositorySpec {
 
         every { dataSource.getAllByTimeAsc(dispatcher) } returns
             flow {
-                emit(Result.success(listOf(alarmEntity)))
+                emit(Result.success(listOf(dto)))
             }
 
         // When
@@ -99,14 +99,14 @@ class AlarmRepositorySpec {
             awaitItem() mustBe Result.success(
                 listOf(
                     Alarm(
-                        id = alarmEntity.id,
-                        hour = Hour(alarmEntity.hour.toInt()),
-                        minute = Minute(alarmEntity.minute.toInt()),
+                        id = dto.id,
+                        hour = Hour(dto.hour.toInt()),
+                        minute = Minute(dto.minute.toInt()),
                         weeklyRepeat = WeeklyRepeat(1, 2, 3, 4, 5, 6, 7),
-                        label = Label(alarmEntity.label),
-                        enabled = alarmEntity.enabled,
+                        label = Label(dto.label),
+                        enabled = dto.enabled,
                         alertType = AlertType.SOUND_AND_VIBRATE,
-                        ringtone = Ringtone(alarmEntity.ringtone),
+                        ringtone = Ringtone(dto.ringtone),
                         alarmType = AlarmType.SAY_IT,
                         sayItScripts = SayItScripts("First script", "Second script", "Third script")
                     )
@@ -118,9 +118,9 @@ class AlarmRepositorySpec {
     }
 
     @Test
-    fun `When getAlarm is called it delegates the call to dataStore and map received alarmEntity to alarm`() = runTest {
+    fun `When getAlarm is called it delegates the call to dataStore and map received dto to alarm`() = runTest {
         // Given
-        val alarmEntity = getRandomAlarmEntity(
+        val dto = getRandomDTO(
             weeklyRepeat = 1,
             alertType = 1,
             alarmType = 2,
@@ -129,7 +129,7 @@ class AlarmRepositorySpec {
         val dispatcher = StandardTestDispatcher(this.testScheduler)
         val repository = AlarmRepository(dataSource, dispatcher)
 
-        coEvery { dataSource.getById(3) } returns Result.success(alarmEntity)
+        coEvery { dataSource.getById(3) } returns Result.success(dto)
 
         // When
         val actual = repository.getAlarm(3, this)
@@ -139,14 +139,14 @@ class AlarmRepositorySpec {
         // Then
         actual mustBe
             Alarm(
-                id = alarmEntity.id,
-                hour = Hour(alarmEntity.hour.toInt()),
-                minute = Minute(alarmEntity.minute.toInt()),
+                id = dto.id,
+                hour = Hour(dto.hour.toInt()),
+                minute = Minute(dto.minute.toInt()),
                 weeklyRepeat = WeeklyRepeat(1),
-                label = Label(alarmEntity.label),
-                enabled = alarmEntity.enabled,
+                label = Label(dto.label),
+                enabled = dto.enabled,
                 alertType = AlertType.VIBRATE_ONLY,
-                ringtone = Ringtone(alarmEntity.ringtone),
+                ringtone = Ringtone(dto.ringtone),
                 alarmType = AlarmType.PUSH_BUTTON,
                 sayItScripts = SayItScripts("One", "Two", "Three")
             )
@@ -155,7 +155,7 @@ class AlarmRepositorySpec {
     @Test
     fun `When getAlarm is called and alarm is not found it returns failure`() = runTest {
         // Given
-        val result = Result.failure<AlarmEntity>(IllegalStateException())
+        val result = Result.failure<AlarmDTO>(IllegalStateException())
         val dispatcher = StandardTestDispatcher(this.testScheduler)
         val repository = AlarmRepository(dataSource, dispatcher)
 
@@ -171,7 +171,7 @@ class AlarmRepositorySpec {
     @Test
     fun `When save is called it invoke dataStore insert`() = runTest {
         // Given
-        val alarm = getRandomAlarmEntity().toAlarm()
+        val alarm = getRandomDTO().toAlarm()
         val dispatcher = StandardTestDispatcher(this.testScheduler)
         val repository = AlarmRepository(dataSource, dispatcher)
 
@@ -186,7 +186,7 @@ class AlarmRepositorySpec {
     @Test
     fun `When update is called it invoke dataStore update`() = runTest {
         // Given
-        val alarm = getRandomAlarmEntity().toAlarm()
+        val alarm = getRandomDTO().toAlarm()
         val dispatcher = StandardTestDispatcher(this.testScheduler)
         val repository = AlarmRepository(dataSource, dispatcher)
 
@@ -234,7 +234,7 @@ class AlarmRepositorySpec {
             RepositoryContract.AlarmRepository::class
     }
 
-    private fun getRandomAlarmEntity(
+    private fun getRandomDTO(
         hour: Long = fixture.fixture(range = 0..23),
         minute: Long = fixture.fixture(range = 0..59),
         weeklyRepeat: Long = 85,
@@ -244,8 +244,8 @@ class AlarmRepositorySpec {
         ringtone: String = fixture.fixture(),
         alarmType: Long = fixture.fixture(range = 0..AlarmType.entries.lastIndex),
         sayItScripts: String = fixture.fixture(),
-    ): AlarmEntity =
-        AlarmEntity(
+    ): AlarmDTO =
+        AlarmDTO(
             id = 0L,
             hour,
             minute,

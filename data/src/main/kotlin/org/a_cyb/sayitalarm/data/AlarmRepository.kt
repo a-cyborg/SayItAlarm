@@ -14,11 +14,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.a_cyb.sayitalarm.data.datasource.DataSourceContract
-import org.a_cyb.sayitalarm.data.model.AlarmEntity
 import org.a_cyb.sayitalarm.data.model.toAlarm
-import org.a_cyb.sayitalarm.data.model.toAlarmEntity
+import org.a_cyb.sayitalarm.data.model.toDTO
 import org.a_cyb.sayitalarm.domain.repository.RepositoryContract
 import org.a_cyb.sayitalarm.entity.Alarm
+import org.acyb.sayitalarm.database.Alarm as AlarmDTO
 
 class AlarmRepository(
     private val dataSource: DataSourceContract.AlarmDataSource,
@@ -31,10 +31,10 @@ class AlarmRepository(
             .map(::map)
     }
 
-    private fun map(result: Result<List<AlarmEntity>>): Result<List<Alarm>> =
+    private fun map(result: Result<List<AlarmDTO>>): Result<List<Alarm>> =
         result.map { listOfEntity ->
-            listOfEntity.map { entity ->
-                entity.toAlarm()
+            listOfEntity.map { dto ->
+                dto.toAlarm()
             }
         }
 
@@ -46,13 +46,13 @@ class AlarmRepository(
 
     override fun save(alarm: Alarm, scope: CoroutineScope) {
         scope.launch(context = dispatcher) {
-            dataSource.insert(alarm.toAlarmEntity())
+            dataSource.insert(alarm.toDTO())
         }
     }
 
     override fun update(alarm: Alarm, scope: CoroutineScope) {
         scope.launch(context = dispatcher) {
-            dataSource.update(alarm.toAlarmEntity())
+            dataSource.update(alarm.toDTO())
         }
     }
 

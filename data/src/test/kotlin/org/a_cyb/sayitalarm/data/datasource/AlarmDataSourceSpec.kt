@@ -15,12 +15,11 @@ import app.cash.turbine.test
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
-import org.a_cyb.sayitalarm.data.model.AlarmEntity
 import org.a_cyb.sayitalarm.database.SayItDB
 import org.a_cyb.sayitalarm.util.mustBe
-import org.acyb.sayitalarm.database.Alarm
 import tech.antibytes.kfixture.fixture
 import tech.antibytes.kfixture.kotlinFixture
+import org.acyb.sayitalarm.database.Alarm as AlarmDTO
 
 class AlarmDataSourceSpec {
 
@@ -45,12 +44,28 @@ class AlarmDataSourceSpec {
     }
 
     @Test
-    fun `When getAllByTimeAsc is called it returns flow of success result with stored alarms`() = runTest {
+    fun `When insert is called it stores an alarm`() = runTest {
         // Given
-        val alarms = List(3) { getRandomAlarm() }
+        val alarmToInsert = getRandomAlarmDto()
+
+        // When
+        dataSource.insert(alarmToInsert)
+
+        val actual = sayItDB.alarmQueries
+            .getById(1)
+            .executeAsOne()
+
+        // Then
+        actual mustBe alarmToInsert.copy(id = 1)
+    }
+
+    @Test
+    fun `When getAllByTimeAsc is called it returns flow of stored alarms`() = runTest {
+        // Given
+        val alarmsToInsert = List(3) { getRandomAlarmDto() }
         val dispatcher = StandardTestDispatcher(this.testScheduler)
 
-        alarms.forEach {
+        alarmsToInsert.forEach {
             sayItDB.alarmQueries.insert(
                 it.hour,
                 it.minute,
@@ -68,16 +83,16 @@ class AlarmDataSourceSpec {
         val item = dataSource.getAllByTimeAsc(dispatcher).first()
 
         // Then
-        val alarmEntities = alarms.mapIndexed { index, alarm ->
-            alarm.copy(id = (index + 1).toLong())
-                .toAlarmEntity()
-        }
+        val expectedAlarms = alarmsToInsert
+            .mapIndexed { index, alarm ->
+                alarm.copy(id = (index + 1).toLong())
+            }
 
-        item mustBe Result.success(alarmEntities)
+        item mustBe Result.success(expectedAlarms)
     }
 
     @Test
-    fun `When getById is called it returns failure result`() = runTest {
+    fun `When getById is called with invalid id it returns failure result`() = runTest {
         // When
         val result = dataSource.getById(8L)
 
@@ -86,11 +101,11 @@ class AlarmDataSourceSpec {
     }
 
     @Test
-    fun `When getById is called it returns success result with alarmEntity`() = runTest {
+    fun `When getById is called it returns alarmDTO`() = runTest {
         // Given
-        val alarms = List(3) { getRandomAlarm() }
+        val alarmsToInsert = List(3) { getRandomAlarmDto() }
 
-        alarms.forEach {
+        alarmsToInsert.forEach {
             sayItDB.alarmQueries.insert(
                 it.hour,
                 it.minute,
@@ -107,36 +122,19 @@ class AlarmDataSourceSpec {
         val idToGet: Long = fixture.fixture(range = 1..3)
 
         // When
-        val result = dataSource.getById(idToGet)
+        val actual = dataSource.getById(idToGet)
 
-        val expected = alarms[idToGet.toInt() - 1]
+        val expected = alarmsToInsert[idToGet.toInt() - 1]
             .copy(id = idToGet)
-            .toAlarmEntity()
 
         // Then
-        result mustBe Result.success(expected)
+        actual mustBe Result.success(expected)
     }
 
     @Test
-    fun `When insert is called it stores an alarm`() = runTest {
+    fun `When update is called it updates stored alarm`() = runTest {
         // Given
-        val alarm = getRandomAlarm()
-
-        // When
-        dataSource.insert(alarm.toAlarmEntity())
-
-        val actual = sayItDB.alarmQueries
-            .getById(1)
-            .executeAsOne()
-
-        // Then
-        actual mustBe alarm.copy(id = 1)
-    }
-
-    @Test
-    fun `When update is called it updated stored alarm`() = runTest {
-        // Given
-        val alarm = getRandomAlarm(hour = 11, minute = 11)
+        val alarm = getRandomAlarmDto(hour = 11, minute = 11)
 
         sayItDB.alarmQueries.insert(
             alarm.hour,
@@ -150,9 +148,8 @@ class AlarmDataSourceSpec {
             alarm.sayItScripts
         )
 
-        val updated = alarm
+        val expected = alarm
             .copy(id = 1L, hour = 3, minute = 3)
-            .toAlarmEntity()
 
         dataSource
             .getAllByTimeAsc(dispatcher = StandardTestDispatcher(this.testScheduler))
@@ -160,7 +157,7 @@ class AlarmDataSourceSpec {
                 skipItems(1)
 
                 // When
-                dataSource.update(updated)
+                dataSource.update(expected)
 
                 val actual = awaitItem().getOrNull()!!.first()
 
@@ -174,7 +171,7 @@ class AlarmDataSourceSpec {
     @Test
     fun `When updateEnabled is called it sets enabled on alarm of given id`() = runTest {
         // Given
-        val alarms = List(3) { getRandomAlarm(enabled = false) }
+        val alarms = List(3) { getRandomAlarmDto(enabled = false) }
 
         alarms.forEach {
             sayItDB.alarmQueries.insert(
@@ -204,11 +201,11 @@ class AlarmDataSourceSpec {
     }
 
     @Test
-    fun `When delete is called it delete the alarm`() = runTest {
+    fun `When delete is called it deletes the alarm`() = runTest {
         // Given
-        val alarms = List(3) { getRandomAlarm() }
+        val alarmsToInsert = List(3) { getRandomAlarmDto() }
 
-        alarms.forEach {
+        alarmsToInsert.forEach {
             sayItDB.alarmQueries.insert(
                 it.hour,
                 it.minute,
@@ -227,16 +224,16 @@ class AlarmDataSourceSpec {
         // When
         dataSource.delete(idToDelete)
 
-        val allAlarms = sayItDB.alarmQueries
+        val actual = sayItDB.alarmQueries
             .getAllByTimeAsc()
             .executeAsList()
 
         // Then
-        allAlarms.size mustBe 2
-        allAlarms.find { it.id == idToDelete } mustBe null
+        actual.size mustBe 2
+        actual.find { it.id == idToDelete } mustBe null
     }
 
-    private fun getRandomAlarm(
+    private fun getRandomAlarmDto(
         hour: Long = fixture.fixture(range = 0..23),
         minute: Long = fixture.fixture(range = 0..59),
         weeklyRepeat: Long = fixture.fixture(),
@@ -246,8 +243,8 @@ class AlarmDataSourceSpec {
         ringtone: String = fixture.fixture(),
         alarmType: Long = fixture.fixture(),
         sayItScripts: String = fixture.fixture(),
-    ): Alarm =
-        Alarm(
+    ): AlarmDTO =
+        AlarmDTO(
             id = 0L,
             hour,
             minute,
@@ -258,19 +255,5 @@ class AlarmDataSourceSpec {
             ringtone,
             alarmType,
             sayItScripts
-        )
-
-    private fun Alarm.toAlarmEntity(): AlarmEntity =
-        AlarmEntity(
-            id = this.id,
-            hour = this.hour,
-            minute = this.minute,
-            weeklyRepeat = this.weeklyRepeat,
-            label = this.label,
-            enabled = this.enabled,
-            alertType = this.alertType,
-            ringtone = this.ringtone,
-            alarmType = this.alarmType,
-            sayItScripts = this.sayItScripts,
         )
 }

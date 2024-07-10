@@ -10,14 +10,9 @@ import org.a_cyb.sayitalarm.entity.Settings
 import org.a_cyb.sayitalarm.entity.Snooze
 import org.a_cyb.sayitalarm.entity.Theme
 import org.a_cyb.sayitalarm.entity.TimeOut
+import org.acyb.sayitalarm.database.Get as SettingsDTO
 
-data class SettingsEntity(
-    val timeOut: Long,
-    val snooze: Long,
-    val theme: Long,
-)
-
-fun SettingsEntity.toSettings(): Settings =
+fun SettingsDTO.toSettings(): Settings =
     Settings(
         timeOut = TimeOut(timeOut.toInt()),
         snooze = Snooze(snooze.toInt()),
@@ -28,10 +23,9 @@ private fun Long.asTheme(): Theme =
     Theme.entries
         .getOrElse(toInt()) { Theme.LIGHT }
 
-fun Settings.toSettingsEntity(): SettingsEntity =
-    SettingsEntity(
+fun Settings.toSettingsDTO(): SettingsDTO =
+    SettingsDTO(
         timeOut = this.timeOut.timeOut.toLong(),
         snooze = this.snooze.snooze.toLong(),
         theme = this.theme.ordinal.toLong(),
     )
-

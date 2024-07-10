@@ -15,12 +15,12 @@ import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import app.cash.turbine.test
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
-import org.a_cyb.sayitalarm.data.model.SettingsEntity
 import org.a_cyb.sayitalarm.database.SayItDB
 import org.a_cyb.sayitalarm.entity.Theme
 import org.a_cyb.sayitalarm.util.mustBe
 import tech.antibytes.kfixture.fixture
 import tech.antibytes.kfixture.kotlinFixture
+import org.acyb.sayitalarm.database.Get as SettingsDTO
 
 class SettingsDataSourceSpec {
     private lateinit var driver: SqlDriver
@@ -44,12 +44,12 @@ class SettingsDataSourceSpec {
     }
 
     @Test
-    fun `when getSettings is called it returns result failure`() = runTest {
+    fun `When getSettings is called and data does not exist it returns failure`() = runTest {
         // Given
         val dispatcher = StandardTestDispatcher(this.testScheduler)
 
-        // When
         dataSource
+            // WHen
             .getSettings(dispatcher)
             .test {
                 // Then
@@ -58,7 +58,7 @@ class SettingsDataSourceSpec {
     }
 
     @Test
-    fun `When insert is called getSettings emits a success result with settingsEntity`() = runTest {
+    fun `When insert is called getSettings emits a success with settings DTO`() = runTest {
         // Given
         val dispatcher = StandardTestDispatcher(this.testScheduler)
 
@@ -68,10 +68,10 @@ class SettingsDataSourceSpec {
                 skipItems(1)
 
                 // When
-                dataSource.insert(getSettingsEntity())
+                dataSource.insert(getSettingsDTO())
 
                 // Then
-                awaitItem() mustBe Result.success(getSettingsEntity())
+                awaitItem() mustBe Result.success(getSettingsDTO())
             }
     }
 
@@ -84,7 +84,7 @@ class SettingsDataSourceSpec {
         dataSource
             .getSettings(dispatcher)
             .test {
-                dataSource.insert(getSettingsEntity())
+                dataSource.insert(getSettingsDTO())
 
                 skipItems(2)
 
@@ -107,7 +107,7 @@ class SettingsDataSourceSpec {
         dataSource
             .getSettings(dispatcher)
             .test {
-                dataSource.insert(getSettingsEntity())
+                dataSource.insert(getSettingsDTO())
 
                 skipItems(2)
 
@@ -130,7 +130,7 @@ class SettingsDataSourceSpec {
         dataSource
             .getSettings(dispatcher)
             .test {
-                dataSource.insert(getSettingsEntity())
+                dataSource.insert(getSettingsDTO())
 
                 skipItems(2)
 
@@ -144,8 +144,8 @@ class SettingsDataSourceSpec {
             }
     }
 
-    private fun getSettingsEntity() =
-        SettingsEntity(
+    private fun getSettingsDTO() =
+        SettingsDTO(
             timeOut = 180,
             snooze = 15,
             theme = 0,
