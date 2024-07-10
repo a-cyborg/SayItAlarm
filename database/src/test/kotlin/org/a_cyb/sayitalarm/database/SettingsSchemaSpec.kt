@@ -13,6 +13,7 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
+import org.a_cyb.sayitalarm.util.isNot
 import org.a_cyb.sayitalarm.util.mustBe
 import org.acyb.sayitalarm.database.Settings
 import tech.antibytes.kfixture.fixture
@@ -68,6 +69,47 @@ class SettingsSchemaSpec {
         fetched.timeOut mustBe settingsEntity.timeOut
         fetched.snooze mustBe settingsEntity.snooze
         fetched.theme mustBe settingsEntity.theme
+    }
+
+    @Test
+    fun `When row is already exists it ignores insert call`() {
+        // Given
+        val existingSettings = getDefaultSettings()
+            .copy(
+                timeOut = 300,
+                snooze = 30,
+                theme = 1
+            )
+
+        sayItDB.settingsQueries
+            .insert(
+                existingSettings.timeOut,
+                existingSettings.snooze,
+                existingSettings.theme
+            )
+
+        val newInsertSettings = getDefaultSettings()
+
+        // When
+        sayItDB.settingsQueries
+            .insert(
+                newInsertSettings.timeOut,
+                newInsertSettings.snooze,
+                newInsertSettings.theme
+            )
+
+        val actual = sayItDB.settingsQueries
+            .get()
+            .executeAsOne()
+
+        // Then
+        actual.timeOut mustBe existingSettings.timeOut
+        actual.snooze mustBe existingSettings.snooze
+        actual.theme mustBe existingSettings.theme
+
+        actual.timeOut isNot newInsertSettings.timeOut
+        actual.snooze isNot newInsertSettings.snooze
+        actual.theme isNot newInsertSettings.theme
     }
 
     @Test

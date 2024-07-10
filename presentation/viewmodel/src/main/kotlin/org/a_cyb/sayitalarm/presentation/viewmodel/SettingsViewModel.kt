@@ -31,6 +31,13 @@ class SettingsViewModel(
     private val durationFormatter: DurationFormatterContract,
 ) : SettingsContract.SettingsViewModel, ViewModel() {
 
+    init {
+        interactor.insertOrIgnore(
+            getDefaultSettings(),
+            scope
+        )
+    }
+
     override val state: StateFlow<SettingsState> = interactor.settings
         .map(::mapToState)
         .stateIn(
@@ -92,7 +99,17 @@ class SettingsViewModel(
         get() = Theme.entries.map { it.name.toCamelCase() }
 
     companion object {
-        val TIME_OUT_RANGE = 30..300
-        val SNOOZE_RANGE = 5..60
+        private val TIME_OUT_RANGE = 30..300
+        private val SNOOZE_RANGE = 5..60
+
+        private const val DEFAULT_TIMEOUT = 180
+        private const val DEFAULT_SNOOZE = 15
+
+        private fun getDefaultSettings(): Settings =
+            Settings(
+                TimeOut(DEFAULT_TIMEOUT),
+                Snooze(DEFAULT_SNOOZE),
+                Theme.LIGHT,
+            )
     }
 }

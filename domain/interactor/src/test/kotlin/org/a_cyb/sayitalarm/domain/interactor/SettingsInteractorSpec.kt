@@ -75,7 +75,23 @@ class SettingsInteractorSpec {
     }
 
     @Test
-    fun `When setTimeout is called triggers repository setTimeOut`() = runTest {
+    fun `When insertOrIgnore is called it triggers repository insertOrIgnore`() = runTest {
+        // Given
+        val settings = Settings(TimeOut(180), Snooze(15), Theme.LIGHT)
+
+        // When
+        interactor.insertOrIgnore(settings, this)
+
+        runCurrent()
+
+        // Then
+        verify(exactly = 1) {
+            settingsRepository.insertOrIgnore(any(), any())
+        }
+    }
+
+    @Test
+    fun `When setTimeout is called it triggers repository setTimeOut`() = runTest {
         // Given
         val timeOut = TimeOut(300)
 

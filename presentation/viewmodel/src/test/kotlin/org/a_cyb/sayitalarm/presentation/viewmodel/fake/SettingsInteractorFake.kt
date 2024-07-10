@@ -27,6 +27,10 @@ class SettingsInteractorFake(
     override val settings: Flow<Result<Settings>>
         get() = flow { results.forEach { emit(it) } }
 
+    override fun insertOrIgnore(settings: Settings, scope: CoroutineScope) {
+        _invoked = InvokedType.INSERT_OR_IGNORE
+    }
+
     override fun setTimeOut(timeOut: TimeOut, scope: CoroutineScope) {
         _invoked = InvokedType.SET_TIMEOUT
     }
@@ -43,6 +47,7 @@ class SettingsInteractorFake(
         SET_TIMEOUT,
         SET_SNOOZE,
         SET_THEME,
+        INSERT_OR_IGNORE,
         NONE,
     }
 }

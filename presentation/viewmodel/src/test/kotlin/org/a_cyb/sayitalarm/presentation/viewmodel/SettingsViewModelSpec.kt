@@ -22,12 +22,16 @@ import org.a_cyb.sayitalarm.entity.Settings
 import org.a_cyb.sayitalarm.entity.Snooze
 import org.a_cyb.sayitalarm.entity.Theme
 import org.a_cyb.sayitalarm.entity.TimeOut
-import org.a_cyb.sayitalarm.presentation.command.CommandContract
 import org.a_cyb.sayitalarm.presentation.SettingsContract
-import org.a_cyb.sayitalarm.presentation.SettingsContract.*
-import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState.*
+import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState.Error
+import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState.Initial
+import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState.Success
+import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsUI
+import org.a_cyb.sayitalarm.presentation.SettingsContract.TimeInput
+import org.a_cyb.sayitalarm.presentation.command.CommandContract
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.DurationFormatterFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.SettingsInteractorFake
+import org.a_cyb.sayitalarm.presentation.viewmodel.fake.SettingsInteractorFake.InvokedType
 import org.a_cyb.sayitalarm.util.fulfils
 import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Test
@@ -97,6 +101,19 @@ class SettingsViewModelSpec {
     }
 
     @Test
+    fun `When it initialized it triggers repository insertOrIgnore`() = runTest {
+        // Given
+        val results = listOf(Result.success(settings))
+        val interactor = SettingsInteractorFake(results)
+
+        // When
+        SettingsViewModel(interactor, durationFormatter)
+
+        // Then
+        interactor.invoked mustBe InvokedType.INSERT_OR_IGNORE
+    }
+
+    @Test
     fun `Given setTimeOut is called it propagates SettingsStateWithContent`() = runTest {
         // Given
         val timeOut = TimeOut(60)
@@ -119,7 +136,7 @@ class SettingsViewModelSpec {
 
             // Then
             awaitItem() mustBe Success(settingsUI)
-            interactor.invoked mustBe SettingsInteractorFake.InvokedType.SET_TIMEOUT
+            interactor.invoked mustBe InvokedType.SET_TIMEOUT
         }
     }
 
@@ -148,7 +165,7 @@ class SettingsViewModelSpec {
             // Then
             awaitItem() mustBe Success(settingsUI)
 
-            interactor.invoked mustBe SettingsInteractorFake.InvokedType.SET_SNOOZE
+            interactor.invoked mustBe InvokedType.SET_SNOOZE
         }
     }
 
@@ -174,7 +191,7 @@ class SettingsViewModelSpec {
 
             // Then
             awaitItem() mustBe Success(settingsUI)
-            interactor.invoked mustBe SettingsInteractorFake.InvokedType.SET_THEME
+            interactor.invoked mustBe InvokedType.SET_THEME
         }
     }
 

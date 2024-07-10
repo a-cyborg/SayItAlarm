@@ -36,7 +36,7 @@ class SettingsRepository(
         return result.map { it.toSettings() }
     }
 
-    override fun insert(settings: Settings, scope: CoroutineScope) {
+    override fun insertOrIgnore(settings: Settings, scope: CoroutineScope) {
         scope.launch(dispatcher) {
             dataSource.insert(settings.toSettingsEntity())
         }

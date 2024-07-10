@@ -22,6 +22,13 @@ class SettingsInteractor(
     override val settings: Flow<Result<Settings>>
         get() = settingsRepository.getSettings()
 
+    override fun insertOrIgnore(settings: Settings, scope: CoroutineScope) {
+        scope.launch {
+            settingsRepository
+                .insertOrIgnore(settings, scope)
+        }
+    }
+
     override fun setTimeOut(timeOut: TimeOut, scope: CoroutineScope) {
         scope.launch {
             settingsRepository
@@ -42,4 +49,6 @@ class SettingsInteractor(
                 .setTheme(theme, this)
         }
     }
+
+
 }

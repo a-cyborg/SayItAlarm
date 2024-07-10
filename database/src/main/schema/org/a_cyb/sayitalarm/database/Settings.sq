@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS Settings(
 );
 
 insert:
-INSERT INTO Settings(timeOut, snooze, theme)
+INSERT OR IGNORE INTO Settings(timeOut, snooze, theme)
 VALUES (?, ?, ?);
 
 updateTimeOut:

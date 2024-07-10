@@ -81,7 +81,7 @@ class SettingsRepositorySpec {
         val repository = SettingsRepository(dataSource, dispatcher)
 
         // When
-        repository.insert(settingsToInsert, this)
+        repository.insertOrIgnore(settingsToInsert, this)
 
         runCurrent()
 
