@@ -44,6 +44,29 @@ class DataModuleSpec {
     }
 
     @Test
+    fun `It injects SettingsDataSource`() {
+        // Given
+        val databaseModule = module {
+            single<SettingsQueries> { SettingsQueries(mockk()) }
+        }
+
+        val koinApp = koinApplication {
+            modules(
+                dataModule,
+                databaseModule,
+            )
+        }
+
+        // When
+        val settingsDataSource = koinApp
+            .koin
+            .getOrNull<DataSourceContract.SettingsDataSource>()
+
+        // Then
+        assertNotNull(settingsDataSource)
+    }
+
+    @Test
     fun `It injects AlarmRepository`() {
         // Given
         val dispatcherModule = module {
@@ -65,29 +88,6 @@ class DataModuleSpec {
 
         // Then
         assertNotNull(alarmRepository)
-    }
-
-    @Test
-    fun `It injects SettingsDataSource`() {
-        // Given
-        val databaseModule = module {
-            single<SettingsQueries> { SettingsQueries(mockk()) }
-        }
-
-        val koinApp = koinApplication {
-            modules(
-                dataModule,
-                databaseModule,
-            )
-        }
-
-        // When
-        val settingsDataSource = koinApp
-            .koin
-            .getOrNull<DataSourceContract.SettingsDataSource>()
-
-        // Then
-        assertNotNull(settingsDataSource)
     }
 
     @Test

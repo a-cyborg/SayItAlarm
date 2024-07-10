@@ -8,7 +8,6 @@ package org.a_cyb.sayitalarm.presentation.viewmodel.di
 
 import kotlin.test.Test
 import kotlin.test.assertNotNull
-import io.mockk.every
 import io.mockk.mockk
 import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
 import org.a_cyb.sayitalarm.formatter.duration.DurationFormatterContract
@@ -57,8 +56,8 @@ class ViewModelModuleSpec {
     fun `It injects EditViewModel`() {
         // Given
         val interactor: InteractorContract.EditInteractor = mockk(relaxed = true)
-        every { interactor.getAlarm(any(), any()) } returns
-            Result.failure(IllegalStateException())
+        // every { interactor.alarm } returns
+        //      { Result.failure(IllegalStateException()) }
 
         val interactorModule = module {
             single<InteractorContract.EditInteractor> { interactor }
