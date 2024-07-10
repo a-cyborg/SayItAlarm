@@ -7,12 +7,18 @@
 package org.a_cyb.sayitalarm.presentation.viewmodel.fake
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.launch
 import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
 import org.a_cyb.sayitalarm.entity.Alarm
 
 class EditInteractorFake(
     private val result: Result<Alarm>
 ) : InteractorContract.EditInteractor {
+
+    private val _alarm = MutableSharedFlow<Result<Alarm>>()
+    override val alarm: SharedFlow<Result<Alarm>> = _alarm
 
     private var _invoked: InvokedType = InvokedType.NONE
     val invoked: InvokedType
@@ -22,10 +28,12 @@ class EditInteractorFake(
     val updatedAlarm: Alarm?
         get() = _updatedAlarm
 
-    override fun getAlarm(id: Long, scope: CoroutineScope): Result<Alarm> {
-        _invoked = InvokedType.GET_ALARM
+    override fun getAlarm(id: Long, scope: CoroutineScope) {
+        scope.launch {
+            _alarm.emit(result)
+        }
 
-        return result
+        _invoked = InvokedType.GET_ALARM
     }
 
     override fun update(alarm: Alarm, scope: CoroutineScope) {

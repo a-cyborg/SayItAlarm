@@ -312,6 +312,10 @@ class EditViewModelSpec {
         )
         val viewModel = viewModel(3L, interactor)
 
+        viewModel.state.test {
+            skipItems(2)
+        }
+
         // When
         viewModel.save()
 
@@ -364,6 +368,10 @@ class EditViewModelSpec {
             Result.success(alarm)
         )
         val viewModel = viewModel(3L, interactor)
+
+        viewModel.state.test {
+            skipItems(2)
+        }
 
         // When
         viewModel.runCommand(SaveCommand)

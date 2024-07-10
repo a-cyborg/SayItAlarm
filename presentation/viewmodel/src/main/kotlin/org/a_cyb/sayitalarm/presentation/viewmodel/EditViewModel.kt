@@ -9,8 +9,12 @@ package org.a_cyb.sayitalarm.presentation.viewmodel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
 import org.a_cyb.sayitalarm.entity.Alarm
 import org.a_cyb.sayitalarm.entity.Hour
@@ -18,10 +22,18 @@ import org.a_cyb.sayitalarm.entity.Minute
 import org.a_cyb.sayitalarm.entity.SayItScripts
 import org.a_cyb.sayitalarm.formatter.time.TimeFormatterContract
 import org.a_cyb.sayitalarm.formatter.weekday.WeekdayFormatterContract
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.*
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.AlarmUI
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.AlertTypeUI
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.RingtoneUI
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.SelectableAlertType
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.SelectableRepeat
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.TimeUI
+import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.WeeklyRepeatUI
 import org.a_cyb.sayitalarm.presentation.EditContract
 import org.a_cyb.sayitalarm.presentation.EditContract.EditViewModel.EditState
-import org.a_cyb.sayitalarm.presentation.EditContract.EditViewModel.EditState.*
+import org.a_cyb.sayitalarm.presentation.EditContract.EditViewModel.EditState.Error
+import org.a_cyb.sayitalarm.presentation.EditContract.EditViewModel.EditState.Initial
+import org.a_cyb.sayitalarm.presentation.EditContract.EditViewModel.EditState.Success
 import org.a_cyb.sayitalarm.presentation.command.CommandContract
 import org.a_cyb.sayitalarm.presentation.viewmodel.mapper.AlarmMapperContract
 
@@ -41,14 +53,20 @@ class EditViewModel(
     )
 
     init {
-        setupAlarm()
+        scope.launch {
+            interactor.alarm
+                .takeWhile { _state.value == Initial }
+                .map(::toState)
+                .collect()
+        }
+
+        interactor.getAlarm(alarmId, scope)
     }
 
-    private fun setupAlarm() {
-        interactor
-            .getAlarm(alarmId, scope)
-            .onSuccess { alarm -> Success(alarm.toAlarmUI()).updateState() }
-            .onFailure { _ -> Error.updateState() }
+    private fun toState(result: Result<Alarm>) {
+        result
+            .onSuccess { Success(it.toAlarmUI()).updateState() }
+            .onFailure { Error.updateState() }
     }
 
     private fun Alarm.toAlarmUI(): AlarmUI {
