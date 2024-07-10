@@ -6,9 +6,16 @@
 
 package org.a_cyb.sayitalarm.presentation.viewmodel.di
 
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 import io.mockk.mockk
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
 import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
 import org.a_cyb.sayitalarm.formatter.duration.DurationFormatterContract
 import org.a_cyb.sayitalarm.formatter.time.TimeFormatterContract
@@ -22,12 +29,23 @@ import org.koin.core.parameter.parametersOf
 import org.koin.dsl.koinApplication
 import org.koin.dsl.module
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class ViewModelModuleSpec {
 
     private val formatterModule = module {
         single<TimeFormatterContract> { mockk() }
         single<WeekdayFormatterContract> { mockk() }
         single<AlarmMapperContract> { mockk(relaxed = true) }
+    }
+
+    @BeforeTest
+    fun setup() {
+        Dispatchers.setMain(StandardTestDispatcher())
+    }
+
+    @AfterTest
+    fun tearDown() {
+        Dispatchers.resetMain()
     }
 
     @Test

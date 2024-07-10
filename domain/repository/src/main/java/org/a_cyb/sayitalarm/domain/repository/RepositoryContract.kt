@@ -22,7 +22,7 @@ interface RepositoryContract {
 
     interface SettingsRepository {
         fun getSettings(): Flow<Result<Settings>>
-        fun insert(settings: Settings, scope: CoroutineScope)
+        fun insertOrIgnore(settings: Settings, scope: CoroutineScope)
         fun setTimeOut(timeOut: TimeOut, scope: CoroutineScope)
         fun setSnooze(snooze: Snooze, scope: CoroutineScope)
         fun setTheme(theme: Theme, scope: CoroutineScope)

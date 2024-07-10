@@ -10,6 +10,7 @@ import kotlin.test.assertNotNull
 import java.util.Locale
 import android.content.Context
 import android.icu.text.DateFormatSymbols
+import android.icu.text.ListFormatter
 import android.icu.text.NumberFormat
 import android.icu.text.RelativeDateTimeFormatter
 import android.icu.util.ULocale
@@ -114,9 +115,10 @@ class FormatterModuleSpec {
     @Test
     fun `It injects WeekdayFormatter`() {
         // Mockk
-        mockkStatic(ULocale::class, DateFormatSymbols::class)
+        mockkStatic(ULocale::class, DateFormatSymbols::class, ListFormatter::class)
         every { ULocale.forLocale(any()) } answers { mockk {} }
         every { DateFormatSymbols.getInstance(any() as Locale) } answers { mockk() }
+        every { ListFormatter.getInstance(any() as Locale) } answers { mockk() }
 
         // Given
         val context: Context = mockk(relaxed = true)

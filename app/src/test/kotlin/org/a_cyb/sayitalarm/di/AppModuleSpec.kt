@@ -22,7 +22,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.androidx.compose.koinViewModel
-import org.koin.core.context.stopKoin
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent.getOrNull
 
@@ -34,8 +33,6 @@ class AppModuleSpec {
 
     @AfterTest
     fun tearDown() {
-        stopKoin()
-
         composeTestRule.activityRule.scenario.close()
     }
 

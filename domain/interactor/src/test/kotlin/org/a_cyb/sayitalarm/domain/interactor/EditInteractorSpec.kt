@@ -9,6 +9,7 @@ package org.a_cyb.sayitalarm.domain.interactor
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import app.cash.turbine.test
 import io.mockk.clearAllMocks
 import io.mockk.coVerify
 import io.mockk.coVerifyOrder
@@ -54,25 +55,26 @@ class EditInteractorSpec {
     }
 
     @Test
-    fun `When getAlarm is called it returns alarm`() = runTest {
+    fun `When getAlarm is called it emits alarm`() = runTest {
         // Given
         every { alarmRepository.getAlarm(any(), any()) } returns
             async { Result.success(alarm) }
 
         val interactor = EditInteractor(alarmRepository, alarmScheduler)
 
-        runCurrent()
-        // When
-        val expected = interactor.getAlarm(3, this)
+        interactor.alarm.test {
+            // When
+            interactor.getAlarm(3, this)
 
-        // Then
-        expected mustBe Result.success(alarm)
+            // Then
+            awaitItem() mustBe Result.success(alarm)
+        }
 
         coVerify(exactly = 1) { alarmRepository.getAlarm(any(), any()) }
     }
 
     @Test
-    fun `When getAlarm is called it returns failure`() = runTest {
+    fun `When getAlarm is called it emits failure`() = runTest {
         // Given
         val result = Result.failure<Alarm>(IllegalStateException())
 
@@ -80,13 +82,13 @@ class EditInteractorSpec {
 
         val interactor = EditInteractor(alarmRepository, alarmScheduler)
 
-        runCurrent()
+        interactor.alarm.test {
+            // When
+            interactor.getAlarm(3, this)
 
-        // When
-        val expected = interactor.getAlarm(3, this)
-
-        // Then
-        expected mustBe result
+            // Then
+            awaitItem() mustBe result
+        }
 
         coVerify(exactly = 1) { alarmRepository.getAlarm(any(), any()) }
     }

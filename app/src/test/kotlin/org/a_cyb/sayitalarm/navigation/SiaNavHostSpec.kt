@@ -26,7 +26,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.koin.core.context.stopKoin
 import org.robolectric.annotation.GraphicsMode
 
 @RunWith(AndroidJUnit4::class)
@@ -48,7 +47,7 @@ class SiaNavHostSpec {
 
     @After
     fun tearDown() {
-        stopKoin()
+        composeTestRule.activityRule.scenario.recreate()
     }
 
     private fun getStringRes(id: Int) = composeTestRule.activity.getString(id)
