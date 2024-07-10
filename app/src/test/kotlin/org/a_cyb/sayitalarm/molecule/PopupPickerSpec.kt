@@ -25,9 +25,11 @@ import org.a_cyb.sayitalarm.R
 import org.a_cyb.sayitalarm.atom.TextDisplayStandardSmall
 import org.a_cyb.sayitalarm.roborazziOf
 import org.a_cyb.sayitalarm.util.mustBe
+import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.core.context.stopKoin
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 
@@ -47,6 +49,11 @@ class PopupPickerSpec {
 
     @get:Rule
     val roborazziRule = roborazziOf(composeTestRule, RoborazziRule.CaptureType.None)
+
+    @After
+    fun tearDown() {
+        stopKoin()
+    }
 
     private fun getString(id: Int) = composeTestRule.activity.getString(id)
 

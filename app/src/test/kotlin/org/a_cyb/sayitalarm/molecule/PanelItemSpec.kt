@@ -24,9 +24,11 @@ import org.a_cyb.sayitalarm.atom.TextDisplayStandardLarge
 import org.a_cyb.sayitalarm.atom.TextTitleDangerMedium
 import org.a_cyb.sayitalarm.roborazziOf
 import org.a_cyb.sayitalarm.util.mustBe
+import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.core.context.stopKoin
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 
@@ -40,6 +42,11 @@ class PanelItemSpec {
 
     @get:Rule
     val roborazziRule = roborazziOf(composeTestRule, RoborazziRule.CaptureType.None)
+
+    @After
+    fun tearDown() {
+        stopKoin()
+    }
 
     private fun getString(id: Int) = composeTestRule.activity.getString(id)
 
@@ -168,7 +175,7 @@ class PanelItemSpec {
 
     @Test
     fun `When PanelItemClickableBordered is clicked it runs onClick action`() {
-        var hasBeenCalled: Boolean = false
+        var hasBeenCalled = false
 
         with(composeTestRule) {
             // Given

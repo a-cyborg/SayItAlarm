@@ -13,6 +13,7 @@ import com.github.takahirom.roborazzi.RoborazziRule
 import com.github.takahirom.roborazzi.captureRoboImage
 import org.junit.After
 import org.junit.Rule
+import org.koin.core.context.stopKoin
 
 abstract class RoborazziTest(
     captureType: RoborazziRule.CaptureType = RoborazziRule.CaptureType.None,
@@ -27,5 +28,6 @@ abstract class RoborazziTest(
     fun capture() {
         subjectUnderTest.onRoot().captureRoboImage()
         subjectUnderTest.activityRule.scenario.recreate()
+        stopKoin()
     }
 }

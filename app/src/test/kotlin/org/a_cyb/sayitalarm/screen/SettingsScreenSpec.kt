@@ -28,9 +28,11 @@ import org.a_cyb.sayitalarm.presentation.SettingsContract.TimeInput
 import org.a_cyb.sayitalarm.roborazziOf
 import org.a_cyb.sayitalarm.screen.SettingsViewModelFake.ExecutedCommand
 import org.a_cyb.sayitalarm.util.mustBe
+import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.core.context.stopKoin
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 
@@ -45,6 +47,11 @@ class SettingsScreenSpec {
 
     @get:Rule
     val roborazziRule = roborazziOf(composeTestRule, RoborazziRule.CaptureType.None)
+
+    @After
+    fun tearDown() {
+        stopKoin()
+    }
 
     private val successSate = Success(
         SettingsUI(

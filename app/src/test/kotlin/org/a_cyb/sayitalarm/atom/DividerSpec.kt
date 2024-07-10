@@ -17,6 +17,7 @@ import org.robolectric.annotation.GraphicsMode
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(sdk = [33])
 class DividerSpec : RoborazziTest() {
+
     @Test
     fun `It renders DividerStandard`() {
         subjectUnderTest.setContent {

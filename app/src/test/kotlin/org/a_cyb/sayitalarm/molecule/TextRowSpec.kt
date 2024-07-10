@@ -19,8 +19,6 @@ import org.robolectric.annotation.GraphicsMode
 @Config(sdk = [33])
 class TextRowSpec : RoborazziTest() {
 
-    private fun getString(id: Int) = subjectUnderTest.activity.getString(id)
-
     @Test
     fun `It renders TextRowTitleAndInfo`() {
         subjectUnderTest.setContent {
