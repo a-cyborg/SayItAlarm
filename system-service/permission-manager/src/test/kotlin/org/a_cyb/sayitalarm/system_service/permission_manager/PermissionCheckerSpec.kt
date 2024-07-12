@@ -1,4 +1,4 @@
-package org.a_cyb.sayitalarm.implementations.permission_manager
+package org.a_cyb.sayitalarm.system_service.permission_manager
 
 import android.Manifest
 import android.app.AlarmManager
