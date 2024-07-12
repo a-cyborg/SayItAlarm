@@ -1,13 +1,34 @@
 plugins {
-    id("org.jetbrains.kotlin.jvm")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+}
+
+val projectPackage = "org.a_cyb.sayitalarm.alarm_service"
+
+android {
+    namespace = projectPackage
+    compileSdk = 34
+
+    defaultConfig {
+        minSdk = 24
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = "17"
+    }
 }
 
 dependencies {
-    implementation(project(":domain:alarm-service"))
+    implementation(projects.domain.alarmService)
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
-    implementation("io.insert-koin:koin-core:3.5.6")
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.koin.core)
 
     // Debug
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.8.10")
+    testImplementation(kotlin("test"))
 }

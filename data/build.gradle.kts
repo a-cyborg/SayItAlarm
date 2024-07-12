@@ -1,6 +1,6 @@
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
 }
 
 val projectPackage = "org.a_cyb.sayitalarm.data"
@@ -31,20 +31,20 @@ android {
 }
 
 dependencies {
-    implementation(project(":entity"))
-    implementation(project(":domain:repository"))
-    implementation(project(":database"))
+    implementation(projects.entity)
+    implementation(projects.domain.repository)
+    implementation(projects.database)
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
-    implementation("app.cash.sqldelight:coroutines-extensions:2.0.2")
-    implementation("io.insert-koin:koin-android:3.5.6")
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.sqldelight.coroutinesExt)
+    implementation(libs.koin.android)
 
     // Debug
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.8.10")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
-    testImplementation("app.cash.turbine:turbine:1.1.0")
-    testImplementation("app.cash.sqldelight:sqlite-driver:2.0.0")
-    testImplementation("io.mockk:mockk:1.13.11")
-    testImplementation("tech.antibytes.kfixture:core:0.4.0")
-    testImplementation(project(":util"))
+    testImplementation(kotlin("test"))
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.turbine)
+    testImplementation(libs.sqldelight.sqliteDriver)
+    testImplementation(libs.mockk)
+    testImplementation(libs.antibytes.fixture)
+    testImplementation(projects.util)
 }

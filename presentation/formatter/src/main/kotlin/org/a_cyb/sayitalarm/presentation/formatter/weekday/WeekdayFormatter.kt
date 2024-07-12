@@ -10,8 +10,6 @@ import java.util.Locale
 import android.content.Context
 import android.icu.text.DateFormatSymbols
 import android.icu.text.ListFormatter
-import android.os.Build
-import androidx.annotation.RequiresApi
 import org.a_cyb.sayitalarm.presentation.formatter.R
 
 class WeekdayFormatter(

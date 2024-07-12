@@ -35,23 +35,22 @@ android {
 }
 
 dependencies {
-    implementation(project(":entity"))
-    implementation(project(":domain:interactor"))
-    implementation(project(":presentation"))
-    implementation(project(":presentation:formatter"))
-    implementation(project(":system-service:ringtone-resolver"))
+    implementation(projects.entity)
+    implementation(projects.domain.interactor)
+    implementation(projects.presentation)
+    implementation(projects.presentation.formatter)
+    implementation(projects.systemService.ringtoneResolver)
 
-    implementation("androidx.lifecycle:lifecycle-viewmodel-android:2.8.0")
-    val koinVersion = "3.5.6"
-    implementation("io.insert-koin:koin-android:$koinVersion")
-    implementation("io.insert-koin:koin-androidx-compose:$koinVersion")
+    implementation(libs.androidx.lifecycle.viewmodelAndroid)
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
 
     // Debug
-    testImplementation("junit:junit:4.13.2")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.8.10")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
-    testImplementation("app.cash.turbine:turbine:1.1.0")
-    testImplementation("tech.antibytes.kfixture:core:0.4.0")
-    testImplementation("io.mockk:mockk:1.13.11")
-    testImplementation(project(":util"))
+    testImplementation(kotlin("test"))
+    testImplementation(libs.androidx.test.ext)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.turbine)
+    testImplementation(libs.antibytes.fixture)
+    testImplementation(libs.mockk)
+    testImplementation(projects.util)
 }

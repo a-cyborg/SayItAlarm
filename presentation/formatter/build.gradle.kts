@@ -1,6 +1,6 @@
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
 }
 
 val projectPackage = "org.a_cyb.sayitalarm.presentation.formatter"
@@ -31,15 +31,15 @@ android {
 }
 
 dependencies {
-    implementation(project(":entity"))
-    implementation("io.insert-koin:koin-android:3.5.6")
+    implementation(projects.entity)
+
+    implementation(libs.koin.android)
 
     // Debug
-    implementation("androidx.test.ext:junit-ktx:1.1.5")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.8.10")
-    testImplementation("junit:junit:4.13.2")
-    testImplementation("org.robolectric:robolectric:4.12")
-    testImplementation("io.mockk:mockk:1.13.11")
-    testImplementation("tech.antibytes.kfixture:core:0.4.0")
-    testImplementation(project(":util"))
+    testImplementation(kotlin("test"))
+    testImplementation(libs.androidx.test.ext)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.mockk)
+    testImplementation(libs.antibytes.fixture)
+    testImplementation(projects.util)
 }

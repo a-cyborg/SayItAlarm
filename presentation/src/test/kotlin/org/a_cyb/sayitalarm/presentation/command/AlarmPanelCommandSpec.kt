@@ -6,7 +6,6 @@
 
 package org.a_cyb.sayitalarm.presentation.command
 
-import kotlin.test.Test
 import io.mockk.mockk
 import io.mockk.verify
 import org.a_cyb.sayitalarm.entity.AlarmType
@@ -15,6 +14,7 @@ import org.a_cyb.sayitalarm.entity.Minute
 import org.a_cyb.sayitalarm.entity.SayItScripts
 import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.RingtoneUI
 import org.a_cyb.sayitalarm.util.fulfils
+import org.junit.Test
 
 class AlarmPanelCommandSpec {
 

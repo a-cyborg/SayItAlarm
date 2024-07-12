@@ -14,6 +14,9 @@ dependencyResolutionManagement {
     }
 }
 
+rootProject.name = "SayItAlarm"
+
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(
     ":app",
     ":entity",
@@ -31,4 +34,4 @@ include(
     ":util",
 )
 
-rootProject.name = "SayItAlarm"
+

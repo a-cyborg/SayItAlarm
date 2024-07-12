@@ -1,16 +1,14 @@
 plugins {
-    id("org.jetbrains.kotlin.jvm")
+    alias(libs.plugins.kotlin.jvm)
 }
 
 dependencies {
-    implementation(project(":entity"))
+    implementation(projects.entity)
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
+    implementation(libs.kotlinx.coroutines.core)
 
     // Debug
-    implementation(kotlin("test"))
-    val mockkVersion = "1.13.11"
-    testImplementation("io.mockk:mockk:$mockkVersion")
-    testImplementation(project(":util"))
+    testImplementation(kotlin("test"))
+    testImplementation(libs.mockk)
+    testImplementation(projects.util)
 }
-

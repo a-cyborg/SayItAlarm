@@ -1,8 +1,7 @@
 plugins {
-    id("org.jetbrains.kotlin.android")
-    id("com.android.library")
-
-    id("app.cash.sqldelight") version "2.0.2"
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.sqldelight)
 }
 
 val projectPackage = "org.a_cyb.sayitalarm.database"
@@ -36,13 +35,13 @@ sqldelight {
 }
 
 dependencies {
-    implementation("app.cash.sqldelight:android-driver:2.0.2")
-    implementation("io.insert-koin:koin-android:3.5.6")
+    implementation(libs.sqldelight.androidDriver)
+    implementation(libs.koin.android)
 
     // Debug
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.8.10")
-    testImplementation("app.cash.sqldelight:sqlite-driver:2.0.0")
-    testImplementation("tech.antibytes.kfixture:core:0.4.0")
-    testImplementation("io.mockk:mockk:1.13.11")
-    testImplementation(project(":util"))
+    testImplementation(kotlin("test"))
+    testImplementation(libs.sqldelight.sqliteDriver)
+    testImplementation(libs.antibytes.fixture)
+    testImplementation(libs.mockk)
+    testImplementation(projects.util)
 }

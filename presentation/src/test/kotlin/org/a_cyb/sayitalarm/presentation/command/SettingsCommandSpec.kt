@@ -6,12 +6,13 @@
 
 package org.a_cyb.sayitalarm.presentation.command
 
-import kotlin.test.Test
 import io.mockk.mockk
 import io.mockk.verify
 import org.a_cyb.sayitalarm.util.fulfils
+import org.junit.Test
 
 class SettingsCommandSpec {
+
     @Test
     fun `SetTimeOutCommand fulfils Command`() {
         SetTimeOutCommand(33) fulfils CommandContract.Command::class
