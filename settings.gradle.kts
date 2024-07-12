@@ -24,9 +24,10 @@ include(
     ":database",
     ":presentation",
     ":presentation:viewmodel",
-    ":formatter",
+    ":presentation:formatter",
     ":alarm-service",
-    ":ringtone-resolver",
+    ":system-service:ringtone-resolver",
+    ":system-service:permission-manager",
     ":util",
 )
 

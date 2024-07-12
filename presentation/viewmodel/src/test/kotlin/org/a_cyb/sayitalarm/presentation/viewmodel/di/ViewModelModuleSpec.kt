@@ -17,9 +17,9 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
-import org.a_cyb.sayitalarm.formatter.duration.DurationFormatterContract
-import org.a_cyb.sayitalarm.formatter.time.TimeFormatterContract
-import org.a_cyb.sayitalarm.formatter.weekday.WeekdayFormatterContract
+import org.a_cyb.sayitalarm.presentation.formatter.duration.DurationFormatterContract
+import org.a_cyb.sayitalarm.presentation.formatter.time.TimeFormatterContract
+import org.a_cyb.sayitalarm.presentation.formatter.weekday.WeekdayFormatterContract
 import org.a_cyb.sayitalarm.presentation.AddContract
 import org.a_cyb.sayitalarm.presentation.EditContract
 import org.a_cyb.sayitalarm.presentation.ListContract

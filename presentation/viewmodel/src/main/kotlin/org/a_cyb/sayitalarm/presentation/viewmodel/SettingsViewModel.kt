@@ -16,7 +16,7 @@ import org.a_cyb.sayitalarm.entity.Settings
 import org.a_cyb.sayitalarm.entity.Snooze
 import org.a_cyb.sayitalarm.entity.Theme
 import org.a_cyb.sayitalarm.entity.TimeOut
-import org.a_cyb.sayitalarm.formatter.duration.DurationFormatterContract
+import org.a_cyb.sayitalarm.presentation.formatter.duration.DurationFormatterContract
 import org.a_cyb.sayitalarm.presentation.SettingsContract
 import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState
 import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState.Error

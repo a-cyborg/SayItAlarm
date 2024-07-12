@@ -14,8 +14,8 @@ import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
 import org.a_cyb.sayitalarm.entity.Alarm
 import org.a_cyb.sayitalarm.entity.Label
 import org.a_cyb.sayitalarm.entity.WeeklyRepeat
-import org.a_cyb.sayitalarm.formatter.time.TimeFormatterContract
-import org.a_cyb.sayitalarm.formatter.weekday.WeekdayFormatterContract
+import org.a_cyb.sayitalarm.presentation.formatter.time.TimeFormatterContract
+import org.a_cyb.sayitalarm.presentation.formatter.weekday.WeekdayFormatterContract
 import org.a_cyb.sayitalarm.presentation.ListContract
 import org.a_cyb.sayitalarm.presentation.ListContract.AlarmInfo
 import org.a_cyb.sayitalarm.presentation.ListContract.ListState

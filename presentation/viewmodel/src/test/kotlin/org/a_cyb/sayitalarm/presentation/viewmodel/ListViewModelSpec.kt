@@ -24,8 +24,8 @@ import org.a_cyb.sayitalarm.presentation.ListContract.ListState.Initial
 import org.a_cyb.sayitalarm.presentation.ListContract.ListState.InitialError
 import org.a_cyb.sayitalarm.presentation.ListContract.ListState.Success
 import org.a_cyb.sayitalarm.presentation.command.CommandContract
-import org.a_cyb.sayitalarm.formatter.time.TimeFormatterContract
-import org.a_cyb.sayitalarm.formatter.weekday.WeekdayFormatterContract
+import org.a_cyb.sayitalarm.presentation.formatter.time.TimeFormatterContract
+import org.a_cyb.sayitalarm.presentation.formatter.weekday.WeekdayFormatterContract
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.FakeAlarmData
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.ListInteractorFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.ListInteractorFake.InvokedType

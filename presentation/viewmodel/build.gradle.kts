@@ -36,10 +36,10 @@ android {
 
 dependencies {
     implementation(project(":entity"))
-    implementation(project(":presentation"))
     implementation(project(":domain:interactor"))
-    implementation(project(":ringtone-resolver"))
-    implementation(project(":formatter"))
+    implementation(project(":presentation"))
+    implementation(project(":presentation:formatter"))
+    implementation(project(":system-service:ringtone-resolver"))
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-android:2.8.0")
     val koinVersion = "3.5.6"

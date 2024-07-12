@@ -21,8 +21,8 @@ import org.a_cyb.sayitalarm.entity.Minute
 import org.a_cyb.sayitalarm.entity.Ringtone
 import org.a_cyb.sayitalarm.entity.SayItScripts
 import org.a_cyb.sayitalarm.entity.WeeklyRepeat
-import org.a_cyb.sayitalarm.formatter.time.TimeFormatterContract
-import org.a_cyb.sayitalarm.formatter.weekday.WeekdayFormatterContract
+import org.a_cyb.sayitalarm.presentation.formatter.time.TimeFormatterContract
+import org.a_cyb.sayitalarm.presentation.formatter.weekday.WeekdayFormatterContract
 import org.a_cyb.sayitalarm.presentation.AddContract
 import org.a_cyb.sayitalarm.presentation.AddContract.AddState
 import org.a_cyb.sayitalarm.presentation.AddContract.AddState.Error

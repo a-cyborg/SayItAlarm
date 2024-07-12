@@ -7,7 +7,7 @@
 package org.a_cyb.sayitalarm.presentation.viewmodel.fake
 
 import org.a_cyb.sayitalarm.entity.AlertType
-import org.a_cyb.sayitalarm.formatter.enum.EnumFormatterContract
+import org.a_cyb.sayitalarm.presentation.formatter.enum.EnumFormatterContract
 
 class AlertTypeFormatterFake : EnumFormatterContract.AlertTypeFormatter {
 

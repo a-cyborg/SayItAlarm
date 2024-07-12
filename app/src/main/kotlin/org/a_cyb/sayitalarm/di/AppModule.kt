@@ -13,9 +13,9 @@ import org.a_cyb.sayitalarm.alarm_service.di.alarmServiceModule
 import org.a_cyb.sayitalarm.data.di.dataModule
 import org.a_cyb.sayitalarm.database.di.databaseModule
 import org.a_cyb.sayitalarm.domain.interactor.di.interactorModule
-import org.a_cyb.sayitalarm.formatter.di.formatterModule
+import org.a_cyb.sayitalarm.presentation.formatter.di.formatterModule
+import org.a_cyb.sayitalarm.system_service.ringtone_resolver.di.ringtoneResolverModule
 import org.a_cyb.sayitalarm.presentation.viewmodel.di.viewModelModule
-import org.a_cyb.sayitalarm.ringtone_resolver.di.ringtoneResolverModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import org.koin.core.qualifier.named

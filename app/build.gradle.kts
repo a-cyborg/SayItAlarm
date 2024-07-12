@@ -88,9 +88,9 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":presentation"))
     implementation(project(":presentation:viewmodel"))
+    implementation(project(":presentation:formatter"))
     implementation(project(":alarm-service"))
-    implementation(project(":formatter"))
-    implementation(project(":ringtone-resolver"))
+    implementation(project(":system-service:ringtone-resolver"))
 
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.0")

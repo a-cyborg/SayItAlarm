@@ -8,8 +8,8 @@ package org.a_cyb.sayitalarm.presentation.viewmodel.fake
 
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
-import org.a_cyb.sayitalarm.formatter.duration.DurationFormatterContract
-import org.a_cyb.sayitalarm.formatter.duration.DurationFormatterContract.FormattedDuration
+import org.a_cyb.sayitalarm.presentation.formatter.duration.DurationFormatterContract
+import org.a_cyb.sayitalarm.presentation.formatter.duration.DurationFormatterContract.FormattedDuration
 
 class DurationFormatterFake : DurationFormatterContract {
     override fun format(duration: Duration): FormattedDuration {

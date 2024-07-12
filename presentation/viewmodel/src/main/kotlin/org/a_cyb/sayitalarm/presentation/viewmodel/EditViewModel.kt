@@ -20,8 +20,8 @@ import org.a_cyb.sayitalarm.entity.Alarm
 import org.a_cyb.sayitalarm.entity.Hour
 import org.a_cyb.sayitalarm.entity.Minute
 import org.a_cyb.sayitalarm.entity.SayItScripts
-import org.a_cyb.sayitalarm.formatter.time.TimeFormatterContract
-import org.a_cyb.sayitalarm.formatter.weekday.WeekdayFormatterContract
+import org.a_cyb.sayitalarm.presentation.formatter.time.TimeFormatterContract
+import org.a_cyb.sayitalarm.presentation.formatter.weekday.WeekdayFormatterContract
 import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.AlarmUI
 import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.AlertTypeUI
 import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.RingtoneUI
