@@ -1,5 +1,5 @@
 plugins {
-    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.sayitalarm.jvm.library)
 }
 
 dependencies {
@@ -11,9 +11,7 @@ dependencies {
     implementation(libs.koin.core)
 
     // Debug
-    testImplementation(kotlin("test"))
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.turbine)
     testImplementation(libs.mockk)
-    testImplementation(projects.util)
 }

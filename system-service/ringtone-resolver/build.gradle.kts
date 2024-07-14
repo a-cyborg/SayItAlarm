@@ -1,32 +1,14 @@
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.sayitalarm.android.library)
 }
 
-val projectPackage = "org.a_cyb.sayitalarm.system_service.ringtone_resolver"
-
 android {
-    namespace = projectPackage
-    compileSdk = 34
-
-    defaultConfig {
-        minSdk = 24
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    kotlinOptions {
-        jvmTarget = "17"
-    }
+    namespace = "org.a_cyb.sayitalarm.system_service.ringtone_resolver"
 }
 
 dependencies {
     implementation(libs.koin.android)
 
     // Debug
-    testImplementation(kotlin("test"))
     testImplementation(libs.mockk)
 }

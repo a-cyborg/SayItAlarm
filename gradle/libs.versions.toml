@@ -20,6 +20,9 @@ sqldelight = "2.0.2"
 turbine = "1.1.0"
 androidxComposeUi = "1.6.8"
 
+[bundles]
+roborazzi = ["roborazzi", "roborazzi-compose", "roborazzi-junit-rule"]
+
 [libraries]
 #androidx-core-ktx = { group = "androidx.core", name ="core-ktx", version.ref = "androidxCore" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidxActivity" }
@@ -51,6 +54,9 @@ sqldelight-sqliteDriver = { group = "app.cash.sqldelight", name = "sqlite-driver
 sqldelight-coroutinesExt = { group = "app.cash.sqldelight", name = "coroutines-extensions", version.ref = "sqldelight" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
 
+android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
+kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin"}
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
@@ -58,3 +64,7 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin"}
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 roborazzi = { id = "io.github.takahirom.roborazzi", version.ref = "roborazzi" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight"}
+# build-logic plugins
+sayitalarm-android-application = { id = "sayitalarm.android.application", version = "unspecified" }
+sayitalarm-android-library = { id = "sayitalarm.android.library", version = "unspecified" }
+sayitalarm-jvm-library = { id = "sayitalarm.jvm.library", version = "unspecified" }

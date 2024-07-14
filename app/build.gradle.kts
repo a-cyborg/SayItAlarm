@@ -1,6 +1,5 @@
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.sayitalarm.android.application)
     alias(libs.plugins.roborazzi)
 }
 
@@ -8,18 +7,11 @@ val projectPackage = "org.a_cyb.sayitalarm"
 
 android {
     namespace = projectPackage
-    compileSdk = 34
 
     defaultConfig {
         applicationId = "org.a_cyb.sayitalarm"
-        minSdk = 24
-        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
-        vectorDrawables {
-            useSupportLibrary = true
-        }
     }
 
     buildTypes {
@@ -36,15 +28,6 @@ android {
         }
     }
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    kotlinOptions {
-        jvmTarget = "17"
-    }
-
     buildFeatures {
         compose = true
         buildConfig = true
@@ -58,10 +41,6 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
-    }
-
-    kotlin.sourceSets.all {
-        languageSettings.enableLanguageFeature("DataObjects")
     }
 
     configurations.implementation {
@@ -101,15 +80,11 @@ dependencies {
     implementation(libs.koin.androidx.compose)
 
     // Debug
-    testImplementation(kotlin("test"))
     testImplementation(libs.androidx.compose.ui.test)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.robolectric)
     testImplementation(libs.androidx.navigation.testing)
-    testImplementation(libs.roborazzi)
-    testImplementation(libs.roborazzi.compose)
-    testImplementation(libs.roborazzi.junit.rule)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.testManifest)
-    testImplementation(project(":util"))
+    testImplementation(libs.bundles.roborazzi)
 }

@@ -94,7 +94,7 @@ class TimeFormatterSpec {
     fun `When format is called with a hour before noon hour it maps to a 12-hour format string in korean`() {
         // Given
         ShadowSettings.set24HourTimeFormat(false)
-        Locale.setDefault(Locale.KOREAN)
+        context.resources.configuration.setLocale(Locale.KOREAN)
 
         val formatter = TimeFormatter(context)
         val hour = Hour(8)
@@ -104,14 +104,14 @@ class TimeFormatterSpec {
         val formattedTime = formatter.format(hour, minutes)
 
         // Then
-        formattedTime mustBe "8:02 오전"
+        formattedTime mustBe "오전 8:02"
     }
 
     @Test
     fun `When format is called with a hour after noon hour it maps to a 12-hour format string in korean`() {
         // Given
         ShadowSettings.set24HourTimeFormat(false)
-        Locale.setDefault(Locale.KOREAN)
+        context.resources.configuration.setLocale(Locale.KOREAN)
 
         val formatter = TimeFormatter(context)
         val hour = Hour(23)
@@ -121,6 +121,6 @@ class TimeFormatterSpec {
         val formattedTime = formatter.format(hour, minutes)
 
         // Then
-        formattedTime mustBe "11:33 오후"
+        formattedTime mustBe "오후 11:33"
     }
 }

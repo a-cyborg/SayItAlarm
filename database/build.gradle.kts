@@ -1,6 +1,5 @@
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.sayitalarm.android.library)
     alias(libs.plugins.sqldelight)
 }
 
@@ -9,20 +8,6 @@ val dbName = "SayItDB"
 
 android {
     namespace = projectPackage
-    compileSdk = 34
-
-    defaultConfig {
-        minSdk = 24
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    kotlinOptions {
-        jvmTarget = "17"
-    }
 }
 
 sqldelight {
@@ -39,9 +24,7 @@ dependencies {
     implementation(libs.koin.android)
 
     // Debug
-    testImplementation(kotlin("test"))
     testImplementation(libs.sqldelight.sqliteDriver)
     testImplementation(libs.antibytes.fixture)
     testImplementation(libs.mockk)
-    testImplementation(projects.util)
 }

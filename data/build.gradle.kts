@@ -1,32 +1,15 @@
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.sayitalarm.android.library)
 }
 
-val projectPackage = "org.a_cyb.sayitalarm.data"
-
 android {
-    namespace = projectPackage
-    compileSdk = 34
-
-    defaultConfig {
-        minSdk = 24
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
+    namespace = "org.a_cyb.sayitalarm.data"
 
     @Suppress("UnstableApiUsage")
     testOptions {
         unitTests {
             isIncludeAndroidResources = true
         }
-    }
-
-    kotlinOptions {
-        jvmTarget = "17"
     }
 }
 
@@ -40,11 +23,9 @@ dependencies {
     implementation(libs.koin.android)
 
     // Debug
-    testImplementation(kotlin("test"))
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.turbine)
     testImplementation(libs.sqldelight.sqliteDriver)
     testImplementation(libs.mockk)
     testImplementation(libs.antibytes.fixture)
-    testImplementation(projects.util)
 }
