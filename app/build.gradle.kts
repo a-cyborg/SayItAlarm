@@ -81,10 +81,10 @@ dependencies {
 
     // Debug
     testImplementation(libs.androidx.compose.ui.test)
-    testImplementation(libs.junit.jupiter)
-    testImplementation(libs.robolectric)
     testImplementation(libs.androidx.navigation.testing)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.testManifest)
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.robolectric)
     testImplementation(libs.bundles.roborazzi)
 }

@@ -63,7 +63,7 @@ fun IconButtonDeleteText(onClick: () -> Unit) {
 
 @Composable
 fun IconButtonDone(onClick: () -> Unit) {
-    IconButton(onClick = onClick) {
+    TextButton(onClick = onClick) {
         TextTitleAttentionMedium(text = stringResource(id = R.string.done))
     }
 }
@@ -81,7 +81,7 @@ fun IconButtonEdit(onClick: () -> Unit) {
 
 @Composable
 fun IconButtonEditText(onClick: () -> Unit) {
-    IconButton(onClick = onClick) {
+    TextButton(onClick = onClick) {
         TextTitleAttentionMedium(text = stringResource(id = R.string.edit))
     }
 }
