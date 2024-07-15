@@ -10,15 +10,15 @@ import java.util.Locale
 import android.content.Context
 import android.icu.text.DateFormatSymbols
 import android.icu.text.ListFormatter
+import android.os.Build
 import org.a_cyb.sayitalarm.presentation.formatter.R
 
 class WeekdayFormatter(
     private val context: Context,
-    locale: Locale = Locale.getDefault(),
+    private val locale: Locale = Locale.getDefault(),
 ) : WeekdayFormatterContract {
 
     private val dateFormatSymbols = DateFormatSymbols.getInstance(locale)
-    private val listFormatter = ListFormatter.getInstance(locale)
 
     private fun getStringRes(id: Int) = context.getString(id)
 
@@ -48,7 +48,16 @@ class WeekdayFormatter(
         when (size) {
             0 -> ""
             1 -> first()
-            else -> listFormatter.format(this)
+            else -> joinDayNames(this)
+        }
+
+    private fun joinDayNames(dayNames: List<String>): String =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            ListFormatter
+                .getInstance(locale)
+                .format(dayNames)
+        } else {
+            dayNames.joinToString(", ")
         }
 
     companion object {
