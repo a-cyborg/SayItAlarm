@@ -14,6 +14,8 @@ import org.a_cyb.sayitalarm.presentation.viewmodel.AddViewModel
 import org.a_cyb.sayitalarm.presentation.viewmodel.EditViewModel
 import org.a_cyb.sayitalarm.presentation.viewmodel.ListViewModel
 import org.a_cyb.sayitalarm.presentation.viewmodel.SettingsViewModel
+import org.a_cyb.sayitalarm.presentation.viewmodel.converter.AlarmUIConverterContract
+import org.a_cyb.sayitalarm.presentation.viewmodel.converter.AlarmUiConverter
 import org.a_cyb.sayitalarm.presentation.viewmodel.mapper.AlarmMapper
 import org.a_cyb.sayitalarm.presentation.viewmodel.mapper.AlarmMapperContract
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -23,11 +25,11 @@ import org.koin.dsl.module
 
 val viewModelModule: Module = module {
     viewModel {
-        AddViewModel(get(), get(), get(), get())
+        AddViewModel(get(), get(), get())
     } bind AddContract.AddViewModel::class
 
     viewModel {
-        EditViewModel(get(), get(), get(), get(), get())
+        EditViewModel(get(), get(), get(), get())
     } bind EditContract.EditViewModel::class
 
     viewModel {
@@ -40,5 +42,9 @@ val viewModelModule: Module = module {
 
     single<AlarmMapperContract> {
         AlarmMapper(get(), get(), get(), get())
+    }
+
+    factory<AlarmUIConverterContract> {
+        AlarmUiConverter(get(), get())
     }
 }

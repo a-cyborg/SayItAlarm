@@ -24,9 +24,6 @@ import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
 import org.a_cyb.sayitalarm.entity.AlertType
 import org.a_cyb.sayitalarm.entity.Hour
 import org.a_cyb.sayitalarm.entity.Minute
-import org.a_cyb.sayitalarm.presentation.formatter.enum.EnumFormatterContract
-import org.a_cyb.sayitalarm.presentation.formatter.time.TimeFormatterContract
-import org.a_cyb.sayitalarm.presentation.formatter.weekday.WeekdayFormatterContract
 import org.a_cyb.sayitalarm.presentation.AddContract
 import org.a_cyb.sayitalarm.presentation.AddContract.AddState.Initial
 import org.a_cyb.sayitalarm.presentation.AddContract.AddState.Success
@@ -37,6 +34,10 @@ import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.SelectableAlertType
 import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.TimeUI
 import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.WeeklyRepeatUI
 import org.a_cyb.sayitalarm.presentation.command.SaveCommand
+import org.a_cyb.sayitalarm.presentation.formatter.enum.EnumFormatterContract
+import org.a_cyb.sayitalarm.presentation.formatter.time.TimeFormatterContract
+import org.a_cyb.sayitalarm.presentation.formatter.weekday.WeekdayFormatterContract
+import org.a_cyb.sayitalarm.presentation.viewmodel.converter.AlarmUiConverter
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.AlertTypeFormatterFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.FakeAlarmData
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.RingtoneResolverFake
@@ -61,6 +62,7 @@ class AddViewModelSpec {
     private val ringtoneResolver: RingtoneResolverContract = RingtoneResolverFake()
     private val mapper: AlarmMapperContract =
         AlarmMapper(timeFormatter, weeklyRepeatFormatter, alertTypeFormatter, ringtoneResolver)
+    private val converter: AlarmUiConverter = AlarmUiConverter(timeFormatter, weeklyRepeatFormatter)
 
     private val interactor: InteractorContract.AddInteractor = mockk(relaxed = true)
 
@@ -70,7 +72,7 @@ class AddViewModelSpec {
     fun setup() {
         Dispatchers.setMain(StandardTestDispatcher())
 
-        viewModel = AddViewModel(interactor, timeFormatter, weeklyRepeatFormatter, mapper)
+        viewModel = AddViewModel(interactor, mapper, converter)
     }
 
     @AfterTest
@@ -246,6 +248,7 @@ class AddViewModelSpec {
             viewModel.setAlertType(alertTypeName)
             viewModel.setRingtone(ringtoneUI)
             viewModel.setScripts(alarm.sayItScripts)
+            skipItems(6)
 
             // When
             viewModel.save()

@@ -17,13 +17,13 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
-import org.a_cyb.sayitalarm.presentation.formatter.duration.DurationFormatterContract
-import org.a_cyb.sayitalarm.presentation.formatter.time.TimeFormatterContract
-import org.a_cyb.sayitalarm.presentation.formatter.weekday.WeekdayFormatterContract
 import org.a_cyb.sayitalarm.presentation.AddContract
 import org.a_cyb.sayitalarm.presentation.EditContract
 import org.a_cyb.sayitalarm.presentation.ListContract
 import org.a_cyb.sayitalarm.presentation.SettingsContract
+import org.a_cyb.sayitalarm.presentation.formatter.duration.DurationFormatterContract
+import org.a_cyb.sayitalarm.presentation.formatter.time.TimeFormatterContract
+import org.a_cyb.sayitalarm.presentation.formatter.weekday.WeekdayFormatterContract
 import org.a_cyb.sayitalarm.presentation.viewmodel.mapper.AlarmMapperContract
 import org.koin.core.parameter.parametersOf
 import org.koin.dsl.koinApplication

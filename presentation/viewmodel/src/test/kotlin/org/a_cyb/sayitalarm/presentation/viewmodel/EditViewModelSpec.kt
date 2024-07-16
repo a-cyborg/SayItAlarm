@@ -19,7 +19,6 @@ import kotlinx.coroutines.test.setMain
 import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
 import org.a_cyb.sayitalarm.entity.Hour
 import org.a_cyb.sayitalarm.entity.Minute
-import org.a_cyb.sayitalarm.system_service.ringtone_resolver.RingtoneResolverContract
 import org.a_cyb.sayitalarm.presentation.AlarmPanelContract
 import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.AlarmUI
 import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.AlertTypeUI
@@ -35,6 +34,8 @@ import org.a_cyb.sayitalarm.presentation.command.SaveCommand
 import org.a_cyb.sayitalarm.presentation.formatter.enum.EnumFormatterContract
 import org.a_cyb.sayitalarm.presentation.formatter.time.TimeFormatterContract
 import org.a_cyb.sayitalarm.presentation.formatter.weekday.WeekdayFormatterContract
+import org.a_cyb.sayitalarm.presentation.viewmodel.converter.AlarmUIConverterContract
+import org.a_cyb.sayitalarm.presentation.viewmodel.converter.AlarmUiConverter
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.AlertTypeFormatterFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.EditInteractorFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.EditInteractorFake.InvokedType
@@ -44,6 +45,7 @@ import org.a_cyb.sayitalarm.presentation.viewmodel.fake.TimeFormatterFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.WeekdayFormatterFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.mapper.AlarmMapper
 import org.a_cyb.sayitalarm.presentation.viewmodel.mapper.AlarmMapperContract
+import org.a_cyb.sayitalarm.system_service.ringtone_resolver.RingtoneResolverContract
 import org.a_cyb.sayitalarm.util.fulfils
 import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Test
@@ -59,6 +61,7 @@ class EditViewModelSpec {
     private val weeklyRepeatFormatter: WeekdayFormatterContract = WeekdayFormatterFake()
     private val alertTypeFormatter: EnumFormatterContract.AlertTypeFormatter = AlertTypeFormatterFake()
     private val ringtoneManager: RingtoneResolverContract = RingtoneResolverFake()
+    private val alarmUiConverter: AlarmUIConverterContract = AlarmUiConverter(timeFormatter, weeklyRepeatFormatter)
     private val mapper: AlarmMapperContract =
         AlarmMapper(timeFormatter, weeklyRepeatFormatter, alertTypeFormatter, ringtoneManager)
 
@@ -66,9 +69,8 @@ class EditViewModelSpec {
         EditViewModel(
             alarmId,
             interactor,
-            timeFormatter,
-            weeklyRepeatFormatter,
-            mapper
+            mapper,
+            alarmUiConverter,
         )
     }
 

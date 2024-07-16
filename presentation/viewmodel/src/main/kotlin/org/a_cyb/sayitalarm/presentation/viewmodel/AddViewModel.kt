@@ -7,9 +7,8 @@
 package org.a_cyb.sayitalarm.presentation.viewmodel
 
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
 import org.a_cyb.sayitalarm.entity.Alarm
@@ -21,122 +20,78 @@ import org.a_cyb.sayitalarm.entity.Minute
 import org.a_cyb.sayitalarm.entity.Ringtone
 import org.a_cyb.sayitalarm.entity.SayItScripts
 import org.a_cyb.sayitalarm.entity.WeeklyRepeat
-import org.a_cyb.sayitalarm.presentation.formatter.time.TimeFormatterContract
-import org.a_cyb.sayitalarm.presentation.formatter.weekday.WeekdayFormatterContract
 import org.a_cyb.sayitalarm.presentation.AddContract
 import org.a_cyb.sayitalarm.presentation.AddContract.AddState
-import org.a_cyb.sayitalarm.presentation.AddContract.AddState.Error
 import org.a_cyb.sayitalarm.presentation.AddContract.AddState.Initial
 import org.a_cyb.sayitalarm.presentation.AddContract.AddState.Success
 import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.AlarmUI
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.AlertTypeUI
 import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.RingtoneUI
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.SelectableAlertType
 import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.SelectableRepeat
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.TimeUI
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.WeeklyRepeatUI
 import org.a_cyb.sayitalarm.presentation.command.CommandContract.Command
 import org.a_cyb.sayitalarm.presentation.command.CommandContract.CommandReceiver
+import org.a_cyb.sayitalarm.presentation.viewmodel.converter.AlarmUIConverterContract
 import org.a_cyb.sayitalarm.presentation.viewmodel.mapper.AlarmMapperContract
 
 class AddViewModel(
     private val interactor: InteractorContract.AddInteractor,
-    private val timeFormatter: TimeFormatterContract,
-    private val weeklyRepeatFormatter: WeekdayFormatterContract,
     private val mapper: AlarmMapperContract,
+    private val converter: AlarmUIConverterContract,
 ) : AddContract.AddViewModel, ViewModel() {
 
     private val _state: MutableStateFlow<AddState> = MutableStateFlow(Initial(getDefaultAlarmUI()))
-    override val state: StateFlow<AddState> = _state.stateIn(
-        scope = scope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = Initial(getDefaultAlarmUI())
-    )
+    override val state: StateFlow<AddState> = _state.asStateFlow()
 
     private fun getDefaultAlarmUI(): AlarmUI {
         return mapper.mapToAlarmUI(defaultAlarm)
     }
 
-    private fun updateSuccessOrError(setValueAction: AlarmUI.() -> AlarmUI) {
-        val updated = _state.value
-            .alarmUI
-            .setValueAction()
-
-        when (_state.value) {
-            is Success, is Initial -> Success(updated)
-            else -> Error(updated)
-        }.updateState()
-    }
-
-    private fun AddState.updateState() {
-        _state.update { this }
-    }
-
     override fun setTime(hour: Hour, minute: Minute) {
-        updateSuccessOrError {
+        updateStateWithCopy {
             copy(
-                timeUI = TimeUI(
-                    hour.hour,
-                    minute.minute,
-                    timeFormatter.format(hour, minute)
-                )
+                timeUI = converter.convertAsTimeUi(hour, minute)
             )
+        }
+    }
+
+    private fun updateStateWithCopy(valueCopy: AlarmUI.() -> AlarmUI) {
+        _state.update {
+            Success(_state.value.alarmUI.valueCopy())
         }
     }
 
     override fun setWeeklyRepeat(selectableRepeats: List<SelectableRepeat>) {
-        updateSuccessOrError {
+        updateStateWithCopy {
             copy(
-                weeklyRepeatUI = WeeklyRepeatUI(
-                    selectableRepeats.format(),
-                    selectableRepeats
-                )
+                weeklyRepeatUI = converter.convertAsWeeklyRepeatUi(selectableRepeats)
             )
         }
     }
 
-    private fun List<SelectableRepeat>.format(): String {
-        val codes = filter { it.selected }
-            .map { it.code }
-            .toSet()
-
-        return weeklyRepeatFormatter.formatAbbr(codes)
-    }
-
     override fun setLabel(label: String) {
-        updateSuccessOrError {
+        updateStateWithCopy {
             copy(label = label)
         }
     }
 
     override fun setAlertType(alertTypeName: String) {
-        updateSuccessOrError {
-            copy(alertTypeUI = getUpdatedAlertTypeUI(alertTypeName))
+        updateStateWithCopy {
+            copy(
+                alertTypeUI = converter.convertToAlertTypeUi(
+                    _state.value.alarmUI.alertTypeUI.selectableAlertType,
+                    alertTypeName
+                )
+            )
         }
     }
 
-    private fun getUpdatedAlertTypeUI(chosenName: String): AlertTypeUI {
-        val selectableAlertTypes = _state.value.alarmUI
-            .alertTypeUI
-            .selectableAlertType
-            .map {
-                SelectableAlertType(
-                    it.name,
-                    it.name == chosenName
-                )
-            }
-
-        return AlertTypeUI(selectableAlertTypes)
-    }
-
     override fun setRingtone(ringtoneUI: RingtoneUI) {
-        updateSuccessOrError {
+        updateStateWithCopy {
             copy(ringtoneUI = ringtoneUI)
         }
     }
 
     override fun setScripts(scripts: SayItScripts) {
-        updateSuccessOrError {
+        updateStateWithCopy {
             copy(sayItScripts = scripts.scripts)
         }
     }
