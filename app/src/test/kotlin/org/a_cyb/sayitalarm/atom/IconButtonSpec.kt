@@ -353,4 +353,28 @@ class IconButtonSpec : RoborazziTest() {
 
         assertTrue(hasBeenCalled)
     }
+
+    @Test
+    fun `It renders a IconButtonRequestPermission`() {
+        subjectUnderTest.setContent {
+            IconButtonRequestPermission {}
+        }
+    }
+
+    @Test
+    fun `Given IconButtonRequestPermission click is called it propagates the given action`() {
+        var hasBeenCalled = false
+
+        subjectUnderTest.setContent {
+            IconButtonRequestPermission {
+                hasBeenCalled = true
+            }
+        }
+
+        subjectUnderTest
+            .onNodeWithText(getString(R.string.request_permission))
+            .performClick()
+
+        assertTrue(hasBeenCalled)
+    }
 }

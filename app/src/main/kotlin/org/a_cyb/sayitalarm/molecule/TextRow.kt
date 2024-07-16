@@ -21,7 +21,10 @@ import org.a_cyb.sayitalarm.token.Spacing
 
 @Composable
 fun TextRowTitleAndInfo(title: String, info: String = "") {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(horizontal = Spacing.m)
+    ) {
         TextTitleStandardLarge(text = title)
         SpacerLarge()
         TextBodyStandardLarge(text = info)

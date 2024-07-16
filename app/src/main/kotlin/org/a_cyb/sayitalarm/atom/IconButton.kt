@@ -150,3 +150,10 @@ fun IconButtonConfirmText(onClick: () -> Unit) {
         TextTitleAttentionMedium(text = stringResource(id = R.string.confirm))
     }
 }
+
+@Composable
+fun IconButtonRequestPermission(onClick: () -> Unit) {
+    TextButton(onClick = onClick) {
+        TextTitleAttentionMedium(text = stringResource(id = R.string.request_permission))
+    }
+}

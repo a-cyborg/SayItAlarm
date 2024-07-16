@@ -14,6 +14,7 @@ import org.a_cyb.sayitalarm.atom.ColumnScreenStandard
 import org.a_cyb.sayitalarm.atom.IconButtonNavigateBack
 import org.a_cyb.sayitalarm.atom.IconButtonSaveText
 import org.a_cyb.sayitalarm.atom.SpacerMedium
+import org.a_cyb.sayitalarm.molecule.PermissionLauncher
 import org.a_cyb.sayitalarm.molecule.TextRowWarning
 import org.a_cyb.sayitalarm.molecule.TopAppBarMedium
 import org.a_cyb.sayitalarm.organism.AlarmPanel
@@ -26,8 +27,9 @@ fun AddScreen(
     viewModel: AddContract.AddViewModel,
     navigateToList: () -> Unit,
 ) {
-
     val state = viewModel.state.collectAsState()
+
+    PermissionLauncher()
 
     ColumnScreenStandard {
         AddTopAppBar(
