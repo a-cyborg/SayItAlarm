@@ -34,7 +34,6 @@ import org.a_cyb.sayitalarm.presentation.command.CommandContract.CommandReceiver
 import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.koin.core.context.stopKoin
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 
@@ -44,10 +43,6 @@ import org.robolectric.annotation.GraphicsMode
 class EditScreenSpec : RoborazziTest() {
 
     private val alarmUI = FakeAlarmUIData.defaultAlarmUI
-
-    init {
-        stopKoin()
-    }
 
     private fun stringRes(id: Int) = subjectUnderTest.activity.getString(id)
 

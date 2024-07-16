@@ -28,7 +28,6 @@ import org.a_cyb.sayitalarm.presentation.command.CommandContract
 import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.koin.core.context.stopKoin
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 
@@ -38,10 +37,6 @@ import org.robolectric.annotation.GraphicsMode
 class ListScreenSpec : RoborazziTest() {
 
     private fun getString(id: Int) = subjectUnderTest.activity.getString(id)
-
-    init {
-        stopKoin()
-    }
 
     @Test
     fun `When ListViewModel is in success state with alarm data it displays them`() {
