@@ -6,29 +6,49 @@
 
 package org.a_cyb.sayitalarm.navigation
 
+import android.app.Application
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertHasClickAction
-import androidx.compose.ui.test.hasSetTextAction
-import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performImeAction
-import androidx.compose.ui.test.performTextInput
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import io.mockk.every
+import io.mockk.mockk
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.test.runTest
+import org.a_cyb.sayitalarm.FakeAlarmUIData
 import org.a_cyb.sayitalarm.R
+import org.a_cyb.sayitalarm.presentation.AddContract
+import org.a_cyb.sayitalarm.presentation.AddContract.AddState
+import org.a_cyb.sayitalarm.presentation.EditContract
+import org.a_cyb.sayitalarm.presentation.ListContract
+import org.a_cyb.sayitalarm.presentation.SettingsContract
+import org.a_cyb.sayitalarm.presentation.viewmodel.AddViewModel
+import org.a_cyb.sayitalarm.presentation.viewmodel.EditViewModel
+import org.a_cyb.sayitalarm.presentation.viewmodel.ListViewModel
+import org.a_cyb.sayitalarm.presentation.viewmodel.SettingsViewModel
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.context.GlobalContext
+import org.koin.core.context.GlobalContext.startKoin
+import org.koin.core.context.loadKoinModules
+import org.koin.dsl.bind
+import org.koin.dsl.module
+import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 
 @RunWith(AndroidJUnit4::class)
+@Config(application = TestApplication::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class SiaNavHostSpec {
 
@@ -37,6 +57,8 @@ class SiaNavHostSpec {
 
     @Before
     fun setup() {
+        setupViewModelMockk()
+
         composeTestRule.setContent {
             val navController = TestNavHostController(LocalContext.current)
             navController.navigatorProvider.addNavigator(ComposeNavigator())
@@ -66,7 +88,7 @@ class SiaNavHostSpec {
     }
 
     @Test
-    fun `When add icon button is clicked it navigate to AddScreen`() {
+    fun `When add icon button is clicked it navigate to AddScreen`() = runTest {
         with(composeTestRule) {
             // When
             onNodeWithContentDescription(getStringRes(R.string.action_add_alarm))
@@ -141,7 +163,6 @@ class SiaNavHostSpec {
     fun `When alarm list row edit button is clicked it navigate to EditScreen`() {
         with(composeTestRule) {
             // Given
-            insertAlarm(this)
             onNodeWithText(getStringRes(R.string.edit)).performClick()
 
             // When
@@ -158,7 +179,6 @@ class SiaNavHostSpec {
     fun `When it is in EditScreen and navigateBack button is clicked it returns to ListScreen`() {
         with(composeTestRule) {
             // Given
-            insertAlarm(this)
             onNodeWithText(getStringRes(R.string.edit))
                 .performClick()  // Enter edit mode
             onNodeWithContentDescription(getStringRes(R.string.action_edit))
@@ -174,16 +194,51 @@ class SiaNavHostSpec {
         }
     }
 
-    private fun insertAlarm(composeTestRule: ComposeTestRule) {
-        with(composeTestRule) {
-            onNodeWithContentDescription(getStringRes(R.string.action_add_alarm))
-                .performClick()
-            onNode(hasSetTextAction())
-                .performTextInput("TestLabel")
-            onNode(hasSetTextAction())
-                .performImeAction()  // Done
-            onNodeWithText(getStringRes(R.string.save))
-                .performClick()  // Save
+    private fun setupViewModelMockk() {
+        val listViewModelFake: ListViewModel = mockk(relaxed = true)
+        val addViewModelFake: AddViewModel = mockk(relaxed = true)
+        val editViewModelFake: EditViewModel = mockk(relaxed = true)
+        val settingsViewModelFake: SettingsViewModel = mockk(relaxed = true)
+
+        val listState = MutableStateFlow<ListContract.ListState>(
+            ListContract.ListState.Success(
+                listOf(
+                    ListContract.AlarmInfo(
+                        id = 1,
+                        time = "6:00 AM",
+                        labelAndWeeklyRepeat = "Wake Up, every weekday",
+                        enabled = true
+                    )
+                )
+            )
+        )
+        every { listViewModelFake.state } returns
+            listState.asStateFlow()
+        every { addViewModelFake.state } returns
+            MutableStateFlow(AddState.Initial(FakeAlarmUIData.defaultAlarmUI)).asStateFlow()
+        every { editViewModelFake.state } returns
+            MutableStateFlow(EditContract.EditViewModel.EditState.Initial).asStateFlow()
+        every { settingsViewModelFake.state } returns
+            MutableStateFlow(SettingsContract.SettingsState.Initial).asStateFlow()
+
+        val viewmodelModule =
+            module {
+                viewModel { listViewModelFake } bind ListContract.ListViewModel::class
+                viewModel { addViewModelFake } bind AddContract.AddViewModel::class
+                viewModel { editViewModelFake } bind EditContract.EditViewModel::class
+                viewModel { settingsViewModelFake } bind SettingsContract.SettingsViewModel::class
+            }
+
+        loadKoinModules(viewmodelModule)
+    }
+}
+
+class TestApplication : Application() {
+    override fun onCreate() {
+        super.onCreate()
+
+        if (GlobalContext.getOrNull() == null) {
+            startKoin {}
         }
     }
 }
