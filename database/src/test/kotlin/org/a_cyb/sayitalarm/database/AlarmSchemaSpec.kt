@@ -68,17 +68,7 @@ class AlarmSchemaSpec {
         // Given
         val alarmEntity = getRandomAlarmEntity(hour = 11, minute = 11)
 
-        sayItDB.alarmQueries.insert(
-            alarmEntity.hour,
-            alarmEntity.minute,
-            alarmEntity.weeklyRepeat,
-            alarmEntity.label,
-            alarmEntity.enabled,
-            alarmEntity.alertType,
-            alarmEntity.ringtone,
-            alarmEntity.alarmType,
-            alarmEntity.sayItScripts
-        )
+        insertAlarm(listOf(alarmEntity))
 
         val fetched = sayItDB.alarmQueries
             .getAllByTimeAsc()
@@ -117,17 +107,7 @@ class AlarmSchemaSpec {
         // Given
         val alarmEntity = getRandomAlarmEntity(enabled = false)
 
-        sayItDB.alarmQueries.insert(
-            alarmEntity.hour,
-            alarmEntity.minute,
-            alarmEntity.weeklyRepeat,
-            alarmEntity.label,
-            alarmEntity.enabled,
-            alarmEntity.alertType,
-            alarmEntity.ringtone,
-            alarmEntity.alarmType,
-            alarmEntity.sayItScripts
-        )
+        insertAlarm(listOf(alarmEntity))
 
         val fetched = sayItDB.alarmQueries
             .getAllByTimeAsc()
@@ -159,20 +139,7 @@ class AlarmSchemaSpec {
             getRandomAlarmEntity(hour = 20, minute = 33),
         )
 
-        alarmEntities.asReversed().forEach {
-            sayItDB.alarmQueries
-                .insert(
-                    it.hour,
-                    it.minute,
-                    it.weeklyRepeat,
-                    it.label,
-                    it.enabled,
-                    it.alertType,
-                    it.ringtone,
-                    it.alarmType,
-                    it.sayItScripts
-                )
-        }
+        insertAlarm(alarmEntities)
 
         // When
         val fetched = sayItDB.alarmQueries
@@ -204,20 +171,7 @@ class AlarmSchemaSpec {
         // Given
         val alarmEntities = List(5) { getRandomAlarmEntity() }
 
-        alarmEntities.forEach {
-            sayItDB.alarmQueries
-                .insert(
-                    it.hour,
-                    it.minute,
-                    it.weeklyRepeat,
-                    it.label,
-                    it.enabled,
-                    it.alertType,
-                    it.ringtone,
-                    it.alarmType,
-                    it.sayItScripts
-                )
-        }
+        insertAlarm(alarmEntities)
 
         val fetchId: Long = fixture.fixture(range = 1..5)
 
@@ -249,24 +203,48 @@ class AlarmSchemaSpec {
     }
 
     @Test
+    fun `When getAllEnabledAlarm is executed it returns enabled alarms`() {
+        // Given
+        val alarmEntities = List(5) { idx ->
+            getRandomAlarmEntity(enabled = idx % 2 == 0)
+        }
+
+        insertAlarm(alarmEntities)
+
+        // When
+        val actual = sayItDB.alarmQueries
+            .getAllEnabledAlarm()
+            .executeAsList()
+
+        val expected = alarmEntities
+            .mapIndexed { idx, alarm -> alarm.copy(id = (idx + 1).toLong()) }
+            .filterIndexed { idx, _ -> idx % 2 == 0 }
+
+        // Then
+        actual mustBe expected
+    }
+
+    @Test
+    fun `When getAllEnabledAlarm is called it returns empty list`() {
+        val alarmEntities = List(5) { getRandomAlarmEntity(enabled = false) }
+
+        insertAlarm(alarmEntities)
+
+        // When
+        val expected = sayItDB.alarmQueries
+            .getAllEnabledAlarm()
+            .executeAsList()
+
+        // Then
+        expected mustBe emptyList()
+    }
+
+    @Test
     fun `When delete query is executed it deletes row`() {
         // Given
         val alarmEntities = List(5) { getRandomAlarmEntity() }
 
-        alarmEntities.forEach {
-            sayItDB.alarmQueries
-                .insert(
-                    it.hour,
-                    it.minute,
-                    it.weeklyRepeat,
-                    it.label,
-                    it.enabled,
-                    it.alertType,
-                    it.ringtone,
-                    it.alarmType,
-                    it.sayItScripts
-                )
-        }
+        insertAlarm(alarmEntities)
 
         val idToDelete: Long = fixture.fixture(range = 1..6)
 
@@ -274,34 +252,21 @@ class AlarmSchemaSpec {
         sayItDB.alarmQueries
             .delete(idToDelete)
 
-        val allAlarmEntities = sayItDB.alarmQueries
+        val actual = sayItDB.alarmQueries
             .getAllByTimeAsc()
             .executeAsList()
 
         // Then
-        alarmEntities
-            .isEmpty() mustBe false
-        allAlarmEntities
-            .firstOrNull { it.id == idToDelete } mustBe null
+        actual.isEmpty() mustBe false
+        actual.firstOrNull { it.id == idToDelete } mustBe null
     }
 
     @Test
     fun `When delete query is executed with non existent id nothing changes`() {
         // Given
-        val alarmEntity = getRandomAlarmEntity()
+        val alarmEntities = List(5) { getRandomAlarmEntity() }
 
-        sayItDB.alarmQueries
-            .insert(
-                alarmEntity.hour,
-                alarmEntity.minute,
-                alarmEntity.weeklyRepeat,
-                alarmEntity.label,
-                alarmEntity.enabled,
-                alarmEntity.alertType,
-                alarmEntity.ringtone,
-                alarmEntity.alarmType,
-                alarmEntity.sayItScripts
-            )
+        insertAlarm(alarmEntities)
 
         val initialEntities = sayItDB.alarmQueries
             .getAllByTimeAsc()
@@ -317,6 +282,23 @@ class AlarmSchemaSpec {
 
         // Then
         initialEntities mustBe entitiesAfterDelete
+    }
+
+    private fun insertAlarm(alarms: List<Alarm>) {
+        alarms.forEach {
+            sayItDB.alarmQueries
+                .insert(
+                    it.hour,
+                    it.minute,
+                    it.weeklyRepeat,
+                    it.label,
+                    it.enabled,
+                    it.alertType,
+                    it.ringtone,
+                    it.alarmType,
+                    it.sayItScripts
+                )
+        }
     }
 
     private fun getRandomAlarmEntity(

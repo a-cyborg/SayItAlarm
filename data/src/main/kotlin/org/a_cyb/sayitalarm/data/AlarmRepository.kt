@@ -44,6 +44,13 @@ class AlarmRepository(
                 .map { it.toAlarm() }
         }
 
+    override fun getAllEnabledAlarm(scope: CoroutineScope): Deferred<List<Alarm>> =
+        scope.async(context = dispatcher) {
+            dataSource
+                .getAllEnabled()
+                .map { it.toAlarm() }
+        }
+
     override fun save(alarm: Alarm, scope: CoroutineScope) {
         scope.launch(context = dispatcher) {
             dataSource.insert(alarm.toDTO())

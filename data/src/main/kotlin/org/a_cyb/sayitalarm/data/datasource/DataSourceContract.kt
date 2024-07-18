@@ -16,6 +16,7 @@ interface DataSourceContract {
     interface AlarmDataSource {
         fun getAllByTimeAsc(dispatcher: CoroutineDispatcher): Flow<Result<List<AlarmDTO>>>
         suspend fun getById(id: Long): Result<AlarmDTO>
+        suspend fun getAllEnabled(): List<AlarmDTO>
         suspend fun insert(alarmDto: AlarmDTO)
         suspend fun update(alarmDto: AlarmDTO)
         suspend fun updateEnabled(id: Long, enabled: Boolean)

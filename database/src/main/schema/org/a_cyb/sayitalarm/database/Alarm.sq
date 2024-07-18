@@ -35,6 +35,10 @@ getById:
 SELECT * FROM Alarm
 WHERE id = ?;
 
+getAllEnabledAlarm:
+SELECT * FROM Alarm
+WHERE enabled = 1;
+
 delete:
 DELETE FROM Alarm
 WHERE id = ?;

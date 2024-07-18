@@ -40,6 +40,11 @@ class AlarmDataSource(
             Result.failure(IllegalStateException())
         }
 
+    override suspend fun getAllEnabled(): List<DTO> =
+        alarmQueries
+            .getAllEnabledAlarm()
+            .executeAsList()
+
     override suspend fun insert(alarmDto: DTO) {
         alarmQueries.insert(
             alarmDto.hour,

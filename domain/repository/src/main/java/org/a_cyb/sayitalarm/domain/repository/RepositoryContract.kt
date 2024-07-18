@@ -14,6 +14,7 @@ interface RepositoryContract {
     interface AlarmRepository {
         fun getAllAlarms(): Flow<Result<List<Alarm>>>
         fun getAlarm(id: Long, scope: CoroutineScope): Deferred<Result<Alarm>>
+        fun getAllEnabledAlarm(scope: CoroutineScope): Deferred<List<Alarm>>
         fun save(alarm: Alarm, scope: CoroutineScope)
         fun update(alarm: Alarm, scope: CoroutineScope)
         fun updateEnabled(id: Long, enabled: Boolean, scope: CoroutineScope)
