@@ -14,6 +14,10 @@ android {
         versionName = "1.0"
     }
 
+    compileOptions {
+        isCoreLibraryDesugaringEnabled = true
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = true
@@ -71,6 +75,7 @@ dependencies {
     implementation(projects.alarmService)
     implementation(projects.systemService.ringtoneResolver)
 
+    coreLibraryDesugaring(libs.android.tools.desugarJdk)
     implementation(libs.androidx.lifecycle.runtimeCompose)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)

@@ -5,6 +5,9 @@ plugins {
 android {
     namespace = "org.a_cyb.sayitalarm.presentation.viewmodel"
 
+    compileOptions {
+        isCoreLibraryDesugaringEnabled = true
+    }
 
     @Suppress("UnstableApiUsage")
     testOptions {
@@ -19,6 +22,7 @@ dependencies {
     implementation(projects.presentation.formatter)
     implementation(projects.systemService.ringtoneResolver)
 
+    coreLibraryDesugaring(libs.android.tools.desugarJdk)
     implementation(libs.androidx.lifecycle.viewmodelAndroid)
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)

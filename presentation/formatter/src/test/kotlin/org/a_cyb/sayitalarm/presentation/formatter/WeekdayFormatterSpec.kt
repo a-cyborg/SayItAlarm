@@ -6,13 +6,13 @@
 
 package org.a_cyb.sayitalarm.presentation.formatter
 
-import java.util.Calendar.FRIDAY
-import java.util.Calendar.MONDAY
-import java.util.Calendar.SATURDAY
-import java.util.Calendar.SUNDAY
-import java.util.Calendar.THURSDAY
-import java.util.Calendar.TUESDAY
-import java.util.Calendar.WEDNESDAY
+import java.time.DayOfWeek.FRIDAY
+import java.time.DayOfWeek.MONDAY
+import java.time.DayOfWeek.SATURDAY
+import java.time.DayOfWeek.SUNDAY
+import java.time.DayOfWeek.THURSDAY
+import java.time.DayOfWeek.TUESDAY
+import java.time.DayOfWeek.WEDNESDAY
 import java.util.Locale
 import android.content.Context
 import android.content.res.Resources
@@ -94,7 +94,7 @@ class WeekdayFormatterSpec {
         val formatter = WeekdayFormatter(context, locale)
 
         // When
-        val formatted = formatter.formatAbbr(setOf(MONDAY, WEDNESDAY, FRIDAY))
+        val formatted = formatter.formatAbbr(setOf(MONDAY.value, WEDNESDAY.value, FRIDAY.value))
 
         // Then
         formatted mustBe "Mon, Wed, and Fri"
@@ -110,7 +110,7 @@ class WeekdayFormatterSpec {
         val formatter = WeekdayFormatter(context, locale)
 
         // When
-        val formatted = formatter.formatFull(setOf(TUESDAY, THURSDAY, SATURDAY))
+        val formatted = formatter.formatFull(setOf(TUESDAY.value, THURSDAY.value, SATURDAY.value))
 
         // Then
         formatted mustBe "Tuesday, Thursday, and Saturday"
@@ -126,7 +126,7 @@ class WeekdayFormatterSpec {
         val formatter = WeekdayFormatter(context, locale)
 
         // When
-        val formatted = formatter.formatFull(setOf(FRIDAY))
+        val formatted = formatter.formatFull(setOf(FRIDAY.value))
 
         // Then
         formatted mustBe "Friday"
@@ -143,7 +143,15 @@ class WeekdayFormatterSpec {
 
         // When
         val formatted = formatter.formatAbbr(
-            setOf(MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY)
+            setOf(
+                MONDAY.value,
+                TUESDAY.value,
+                WEDNESDAY.value,
+                THURSDAY.value,
+                FRIDAY.value,
+                SATURDAY.value,
+                SUNDAY.value,
+            )
         )
 
         // Then
@@ -160,7 +168,15 @@ class WeekdayFormatterSpec {
         val formatter = WeekdayFormatter(context, locale)
 
         // when
-        val formatted = formatter.formatFull(setOf(FRIDAY, THURSDAY, WEDNESDAY, TUESDAY, MONDAY))
+        val formatted = formatter.formatFull(
+            setOf(
+                MONDAY.value,
+                TUESDAY.value,
+                WEDNESDAY.value,
+                THURSDAY.value,
+                FRIDAY.value,
+            )
+        )
 
         // then
         formatted mustBe "every weekday"
@@ -176,7 +192,7 @@ class WeekdayFormatterSpec {
         val formatter = WeekdayFormatter(context, locale)
 
         // when
-        val formatted = formatter.formatFull(setOf(SATURDAY, SUNDAY))
+        val formatted = formatter.formatFull(setOf(SATURDAY.value, SUNDAY.value))
 
         // Then
         formatted mustBe "every weekend"
@@ -209,7 +225,7 @@ class WeekdayFormatterSpec {
         val formatter = WeekdayFormatter(context, locale)
 
         // When
-        val formatted = formatter.formatAbbr(setOf(MONDAY, WEDNESDAY, FRIDAY))
+        val formatted = formatter.formatAbbr(setOf(MONDAY.value, WEDNESDAY.value, FRIDAY.value))
 
         // Then
         formatted mustBe "월, 수 및 금"
@@ -226,7 +242,7 @@ class WeekdayFormatterSpec {
         val formatter = WeekdayFormatter(context, locale)
 
         // When
-        val formatted = formatter.formatFull(setOf(MONDAY, WEDNESDAY, FRIDAY))
+        val formatted = formatter.formatFull(setOf(MONDAY.value, WEDNESDAY.value, FRIDAY.value))
 
         // Then
         formatted mustBe "월요일, 수요일 및 금요일"
@@ -244,7 +260,15 @@ class WeekdayFormatterSpec {
 
         // When
         val formatted = formatter.formatAbbr(
-            setOf(MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY)
+            setOf(
+                MONDAY.value,
+                TUESDAY.value,
+                WEDNESDAY.value,
+                THURSDAY.value,
+                FRIDAY.value,
+                SATURDAY.value,
+                SUNDAY.value
+            )
         )
 
         // Then
@@ -262,7 +286,15 @@ class WeekdayFormatterSpec {
         val formatter = WeekdayFormatter(context, locale)
 
         // When
-        val formatted = formatter.formatFull(setOf(MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY))
+        val formatted = formatter.formatFull(
+            setOf(
+                MONDAY.value,
+                TUESDAY.value,
+                WEDNESDAY.value,
+                THURSDAY.value,
+                FRIDAY.value
+            )
+        )
 
         // Then
         formatted mustBe "주중"
@@ -279,7 +311,7 @@ class WeekdayFormatterSpec {
         val formatter = WeekdayFormatter(context, locale)
 
         // When
-        val formatted = formatter.formatFull(setOf(SUNDAY, SATURDAY))
+        val formatted = formatter.formatFull(setOf(SUNDAY.value, SATURDAY.value))
 
         // Then
         formatted mustBe "주말"

@@ -22,9 +22,19 @@ class WeekdayFormatter(
 
     private fun getStringRes(id: Int) = context.getString(id)
 
-    override fun formatAbbr(days: Set<Int>): String = format(days.toSortedSet(), isAbbr = true)
-    override fun formatFull(days: Set<Int>): String = format(days.toSortedSet(), isAbbr = false)
-    override fun formatFull(vararg day: Int): String = formatFull(day.toSortedSet())
+    override fun formatAbbr(days: Set<Int>): String = format(days.convertToIcu(), isAbbr = true)
+    override fun formatFull(days: Set<Int>): String = format(days.convertToIcu(), isAbbr = false)
+    override fun formatFull(vararg day: Int): String = formatFull(day.toSet())
+
+    private fun Set<Int>.convertToIcu(): Set<Int> =
+        this.map { it.convertToIcu() }
+            .toSortedSet()
+
+    private fun Int.convertToIcu(): Int =
+        when (this) {
+            7 -> 1
+            else -> this + 1
+        }
 
     private fun format(days: Set<Int>, isAbbr: Boolean): String {
         return when (days) {

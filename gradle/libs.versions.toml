@@ -1,5 +1,6 @@
 [versions]
 accompanist = "0.34.0"
+androidToolsDesugarJdk = "2.0.3"
 androidxActivity = "1.9.0"
 androidGradlePlugin = "8.2.2"
 androidxComposeUi = "1.6.8"
@@ -25,6 +26,7 @@ roborazzi = ["roborazzi", "roborazzi-compose", "roborazzi-junit-rule"]
 
 [libraries]
 accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist" }
+android-tools-desugarJdk = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "androidToolsDesugarJdk"}
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidxActivity" }
 androidx-lifecycle-viewmodelAndroid = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-android", version.ref = "androidxLifecycle" }
 androidx-lifecycle-runtimeCompose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidxLifecycle"}

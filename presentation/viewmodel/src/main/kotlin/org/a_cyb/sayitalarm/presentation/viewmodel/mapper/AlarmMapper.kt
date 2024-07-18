@@ -6,7 +6,7 @@
 
 package org.a_cyb.sayitalarm.presentation.viewmodel.mapper
 
-import java.util.Calendar
+import java.time.DayOfWeek
 import org.a_cyb.sayitalarm.entity.Alarm
 import org.a_cyb.sayitalarm.entity.AlarmType
 import org.a_cyb.sayitalarm.entity.AlertType
@@ -16,10 +16,6 @@ import org.a_cyb.sayitalarm.entity.Minute
 import org.a_cyb.sayitalarm.entity.Ringtone
 import org.a_cyb.sayitalarm.entity.SayItScripts
 import org.a_cyb.sayitalarm.entity.WeeklyRepeat
-import org.a_cyb.sayitalarm.presentation.formatter.enum.EnumFormatterContract
-import org.a_cyb.sayitalarm.presentation.formatter.time.TimeFormatterContract
-import org.a_cyb.sayitalarm.presentation.formatter.weekday.WeekdayFormatterContract
-import org.a_cyb.sayitalarm.system_service.ringtone_resolver.RingtoneResolverContract
 import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.AlarmUI
 import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.AlertTypeUI
 import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.RingtoneUI
@@ -27,6 +23,10 @@ import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.SelectableAlertType
 import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.SelectableRepeat
 import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.TimeUI
 import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.WeeklyRepeatUI
+import org.a_cyb.sayitalarm.presentation.formatter.enum.EnumFormatterContract
+import org.a_cyb.sayitalarm.presentation.formatter.time.TimeFormatterContract
+import org.a_cyb.sayitalarm.presentation.formatter.weekday.WeekdayFormatterContract
+import org.a_cyb.sayitalarm.system_service.ringtone_resolver.RingtoneResolverContract
 
 class AlarmMapper(
     private val timeFormatter: TimeFormatterContract,
@@ -98,7 +98,7 @@ class AlarmMapper(
     }
 
     private fun Set<Int>.toSelectableRepeats(): List<SelectableRepeat> {
-        return SELECTABLE_REPEAT_CODE_RANGE.map { code ->
+        return WEEKLY_REPEAT_RANGE.map { code ->
             SelectableRepeat(
                 name = weeklyRepeatFormatter.formatFull(code),
                 code = code,
@@ -132,6 +132,6 @@ class AlarmMapper(
 
     companion object {
         private val DEFAULT_ALERT_TYPE = AlertType.SOUND_AND_VIBRATE
-        private val SELECTABLE_REPEAT_CODE_RANGE = (Calendar.SUNDAY..Calendar.SATURDAY)
+        private val WEEKLY_REPEAT_RANGE = (DayOfWeek.MONDAY.value..DayOfWeek.SUNDAY.value)
     }
 }
