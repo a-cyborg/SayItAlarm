@@ -16,7 +16,6 @@ import org.a_cyb.sayitalarm.entity.Settings
 import org.a_cyb.sayitalarm.entity.Snooze
 import org.a_cyb.sayitalarm.entity.Theme
 import org.a_cyb.sayitalarm.entity.TimeOut
-import org.a_cyb.sayitalarm.presentation.formatter.duration.DurationFormatterContract
 import org.a_cyb.sayitalarm.presentation.SettingsContract
 import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState
 import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState.Error
@@ -25,6 +24,7 @@ import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState.Success
 import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsUI
 import org.a_cyb.sayitalarm.presentation.SettingsContract.TimeInput
 import org.a_cyb.sayitalarm.presentation.command.CommandContract
+import org.a_cyb.sayitalarm.presentation.formatter.duration.DurationFormatterContract
 
 class SettingsViewModel(
     private val interactor: InteractorContract.SettingsInteractor,
@@ -93,7 +93,7 @@ class SettingsViewModel(
         get() = TIME_OUT_RANGE.step(10).map(::toTimeInput)
 
     override val snoozes: List<TimeInput>
-        get() = SNOOZE_RANGE.step(10).map(::toTimeInput)
+        get() = SNOOZE_RANGE.step(5).map(::toTimeInput)
 
     override val themes: List<String>
         get() = Theme.entries.map { it.name.toCamelCase() }
