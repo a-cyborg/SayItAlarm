@@ -12,6 +12,6 @@ import org.koin.dsl.module
 
 val alarmServiceModule = module {
     single<AlarmServiceContract.AlarmScheduler> {
-        AlarmScheduler()
+        AlarmScheduler(get())
     }
 }

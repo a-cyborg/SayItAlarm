@@ -18,9 +18,10 @@ import org.a_cyb.sayitalarm.entity.WeeklyRepeat
 fun getNextAlarmTime(hour: Hour, minute: Minute, weeklyRepeat: WeeklyRepeat): LocalDateTime {
     val alarmTime = LocalTime.of(hour.hour, minute.minute)
     val alarmDate = getNextDayOfAlarm(alarmTime, weeklyRepeat)
-    val alarmDateTime = LocalDateTime.of(alarmDate, alarmTime)
 
-    return alarmDateTime.withSecond(0).withNano(0)
+    return LocalDateTime.of(alarmDate, alarmTime)
+        .withSecond(0)
+        .withNano(0)
 }
 
 private fun getNextDayOfAlarm(alarmTime: LocalTime, weeklyRepeat: WeeklyRepeat): LocalDate {

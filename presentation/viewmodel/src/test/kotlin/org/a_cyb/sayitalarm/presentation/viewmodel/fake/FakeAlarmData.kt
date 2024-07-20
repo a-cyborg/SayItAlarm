@@ -55,10 +55,10 @@ object FakeAlarmData {
             ringtone = Ringtone("file://workout_time_alarm.mp3"),
             alarmType = AlarmType.SAY_IT,
             sayItScripts = SayItScripts(
+                "To keep the body in good health is a duty otherwise " +
+                    "we shall not be able to keep our mind strong and clear.",
                 "My body is strong.",
-                "I am thankful for my body.",
-                "My body helps me play.",
-                "I am worthy of investing time and effort into my physical health."
+                "Fitness is my therapy.",
             )
         ),
         Alarm(

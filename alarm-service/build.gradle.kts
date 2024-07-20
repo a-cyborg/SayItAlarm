@@ -24,6 +24,7 @@ dependencies {
     implementation(projects.entity)
     implementation(projects.domain.alarmService)
     implementation(projects.domain.repository)
+    implementation(projects.systemService.permissionManager)
 
     coreLibraryDesugaring(libs.android.tools.desugarJdk)
     implementation(libs.androidx.work.workRuntime)
@@ -32,8 +33,9 @@ dependencies {
 
     // Debug
     testImplementation(libs.androidx.test.ext)
+    testImplementation(libs.androidx.work.workTesting)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.robolectric)
     testImplementation(libs.mockk)
-    testImplementation(libs.androidx.work.workTesting)
+    testImplementation(libs.antibytes.fixture)
 }
