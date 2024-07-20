@@ -67,7 +67,9 @@ internal class AlarmSchedulerWorker(
 
             if (pendingIntentToCheckDuplicate == null) {
                 val nextAlarmTime = getNextAlarmTime(alarm.hour, alarm.minute, alarm.weeklyRepeat)
-                val zoneAlarmTime = ZonedDateTime.of(nextAlarmTime, ZoneId.systemDefault())
+                val zoneAlarmTime = ZonedDateTime
+                    .of(nextAlarmTime, ZoneId.systemDefault())
+                    .toEpochSecond() * 1000
 
                 val alarmPendingIntent = PendingIntent.getBroadcast(
                     applicationContext,
@@ -78,7 +80,7 @@ internal class AlarmSchedulerWorker(
 
                 alarmManager.setAlarmClock(
                     AlarmManager.AlarmClockInfo(
-                        zoneAlarmTime.toEpochSecond(),
+                        zoneAlarmTime,
                         alarmPendingIntent
                     ),
                     alarmPendingIntent
