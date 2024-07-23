@@ -6,8 +6,6 @@
 
 package org.a_cyb.sayitalarm.alarm_service
 
-import java.time.ZoneId
-import java.time.ZonedDateTime
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
@@ -53,34 +51,35 @@ internal class AlarmSchedulerWorker(
         val settings = getSettingsOrDefault()
 
         enabledAlarms.forEach { alarm ->
-            val intent: Intent = getBaseIntent().apply {
-                putExtras(resolveAlarmDataBundle(alarm, settings))
-            }
+            val receiverIntent: Intent =
+                Intent(applicationContext, AlarmBroadcastReceiver::class.java)
+                    .setAction(AlarmScheduler.ACTION_DELIVER_ALARM)
+                    .setFlags(Intent.FLAG_RECEIVER_FOREGROUND)
+                    .putExtras(getAlarmDataBundle(alarm, settings))
 
-            val pendingIntentToCheckDuplicate =
-                PendingIntent.getBroadcast(
+            val pendingIntentToCheckDuplicate = PendingIntent
+                .getBroadcast(
                     applicationContext,
                     alarm.id.toInt(),
-                    intent,
+                    receiverIntent,
                     PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE
                 )
 
             if (pendingIntentToCheckDuplicate == null) {
-                val nextAlarmTime = getNextAlarmTime(alarm.hour, alarm.minute, alarm.weeklyRepeat)
-                val zoneAlarmTime = ZonedDateTime
-                    .of(nextAlarmTime, ZoneId.systemDefault())
-                    .toEpochSecond() * 1000
+                val nextAlarmTimeInMills =
+                    getNextAlarmTimeInMills(alarm.hour, alarm.minute, alarm.weeklyRepeat)
 
-                val alarmPendingIntent = PendingIntent.getBroadcast(
-                    applicationContext,
-                    alarm.id.toInt(),
-                    intent,
-                    PendingIntent.FLAG_IMMUTABLE
-                )
+                val alarmPendingIntent = PendingIntent
+                    .getBroadcast(
+                        applicationContext,
+                        alarm.id.toInt(),
+                        receiverIntent,
+                        PendingIntent.FLAG_IMMUTABLE
+                    )
 
                 alarmManager.setAlarmClock(
                     AlarmManager.AlarmClockInfo(
-                        zoneAlarmTime,
+                        nextAlarmTimeInMills,
                         alarmPendingIntent
                     ),
                     alarmPendingIntent
@@ -97,12 +96,9 @@ internal class AlarmSchedulerWorker(
 
     private suspend fun getAllEnabledAlarms(): List<Alarm> {
         val alarmRepository: AlarmRepository by inject(AlarmRepository::class.java)
-        val coroutineDispatcher: CoroutineDispatcher by inject(
-            CoroutineDispatcher::class.java,
-            named("io")
-        )
+        val dispatcher: CoroutineDispatcher by inject(CoroutineDispatcher::class.java, named("io"))
 
-        return withContext(coroutineDispatcher) {
+        return withContext(dispatcher) {
             alarmRepository
                 .getAllEnabledAlarm(this)
                 .await()
@@ -115,25 +111,19 @@ internal class AlarmSchedulerWorker(
         val settings: Settings = settingsRepository.getSettings()
             .firstOrNull()
             ?.getOrNull()
-            ?: Settings(
-                TimeOut(SETTINGS_DEFAULT_TIME_OUT),
-                Snooze(SETTINGS_DEFAULT_SNOOZE),
-                Theme.entries[SETTINGS_DEFAULT_THEME],
-            )
+            ?: getDefaultSettings()
 
         return settings
     }
 
-    private fun getBaseIntent(): Intent =
-        Intent(
-            applicationContext,
-            AlarmBroadcastReceiver::class.java
-        ).apply {
-            setAction(AlarmScheduler.ACTION_DELIVER_ALARM)
-            setFlags(Intent.FLAG_RECEIVER_FOREGROUND)
-        }
+    private fun getDefaultSettings(): Settings =
+        Settings(
+            TimeOut(SETTINGS_DEFAULT_TIME_OUT),
+            Snooze(SETTINGS_DEFAULT_SNOOZE),
+            Theme.entries[SETTINGS_DEFAULT_THEME],
+        )
 
-    private fun resolveAlarmDataBundle(alarm: Alarm, settings: Settings): Bundle =
+    private fun getAlarmDataBundle(alarm: Alarm, settings: Settings): Bundle =
         Bundle().apply {
             putLong(BUNDLE_KEY_ALARM_ID, alarm.id)
             putBoolean(BUNDLE_KEY_IS_REPEAT, alarm.weeklyRepeat.weekdays.isNotEmpty())

@@ -14,24 +14,20 @@ import androidx.core.content.ContextCompat
 class AlarmBroadcastReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-
         when (intent.action) {
             AlarmScheduler.ACTION_DELIVER_ALARM -> {
-                AlarmAlertWakeLock
-                    .acquireWakeLock(context)
+                AlarmAlertWakeLock.acquireWakeLock(context)
 
-                val alarmRingServiceIntent =
-                    Intent(context, AlarmRingService::class.java)
+                val alarmAlertServiceIntent =
+                    Intent(context, AlarmAlertService::class.java)
                         .putExtras(intent.extras!!)
 
-                ContextCompat
-                    .startForegroundService(
-                        context,
-                        alarmRingServiceIntent
-                    )
+                ContextCompat.startForegroundService(
+                    context,
+                    alarmAlertServiceIntent
+                )
 
-                AlarmAlertWakeLock
-                    .releaseWakeLock()
+                AlarmAlertWakeLock.releaseWakeLock()
             }
 
             Intent.ACTION_BOOT_COMPLETED, Intent.ACTION_TIMEZONE_CHANGED -> {

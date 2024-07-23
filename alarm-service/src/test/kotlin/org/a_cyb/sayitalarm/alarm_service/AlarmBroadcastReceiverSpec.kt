@@ -9,10 +9,8 @@ package org.a_cyb.sayitalarm.alarm_service
 import kotlin.test.Test
 import kotlin.test.assertTrue
 import android.Manifest
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.os.Bundle
 import androidx.core.content.ContextCompat
@@ -48,20 +46,25 @@ class AlarmBroadcastReceiverSpec {
         // Given
         mockkStatic(ContextCompat::class)
 
+        val intent = Intent(AlarmScheduler.ACTION_DELIVER_ALARM)
+            .putExtras(Bundle())
+
         // When
-        AlarmBroadcastReceiver().onReceive(
-            context,
-            Intent(AlarmScheduler.ACTION_DELIVER_ALARM).putExtras(Bundle())
-        )
+        AlarmBroadcastReceiver()
+            .onReceive(context, intent)
 
         val captureIntent = slot<Intent>()
 
-        // Then
         verify(exactly = 1) {
-            ContextCompat.startForegroundService(any(), capture(captureIntent))
+            ContextCompat.startForegroundService(
+                any(),
+                capture(captureIntent)
+            )
         }
 
-        captureIntent.captured.component!!.className mustBe AlarmRingService::class.qualifiedName
+        // Then
+        captureIntent.captured.component!!.className mustBe
+            AlarmAlertService::class.qualifiedName
     }
 
     @Test
@@ -109,19 +112,11 @@ class AlarmBroadcastReceiverSpec {
     }
 
     private fun isContainsAlarmBroadcastReceiver(resolvedInfo: List<ResolveInfo>): Boolean {
-        val alarmBroadcastReceiverName = context.packageManager
-            .getReceiverInfo(
-                ComponentName(context, AlarmBroadcastReceiver::class.java),
-                PackageManager.GET_RECEIVERS
-            )
-            .name
-
         resolvedInfo.forEach {
-            if (it.activityInfo.name == alarmBroadcastReceiverName) {
+            if (it.activityInfo.name == AlarmBroadcastReceiver::class.qualifiedName) {
                 return true
             }
         }
-
         return false
     }
 }

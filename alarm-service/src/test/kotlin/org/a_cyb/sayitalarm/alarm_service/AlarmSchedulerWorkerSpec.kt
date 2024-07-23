@@ -19,6 +19,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -77,12 +78,6 @@ class AlarmSchedulerWorkerSpec {
         context = mockk(relaxed = true)
         alarmSchedulerWorker = TestListenableWorkerBuilder<AlarmSchedulerWorker>(context).build()
 
-        every { context.getSystemService(AlarmManager::class.java) } returns
-            alarmManager
-
-        every { settingsRepository.getSettings() } returns
-            flow { emit(Result.success(settings)) }
-
         val module = module {
             single<RepositoryContract.AlarmRepository> { alarmRepository }
             single<RepositoryContract.SettingsRepository> { settingsRepository }
@@ -99,13 +94,22 @@ class AlarmSchedulerWorkerSpec {
         stopKoin()
     }
 
+    private fun setupMockk(alarms: List<Alarm>) {
+        every { context.getSystemService(AlarmManager::class.java) } returns
+            alarmManager
+
+        every { settingsRepository.getSettings() } returns
+            flow { emit(Result.success(settings)) }
+
+        every { alarmRepository.getAllEnabledAlarm(any()) } returns
+            CompletableDeferred(alarms)
+    }
+
     @Test
     fun `When doWork is invoked it schedules enabled alarms in the database`() = runTest {
         // Given
         val alarms = getRandomEnabledAlarms(size = 2)
-
-        every { alarmRepository.getAllEnabledAlarm(any()) } returns
-            async { alarms }
+        setupMockk(alarms)
 
         // When
         val result = alarmSchedulerWorker.doWork()
@@ -122,9 +126,7 @@ class AlarmSchedulerWorkerSpec {
 
         // Call for the first time with 2 alarms.
         val alarms = getRandomEnabledAlarms(size = 2)
-
-        every { alarmRepository.getAllEnabledAlarm(any()) } returns
-            async { alarms }
+        setupMockk(alarms)
 
         alarmSchedulerWorker.doWork()
 
@@ -148,8 +150,7 @@ class AlarmSchedulerWorkerSpec {
     fun `When doWork is invoked it schedules broadcast pendingIntent`() = runTest {
         // Given
         val alarm = getRandomAlarm(id = 1, enabled = true)
-        every { alarmRepository.getAllEnabledAlarm(any()) } returns
-            async { listOf(alarm) }
+        setupMockk(listOf(alarm))
 
         val capturedIntent = slot<PendingIntent>()
         every { alarmManager.setAlarmClock(any(), capture(capturedIntent)) } answers { mockk() }
@@ -168,14 +169,14 @@ class AlarmSchedulerWorkerSpec {
     fun `When doWork is invoked it constructs intent with alarm data`() = runTest {
         // Given
         val alarm = getRandomAlarm(id = 1, enabled = true)
-        every { alarmRepository.getAllEnabledAlarm(any()) } returns async { listOf(alarm) }
+        setupMockk(listOf(alarm))
 
         val capturedIntent = slot<PendingIntent>()
         every { alarmManager.setAlarmClock(any(), capture(capturedIntent)) } answers { mockk() }
 
+        // When
         alarmSchedulerWorker.doWork()
 
-        // When
         val actual = extractIntent(capturedIntent.captured)
 
         // Then
