@@ -15,8 +15,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.mockk.every
 import io.mockk.mockkStatic
 import io.mockk.unmockkAll
-import org.a_cyb.sayitalarm.entity.Hour
-import org.a_cyb.sayitalarm.entity.Minute
 import org.a_cyb.sayitalarm.entity.WeeklyRepeat
 import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.After
@@ -43,8 +41,7 @@ class AlarmTimeUtilSpec {
 
         // When
         val actual = getNextAlarmTime(
-            Hour(13),
-            Minute(33),
+            LocalTime.of(13, 33),
             WeeklyRepeat(
                 DayOfWeek.MONDAY.value,
                 DayOfWeek.WEDNESDAY.value,
@@ -66,8 +63,7 @@ class AlarmTimeUtilSpec {
 
         // When
         val actual = getNextAlarmTime(
-            Hour(7),
-            Minute(0),
+            LocalTime.of(7, 0),
             WeeklyRepeat(DayOfWeek.THURSDAY.value)
         )
 
@@ -85,8 +81,7 @@ class AlarmTimeUtilSpec {
 
         // When
         val actual = getNextAlarmTime(
-            Hour(7),
-            Minute(0),
+            LocalTime.of(7, 0),
             WeeklyRepeat(DayOfWeek.THURSDAY.value)
         )
 
@@ -104,8 +99,7 @@ class AlarmTimeUtilSpec {
 
         // When
         val actual = getNextAlarmTime(
-            Hour(7),
-            Minute(0),
+            LocalTime.of(7, 0),
             WeeklyRepeat()
         )
 

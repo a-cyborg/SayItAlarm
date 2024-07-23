@@ -10,13 +10,25 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.temporal.TemporalAdjusters
 import org.a_cyb.sayitalarm.entity.Hour
 import org.a_cyb.sayitalarm.entity.Minute
 import org.a_cyb.sayitalarm.entity.WeeklyRepeat
 
-fun getNextAlarmTime(hour: Hour, minute: Minute, weeklyRepeat: WeeklyRepeat): LocalDateTime {
-    val alarmTime = LocalTime.of(hour.hour, minute.minute)
+fun getNextAlarmTimeInMills(hour: Hour, minute: Minute, weeklyRepeat: WeeklyRepeat): Long {
+    val alarmLocalDateTime = getNextAlarmTime(
+        LocalTime.of(hour.hour, minute.minute),
+        weeklyRepeat
+    )
+
+    return ZonedDateTime
+        .of(alarmLocalDateTime, ZoneId.systemDefault())
+        .toEpochSecond() * 1000
+}
+
+fun getNextAlarmTime(alarmTime: LocalTime, weeklyRepeat: WeeklyRepeat): LocalDateTime {
     val alarmDate = getNextDayOfAlarm(alarmTime, weeklyRepeat)
 
     return LocalDateTime.of(alarmDate, alarmTime)
