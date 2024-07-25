@@ -65,10 +65,11 @@ object AlarmNotification {
     private fun getNotificationBuilder(context: Context, contentTitle: String): NotificationCompat.Builder =
         NotificationCompat.Builder(context, ALARM_NOTIFICATION_CHANNEL_ID)
             .setContentTitle(contentTitle)
+            .setSmallIcon(R.drawable.ic_notif_small)
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setCategory(NotificationCompat.CATEGORY_ALARM)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-            .setOngoing(true)
+            // .setOngoing(true)
             .setAutoCancel(false)
             .setWhen(0)
             .setOnlyAlertOnce(true)

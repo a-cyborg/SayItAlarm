@@ -49,6 +49,7 @@ class AlarmNotificationSpec {
             priority mustBe NotificationCompat.PRIORITY_MAX
             category mustBe NotificationCompat.CATEGORY_ALARM
             visibility mustBe NotificationCompat.VISIBILITY_PUBLIC
+            smallIcon.resId mustBe R.drawable.ic_notif_small
         }
 
         val pendingIntent = (Shadow.extract(actualNotification.fullScreenIntent) as ShadowPendingIntent)
