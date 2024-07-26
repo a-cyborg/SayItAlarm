@@ -17,6 +17,7 @@ import android.os.IBinder
 class AlertService : Service() {
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        println("[***] ${this::class.simpleName} onStartCommand is called")
 
         val bundle = intent.extras ?: Bundle()
 

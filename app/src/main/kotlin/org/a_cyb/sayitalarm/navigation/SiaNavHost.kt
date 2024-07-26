@@ -13,6 +13,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import org.a_cyb.sayitalarm.BuildConfig
+import org.a_cyb.sayitalarm.design_system.screen.AddScreen
+import org.a_cyb.sayitalarm.design_system.screen.EditScreen
+import org.a_cyb.sayitalarm.design_system.screen.ListScreen
+import org.a_cyb.sayitalarm.design_system.screen.SettingsScreen
 import org.a_cyb.sayitalarm.navigation.NavRoute.ADD_ROUTE
 import org.a_cyb.sayitalarm.navigation.NavRoute.EDIT_ARGUMENT_NAME
 import org.a_cyb.sayitalarm.navigation.NavRoute.EDIT_ROUTE
@@ -23,10 +28,6 @@ import org.a_cyb.sayitalarm.presentation.viewmodel.AddViewModel
 import org.a_cyb.sayitalarm.presentation.viewmodel.EditViewModel
 import org.a_cyb.sayitalarm.presentation.viewmodel.ListViewModel
 import org.a_cyb.sayitalarm.presentation.viewmodel.SettingsViewModel
-import org.a_cyb.sayitalarm.screen.AddScreen
-import org.a_cyb.sayitalarm.screen.EditScreen
-import org.a_cyb.sayitalarm.screen.ListScreen
-import org.a_cyb.sayitalarm.screen.SettingsScreen
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -69,7 +70,8 @@ fun SiaNavHost(
         composable(SETTINGS_ROUTE) {
             SettingsScreen(
                 viewModel = koinViewModel<SettingsViewModel>(),
-                navigateToList = navController::navigateBackToList
+                navigateToList = navController::navigateBackToList,
+                versionName = BuildConfig.VERSION_NAME,
             )
         }
     }

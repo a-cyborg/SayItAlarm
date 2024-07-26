@@ -11,7 +11,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
-import org.a_cyb.sayitalarm.token.Color
+import org.a_cyb.sayitalarm.design_system.token.Color
+import org.a_cyb.sayitalarm.navigation.SiaNavHost
 
 class MainActivity : ComponentActivity() {
 
@@ -24,6 +25,8 @@ class MainActivity : ComponentActivity() {
                 true -> Color.useDarkTheme()
                 false -> Color.useLightTheme()
             }
+
+            SiaNavHost()
         }
     }
 }

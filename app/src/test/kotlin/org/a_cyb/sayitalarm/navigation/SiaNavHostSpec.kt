@@ -22,8 +22,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.test.runTest
-import org.a_cyb.sayitalarm.FakeAlarmUIData
-import org.a_cyb.sayitalarm.R
+import org.a_cyb.sayitalarm.design_system.R
 import org.a_cyb.sayitalarm.presentation.AddContract
 import org.a_cyb.sayitalarm.presentation.AddContract.AddState
 import org.a_cyb.sayitalarm.presentation.EditContract

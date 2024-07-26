@@ -30,6 +30,7 @@ include(
     ":presentation",
     ":presentation:viewmodel",
     ":presentation:formatter",
+    ":design-system",
     ":alarm-service",
     ":alarm-service:ui",
     ":system-service:ringtone-resolver",

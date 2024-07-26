@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.sayitalarm.android.application)
-    alias(libs.plugins.roborazzi)
 }
 
 val projectPackage = "org.a_cyb.sayitalarm"
@@ -60,12 +59,9 @@ android {
     }
 }
 
-roborazzi {
-    outputDir.set(project.layout.projectDirectory.dir("src/test/snapshots/roborazzi/images"))
-}
-
 dependencies {
     implementation(projects.entity)
+    implementation(projects.designSystem)
     implementation(projects.domain.interactor)
     implementation(projects.database)
     implementation(projects.data)
@@ -81,17 +77,12 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material3.windowSizeClass)
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.accompanist.permissions)
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
 
     // Debug
     testImplementation(libs.androidx.compose.ui.test)
     testImplementation(libs.androidx.navigation.testing)
-    debugImplementation(libs.androidx.compose.ui.tooling)
-    debugImplementation(libs.androidx.compose.ui.testManifest)
-    testImplementation(libs.junit.jupiter)
     testImplementation(libs.robolectric)
-    testImplementation(libs.bundles.roborazzi)
     testImplementation(libs.mockk)
 }
