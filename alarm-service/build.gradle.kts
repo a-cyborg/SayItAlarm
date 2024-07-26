@@ -19,12 +19,11 @@ android {
     }
 }
 
-
 dependencies {
     implementation(projects.entity)
     implementation(projects.domain.alarmService)
     implementation(projects.domain.repository)
-    implementation(projects.systemService.permissionManager)
+    implementation(projects.alarmService.ui)
 
     coreLibraryDesugaring(libs.android.tools.desugarJdk)
     implementation(libs.androidx.work.workRuntime)

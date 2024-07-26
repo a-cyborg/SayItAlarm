@@ -10,6 +10,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import androidx.core.content.ContextCompat
+import org.a_cyb.sayitalarm.alarm_service.util.AlarmAlertWakeLock
 
 class AlarmBroadcastReceiver : BroadcastReceiver() {
 
@@ -18,13 +19,13 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
             AlarmScheduler.ACTION_DELIVER_ALARM -> {
                 AlarmAlertWakeLock.acquireWakeLock(context)
 
-                val alarmAlertServiceIntent =
-                    Intent(context, AlarmAlertService::class.java)
+                val alertServiceIntent =
+                    Intent(context, AlertService::class.java)
                         .putExtras(intent.extras!!)
 
                 ContextCompat.startForegroundService(
                     context,
-                    alarmAlertServiceIntent
+                    alertServiceIntent
                 )
 
                 AlarmAlertWakeLock.releaseWakeLock()

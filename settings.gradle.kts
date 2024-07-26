@@ -31,6 +31,7 @@ include(
     ":presentation:viewmodel",
     ":presentation:formatter",
     ":alarm-service",
+    ":alarm-service:ui",
     ":system-service:ringtone-resolver",
     ":system-service:permission-manager",
     ":util",

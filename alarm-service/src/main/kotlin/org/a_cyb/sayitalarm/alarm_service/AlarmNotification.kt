@@ -16,6 +16,7 @@ import android.os.Build
 import android.os.Bundle
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import org.a_cyb.sayitalarm.alarm_service.ui.AlarmActivity
 
 object AlarmNotification {
 
@@ -25,7 +26,7 @@ object AlarmNotification {
             context.getString(R.string.notification_alert_channel_name)
         )
 
-        val activityIntent = Intent(context, AlarmAlertActivity::class.java)
+        val activityIntent = Intent(context, AlarmActivity::class.java)
             .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NO_HISTORY)
             .putExtras(alarmBundle)

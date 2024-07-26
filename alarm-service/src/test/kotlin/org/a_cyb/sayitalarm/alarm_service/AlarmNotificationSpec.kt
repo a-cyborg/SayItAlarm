@@ -16,6 +16,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import org.a_cyb.sayitalarm.alarm_service.ui.AlarmActivity
 import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Before
 import org.junit.Test
@@ -62,7 +63,7 @@ class AlarmNotificationSpec {
         }
 
         with(pendingIntent.savedIntent) {
-            component!!.className mustBe AlarmAlertActivity::class.qualifiedName
+            component!!.className mustBe AlarmActivity::class.qualifiedName
             extras!!.getLong(AlarmScheduler.BUNDLE_KEY_ALARM_ID) mustBe 3
             flags mustBe (
                 Intent.FLAG_ACTIVITY_NEW_TASK

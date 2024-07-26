@@ -8,7 +8,6 @@ package org.a_cyb.sayitalarm.alarm_service
 
 import kotlin.test.Test
 import kotlin.test.assertTrue
-import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ResolveInfo
@@ -16,25 +15,17 @@ import android.os.Bundle
 import androidx.core.content.ContextCompat
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.rule.GrantPermissionRule
 import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.verify
 import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Before
-import org.junit.Rule
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class AlarmBroadcastReceiverSpec {
 
     private lateinit var context: Context
-
-    @get:Rule
-    val grantPermissionRule: GrantPermissionRule = GrantPermissionRule.grant(
-        Manifest.permission.FOREGROUND_SERVICE,
-        Manifest.permission.FOREGROUND_SERVICE_SPECIAL_USE,
-    )
 
     @Before
     fun setup() {
@@ -64,7 +55,7 @@ class AlarmBroadcastReceiverSpec {
 
         // Then
         captureIntent.captured.component!!.className mustBe
-            AlarmAlertService::class.qualifiedName
+            AlertService::class.qualifiedName
     }
 
     @Test
