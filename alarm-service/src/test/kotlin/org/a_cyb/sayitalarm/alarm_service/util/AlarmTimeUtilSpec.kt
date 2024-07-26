@@ -4,7 +4,7 @@
  * Use of this source code is governed by Apache v2.0
  */
 
-package org.a_cyb.sayitalarm.alarm_service
+package org.a_cyb.sayitalarm.alarm_service.util
 
 import kotlin.test.Test
 import java.time.DayOfWeek
