@@ -9,6 +9,7 @@ package org.a_cyb.sayitalarm.design_system.organism
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -29,13 +30,10 @@ import org.a_cyb.sayitalarm.design_system.atom.SpacerLarge
 import org.a_cyb.sayitalarm.design_system.atom.TextDisplayStandardLarge
 import org.a_cyb.sayitalarm.design_system.atom.TextFieldLabel
 import org.a_cyb.sayitalarm.design_system.atom.TextTitleStandardLarge
-import org.a_cyb.sayitalarm.entity.Hour
-import org.a_cyb.sayitalarm.entity.Minute
-import org.a_cyb.sayitalarm.entity.SayItScripts
 import org.a_cyb.sayitalarm.design_system.molecule.ActionRowCollapse
+import org.a_cyb.sayitalarm.design_system.molecule.PanelItemClickableBordered
 import org.a_cyb.sayitalarm.design_system.molecule.PanelItemStandard
 import org.a_cyb.sayitalarm.design_system.molecule.PanelItemStandardClickable
-import org.a_cyb.sayitalarm.design_system.molecule.PanelItemClickableBordered
 import org.a_cyb.sayitalarm.design_system.molecule.PanelItemWithPopupPicker
 import org.a_cyb.sayitalarm.design_system.molecule.PanelItemWithPopupPickerStandardWheel
 import org.a_cyb.sayitalarm.design_system.molecule.PopupPickerRepeat
@@ -43,6 +41,9 @@ import org.a_cyb.sayitalarm.design_system.molecule.PopupPickerRingtone
 import org.a_cyb.sayitalarm.design_system.molecule.PopupPickerSayItScript
 import org.a_cyb.sayitalarm.design_system.molecule.PopupPickerTime
 import org.a_cyb.sayitalarm.design_system.molecule.TextRowInfo
+import org.a_cyb.sayitalarm.entity.Hour
+import org.a_cyb.sayitalarm.entity.Minute
+import org.a_cyb.sayitalarm.entity.SayItScripts
 import org.a_cyb.sayitalarm.presentation.AlarmPanelContract
 import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.AlarmUI
 import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.RingtoneUI
@@ -63,6 +64,10 @@ fun AlarmPanel(
     executor: (CommandContract.Command<out CommandReceiver>) -> Unit,
 ) {
     val focusManager = LocalFocusManager.current
+
+    SideEffect {
+        focusManager.clearFocus()
+    }
 
     ColumnScreenStandardScrollableTapDetectable(
         onTap = { _ -> focusManager.clearFocus() }  // Clear focus from the label text field
