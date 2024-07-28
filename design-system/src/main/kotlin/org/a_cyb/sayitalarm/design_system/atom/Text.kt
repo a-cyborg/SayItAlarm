@@ -84,6 +84,15 @@ fun TextTitleAttentionMedium(text: String) {
 }
 
 @Composable
+fun TextTitleAttentionLarge(text: String) {
+    Text(
+        text = text,
+        color = Color.text.attention,
+        style = Font.title.l,
+    )
+}
+
+@Composable
 fun TextTitleWarningMedium(text: String) {
     Text(
         text = text,

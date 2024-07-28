@@ -47,6 +47,12 @@ fun TextTitleAttentionMediumPreview() {
 
 @Preview
 @Composable
+fun TextTitleAttentionLargePreview() {
+    TextTitleAttentionLarge(text = "SayIt")
+}
+
+@Preview
+@Composable
 fun TextTitleWarningPreview() {
     TextTitleWarningMedium(text = "SayIt")
 }

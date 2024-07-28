@@ -15,7 +15,6 @@ import org.a_cyb.sayitalarm.design_system.atom.IconButtonNavigateBack
 import org.a_cyb.sayitalarm.design_system.atom.IconButtonSaveText
 import org.a_cyb.sayitalarm.design_system.atom.SpacerMedium
 import org.a_cyb.sayitalarm.design_system.molecule.PermissionLauncher
-import org.a_cyb.sayitalarm.design_system.molecule.PermissionLauncher
 import org.a_cyb.sayitalarm.design_system.molecule.TextRowWarning
 import org.a_cyb.sayitalarm.design_system.molecule.TopAppBarMedium
 import org.a_cyb.sayitalarm.design_system.organism.AlarmPanel

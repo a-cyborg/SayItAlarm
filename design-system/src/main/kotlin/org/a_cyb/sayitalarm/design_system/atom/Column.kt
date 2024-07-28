@@ -86,3 +86,17 @@ fun ColumnScreenStandardScrollableTapDetectable(
         Footer()
     }
 }
+
+@Composable
+fun ColumnScreenVerticalCenter(content: @Composable ColumnScope.() -> Unit) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .fillMaxSize()
+            .windowInsetsPadding(WindowInsets.safeDrawing)
+            .background(Color.surface.standard),
+    ) {
+        content()
+    }
+}

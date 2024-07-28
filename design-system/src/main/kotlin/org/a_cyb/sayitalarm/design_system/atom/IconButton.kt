@@ -152,6 +152,13 @@ fun IconButtonConfirmText(onClick: () -> Unit) {
 }
 
 @Composable
+fun IconButtonSnoozeText(onClick: () -> Unit) {
+    TextButton(onClick = onClick) {
+        TextTitleAttentionMedium(text = stringResource(id = R.string.snooze))
+    }
+}
+
+@Composable
 fun IconButtonRequestPermission(onClick: () -> Unit) {
     TextButton(onClick = onClick) {
         TextTitleAttentionMedium(text = stringResource(id = R.string.request_permission))

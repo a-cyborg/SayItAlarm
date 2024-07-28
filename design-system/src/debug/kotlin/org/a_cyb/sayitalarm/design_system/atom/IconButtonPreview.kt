@@ -86,3 +86,9 @@ fun IconButtonCancelTextPreview() {
 fun IconButtonConfirmTextPreview() {
     IconButtonConfirmText {}
 }
+
+@Preview
+@Composable
+fun IconButtonSnoozeTextPreview() {
+    IconButtonSnoozeText {}
+}

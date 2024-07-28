@@ -348,6 +348,30 @@ class IconButtonSpec : RoborazziTest() {
     }
 
     @Test
+    fun `It renders a IconButtonSnoozeText`() {
+        subjectUnderTest.setContent {
+            IconButtonSnoozeText {}
+        }
+    }
+
+    @Test
+    fun `Given IconButtonSnoozeText click is called it propagates the given action`() {
+        var hasBeenCalled = false
+
+        subjectUnderTest.setContent {
+            IconButtonSnoozeText {
+                hasBeenCalled = true
+            }
+        }
+
+        subjectUnderTest
+            .onNodeWithText(getString(R.string.snooze))
+            .performClick()
+
+        assertTrue(hasBeenCalled)
+    }
+
+    @Test
     fun `It renders a IconButtonRequestPermission`() {
         subjectUnderTest.setContent {
             IconButtonRequestPermission {}

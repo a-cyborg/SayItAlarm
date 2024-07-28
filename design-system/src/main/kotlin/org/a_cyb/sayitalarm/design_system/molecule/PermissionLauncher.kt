@@ -50,9 +50,6 @@ private fun getPermissions(): List<String> {
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         permissions.add(Manifest.permission.POST_NOTIFICATIONS)
-    }
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         permissions.add(Manifest.permission.READ_MEDIA_AUDIO)
     } else {
         permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE)
