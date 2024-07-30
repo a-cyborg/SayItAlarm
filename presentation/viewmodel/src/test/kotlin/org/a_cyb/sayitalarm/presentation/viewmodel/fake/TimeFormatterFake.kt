@@ -15,6 +15,7 @@ import org.a_cyb.sayitalarm.presentation.formatter.time.TimeFormatterContract
 class TimeFormatterFake : TimeFormatterContract {
 
     private val timeFormat12H = SimpleDateFormat("h:mm a")
+
     override fun format(hour: Hour, minutes: Minute): String {
         val instance = Calendar.getInstance().apply {
             set(Calendar.HOUR_OF_DAY, hour.hour)

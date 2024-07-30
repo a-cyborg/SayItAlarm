@@ -18,6 +18,7 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
 import org.a_cyb.sayitalarm.presentation.AddContract
+import org.a_cyb.sayitalarm.presentation.AlarmContract
 import org.a_cyb.sayitalarm.presentation.EditContract
 import org.a_cyb.sayitalarm.presentation.ListContract
 import org.a_cyb.sayitalarm.presentation.SettingsContract
@@ -25,6 +26,7 @@ import org.a_cyb.sayitalarm.presentation.formatter.duration.DurationFormatterCon
 import org.a_cyb.sayitalarm.presentation.formatter.time.TimeFormatterContract
 import org.a_cyb.sayitalarm.presentation.formatter.weekday.WeekdayFormatterContract
 import org.a_cyb.sayitalarm.presentation.viewmodel.mapper.AlarmMapperContract
+import org.a_cyb.sayitalarm.presentation.viewmodel.time_flow.TimeFlowContract
 import org.koin.core.parameter.parametersOf
 import org.koin.dsl.koinApplication
 import org.koin.dsl.module
@@ -141,5 +143,38 @@ class ViewModelModuleSpec {
 
         // Then
         assertNotNull(settingsViewModel)
+    }
+
+    @Test
+    fun `It injects AlarmViewModel`() {
+        // Given
+        val koinApp = koinApplication {
+            modules(
+                viewModelModule,
+                formatterModule,
+            )
+        }
+
+        // When
+        val alarmViewModel = koinApp.koin.getOrNull<AlarmContract.AlarmViewModel>()
+
+        // Then
+        assertNotNull(alarmViewModel)
+    }
+
+    @Test
+    fun `It injects TimeFlow`() {
+        // Given
+        val koinApp = koinApplication {
+            modules(
+                viewModelModule,
+            )
+        }
+
+        // When
+        val timeFlow = koinApp.koin.getOrNull<TimeFlowContract>()
+
+        // Then
+        assertNotNull(timeFlow)
     }
 }

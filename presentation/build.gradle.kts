@@ -9,4 +9,6 @@ dependencies {
 
     // Debug
     testImplementation(libs.mockk)
+    testImplementation(projects.util)
+    testImplementation(kotlin("test"))
 }
