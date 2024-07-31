@@ -22,6 +22,10 @@ gradlePlugin {
             id = "sayitalarm.android.library"
             implementationClass = "AndroidLibraryConventionPlugin"
         }
+        register("androidLibraryCompose") {
+            id = "sayitalarm.android.library.compose"
+            implementationClass = "AndroidLibraryComposeConventionPlugin"
+        }
         register("jvmLibrary") {
             id = "sayitalarm.jvm.library"
             implementationClass = "JvmLibraryConventionPlugin"

@@ -32,12 +32,7 @@ android {
     }
 
     buildFeatures {
-        compose = true
         buildConfig = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.14"
     }
 
     packaging {
@@ -54,7 +49,6 @@ android {
     testOptions {
         unitTests {
             isReturnDefaultValues = true
-            isIncludeAndroidResources = true
         }
     }
 }
@@ -73,7 +67,6 @@ dependencies {
 
     coreLibraryDesugaring(libs.android.tools.desugarJdk)
     implementation(libs.androidx.lifecycle.runtimeCompose)
-    implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material3.windowSizeClass)
     implementation(libs.androidx.navigation.compose)
@@ -81,7 +74,6 @@ dependencies {
     implementation(libs.koin.androidx.compose)
 
     // Debug
-    testImplementation(libs.androidx.compose.ui.test)
     testImplementation(libs.androidx.navigation.testing)
     testImplementation(libs.robolectric)
     testImplementation(libs.mockk)

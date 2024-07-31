@@ -5,6 +5,7 @@
  */
 
 import com.android.build.api.dsl.ApplicationExtension
+import org.a_cyb.sayitalarm.build_logic.convention.configureAndroidCompose
 import org.a_cyb.sayitalarm.build_logic.convention.configureKotlinAndroid
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -22,6 +23,7 @@ internal class AndroidApplicationConventionPlugin : Plugin<Project> {
 
             extensions.configure<ApplicationExtension> {
                 configureKotlinAndroid(this)
+                configureAndroidCompose(this)
                 defaultConfig.targetSdk = 34
                 @Suppress("UnstableApiUsage")
                 testOptions.animationsDisabled = true
