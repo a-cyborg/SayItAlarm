@@ -37,7 +37,7 @@ import org.robolectric.annotation.GraphicsMode
 @OptIn(ExperimentalRoborazziApi::class)
 @RunWith(AndroidJUnit4::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
-@Config(sdk = [33], qualifiers = RobolectricDeviceQualifiers.ResizableExperimental)
+@Config(sdk = [33], qualifiers = RobolectricDeviceQualifiers.Pixel7)
 class SettingsScreenSpec {
 
     @get:Rule

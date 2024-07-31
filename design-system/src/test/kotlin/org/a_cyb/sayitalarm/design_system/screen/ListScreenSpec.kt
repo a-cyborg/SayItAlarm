@@ -28,7 +28,7 @@ import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Test
 import org.robolectric.annotation.Config
 
-@Config(qualifiers = RobolectricDeviceQualifiers.SmallPhone)
+@Config(qualifiers = RobolectricDeviceQualifiers.Pixel7)
 class ListScreenSpec : RoborazziTest() {
 
     private fun getString(id: Int) = subjectUnderTest.activity.getString(id)

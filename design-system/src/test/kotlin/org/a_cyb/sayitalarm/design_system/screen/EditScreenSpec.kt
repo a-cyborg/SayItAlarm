@@ -34,7 +34,7 @@ import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Test
 import org.robolectric.annotation.Config
 
-@Config(qualifiers = RobolectricDeviceQualifiers.ResizableExperimental)
+@Config(qualifiers = RobolectricDeviceQualifiers.Pixel7)
 class EditScreenSpec : RoborazziTest() {
 
     private val alarmUI = FakeAlarmUIData.defaultAlarmUI
