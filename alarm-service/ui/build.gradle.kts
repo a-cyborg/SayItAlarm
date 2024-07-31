@@ -21,7 +21,13 @@ android {
     }
 
     dependencies {
+        implementation(projects.designSystem)
+        implementation(projects.presentation)
+        implementation(projects.presentation.viewmodel)
+
+        implementation(libs.koin.android)
+        implementation(libs.koin.androidx.compose)
+
         implementation(libs.androidx.activity.compose)
-        implementation(libs.androidx.compose.material3)
     }
 }

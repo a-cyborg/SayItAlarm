@@ -394,4 +394,28 @@ class IconButtonSpec : RoborazziTest() {
 
         assertTrue(hasBeenCalled)
     }
+
+    @Test
+    fun `It renders a IconButtonSayIt`() {
+        subjectUnderTest.setContent {
+            IconButtonSayIt {}
+        }
+    }
+
+    @Test
+    fun `Given IconButtonSayIt is clicked, it runs the given action`() {
+        var hasBeenCalled = false
+
+        subjectUnderTest.setContent {
+            IconButtonSayIt {
+                hasBeenCalled = true
+            }
+        }
+
+        subjectUnderTest
+            .onNodeWithText(getString(R.string.say_it))
+            .performClick()
+
+        assertTrue(hasBeenCalled)
+    }
 }

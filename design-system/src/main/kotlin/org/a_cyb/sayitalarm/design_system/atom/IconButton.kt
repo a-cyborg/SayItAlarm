@@ -6,12 +6,16 @@
 
 package org.a_cyb.sayitalarm.design_system.atom
 
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import org.a_cyb.sayitalarm.design_system.R
+import org.a_cyb.sayitalarm.design_system.molecule.animateCircleBorder
 import org.a_cyb.sayitalarm.design_system.token.Color
 import org.a_cyb.sayitalarm.design_system.token.Icon
 
@@ -162,5 +166,19 @@ fun IconButtonSnoozeText(onClick: () -> Unit) {
 fun IconButtonRequestPermission(onClick: () -> Unit) {
     TextButton(onClick = onClick) {
         TextTitleAttentionMedium(text = stringResource(id = R.string.request_permission))
+    }
+}
+
+@Composable
+fun IconButtonSayIt(onClick: () -> Unit) {
+    TextButton(
+        onClick = onClick,
+        modifier = Modifier
+            .size(160.dp)
+            .animateCircleBorder()
+    ) {
+        TextTitleAttentionLarge(
+            text = stringResource(id = R.string.say_it)
+        )
     }
 }

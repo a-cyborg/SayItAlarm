@@ -10,11 +10,25 @@ import androidx.compose.ui.graphics.Brush
 
 @Suppress("MagicNumber")
 object Brush {
-    val verticalFadingBrush = Brush.verticalGradient(
+    val verticalFading = Brush.verticalGradient(
         0f to Color.ColorPalette.transparent,
         0.3f to Color.ColorPalette.transparent.copy(alpha = 0.3f),
         0.5f to Color.surface.standard,
         0.7f to Color.ColorPalette.transparent.copy(alpha = 0.3f),
         1f to Color.ColorPalette.transparent,
+    )
+
+    val sweepGradientRainbow = Brush.sweepGradient(
+        listOf(
+            Color.text.danger,
+            Color.text.warning,
+            Color.text.accent,
+            Color.text.success,
+            Color.text.warning,
+            Color.text.info,
+            Color.text.attention,
+            Color.text.inverse,
+            Color.text.subtle,
+        )
     )
 }
