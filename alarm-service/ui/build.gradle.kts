@@ -1,23 +1,12 @@
 plugins {
-    alias(libs.plugins.sayitalarm.android.library)
+    alias(libs.plugins.sayitalarm.android.library.comopose)
 }
 
 android {
     namespace = "org.a_cyb.sayitalarm.alarm_service.ui"
 
-    buildFeatures {
-        compose = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.14"
-    }
-
-    @Suppress("UnstableApiUsage")
-    testOptions {
-        unitTests {
-            isIncludeAndroidResources = true
-        }
+    compileOptions {
+        isCoreLibraryDesugaringEnabled = true
     }
 
     dependencies {
@@ -25,9 +14,8 @@ android {
         implementation(projects.presentation)
         implementation(projects.presentation.viewmodel)
 
+        coreLibraryDesugaring(libs.android.tools.desugarJdk)
         implementation(libs.koin.android)
         implementation(libs.koin.androidx.compose)
-
-        implementation(libs.androidx.activity.compose)
     }
 }

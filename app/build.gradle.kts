@@ -62,7 +62,7 @@ dependencies {
     implementation(projects.presentation)
     implementation(projects.presentation.viewmodel)
     implementation(projects.presentation.formatter)
-    implementation(projects.alarmService)
+    implementation(projects.alarmService.core)
     implementation(projects.systemService.ringtoneResolver)
 
     coreLibraryDesugaring(libs.android.tools.desugarJdk)
