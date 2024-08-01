@@ -24,24 +24,5 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-<!--        <activity-->
-<!--            android:name=".feature.alarm.AlarmActivity"-->
-<!--            android:exported="false"-->
-<!--            android:launchMode="singleTask"-->
-<!--            android:directBootAware="true"-->
-<!--            android:excludeFromRecents="true"-->
-<!--            android:showOnLockScreen="true"-->
-<!--            android:showWhenLocked="true" />-->
-
-<!--        <service-->
-<!--            android:name=".core.alarm.AlarmService"-->
-<!--            android:exported="false"-->
-<!--            android:description="@string/manifest_service_description"-->
-<!--            android:directBootAware="true" />-->
-
-<!--        <receiver-->
-<!--            android:name=".core.alarm.AlarmReceiver"-->
-<!--            android:directBootAware="true" />-->
     </application>
 </manifest>

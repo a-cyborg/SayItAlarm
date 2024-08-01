@@ -16,7 +16,6 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import org.a_cyb.sayitalarm.alarm_service.R
 import org.a_cyb.sayitalarm.alarm_service.ui.AlarmActivity
 import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Before
@@ -87,7 +86,7 @@ class AlarmNotificationSpec {
         with(manager.getNotificationChannel(actualNotification.channelId)) {
             assertNotNull(this)
             this.importance mustBe NotificationManager.IMPORTANCE_HIGH
-            this.name mustBe "Ringing alarms"
+            this.name mustBe context.getString(R.string.notification_alert_channel_name)
         }
     }
 }

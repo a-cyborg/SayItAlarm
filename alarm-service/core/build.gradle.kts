@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "org.a_cyb.sayitalarm.alarm_service"
+    namespace = "org.a_cyb.sayitalarm.alarm_service.core"
 
     compileOptions {
         isCoreLibraryDesugaringEnabled = true

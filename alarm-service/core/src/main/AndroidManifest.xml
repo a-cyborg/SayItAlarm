@@ -23,7 +23,7 @@
 
     <application>
         <receiver
-            android:name=".core.AlarmBroadcastReceiver"
+            android:name=".AlarmBroadcastReceiver"
             android:directBootAware="true"
             android:enabled="true"
             android:exported="true"
@@ -37,7 +37,7 @@
         </receiver>
 
         <service
-            android:name=".core.AlertService"
+            android:name=".AlertService"
             android:directBootAware="true"
             android:enabled="true"
             android:exported="false"
