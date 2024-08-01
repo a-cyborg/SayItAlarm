@@ -18,9 +18,11 @@ import org.a_cyb.sayitalarm.util.fulfils
 import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowSettings
 
 @RunWith(AndroidJUnit4::class)
+@Config(sdk = [33])
 class TimeFormatterSpec {
 
     private val context: Context = ApplicationProvider.getApplicationContext()
@@ -90,6 +92,7 @@ class TimeFormatterSpec {
         formattedTime mustBe "11:33 PM"
     }
 
+    @Config(qualifiers = "ko")
     @Test
     fun `When format is called with a hour before noon hour it maps to a 12-hour format string in korean`() {
         // Given
@@ -107,6 +110,7 @@ class TimeFormatterSpec {
         formattedTime mustBe "오전 8:02"
     }
 
+    @Config(qualifiers = "ko")
     @Test
     fun `When format is called with a hour after noon hour it maps to a 12-hour format string in korean`() {
         // Given
