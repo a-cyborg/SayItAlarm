@@ -1,5 +1,5 @@
 plugins {
-    alias(libs.plugins.sayitalarm.android.library)
+    alias(libs.plugins.sayitalarm.android.library.comopose)
 }
 
 android {
@@ -17,20 +17,31 @@ android {
             all { it.jvmArgs("--add-opens", "java.base/java.time=ALL-UNNAMED") }
         }
     }
+
+    defaultConfig {
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
 }
 
 dependencies {
     implementation(projects.entity)
     implementation(projects.domain.alarmService)
     implementation(projects.domain.repository)
-    implementation(projects.alarmService.ui)
+    implementation(projects.presentation)
+    implementation(projects.presentation.viewmodel)
+    implementation(projects.designSystem)
 
     coreLibraryDesugaring(libs.android.tools.desugarJdk)
     implementation(libs.androidx.work.workRuntime)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
 
     // Debug
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.rules)
+    androidTestImplementation(libs.androidx.test.ext)
+    androidTestImplementation(kotlin("test"))
     testImplementation(libs.androidx.test.ext)
     testImplementation(libs.androidx.work.workTesting)
     testImplementation(libs.kotlinx.coroutines.test)

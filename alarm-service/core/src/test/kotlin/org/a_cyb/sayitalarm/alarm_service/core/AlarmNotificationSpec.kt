@@ -16,15 +16,16 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import org.a_cyb.sayitalarm.alarm_service.ui.AlarmActivity
 import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.robolectric.annotation.Config
 import org.robolectric.shadow.api.Shadow
 import org.robolectric.shadows.ShadowPendingIntent
 
 @RunWith(AndroidJUnit4::class)
+@Config(sdk = [33])
 class AlarmNotificationSpec {
 
     private lateinit var context: Context
