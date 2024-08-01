@@ -7,16 +7,17 @@
 package org.a_cyb.sayitalarm.navigation
 
 import android.app.Application
-import androidx.activity.ComponentActivity
+import android.content.Context
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertHasClickAction
-import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,15 +33,14 @@ import org.a_cyb.sayitalarm.presentation.viewmodel.AddViewModel
 import org.a_cyb.sayitalarm.presentation.viewmodel.EditViewModel
 import org.a_cyb.sayitalarm.presentation.viewmodel.ListViewModel
 import org.a_cyb.sayitalarm.presentation.viewmodel.SettingsViewModel
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.GlobalContext
-import org.koin.core.context.GlobalContext.startKoin
 import org.koin.core.context.loadKoinModules
+import org.koin.core.context.startKoin
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import org.robolectric.annotation.Config
@@ -52,7 +52,7 @@ import org.robolectric.annotation.GraphicsMode
 class SiaNavHostSpec {
 
     @get:Rule
-    val composeTestRule = createAndroidComposeRule<ComponentActivity>()
+    val composeTestRule = createComposeRule()
 
     @Before
     fun setup() {
@@ -66,12 +66,8 @@ class SiaNavHostSpec {
         }
     }
 
-    @After
-    fun tearDown() {
-        composeTestRule.activityRule.scenario.recreate()
-    }
-
-    private fun getStringRes(id: Int) = composeTestRule.activity.getString(id)
+    private val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
+    private fun getStringRes(id: Int) = context.getString(id)
 
     @Test
     fun `It start from ListScreen`() {

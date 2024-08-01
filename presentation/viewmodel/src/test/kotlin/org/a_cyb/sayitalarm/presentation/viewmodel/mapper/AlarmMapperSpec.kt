@@ -9,7 +9,6 @@ package org.a_cyb.sayitalarm.presentation.viewmodel.mapper
 import kotlin.test.Test
 import java.util.Calendar
 import org.a_cyb.sayitalarm.entity.AlertType
-import org.a_cyb.sayitalarm.system_service.ringtone_resolver.RingtoneResolverContract
 import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.AlarmUI
 import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.AlertTypeUI
 import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.RingtoneUI
@@ -23,6 +22,7 @@ import org.a_cyb.sayitalarm.presentation.viewmodel.fake.FakeAlarmData
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.RingtoneResolverFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.TimeFormatterFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.WeekdayFormatterFake
+import org.a_cyb.sayitalarm.system_service.ringtone_resolver.RingtoneResolverContract
 import org.a_cyb.sayitalarm.util.mustBe
 
 class AlarmMapperSpec {

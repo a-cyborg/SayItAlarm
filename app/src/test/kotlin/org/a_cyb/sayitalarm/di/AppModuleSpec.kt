@@ -8,8 +8,7 @@ package org.a_cyb.sayitalarm.di
 
 import kotlin.test.AfterTest
 import kotlin.test.assertNotNull
-import androidx.activity.ComponentActivity
-import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.a_cyb.sayitalarm.presentation.EditContract
 import org.a_cyb.sayitalarm.presentation.ListContract
@@ -22,24 +21,23 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.androidx.compose.koinViewModel
-import org.koin.core.context.stopKoin
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent.getOrNull
+import org.koin.mp.KoinPlatform.stopKoin
 
 @RunWith(AndroidJUnit4::class)
 class AppModuleSpec {
 
-    @get:Rule
-    val composeTestRule = createAndroidComposeRule<ComponentActivity>()
-
     @AfterTest
     fun tearDown() {
         stopKoin()
-        composeTestRule.activityRule.scenario.recreate()
     }
 
+    @get:Rule
+    val composeTestRule = createComposeRule()
+
     @Test
-    fun `It injects AddVieWModel`() {
+    fun `It injects AddViewModel`() {
         // When
         val viewModel: AddViewModel? = getOrNull(AddViewModel::class.java)
 
