@@ -12,13 +12,15 @@ import org.a_cyb.sayitalarm.presentation.command.CommandContract
 
 interface AlarmContract {
     interface AlarmViewModel : AlarmCommandContract.StartSayIt, CommandContract.CommandExecutor {
-        val state: StateFlow<AlarmState>
+        val state: StateFlow<AlarmUiState>
         val currentTime: StateFlow<String>
     }
 
-    sealed interface AlarmState {
-        data object Initial : AlarmState
-        data object VoiceInputProcessing : AlarmState
-        data object Error : AlarmState
+    sealed interface AlarmUiState {
+        data object Initial : AlarmUiState
+        data object Ringing : AlarmUiState
+        data object VoiceInputProcessing : AlarmUiState
+        data object Completed : AlarmUiState
+        data object Error : AlarmUiState
     }
 }
