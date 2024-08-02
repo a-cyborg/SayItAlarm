@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import org.a_cyb.sayitalarm.design_system.R
 import org.a_cyb.sayitalarm.design_system.RoborazziTest
 import org.a_cyb.sayitalarm.presentation.AlarmContract
-import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmState
+import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmUiState
 import org.a_cyb.sayitalarm.presentation.command.CommandContract
 import org.junit.Test
 import org.robolectric.annotation.Config
@@ -45,13 +45,13 @@ class AlarmScreenSpec : RoborazziTest() {
 
 private class AlarmViewModelFake() : AlarmContract.AlarmViewModel {
 
-    private val _state: MutableStateFlow<AlarmState> = MutableStateFlow(AlarmState.Initial)
-    override val state: StateFlow<AlarmState> = _state.asStateFlow()
+    private val _state: MutableStateFlow<AlarmUiState> = MutableStateFlow(AlarmUiState.Initial)
+    override val state: StateFlow<AlarmUiState> = _state.asStateFlow()
 
     override val currentTime: StateFlow<String> = MutableStateFlow("8:00 AM")
 
     override fun startSayIt() {
-        _state.value = AlarmState.VoiceInputProcessing
+        _state.value = AlarmUiState.VoiceInputProcessing
     }
 
     override fun <T : CommandContract.CommandReceiver> runCommand(command: CommandContract.Command<T>) {

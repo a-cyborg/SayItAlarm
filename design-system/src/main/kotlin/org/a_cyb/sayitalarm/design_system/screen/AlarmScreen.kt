@@ -29,7 +29,7 @@ fun AlarmScreen(
     val time = viewModel.currentTime.collectAsState()
 
     when (state.value) {
-        is AlarmContract.AlarmState.Initial -> RingingScreen(
+        is AlarmContract.AlarmUiState.Initial -> RingingScreen(
             time = time.value,
             label = "" /*TODO*/,
             onSayItButtonClick = { viewModel.runCommand(StartSayItCommand) },

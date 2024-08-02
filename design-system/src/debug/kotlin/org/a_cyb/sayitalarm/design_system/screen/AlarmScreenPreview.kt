@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmState
+import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmUiState
 import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmViewModel
 import org.a_cyb.sayitalarm.presentation.command.CommandContract
 
@@ -21,9 +21,9 @@ fun AlarmScreenInitialStatePreview() {
 }
 
 private class AlarmViewModelFake(
-    state: AlarmState = AlarmState.Initial
+    state: AlarmUiState = AlarmUiState.Initial
 ) : AlarmViewModel {
-    override val state: StateFlow<AlarmState> = MutableStateFlow(state)
+    override val state: StateFlow<AlarmUiState> = MutableStateFlow(state)
     override val currentTime: StateFlow<String> = MutableStateFlow("04:00")
 
     override fun startSayIt() {}
