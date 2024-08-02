@@ -7,11 +7,16 @@
 package org.a_cyb.sayitalarm.alarm_service.core.di
 
 import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler
+import org.a_cyb.sayitalarm.alarm_service.core.AlarmServiceController
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
 import org.koin.dsl.module
 
 val alarmServiceModule = module {
     single<AlarmServiceContract.AlarmScheduler> {
         AlarmScheduler(get())
+    }
+
+    single<AlarmServiceContract.AlarmServiceController> {
+        AlarmServiceController()
     }
 }

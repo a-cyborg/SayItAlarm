@@ -17,7 +17,7 @@ import android.os.Bundle
 import android.os.IBinder
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
 
-class AlertService : AlarmServiceContract.AlertServiceContract, Service() {
+class AlarmService : AlarmServiceContract.AlarmService, Service() {
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         val notification = AlarmNotification.getAlarmAlertNotification(
@@ -66,8 +66,8 @@ class AlertService : AlarmServiceContract.AlertServiceContract, Service() {
     }
 
     inner class AlertServiceBinder : Binder() {
-        fun getService(): AlarmServiceContract.AlertServiceContract =
-            this@AlertService
+        fun getService(): AlarmServiceContract.AlarmService =
+            this@AlarmService
     }
 
     override fun startSayIt() {

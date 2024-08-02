@@ -55,7 +55,7 @@ class AlarmBroadcastReceiverSpec {
 
         // Then
         captureIntent.captured.component!!.className mustBe
-            AlertService::class.qualifiedName
+            AlarmService::class.qualifiedName
     }
 
     @Test

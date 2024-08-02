@@ -20,13 +20,13 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
             AlarmScheduler.ACTION_DELIVER_ALARM -> {
                 AlarmAlertWakeLock.acquireWakeLock(context)
 
-                val alertServiceIntent =
-                    Intent(context, AlertService::class.java)
+                val alarmServiceIntent =
+                    Intent(context, AlarmService::class.java)
                         .putExtras(intent.extras ?: Bundle())
 
                 ContextCompat.startForegroundService(
                     context,
-                    alertServiceIntent
+                    alarmServiceIntent
                 )
 
                 AlarmAlertWakeLock.releaseWakeLock()

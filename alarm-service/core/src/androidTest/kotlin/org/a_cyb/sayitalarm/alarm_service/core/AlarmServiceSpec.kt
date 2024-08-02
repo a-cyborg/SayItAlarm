@@ -26,7 +26,7 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 @SmallTest
-class AlertServiceSpec {
+class AlarmServiceSpec {
     private lateinit var context: Context
     private lateinit var serviceIntent: Intent
 
@@ -42,7 +42,7 @@ class AlertServiceSpec {
     @Before
     fun setup() {
         context = ApplicationProvider.getApplicationContext()
-        serviceIntent = Intent(context, AlertService::class.java)
+        serviceIntent = Intent(context, AlarmService::class.java)
     }
 
     @Test
@@ -58,7 +58,7 @@ class AlertServiceSpec {
         context
             .getSystemService(ActivityManager::class.java)
             .getRunningServices(Int.MAX_VALUE)
-            .any { it.foreground && it.service.className == AlertService::class.qualifiedName }
+            .any { it.foreground && it.service.className == AlarmService::class.qualifiedName }
 
     @Test
     fun alertService_DisplaysNotification() {
@@ -84,10 +84,10 @@ class AlertServiceSpec {
     fun alertService_onBind_Returns_AlertServiceBinder() {
         // When
         val binder = serviceTestRule.bindService(serviceIntent)
-        val service = (binder as? AlertService.AlertServiceBinder)?.getService()
+        val service = (binder as? AlarmService.AlertServiceBinder)?.getService()
 
         // Then
-        assertTrue { binder is AlertService.AlertServiceBinder }
-        assertTrue { service is AlarmServiceContract.AlertServiceContract }
+        assertTrue { binder is AlarmService.AlertServiceBinder }
+        assertTrue { service is AlarmServiceContract.AlarmService }
     }
 }

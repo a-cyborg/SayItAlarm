@@ -37,7 +37,6 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
 
-    // Debug
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.androidx.test.rules)
     androidTestImplementation(libs.androidx.test.ext)
@@ -46,6 +45,7 @@ dependencies {
     testImplementation(libs.androidx.work.workTesting)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.robolectric)
+    testImplementation(libs.turbine)
     testImplementation(libs.mockk)
     testImplementation(libs.antibytes.fixture)
 }
