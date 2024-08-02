@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
 
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
     <uses-permission
         android:name="android.permission.SCHEDULE_EXACT_ALARM"
         android:maxSdkVersion="32"
         />
-    <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT"/>
@@ -22,12 +24,22 @@
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO"/>
 
     <application>
+        <activity
+            android:name=".AlarmActivity"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+            android:showOnLockScreen="true"
+            android:directBootAware="true"
+            android:showWhenLocked="true"
+            tools:ignore="UnusedAttribute">
+        </activity>
+
         <receiver
             android:name=".AlarmBroadcastReceiver"
             android:directBootAware="true"
             android:enabled="true"
-            android:exported="true"
-            >
+            android:exported="true">
             <intent-filter>
                 <action android:name="org.a_cyb.sayitalarm.DELIVER_ALARM"/>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
@@ -37,12 +49,17 @@
         </receiver>
 
         <service
-            android:name=".AlertService"
+            android:name=".AlarmService"
             android:directBootAware="true"
             android:enabled="true"
             android:exported="false"
-            android:foregroundServiceType="microphone"
-            >
+            android:foregroundServiceType="specialUse" >
+            <property
+            android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+            android:value="This service is triggered when an alarm goes off.
+                It manages the sound of the ringing alarm and allows users to turn it off(by reading aloud text),
+                which is the primary feature of the application.">
+            </property>
         </service>
     </application>
 

@@ -16,7 +16,6 @@ import android.os.Build
 import android.os.Bundle
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import org.a_cyb.sayitalarm.alarm_service.ui.AlarmActivity
 
 object AlarmNotification {
 

@@ -18,6 +18,7 @@ android {
 dependencies {
     implementation(projects.entity)
     implementation(projects.domain.interactor)
+    implementation(projects.domain.alarmService)
     implementation(projects.presentation)
     implementation(projects.presentation.formatter)
     implementation(projects.systemService.ringtoneResolver)
