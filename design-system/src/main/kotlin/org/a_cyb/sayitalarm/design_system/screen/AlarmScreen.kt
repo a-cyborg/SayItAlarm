@@ -28,16 +28,25 @@ fun AlarmScreen(
     val state = viewModel.state.collectAsState()
     val time = viewModel.currentTime.collectAsState()
 
-    when (state.value) {
-        is AlarmContract.AlarmUiState.Initial -> RingingScreen(
-            time = time.value,
-            label = "" /*TODO*/,
-            onSayItButtonClick = { viewModel.runCommand(StartSayItCommand) },
-            onSnoozeButtonClick = {},
-        )
+    ColumnScreenVerticalCenter {
+        when (state.value) {
+            is AlarmContract.AlarmUiState.Initial -> LoadingScreen()
+            is AlarmContract.AlarmUiState.Ringing ->
+                RingingScreen(
+                    time = time.value,
+                    label = "" /*TODO*/,
+                    onSayItButtonClick = { viewModel.runCommand(StartSayItCommand) },
+                    onSnoozeButtonClick = {},
+                )
 
-        else -> {}
+            else -> {}
+        }
     }
+}
+
+@Composable
+fun LoadingScreen() {
+    TextDisplayStandardLarge(text = "Loading...")
 }
 
 @Composable

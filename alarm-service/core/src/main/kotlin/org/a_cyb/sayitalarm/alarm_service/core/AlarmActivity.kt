@@ -29,16 +29,21 @@ class AlarmActivity : ComponentActivity() {
 
     private val controller: AlarmServiceController = get(AlarmServiceController::class.java)
 
+    private lateinit var alarmData: Bundle
+
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
+        alarmData = intent.extras ?: Bundle()
         setupTurnScreenOn()
 
-        val viewmodel = getViewModel<AlarmViewModel>(parameters = { parametersOf(controller) })
-
         setContent {
-            AlarmScreen(viewModel = viewmodel)
+            AlarmScreen(
+                getViewModel<AlarmViewModel> {
+                    parametersOf(controller)
+                }
+            )
         }
     }
 
@@ -75,16 +80,19 @@ class AlarmActivity : ComponentActivity() {
         super.onStart()
 
         bindService(
-            Intent(this, AlarmService::class.java),
+            getAlarmServiceBindIntent(),
             serviceConnection,
             Context.BIND_AUTO_CREATE
         )
     }
 
-    override fun onStop() {
-        super.onStop()
+    private fun getAlarmServiceBindIntent(): Intent {
+        val ringtone = alarmData.getString(AlarmScheduler.BUNDLE_KEY_RINGTONE_URI)
+        val alertType = alarmData.getInt(AlarmScheduler.BUNDLE_KEY_ALERT_TYPE)
 
-        unbindService(serviceConnection)
+        return Intent(this, AlarmService::class.java)
+            .putExtra(AlarmService.SERVICE_BIND_EXTRA_RINGTONE_URI, ringtone)
+            .putExtra(AlarmService.SERVICE_BIND_EXTRA_ALERT_TYPE, alertType)
     }
 
     override fun onDestroy() {
@@ -99,5 +107,7 @@ class AlarmActivity : ComponentActivity() {
             setShowWhenLocked(false)
             setTurnScreenOn(false)
         }
+
+        unbindService(serviceConnection)
     }
 }
