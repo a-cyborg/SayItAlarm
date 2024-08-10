@@ -28,13 +28,13 @@ interface AudioVibeControllerContract {
 object AudioVibeController : AudioVibeControllerContract {
     private var audioManager: AudioManager? = null
     private var vibrator: Vibrator? = null
-    private val mediaPlayer = MediaPlayer()
+    private var mediaPlayer: MediaPlayer? = null
 
     private val audioFocusChangeListener = AudioManager
         .OnAudioFocusChangeListener { focusChange ->
             when (focusChange) {
-                AudioManager.AUDIOFOCUS_GAIN -> mediaPlayer.start()
-                AudioManager.AUDIOFOCUS_LOSS -> mediaPlayer.stop()
+                AudioManager.AUDIOFOCUS_GAIN -> mediaPlayer?.start()
+                AudioManager.AUDIOFOCUS_LOSS -> mediaPlayer?.stop()
             }
         }
 
@@ -78,55 +78,55 @@ object AudioVibeController : AudioVibeControllerContract {
             ?: AlertType.SOUND_AND_VIBRATE
 
     private fun playRingtone(context: Context, audioUri: Uri) {
-        audioManager = (context.getSystemService(Context.AUDIO_SERVICE) as AudioManager)
-            .apply {
-                setStreamVolume(
-                    AudioManager.STREAM_ALARM,
-                    getStreamMaxVolume(AudioManager.STREAM_ALARM),
-                    0
-                )
+        audioManager = (context.getSystemService(Context.AUDIO_SERVICE) as AudioManager).apply {
+            setStreamVolume(
+                AudioManager.STREAM_ALARM,
+                getStreamMaxVolume(AudioManager.STREAM_ALARM),
+                0
+            )
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    requestAudioFocus(audioFocusRequest)
-                }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                requestAudioFocus(audioFocusRequest)
+            }
+        }
+
+        mediaPlayer = MediaPlayer().apply {
+            try {
+                setDataSource(context, audioUri)
+                setAudioAttributes(getAudioAttribute())
+                isLooping = true
+                prepare()
+            } catch (_: Exception) {
             }
 
-        mediaPlayer
-            .run {
-                try {
-                    setDataSource(context, audioUri)
-                    setAudioAttributes(getAudioAttribute())
-                    isLooping = true
-                    prepare()
-                } catch (_: Exception) {
-                }
-                setOnPreparedListener { mediaPlayer.start() }
-            }
+            setOnPreparedListener { it.start() }
+        }
     }
 
     private fun playVibration(context: Context) {
         val vibrationPatter = longArrayOf(0, 200, 400, 200, 400, 600)
 
-        vibrator = (context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator)
-            .apply {
-                if (hasVibrator()) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        vibrate(VibrationEffect.createWaveform(vibrationPatter, 0))
-                    } else {
-                        vibrate(vibrationPatter, 0)
-                    }
+        vibrator = (context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator).apply {
+            if (hasVibrator()) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    vibrate(VibrationEffect.createWaveform(vibrationPatter, 0))
+                } else {
+                    vibrate(vibrationPatter, 0)
                 }
             }
+        }
     }
 
     override fun stopRinging() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             audioManager?.abandonAudioFocusRequest(audioFocusRequest)
-            audioManager = null
         }
-        mediaPlayer.stop()
-        mediaPlayer.release()
+        mediaPlayer?.stop()
+        mediaPlayer?.release()
         vibrator?.cancel()
+
+        audioManager = null
+        mediaPlayer = null
         vibrator = null
     }
 }
