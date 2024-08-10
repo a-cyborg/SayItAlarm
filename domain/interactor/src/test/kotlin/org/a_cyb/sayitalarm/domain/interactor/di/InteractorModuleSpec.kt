@@ -8,10 +8,12 @@ package org.a_cyb.sayitalarm.domain.interactor.di
 
 import kotlin.test.assertNotNull
 import io.mockk.mockk
+import kotlinx.coroutines.CoroutineDispatcher
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
 import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
 import org.a_cyb.sayitalarm.domain.repository.RepositoryContract
 import org.junit.Test
+import org.koin.core.qualifier.named
 import org.koin.dsl.koinApplication
 import org.koin.dsl.module
 
@@ -36,6 +38,28 @@ class InteractorModuleSpec {
 
         // Then
         assertNotNull(addInteractor)
+    }
+
+    @Test
+    fun `It injects AlarmInteractor`() {
+        // Given
+        val externalModule = module {
+            single<RepositoryContract.AlarmRepository> { mockk() }
+            single<CoroutineDispatcher>(named("io")) { mockk() }
+        }
+
+        val koinApp = koinApplication {
+            modules(
+                interactorModule,
+                externalModule,
+            )
+        }
+
+        // When
+        val alarmInteractor = koinApp.koin.getOrNull<InteractorContract.AlarmInteractor>()
+
+        // Then
+        assertNotNull(alarmInteractor)
     }
 
     @Test

@@ -26,8 +26,7 @@ class EditInteractor(
         scope.launch {
             alarmRepository.getAlarm(id, scope)
                 .await()
-                .onSuccess { _alarm.emit(Result.success(it)) }
-                .onFailure { _alarm.emit(Result.failure(it)) }
+                .let { _alarm.emit(it) }
         }
     }
 
