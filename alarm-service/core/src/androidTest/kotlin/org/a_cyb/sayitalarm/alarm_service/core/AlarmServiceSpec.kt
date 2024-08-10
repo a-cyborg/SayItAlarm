@@ -6,6 +6,7 @@
 
 package org.a_cyb.sayitalarm.alarm_service.core
 
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import android.Manifest
 import android.app.ActivityManager
@@ -46,7 +47,7 @@ class AlarmServiceSpec {
     }
 
     @Test
-    fun alertService_StartsForeground() {
+    fun alarmService_StartsForeground() {
         // When
         serviceTestRule.startService(serviceIntent)
 
@@ -61,7 +62,7 @@ class AlarmServiceSpec {
             .any { it.foreground && it.service.className == AlarmService::class.qualifiedName }
 
     @Test
-    fun alertService_DisplaysNotification() {
+    fun alarmService_DisplaysNotification() {
         // When
         serviceTestRule.startService(serviceIntent)
 
@@ -81,7 +82,7 @@ class AlarmServiceSpec {
             }
 
     @Test
-    fun alertService_onBind_Returns_AlertServiceBinder() {
+    fun alarmService_onBind_Returns_AlertServiceBinder() {
         // When
         val binder = serviceTestRule.bindService(serviceIntent)
         val service = (binder as? AlarmService.AlertServiceBinder)?.getService()
@@ -89,5 +90,19 @@ class AlarmServiceSpec {
         // Then
         assertTrue { binder is AlarmService.AlertServiceBinder }
         assertTrue { service is AlarmServiceContract.AlarmService }
+    }
+
+    @Test
+    fun alarmService_stopService_stopForegroundService_dismissesNotification() {
+        // Given
+        val binder = serviceTestRule.bindService(serviceIntent)
+        val service = (binder as? AlarmService.AlertServiceBinder)?.getService()
+
+        // When
+        service?.stopService()
+
+        // Then
+        assertFalse(notificationIsDisplayed(context))
+        assertFalse(isRunningForeground(context))
     }
 }

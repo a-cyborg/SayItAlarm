@@ -27,7 +27,7 @@ class AlarmServiceController : AlarmServiceController {
 
     override fun onServiceDisconnected() {
         alarmService = null
-        _alarmState.value = AlarmServiceState.Initial
+        _alarmState.value = AlarmServiceState.Error
     }
 
     override fun startSayIt() {
@@ -40,4 +40,8 @@ class AlarmServiceController : AlarmServiceController {
     }
 
     override fun startSnooze() {}
+
+    override fun terminate() {
+        alarmService?.stopService()
+    }
 }

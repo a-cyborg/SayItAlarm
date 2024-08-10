@@ -60,7 +60,7 @@ class AlarmServiceControllerSpec {
     }
 
     @Test
-    fun `When the service is disconnected, it sets the state to Initial`() = runTest {
+    fun `When the service is disconnected, it sets the state to Error`() = runTest {
         // Given
         val alarmService: AlarmServiceContract.AlarmService = mockk()
 
@@ -72,7 +72,7 @@ class AlarmServiceControllerSpec {
             controller.onServiceDisconnected()
 
             // Then
-            awaitItem() mustBe Initial
+            awaitItem() mustBe Error
         }
     }
 
@@ -108,6 +108,18 @@ class AlarmServiceControllerSpec {
             // Then
             awaitItem() mustBe Error
         }
+    }
+
+    @Test
+    fun `When terminate is called, it invokes service stopService`() = runTest {
+        // Given
+        val alarmService: AlarmServiceContract.AlarmService = mockk(relaxed = true)
+        controller.onServiceBind(alarmService)
+
+        // When
+        controller.terminate()
+
+        verify(exactly = 1) { alarmService.stopService() }
     }
 
     @Test

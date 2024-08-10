@@ -17,8 +17,10 @@ sealed interface AlarmServiceContract {
     }
 
     interface AlarmService {
+        fun ringAlarm(ringtone: String?, alertType: Int)
         fun startSayIt()
         fun startSnooze()
+        fun stopService()
     }
 
     interface AlarmServiceController {
@@ -28,6 +30,7 @@ sealed interface AlarmServiceContract {
         fun onServiceDisconnected()
         fun startSayIt()
         fun startSnooze()
+        fun terminate()
 
         sealed interface AlarmServiceState {
             data object Initial : AlarmServiceState
@@ -36,5 +39,10 @@ sealed interface AlarmServiceContract {
             data object Completed : AlarmServiceState
             data object Error : AlarmServiceState
         }
+    }
+
+    interface SayItRecognizer {
+        fun startSayItRecognizer()
+        fun stopSayItRecognizer()
     }
 }
