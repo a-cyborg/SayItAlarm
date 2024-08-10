@@ -13,6 +13,9 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.takeWhile
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController.AlarmServiceState
+import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.SayItRecognizer
+import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
+import org.a_cyb.sayitalarm.entity.Alarm
 import org.a_cyb.sayitalarm.presentation.AlarmContract
 import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmUiState
 import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmUiState.Completed
@@ -26,13 +29,26 @@ import org.a_cyb.sayitalarm.presentation.formatter.time.TimeFormatterContract
 import org.a_cyb.sayitalarm.presentation.viewmodel.time_flow.TimeFlowContract
 
 class AlarmViewModel(
-    private val controller: AlarmServiceController,
-    private val timeFormatter: TimeFormatterContract,
+    alarmId: Int,
+    alarmInteractor: InteractorContract.AlarmInteractor,
     timeFlow: TimeFlowContract,
+    private val serviceController: AlarmServiceController,
+    private val sayItRecognizer: SayItRecognizer,
+    private val timeFormatter: TimeFormatterContract,
 ) : AlarmContract.AlarmViewModel, ViewModel() {
 
+    private lateinit var alarm: Alarm
+
+    init {
+        alarmInteractor
+            .getAlarm(alarmId.toLong(), scope)
+            .onSuccess { alarm = it }
+            // If the alarm is no longer in the database, terminate the application.
+            .onFailure { serviceController.terminate() }
+    }
+
     override val currentTime: StateFlow<String> = timeFlow.currentTimeFlow
-        .takeWhile { shouldDisplayTime() }
+        .takeWhile { state.value is Initial || state.value is Ringing }
         .map { (hour, minute) -> timeFormatter.format(hour, minute) }
         .stateIn(
             scope = scope,
@@ -40,10 +56,7 @@ class AlarmViewModel(
             initialValue = ""
         )
 
-    private fun shouldDisplayTime(): Boolean =
-        (state.value == Initial || state.value == Ringing)
-
-    override val state: StateFlow<AlarmUiState> = controller.alarmState
+    override val state: StateFlow<AlarmUiState> = serviceController.alarmState
         .map(::mapToState)
         .stateIn(
             scope = scope,
@@ -54,14 +67,19 @@ class AlarmViewModel(
     private fun mapToState(alarmState: AlarmServiceState): AlarmUiState =
         when (alarmState) {
             AlarmServiceState.Initial -> Initial
-            AlarmServiceState.Ringing -> Ringing
-            AlarmServiceState.RunningSayIt -> VoiceInputProcessing
+            AlarmServiceState.Ringing -> Ringing(alarm.label.label)
+            AlarmServiceState.RunningSayIt -> VoiceInputProcessing(alarm.sayItScripts.scripts)
             AlarmServiceState.Completed -> Completed
             AlarmServiceState.Error -> Error
         }
 
     override fun startSayIt() {
-        controller.startSayIt()
+        serviceController.startSayIt()
+        sayItRecognizer.startSayItRecognizer()
+    }
+
+    override fun finishAlarm() {
+        serviceController.terminate()
     }
 
     override fun <T : CommandReceiver> runCommand(command: Command<T>) {

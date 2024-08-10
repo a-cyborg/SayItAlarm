@@ -10,12 +10,14 @@ import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertNotNull
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
+import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
 import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
 import org.a_cyb.sayitalarm.presentation.AddContract
 import org.a_cyb.sayitalarm.presentation.AlarmContract
@@ -75,12 +77,8 @@ class ViewModelModuleSpec {
     @Test
     fun `It injects EditViewModel`() {
         // Given
-        val interactor: InteractorContract.EditInteractor = mockk(relaxed = true)
-        // every { interactor.alarm } returns
-        //      { Result.failure(IllegalStateException()) }
-
         val interactorModule = module {
-            single<InteractorContract.EditInteractor> { interactor }
+            single<InteractorContract.EditInteractor> { mockk(relaxed = true) }
         }
 
         val koinApp = koinApplication {
@@ -92,13 +90,13 @@ class ViewModelModuleSpec {
         }
 
         // When
-        val alarmId: Long = 2
-        val viewmodel = koinApp.koin
-            .inject<EditContract.EditViewModel> { parametersOf(alarmId) }
-            .value
+        val viewModel = koinApp.koin
+            .getOrNull<EditContract.EditViewModel>(
+                parameters = { parametersOf(2L) }
+            )
 
         // Then
-        assertNotNull(viewmodel)
+        assertNotNull(viewModel)
     }
 
     @Test
@@ -148,15 +146,28 @@ class ViewModelModuleSpec {
     @Test
     fun `It injects AlarmViewModel`() {
         // Given
+        val interactor: InteractorContract.AlarmInteractor = mockk(relaxed = true)
+        every { interactor.getAlarm(any(), any()) } returns Result.failure(IllegalStateException())
+
+        val externalModule = module {
+            single<InteractorContract.AlarmInteractor> { interactor }
+            single<AlarmServiceContract.AlarmServiceController> { mockk(relaxed = true) }
+            single<AlarmServiceContract.SayItRecognizer> { mockk(relaxed = true) }
+        }
+
         val koinApp = koinApplication {
             modules(
                 viewModelModule,
                 formatterModule,
+                externalModule,
             )
         }
 
         // When
-        val alarmViewModel = koinApp.koin.getOrNull<AlarmContract.AlarmViewModel>()
+        val alarmViewModel = koinApp.koin
+            .getOrNull<AlarmContract.AlarmViewModel>(
+                parameters = { parametersOf(0) }
+            )
 
         // Then
         assertNotNull(alarmViewModel)
