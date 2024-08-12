@@ -13,11 +13,12 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import org.a_cyb.sayitalarm.design_system.R
 import org.a_cyb.sayitalarm.design_system.molecule.animateCircleBorder
+import org.a_cyb.sayitalarm.design_system.token.Brush
 import org.a_cyb.sayitalarm.design_system.token.Color
 import org.a_cyb.sayitalarm.design_system.token.Icon
+import org.a_cyb.sayitalarm.design_system.token.Sizing
 
 @Composable
 fun IconButtonAdd(
@@ -174,8 +175,8 @@ fun IconButtonSayIt(onClick: () -> Unit) {
     TextButton(
         onClick = onClick,
         modifier = Modifier
-            .size(160.dp)
-            .animateCircleBorder()
+            .size(Sizing.CircleButton.Large)
+            .animateCircleBorder(Brush.sweepGradientRainbow)
     ) {
         TextTitleAttentionLarge(
             text = stringResource(id = R.string.say_it)

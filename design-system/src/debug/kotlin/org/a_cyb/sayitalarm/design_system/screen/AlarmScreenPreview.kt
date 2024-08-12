@@ -20,12 +20,20 @@ fun AlarmScreenInitialStatePreview() {
     AlarmScreen(AlarmViewModelFake())
 }
 
+@Preview
+@Composable
+fun AlarmScreenRingingStatePreview() {
+    AlarmScreen(AlarmViewModelFake(state = AlarmUiState.Ringing("Good morning 🌵")))
+}
+
 private class AlarmViewModelFake(
     state: AlarmUiState = AlarmUiState.Initial
 ) : AlarmViewModel {
     override val state: StateFlow<AlarmUiState> = MutableStateFlow(state)
-    override val currentTime: StateFlow<String> = MutableStateFlow("04:00")
+    override val currentTime: StateFlow<String> = MutableStateFlow("6:00 AM")
 
     override fun startSayIt() {}
+    override fun finishAlarm() {}
+
     override fun <T : CommandContract.CommandReceiver> runCommand(command: CommandContract.Command<T>) {}
 }

@@ -16,4 +16,8 @@ object Sizing {
     object PanelRow {
         val MinHeight = 40.dp
     }
+
+    object CircleButton {
+        val Large = 160.dp
+    }
 }

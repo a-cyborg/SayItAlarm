@@ -31,4 +31,12 @@ object Brush {
             Color.text.subtle,
         )
     )
+
+    val sweepGradientGray = Brush.sweepGradient(
+        listOf(
+            Color.surface.standard,
+            Color.surface.subtle,
+            Color.surface.strong,
+        )
+    )
 }

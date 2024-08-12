@@ -20,15 +20,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.unit.dp
-import org.a_cyb.sayitalarm.design_system.token.Brush
 import org.a_cyb.sayitalarm.design_system.token.Color
 
 // https://medium.com/@mohammadbahadori99/creating-an-animated-border-composable-in-jetpack-compose-8604e4c7c66e
 @Composable
-fun Modifier.animateCircleBorder(): Modifier {
-    val brush = Brush.sweepGradientRainbow
+fun Modifier.animateCircleBorder(brush: Brush): Modifier {
     val infiniteTransition = rememberInfiniteTransition(label = "CircleButtonBorder")
     val angle by infiniteTransition.animateFloat(
         initialValue = 0f,

@@ -97,6 +97,8 @@ fun ColumnScreenVerticalCenter(content: @Composable ColumnScope.() -> Unit) {
             .windowInsetsPadding(WindowInsets.safeDrawing)
             .background(Color.surface.standard),
     ) {
+        SpacerXxxxLarge()
         content()
+        SpacerXxxxLarge()
     }
 }
