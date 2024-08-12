@@ -27,13 +27,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler.Companion.BUNDLE_KEY_ALARM_ID
 import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler.Companion.BUNDLE_KEY_ALERT_TYPE
-import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler.Companion.BUNDLE_KEY_IS_REPEAT
-import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler.Companion.BUNDLE_KEY_LABEL
 import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler.Companion.BUNDLE_KEY_RINGTONE_URI
-import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler.Companion.BUNDLE_KEY_SAYIT_SCRIPTS
-import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler.Companion.BUNDLE_KEY_SNOOZE
-import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler.Companion.BUNDLE_KEY_THEME
-import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler.Companion.BUNDLE_KEY_TIME_OUT
 import org.a_cyb.sayitalarm.domain.repository.RepositoryContract
 import org.a_cyb.sayitalarm.entity.Alarm
 import org.a_cyb.sayitalarm.entity.AlarmType
@@ -188,14 +182,8 @@ class AlarmSchedulerWorkerSpec {
 
         val extras = actual.extras!!
         extras.getLong(BUNDLE_KEY_ALARM_ID) mustBe alarm.id
-        extras.getBoolean(BUNDLE_KEY_IS_REPEAT) mustBe alarm.weeklyRepeat.weekdays.isNotEmpty()
-        extras.getString(BUNDLE_KEY_LABEL) mustBe alarm.label.label
         extras.getInt(BUNDLE_KEY_ALERT_TYPE) mustBe alarm.alertType.ordinal
         extras.getString(BUNDLE_KEY_RINGTONE_URI) mustBe alarm.ringtone.ringtone
-        extras.getStringArray(BUNDLE_KEY_SAYIT_SCRIPTS)?.get(0) mustBe alarm.sayItScripts.scripts[0]
-        extras.getInt(BUNDLE_KEY_TIME_OUT) mustBe settings.timeOut.timeOut
-        extras.getInt(BUNDLE_KEY_SNOOZE) mustBe settings.snooze.snooze
-        extras.getInt(BUNDLE_KEY_THEME) mustBe settings.theme.ordinal
     }
 
     private fun extractIntent(pendingIntent: PendingIntent?): Intent =

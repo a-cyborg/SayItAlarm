@@ -14,28 +14,13 @@ import android.os.Bundle
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.withContext
 import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler.Companion.BUNDLE_KEY_ALARM_ID
 import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler.Companion.BUNDLE_KEY_ALERT_TYPE
-import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler.Companion.BUNDLE_KEY_IS_REPEAT
-import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler.Companion.BUNDLE_KEY_LABEL
 import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler.Companion.BUNDLE_KEY_RINGTONE_URI
-import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler.Companion.BUNDLE_KEY_SAYIT_SCRIPTS
-import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler.Companion.BUNDLE_KEY_SNOOZE
-import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler.Companion.BUNDLE_KEY_THEME
-import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler.Companion.BUNDLE_KEY_TIME_OUT
-import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler.Companion.SETTINGS_DEFAULT_SNOOZE
-import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler.Companion.SETTINGS_DEFAULT_THEME
-import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler.Companion.SETTINGS_DEFAULT_TIME_OUT
 import org.a_cyb.sayitalarm.alarm_service.core.util.getNextAlarmTimeInMills
 import org.a_cyb.sayitalarm.domain.repository.RepositoryContract.AlarmRepository
-import org.a_cyb.sayitalarm.domain.repository.RepositoryContract.SettingsRepository
 import org.a_cyb.sayitalarm.entity.Alarm
-import org.a_cyb.sayitalarm.entity.Settings
-import org.a_cyb.sayitalarm.entity.Snooze
-import org.a_cyb.sayitalarm.entity.Theme
-import org.a_cyb.sayitalarm.entity.TimeOut
 import org.koin.core.qualifier.named
 import org.koin.java.KoinJavaComponent.inject
 
@@ -45,18 +30,15 @@ internal class AlarmSchedulerWorker(
 ) : CoroutineWorker(context, workerParameters) {
 
     override suspend fun doWork(): Result {
-        val alarmManager = applicationContext
-            .getSystemService(AlarmManager::class.java)
-
+        val alarmManager = applicationContext.getSystemService(AlarmManager::class.java)
         val enabledAlarms = getAllEnabledAlarms()
-        val settings = getSettingsOrDefault()
 
         enabledAlarms.forEach { alarm ->
             val receiverIntent: Intent =
                 Intent(applicationContext, AlarmBroadcastReceiver::class.java)
                     .setAction(AlarmScheduler.ACTION_DELIVER_ALARM)
                     .setFlags(Intent.FLAG_RECEIVER_FOREGROUND)
-                    .putExtras(getAlarmDataBundle(alarm, settings))
+                    .putExtras(getAlarmDataBundle(alarm))
 
             val pendingIntentToCheckDuplicate = PendingIntent
                 .getBroadcast(
@@ -106,34 +88,10 @@ internal class AlarmSchedulerWorker(
         }
     }
 
-    private suspend fun getSettingsOrDefault(): Settings {
-        val settingsRepository: SettingsRepository by inject(SettingsRepository::class.java)
-
-        val settings: Settings = settingsRepository.getSettings()
-            .firstOrNull()
-            ?.getOrNull()
-            ?: getDefaultSettings()
-
-        return settings
-    }
-
-    private fun getDefaultSettings(): Settings =
-        Settings(
-            TimeOut(SETTINGS_DEFAULT_TIME_OUT),
-            Snooze(SETTINGS_DEFAULT_SNOOZE),
-            Theme.entries[SETTINGS_DEFAULT_THEME],
-        )
-
-    private fun getAlarmDataBundle(alarm: Alarm, settings: Settings): Bundle =
+    private fun getAlarmDataBundle(alarm: Alarm): Bundle =
         Bundle().apply {
             putLong(BUNDLE_KEY_ALARM_ID, alarm.id)
-            putBoolean(BUNDLE_KEY_IS_REPEAT, alarm.weeklyRepeat.weekdays.isNotEmpty())
-            putString(BUNDLE_KEY_LABEL, alarm.label.label)
             putInt(BUNDLE_KEY_ALERT_TYPE, alarm.alertType.ordinal)
             putString(BUNDLE_KEY_RINGTONE_URI, alarm.ringtone.ringtone)
-            putStringArray(BUNDLE_KEY_SAYIT_SCRIPTS, alarm.sayItScripts.scripts.toTypedArray())
-            putInt(BUNDLE_KEY_TIME_OUT, settings.timeOut.timeOut)
-            putInt(BUNDLE_KEY_SNOOZE, settings.snooze.snooze)
-            putInt(BUNDLE_KEY_THEME, settings.theme.ordinal)
         }
 }
