@@ -29,7 +29,7 @@ import org.a_cyb.sayitalarm.presentation.formatter.time.TimeFormatterContract
 import org.a_cyb.sayitalarm.presentation.viewmodel.time_flow.TimeFlowContract
 
 class AlarmViewModel(
-    alarmId: Int,
+    alarmId: Long,
     alarmInteractor: InteractorContract.AlarmInteractor,
     timeFlow: TimeFlowContract,
     private val serviceController: AlarmServiceController,
@@ -41,10 +41,9 @@ class AlarmViewModel(
 
     init {
         alarmInteractor
-            .getAlarm(alarmId.toLong(), scope)
+            .getAlarm(alarmId, scope)
             .onSuccess { alarm = it }
-            // If the alarm is no longer in the database, terminate the application.
-            .onFailure { serviceController.terminate() }
+            .onFailure { serviceController.terminate() } // If the alarm is no longer in the database, terminate the application.
     }
 
     override val currentTime: StateFlow<String> = timeFlow.currentTimeFlow

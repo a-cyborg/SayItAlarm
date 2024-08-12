@@ -8,6 +8,9 @@ package org.a_cyb.sayitalarm.alarm_service.core.di
 
 import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler
 import org.a_cyb.sayitalarm.alarm_service.core.AlarmServiceController
+import org.a_cyb.sayitalarm.alarm_service.core.SayItRecognizer
+import org.a_cyb.sayitalarm.alarm_service.core.util.AudioVibeController
+import org.a_cyb.sayitalarm.alarm_service.core.util.AudioVibeControllerContract
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
 import org.koin.dsl.module
 
@@ -18,5 +21,13 @@ val alarmServiceModule = module {
 
     single<AlarmServiceContract.AlarmServiceController> {
         AlarmServiceController()
+    }
+
+    single<AlarmServiceContract.SayItRecognizer> {
+        SayItRecognizer(get())
+    }
+
+    single<AudioVibeControllerContract> {
+        AudioVibeController
     }
 }

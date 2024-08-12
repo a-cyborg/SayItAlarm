@@ -17,7 +17,7 @@ sealed interface AlarmServiceContract {
     }
 
     interface AlarmService {
-        fun ringAlarm(ringtone: String?, alertType: Int)
+        fun ringAlarm()
         fun startSayIt()
         fun startSnooze()
         fun stopService()
