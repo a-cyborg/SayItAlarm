@@ -33,6 +33,7 @@ private class AlarmViewModelFake(
     override val currentTime: StateFlow<String> = MutableStateFlow("6:00 AM")
 
     override fun startSayIt() {}
+    override fun snooze() {}
     override fun finishAlarm() {}
 
     override fun <T : CommandContract.CommandReceiver> runCommand(command: CommandContract.Command<T>) {}

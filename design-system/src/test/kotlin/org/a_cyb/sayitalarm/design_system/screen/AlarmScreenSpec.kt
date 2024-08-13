@@ -8,6 +8,7 @@ package org.a_cyb.sayitalarm.design_system.screen
 
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import com.github.takahirom.roborazzi.RobolectricDeviceQualifiers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,6 +17,7 @@ import org.a_cyb.sayitalarm.design_system.RoborazziTest
 import org.a_cyb.sayitalarm.presentation.AlarmContract
 import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmUiState
 import org.a_cyb.sayitalarm.presentation.command.CommandContract
+import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Test
 import org.robolectric.annotation.Config
 
@@ -64,13 +66,79 @@ class AlarmScreenSpec : RoborazziTest() {
                 .assertHasClickAction()
         }
     }
+
+    @Test
+    fun `When SayItButton is clicked, it executes SayItCommand`() {
+        // Given
+        val label = "Good morning🌻"
+        val viewModel = AlarmViewModelFake(AlarmUiState.Ringing(label))
+
+        with(subjectUnderTest) {
+            setContent {
+                AlarmScreen(viewModel = viewModel)
+            }
+
+            // When
+            onNodeWithText(getString(R.string.say_it))
+                .assertExists()
+                .performClick()
+        }
+
+        // Then
+        viewModel.invokedType mustBe AlarmViewModelFake.InvokedType.START_SAYIT
+    }
+
+    @Test
+    fun `When SnoozeButton is clicked, it executes snooze`() {
+        // Given
+        val label = "Good morning🌻"
+        val viewModel = AlarmViewModelFake(AlarmUiState.Ringing(label))
+
+        with(subjectUnderTest) {
+            setContent {
+                AlarmScreen(viewModel = viewModel)
+            }
+
+            // When
+            onNodeWithText(getString(R.string.snooze))
+                .assertExists()
+                .performClick()
+        }
+
+        // Then
+        viewModel.invokedType mustBe AlarmViewModelFake.InvokedType.SNOOZE
+    }
 }
 
 private class AlarmViewModelFake(state: AlarmUiState = AlarmUiState.Initial) : AlarmContract.AlarmViewModel {
     override val state: StateFlow<AlarmUiState> = MutableStateFlow(state)
     override val currentTime: StateFlow<String> = MutableStateFlow("8:00 AM")
 
-    override fun startSayIt() {}
-    override fun finishAlarm() {}
-    override fun <T : CommandContract.CommandReceiver> runCommand(command: CommandContract.Command<T>) {}
+    private var _invokedType: InvokedType = InvokedType.NONE
+    val invokedType: InvokedType
+        get() = _invokedType
+
+    override fun startSayIt() {
+        _invokedType = InvokedType.START_SAYIT
+    }
+
+    override fun snooze() {
+        _invokedType = InvokedType.SNOOZE
+    }
+
+    override fun finishAlarm() {
+        _invokedType = InvokedType.FINISH_ALARM
+    }
+
+    override fun <T : CommandContract.CommandReceiver> runCommand(command: CommandContract.Command<T>) {
+        @Suppress("UNCHECKED_CAST")
+        command.execute(this as T)
+    }
+
+    enum class InvokedType {
+        START_SAYIT,
+        SNOOZE,
+        FINISH_ALARM,
+        NONE,
+    }
 }
