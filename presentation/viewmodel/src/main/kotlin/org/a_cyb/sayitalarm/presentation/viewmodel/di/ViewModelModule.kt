@@ -45,7 +45,7 @@ val viewModelModule: Module = module {
     } bind SettingsContract.SettingsViewModel::class
 
     viewModel {
-        AlarmViewModel(get(), get(), get(), get(), get(), get())
+        AlarmViewModel(get(), get(), get(), get())
     } bind AlarmContract.AlarmViewModel::class
 
     single<AlarmMapperContract> {

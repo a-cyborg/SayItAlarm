@@ -10,7 +10,6 @@ import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertNotNull
-import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -146,11 +145,7 @@ class ViewModelModuleSpec {
     @Test
     fun `It injects AlarmViewModel`() {
         // Given
-        val interactor: InteractorContract.AlarmInteractor = mockk(relaxed = true)
-        every { interactor.getAlarm(any(), any()) } returns Result.failure(IllegalStateException())
-
         val externalModule = module {
-            single<InteractorContract.AlarmInteractor> { interactor }
             single<AlarmServiceContract.AlarmServiceController> { mockk(relaxed = true) }
             single<AlarmServiceContract.SayItRecognizer> { mockk(relaxed = true) }
         }

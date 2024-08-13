@@ -12,6 +12,7 @@ import org.a_cyb.sayitalarm.alarm_service.core.SayItRecognizer
 import org.a_cyb.sayitalarm.alarm_service.core.util.AudioVibeController
 import org.a_cyb.sayitalarm.alarm_service.core.util.AudioVibeControllerContract
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val alarmServiceModule = module {
@@ -20,7 +21,7 @@ val alarmServiceModule = module {
     }
 
     single<AlarmServiceContract.AlarmServiceController> {
-        AlarmServiceController()
+        AlarmServiceController(get(), get(), get(named("io")))
     }
 
     single<AlarmServiceContract.SayItRecognizer> {

@@ -105,7 +105,7 @@ class SettingsViewModel(
         private const val DEFAULT_TIMEOUT = 180
         private const val DEFAULT_SNOOZE = 15
 
-        private fun getDefaultSettings(): Settings =
+        fun getDefaultSettings(): Settings =
             Settings(
                 TimeOut(DEFAULT_TIMEOUT),
                 Snooze(DEFAULT_SNOOZE),

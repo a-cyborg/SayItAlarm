@@ -7,19 +7,20 @@
 package org.a_cyb.sayitalarm.presentation
 
 import kotlinx.coroutines.flow.StateFlow
-import org.a_cyb.sayitalarm.presentation.command.AlarmCommandContract
+import org.a_cyb.sayitalarm.presentation.command.AlarmCommandContractAll
 import org.a_cyb.sayitalarm.presentation.command.CommandContract
 
 interface AlarmContract {
-    interface AlarmViewModel : AlarmCommandContract.StartSayIt, CommandContract.CommandExecutor {
+
+    interface AlarmViewModel : AlarmCommandContractAll, CommandContract.CommandExecutor {
         val state: StateFlow<AlarmUiState>
         val currentTime: StateFlow<String>
     }
 
     sealed interface AlarmUiState {
         data object Initial : AlarmUiState
-        data object Ringing : AlarmUiState
-        data object VoiceInputProcessing : AlarmUiState
+        data class Ringing(val label: String) : AlarmUiState
+        data class VoiceInputProcessing(val scripts: List<String>) : AlarmUiState
         data object Completed : AlarmUiState
         data object Error : AlarmUiState
     }

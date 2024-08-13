@@ -14,8 +14,6 @@ import kotlinx.coroutines.flow.takeWhile
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController.AlarmServiceState
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.SayItRecognizer
-import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
-import org.a_cyb.sayitalarm.entity.Alarm
 import org.a_cyb.sayitalarm.presentation.AlarmContract
 import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmUiState
 import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmUiState.Completed
@@ -29,22 +27,11 @@ import org.a_cyb.sayitalarm.presentation.formatter.time.TimeFormatterContract
 import org.a_cyb.sayitalarm.presentation.viewmodel.time_flow.TimeFlowContract
 
 class AlarmViewModel(
-    alarmId: Long,
-    alarmInteractor: InteractorContract.AlarmInteractor,
     timeFlow: TimeFlowContract,
     private val serviceController: AlarmServiceController,
     private val sayItRecognizer: SayItRecognizer,
     private val timeFormatter: TimeFormatterContract,
 ) : AlarmContract.AlarmViewModel, ViewModel() {
-
-    private lateinit var alarm: Alarm
-
-    init {
-        alarmInteractor
-            .getAlarm(alarmId, scope)
-            .onSuccess { alarm = it }
-            .onFailure { serviceController.terminate() } // If the alarm is no longer in the database, terminate the application.
-    }
 
     override val currentTime: StateFlow<String> = timeFlow.currentTimeFlow
         .takeWhile { state.value is Initial || state.value is Ringing }
@@ -65,16 +52,20 @@ class AlarmViewModel(
 
     private fun mapToState(alarmState: AlarmServiceState): AlarmUiState =
         when (alarmState) {
-            AlarmServiceState.Initial -> Initial
-            AlarmServiceState.Ringing -> Ringing(alarm.label.label)
-            AlarmServiceState.RunningSayIt -> VoiceInputProcessing(alarm.sayItScripts.scripts)
-            AlarmServiceState.Completed -> Completed
-            AlarmServiceState.Error -> Error
+            is AlarmServiceState.Initial -> Initial
+            is AlarmServiceState.Ringing -> Ringing(alarmState.label.label)
+            is AlarmServiceState.RunningSayIt -> VoiceInputProcessing(alarmState.scripts.scripts)
+            is AlarmServiceState.Completed -> Completed
+            is AlarmServiceState.Error -> Error
         }
 
     override fun startSayIt() {
         serviceController.startSayIt()
         sayItRecognizer.startSayItRecognizer()
+    }
+
+    override fun snooze() {
+        serviceController.startSnooze()
     }
 
     override fun finishAlarm() {

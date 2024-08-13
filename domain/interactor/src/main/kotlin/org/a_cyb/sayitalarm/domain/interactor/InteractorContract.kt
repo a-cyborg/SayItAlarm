@@ -21,10 +21,6 @@ interface InteractorContract {
         fun save(alarm: Alarm, scope: CoroutineScope)
     }
 
-    interface AlarmInteractor {
-        fun getAlarm(id: Long, scope: CoroutineScope): Result<Alarm>
-    }
-
     interface EditInteractor {
         val alarm: SharedFlow<Result<Alarm>>
         fun getAlarm(id: Long, scope: CoroutineScope)

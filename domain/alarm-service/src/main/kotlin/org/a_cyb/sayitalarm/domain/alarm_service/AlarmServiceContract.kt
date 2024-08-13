@@ -8,6 +8,11 @@ package org.a_cyb.sayitalarm.domain.alarm_service
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.StateFlow
+import org.a_cyb.sayitalarm.entity.AlertType
+import org.a_cyb.sayitalarm.entity.Label
+import org.a_cyb.sayitalarm.entity.Ringtone
+import org.a_cyb.sayitalarm.entity.SayItScripts
+import org.a_cyb.sayitalarm.entity.Snooze
 
 sealed interface AlarmServiceContract {
 
@@ -17,16 +22,16 @@ sealed interface AlarmServiceContract {
     }
 
     interface AlarmService {
-        fun ringAlarm()
+        fun ringAlarm(ringtone: Ringtone, alertType: AlertType)
         fun startSayIt()
-        fun startSnooze()
+        fun startSnooze(snooze: Snooze)
         fun stopService()
     }
 
     interface AlarmServiceController {
         val alarmState: StateFlow<AlarmServiceState>
 
-        fun onServiceBind(serviceContract: AlarmService)
+        fun onServiceBind(service: AlarmService, alarmId: Long)
         fun onServiceDisconnected()
         fun startSayIt()
         fun startSnooze()
@@ -34,8 +39,8 @@ sealed interface AlarmServiceContract {
 
         sealed interface AlarmServiceState {
             data object Initial : AlarmServiceState
-            data object Ringing : AlarmServiceState
-            data object RunningSayIt : AlarmServiceState
+            data class Ringing(val label: Label) : AlarmServiceState
+            data class RunningSayIt(val scripts: SayItScripts) : AlarmServiceState
             data object Completed : AlarmServiceState
             data object Error : AlarmServiceState
         }

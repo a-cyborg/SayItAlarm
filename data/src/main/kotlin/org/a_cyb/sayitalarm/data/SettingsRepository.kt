@@ -26,11 +26,10 @@ class SettingsRepository(
     private val dispatcher: CoroutineDispatcher,
 ) : RepositoryContract.SettingsRepository {
 
-    override fun getSettings(): Flow<Result<Settings>> {
-        return dataSource
+    override fun getSettings(): Flow<Result<Settings>> =
+        dataSource
             .getSettings(dispatcher)
             .map(::map)
-    }
 
     private fun map(result: Result<SettingsDTO>): Result<Settings> {
         return result.map { it.toSettings() }

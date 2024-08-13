@@ -7,21 +7,15 @@
 package org.a_cyb.sayitalarm.domain.interactor.di
 
 import org.a_cyb.sayitalarm.domain.interactor.AddInteractor
-import org.a_cyb.sayitalarm.domain.interactor.AlarmInteractor
 import org.a_cyb.sayitalarm.domain.interactor.EditInteractor
 import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
 import org.a_cyb.sayitalarm.domain.interactor.ListInteractor
 import org.a_cyb.sayitalarm.domain.interactor.SettingsInteractor
-import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val interactorModule = module {
     single<InteractorContract.AddInteractor> {
         AddInteractor(get(), get())
-    }
-
-    single<InteractorContract.AlarmInteractor> {
-        AlarmInteractor(get(), get(named("io")))
     }
 
     single<InteractorContract.EditInteractor> {

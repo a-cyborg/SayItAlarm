@@ -17,6 +17,9 @@ import android.os.Bundle
 import android.os.IBinder
 import org.a_cyb.sayitalarm.alarm_service.core.util.AudioVibeControllerContract
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
+import org.a_cyb.sayitalarm.entity.AlertType
+import org.a_cyb.sayitalarm.entity.Ringtone
+import org.a_cyb.sayitalarm.entity.Snooze
 import org.koin.android.ext.android.inject
 
 class AlarmService : AlarmServiceContract.AlarmService, Service() {
@@ -28,6 +31,7 @@ class AlarmService : AlarmServiceContract.AlarmService, Service() {
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         alarmData = intent.extras ?: Bundle()
+
         val notification = AlarmNotification.getAlarmAlertNotification(this, alarmData)
         val notificationManager = (getSystemService(NotificationManager::class.java) as NotificationManager)
 
@@ -64,23 +68,18 @@ class AlarmService : AlarmServiceContract.AlarmService, Service() {
         return binder
     }
 
-    inner class AlertServiceBinder : Binder() {
-        fun getService(): AlarmServiceContract.AlarmService = this@AlarmService
-    }
-
-    override fun ringAlarm() {
-        val ringtone = alarmData.getString(AlarmScheduler.BUNDLE_KEY_RINGTONE_URI)
-        val alertType = alarmData.getInt(AlarmScheduler.BUNDLE_KEY_ALERT_TYPE)
-
-        audioVibeController.startRinging(this, ringtone, alertType)
+    override fun ringAlarm(ringtone: Ringtone, alertType: AlertType) {
+        audioVibeController
+            .startRinging(this, ringtone.ringtone, alertType.ordinal)
     }
 
     override fun startSayIt() {
         audioVibeController.stopRinging()
     }
 
-    override fun startSnooze() {
+    override fun startSnooze(snooze: Snooze) {
         audioVibeController.stopRinging()
+        TODO()
     }
 
     override fun stopService() {
@@ -91,6 +90,11 @@ class AlarmService : AlarmServiceContract.AlarmService, Service() {
                 .setPackage(packageName)
                 .setAction(ACTION_EXIT_APP)
         )
+    }
+
+    inner class AlertServiceBinder : Binder() {
+        fun getAlarmId(): Long = alarmData.getLong(AlarmScheduler.BUNDLE_KEY_ALARM_ID)
+        fun getService(): AlarmServiceContract.AlarmService = this@AlarmService
     }
 
     companion object {

@@ -26,7 +26,6 @@ import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServi
 import org.a_cyb.sayitalarm.presentation.viewmodel.AlarmViewModel
 import org.koin.android.ext.android.inject
 import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
 
 class AlarmActivity : ComponentActivity() {
 
@@ -44,19 +43,15 @@ class AlarmActivity : ComponentActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
-        val alarmId = intent.extras
-            ?.getLong(AlarmScheduler.BUNDLE_KEY_ALARM_ID, 0)
-            ?: 0
-
+        registerExitReceiver()
         setupScreenOn()
-        setContent {
-            AlarmScreen(
-                viewModel = koinViewModel<AlarmViewModel>(
-                    parameters = { parametersOf(alarmId) }
-                )
-            )
-        }
 
+        setContent {
+            AlarmScreen(viewModel = koinViewModel<AlarmViewModel>())
+        }
+    }
+
+    private fun registerExitReceiver() {
         ContextCompat.registerReceiver(
             this,
             appExitReceiver,
@@ -95,9 +90,9 @@ class AlarmActivity : ComponentActivity() {
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val alarmService = (service as AlarmService.AlertServiceBinder).getService()
+            val alarmId = service.getAlarmId()
 
-            controller.onServiceBind(alarmService)
-            alarmService.ringAlarm()
+            controller.onServiceBind(alarmService, alarmId)
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
