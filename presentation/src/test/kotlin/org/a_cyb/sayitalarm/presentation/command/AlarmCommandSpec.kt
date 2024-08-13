@@ -29,4 +29,21 @@ class AlarmCommandSpec {
         // Then
         verify(exactly = 1) { receiver.startSayIt() }
     }
+
+    @Test
+    fun `SnoozeCommand fulfills Command`() {
+        SnoozeCommand fulfils CommandContract.Command::class
+    }
+
+    @Test
+    fun `When SnoozeCommand is executed, it runs snooze`() {
+        // Given
+        val receiver: AlarmCommandContract.Snooze = mockk(relaxed = true)
+
+        // When
+        SnoozeCommand.execute(receiver)
+
+        // Then
+        verify(exactly = 1) { receiver.snooze() }
+    }
 }
