@@ -19,13 +19,12 @@ class SettingsDataSource(
     private val settingsQueries: SettingsQueries
 ) : DataSourceContract.SettingsDataSource {
 
-    override fun getSettings(dispatcher: CoroutineDispatcher): Flow<Result<SettingsDTO>> {
-        return settingsQueries.get()
+    override fun getSettings(dispatcher: CoroutineDispatcher): Flow<Result<SettingsDTO>> =
+        settingsQueries.get()
             .asFlow()
             .mapToOneOrNull(dispatcher)
             .map(::mapToResult)
             .catch { emit(Result.failure(it)) }
-    }
 
     private fun mapToResult(settings: SettingsDTO?): Result<SettingsDTO> {
         return settings

@@ -19,13 +19,12 @@ class AlarmDataSource(
     private val alarmQueries: AlarmQueries,
 ) : DataSourceContract.AlarmDataSource {
 
-    override fun getAllByTimeAsc(dispatcher: CoroutineDispatcher): Flow<Result<List<DTO>>> {
-        return alarmQueries.getAllByTimeAsc()
+    override fun getAllByTimeAsc(dispatcher: CoroutineDispatcher): Flow<Result<List<DTO>>> =
+        alarmQueries.getAllByTimeAsc()
             .asFlow()
             .mapToList(dispatcher)
             .map { Result.success(it) }
             .catch { emit(Result.failure(it)) }
-    }
 
     override suspend fun getById(id: Long): Result<DTO> =
         alarmQueries
