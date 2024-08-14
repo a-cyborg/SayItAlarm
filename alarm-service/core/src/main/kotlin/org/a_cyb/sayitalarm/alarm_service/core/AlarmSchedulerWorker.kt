@@ -10,14 +10,10 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler.Companion.BUNDLE_KEY_ALARM_ID
-import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler.Companion.BUNDLE_KEY_ALERT_TYPE
-import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler.Companion.BUNDLE_KEY_RINGTONE_URI
 import org.a_cyb.sayitalarm.alarm_service.core.util.getNextAlarmTimeInMills
 import org.a_cyb.sayitalarm.domain.repository.RepositoryContract.AlarmRepository
 import org.a_cyb.sayitalarm.entity.Alarm
@@ -38,7 +34,7 @@ internal class AlarmSchedulerWorker(
                 Intent(applicationContext, AlarmBroadcastReceiver::class.java)
                     .setAction(AlarmScheduler.ACTION_DELIVER_ALARM)
                     .setFlags(Intent.FLAG_RECEIVER_FOREGROUND)
-                    .putExtras(getAlarmDataBundle(alarm))
+                    .putExtra(AlarmScheduler.EXTRA_ALARM_ID, alarm.id)
 
             val pendingIntentToCheckDuplicate = PendingIntent
                 .getBroadcast(
@@ -87,11 +83,4 @@ internal class AlarmSchedulerWorker(
                 .await()
         }
     }
-
-    private fun getAlarmDataBundle(alarm: Alarm): Bundle =
-        Bundle().apply {
-            putLong(BUNDLE_KEY_ALARM_ID, alarm.id)
-            putInt(BUNDLE_KEY_ALERT_TYPE, alarm.alertType.ordinal)
-            putString(BUNDLE_KEY_RINGTONE_URI, alarm.ringtone.ringtone)
-        }
 }

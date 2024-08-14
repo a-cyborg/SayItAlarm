@@ -11,7 +11,6 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.test.core.app.ApplicationProvider
@@ -38,13 +37,7 @@ class AlarmNotificationSpec {
     @Test
     fun `When getAlarmAlertNotification is called it returns notification`() {
         // Given
-        val alarmBundle = Bundle().apply {
-            putLong(AlarmScheduler.BUNDLE_KEY_ALARM_ID, 3)
-        }
-
-        // When
-        val actualNotification = AlarmNotification
-            .getAlarmAlertNotification(context, alarmBundle)
+        val actualNotification = AlarmNotification.getAlarmAlertNotification(context)
 
         // Then
         with(actualNotification) {
@@ -65,7 +58,6 @@ class AlarmNotificationSpec {
 
         with(pendingIntent.savedIntent) {
             component!!.className mustBe AlarmActivity::class.qualifiedName
-            extras!!.getLong(AlarmScheduler.BUNDLE_KEY_ALARM_ID) mustBe 3
             flags mustBe (
                 Intent.FLAG_ACTIVITY_NEW_TASK
                     or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -81,7 +73,7 @@ class AlarmNotificationSpec {
 
         // When
         val actualNotification = AlarmNotification
-            .getAlarmAlertNotification(context, Bundle())
+            .getAlarmAlertNotification(context)
 
         // Then
         with(manager.getNotificationChannel(actualNotification.channelId)) {

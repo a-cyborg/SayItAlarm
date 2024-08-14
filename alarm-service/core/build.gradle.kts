@@ -42,6 +42,7 @@ dependencies {
     androidTestImplementation(libs.androidx.test.ext)
     androidTestImplementation(kotlin("test"))
     testImplementation(libs.androidx.test.ext)
+    testImplementation(libs.androidx.test.rules)
     testImplementation(libs.androidx.work.workTesting)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.robolectric)

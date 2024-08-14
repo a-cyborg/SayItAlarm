@@ -13,13 +13,12 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.os.Bundle
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 
 object AlarmNotification {
 
-    fun getAlarmAlertNotification(context: Context, alarmBundle: Bundle): Notification {
+    fun getAlarmAlertNotification(context: Context): Notification {
         createNotificationChannel(
             NotificationManagerCompat.from(context),
             context.getString(R.string.notification_alert_channel_name)
@@ -28,7 +27,6 @@ object AlarmNotification {
         val activityIntent = Intent(context, AlarmActivity::class.java)
             .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NO_HISTORY)
-            .putExtras(alarmBundle)
 
         val pendingIntent = PendingIntent.getActivity(
             context,

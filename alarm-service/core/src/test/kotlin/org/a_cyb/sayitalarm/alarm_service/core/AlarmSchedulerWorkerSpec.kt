@@ -25,9 +25,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
-import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler.Companion.BUNDLE_KEY_ALARM_ID
-import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler.Companion.BUNDLE_KEY_ALERT_TYPE
-import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler.Companion.BUNDLE_KEY_RINGTONE_URI
 import org.a_cyb.sayitalarm.domain.repository.RepositoryContract
 import org.a_cyb.sayitalarm.entity.Alarm
 import org.a_cyb.sayitalarm.entity.AlarmType
@@ -179,11 +176,8 @@ class AlarmSchedulerWorkerSpec {
         actual.action mustBe "org.a_cyb.sayitalarm.DELIVER_ALARM"
         actual.component!!.shortClassName mustBe AlarmBroadcastReceiver::class.qualifiedName
         actual.flags mustBe Intent.FLAG_RECEIVER_FOREGROUND
+        actual.getLongExtra(AlarmScheduler.EXTRA_ALARM_ID, 9L) mustBe alarm.id
 
-        val extras = actual.extras!!
-        extras.getLong(BUNDLE_KEY_ALARM_ID) mustBe alarm.id
-        extras.getInt(BUNDLE_KEY_ALERT_TYPE) mustBe alarm.alertType.ordinal
-        extras.getString(BUNDLE_KEY_RINGTONE_URI) mustBe alarm.ringtone.ringtone
     }
 
     private fun extractIntent(pendingIntent: PendingIntent?): Intent =

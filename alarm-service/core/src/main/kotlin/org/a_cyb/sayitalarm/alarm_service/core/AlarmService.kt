@@ -6,6 +6,7 @@
 
 package org.a_cyb.sayitalarm.alarm_service.core
 
+import kotlin.properties.Delegates
 import android.app.Notification
 import android.app.NotificationManager
 import android.app.Service
@@ -13,7 +14,6 @@ import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.os.Binder
 import android.os.Build
-import android.os.Bundle
 import android.os.IBinder
 import org.a_cyb.sayitalarm.alarm_service.core.util.AudioVibeControllerContract
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
@@ -27,12 +27,12 @@ class AlarmService : AlarmServiceContract.AlarmService, Service() {
     private val binder: Binder = AlertServiceBinder()
     private val audioVibeController: AudioVibeControllerContract by inject()
 
-    private lateinit var alarmData: Bundle
+    private var alarmId by Delegates.notNull<Long>()
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        alarmData = intent.extras ?: Bundle()
+        alarmId = intent.getLongExtra(AlarmScheduler.EXTRA_ALARM_ID, 0L)
 
-        val notification = AlarmNotification.getAlarmAlertNotification(this, alarmData)
+        val notification = AlarmNotification.getAlarmAlertNotification(this)
         val notificationManager = (getSystemService(NotificationManager::class.java) as NotificationManager)
 
         startForeground(notification)
@@ -93,7 +93,7 @@ class AlarmService : AlarmServiceContract.AlarmService, Service() {
     }
 
     inner class AlertServiceBinder : Binder() {
-        fun getAlarmId(): Long = alarmData.getLong(AlarmScheduler.BUNDLE_KEY_ALARM_ID)
+        fun getAlarmId(): Long = alarmId
         fun getService(): AlarmServiceContract.AlarmService = this@AlarmService
     }
 

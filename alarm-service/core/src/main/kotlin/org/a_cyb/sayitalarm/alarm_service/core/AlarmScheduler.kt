@@ -31,9 +31,6 @@ class AlarmScheduler(
 
     companion object {
         const val ACTION_DELIVER_ALARM = "org.a_cyb.sayitalarm.DELIVER_ALARM"
-
-        const val BUNDLE_KEY_ALARM_ID = "org.a_cyb.sayitalarm.BUNDLE_ALARM_ID"
-        const val BUNDLE_KEY_ALERT_TYPE = "org.a_cyb.sayitalarm.BUNDLE_ALERT_TYPE"
-        const val BUNDLE_KEY_RINGTONE_URI = "org.a_cyb.sayitalarm.BUNDLE_RINGTONE_URI"
+        const val EXTRA_ALARM_ID = "org.a_cyb.sayitalarm.EXTRA_ALARM_ID"
     }
 }
