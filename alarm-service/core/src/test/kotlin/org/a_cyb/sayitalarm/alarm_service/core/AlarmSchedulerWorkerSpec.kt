@@ -77,6 +77,7 @@ class AlarmSchedulerWorkerSpec {
         alarmRepository = mockk(relaxed = true)
         alarmManager = mockk(relaxed = true)
 
+        every { context.getSystemService(AlarmManager::class.java) } returns alarmManager
         Dispatchers.setMain(StandardTestDispatcher())
     }
 
@@ -93,7 +94,6 @@ class AlarmSchedulerWorkerSpec {
         }
         startKoin { modules(module) }
 
-        every { context.getSystemService(AlarmManager::class.java) } returns alarmManager
         every { alarmRepository.getAllEnabledAlarm(any()) } returns CompletableDeferred(alarms)
     }
 
@@ -111,83 +111,71 @@ class AlarmSchedulerWorkerSpec {
     }
 
     @Test
-    fun `When doWork invoked with WORKER_WORK_SET_ALARM it schedules enabled alarms in the database`() = runTest {
+    fun `When doWork invoked with WORKER_WORK_SET_ALARM it schedules alarms in the database`() = runTest {
         // Given
-        val alarms = getRandomEnabledAlarms(size = 2)
-        setupMockk(alarms)
+        val testAlarms = getRandomEnabledAlarms(size = 2)
+        setupMockk(testAlarms)
 
         // When
         val result = getSetAlarmWorker(context).doWork()
 
         // Then
+        @Suppress("DeferredResultUnused")
+        verify(exactly = 1) { alarmRepository.getAllEnabledAlarm(any()) }
         verify(exactly = 2) { alarmManager.setAlarmClock(any(), any()) }
         result mustBe ListenableWorker.Result.success()
     }
 
     @Test
-    fun `When worker schedule enabled alarms it only schedules alarms that have not been scheduled yet`() = runTest {
+    fun `When worker schedules an alarm it sets PendingIntent correctly`() = runTest {
+        // Given
+        val alarm = getRandomAlarm(id = 3, enabled = true)
+        val capturedIntent = slot<PendingIntent>()
+
+        setupMockk(listOf(alarm))
+        every { alarmManager.setAlarmClock(any(), capture(capturedIntent)) } answers { mockk() }
+
+        // When
+        getSetAlarmWorker(context).doWork()
+
+        // Then
+        val actualIntent = (Shadow.extract(capturedIntent.captured) as ShadowPendingIntent).savedIntent
+
+        capturedIntent.isCaptured mustBe true
+        capturedIntent.captured.isBroadcast mustBe true
+        capturedIntent.captured.isImmutable mustBe true
+        capturedIntent.captured.creatorPackage?.contains("org.a_cyb.sayitalarm.alarm_service") mustBe true
+
+        actualIntent.action mustBe AlarmScheduler.ACTION_DELIVER_ALARM
+        actualIntent.flags mustBe Intent.FLAG_RECEIVER_FOREGROUND
+        actualIntent.getLongExtra(AlarmScheduler.EXTRA_ALARM_ID, 0) mustBe alarm.id
+        actualIntent.component!!.shortClassName mustBe AlarmBroadcastReceiver::class.qualifiedName
+    }
+
+    @Test
+    fun `When worker schedules alarms it schedules only unscheduled alarms`() = runTest {
         // Given
         val worker = getSetAlarmWorker(context)
+        val initialAlarms = getRandomEnabledAlarms(size = 2)
+        val additionalAlarms = initialAlarms.plus(getRandomEnabledAlarms(size = 3, idOffset = 2))
+        setupMockk(initialAlarms)
 
-        // Call for the first time with 2 alarms.
-        val alarms = getRandomEnabledAlarms(size = 2)
-        setupMockk(alarms)
-
+        // When
         worker.doWork()
 
+        // Then
         verify(exactly = 2) { alarmManager.setAlarmClock(any(), any()) }
+
+        // Given
         clearMocks(alarmManager)
-
-        // Call for the second time with 2 alarms already scheduled, plus 3 more alarms.
-        val newAlarms = getRandomEnabledAlarms(size = 3, idOffset = 2)
-
         every { alarmRepository.getAllEnabledAlarm(any()) } returns
-            async { alarms.plus(newAlarms) }
+            async { initialAlarms.plus(additionalAlarms) }
 
         // When
         worker.doWork()
 
         // Then
         verify(exactly = 3) { alarmManager.setAlarmClock(any(), any()) }
-    }
-
-    @Test
-    fun `When worker schedules an alarm it calls setAlarmClock with AlarmService pendingIntent`() = runTest {
-        // Given
-        val alarm = getRandomAlarm(id = 1, enabled = true)
-        setupMockk(listOf(alarm))
-
-        val capturedIntent = slot<PendingIntent>()
-        every { alarmManager.setAlarmClock(any(), capture(capturedIntent)) } answers { mockk() }
-
-        // When
-        getSetAlarmWorker(context).doWork()
-
-        // Then
-        capturedIntent.isCaptured mustBe true
-        capturedIntent.captured.isBroadcast mustBe true
-        capturedIntent.captured.isImmutable mustBe true
-        capturedIntent.captured.creatorPackage?.contains("org.a_cyb.sayitalarm.alarm_service") mustBe true
-    }
-
-    @Test
-    fun `When worker schedules an alarm, it passes intent with alarm data`() = runTest {
-        // Given
-        val alarm = getRandomAlarm(id = 3, enabled = true)
-        setupMockk(listOf(alarm))
-
-        val capturedIntent = slot<PendingIntent>()
-        every { alarmManager.setAlarmClock(any(), capture(capturedIntent)) } answers { mockk() }
-
-        // When
-        getSetAlarmWorker(context).doWork()
-
-        // Then
-        val actual = extractIntent(capturedIntent.captured)
-        actual.action mustBe AlarmScheduler.ACTION_DELIVER_ALARM
-        actual.flags mustBe Intent.FLAG_RECEIVER_FOREGROUND
-        actual.component!!.shortClassName mustBe AlarmBroadcastReceiver::class.qualifiedName
-        actual.getLongExtra(AlarmScheduler.EXTRA_ALARM_ID, 9L) mustBe alarm.id
     }
 
     /**
@@ -206,15 +194,14 @@ class AlarmSchedulerWorkerSpec {
     }
 
     @Test
-    fun `When worker schedules a snooze, it schedules snooze alarm with AlarmManager`() = runTest {
+    fun `When doWork invoked with WORKER_WORK_SET_SNOOZE it schedules snooze alarm`() = runTest {
         // Given
+        mockkStatic(::getSnoozeTimeInMills)
+
         val alarmId: Long = fixture.fixture()
         val snoozeMin: Int = fixture.fixture()
         val snoozeMinSlot = slot<Int>()
         val capturedIntent = slot<PendingIntent>()
-
-        setupMockk(emptyList())
-        mockkStatic(::getSnoozeTimeInMills)
 
         // When
         getSetSnoozeWorker(context, alarmId, snoozeMin).doWork()
@@ -223,14 +210,10 @@ class AlarmSchedulerWorkerSpec {
         verify(exactly = 1) { alarmManager.setAlarmClock(any(), capture((capturedIntent))) }
         verify(exactly = 1) { getSnoozeTimeInMills(capture(snoozeMinSlot)) }
 
+        val actualIntent = (Shadow.extract(capturedIntent.captured) as ShadowPendingIntent).savedIntent
+        actualIntent.getLongExtra(AlarmScheduler.EXTRA_ALARM_ID, 0L) mustBe alarmId
         snoozeMinSlot.captured mustBe snoozeMin
-        extractIntent(capturedIntent.captured)
-            .getLongExtra(AlarmScheduler.EXTRA_ALARM_ID, 0L) mustBe alarmId
     }
-
-    private fun extractIntent(pendingIntent: PendingIntent?): Intent =
-        (Shadow.extract(pendingIntent) as ShadowPendingIntent)
-            .savedIntent
 
     private fun getRandomEnabledAlarms(size: Int, idOffset: Int = 0) =
         List(size) { idx ->
