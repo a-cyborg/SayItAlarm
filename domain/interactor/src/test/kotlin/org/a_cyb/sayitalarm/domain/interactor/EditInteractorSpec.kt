@@ -106,7 +106,7 @@ class EditInteractorSpec {
         coVerifyOrder {
             alarmRepository.update(any(), any())
 
-            alarmScheduler.setAlarm(any())
+            alarmScheduler.scheduleAlarms(any())
         }
     }
 

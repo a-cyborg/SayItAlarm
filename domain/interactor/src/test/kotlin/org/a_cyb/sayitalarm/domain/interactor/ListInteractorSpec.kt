@@ -125,7 +125,7 @@ class ListInteractorSpec {
 
         // Then
         coVerify(exactly = 1) {
-            alarmScheduler.setAlarm(any())
+            alarmScheduler.scheduleAlarms(any())
         }
     }
 
@@ -152,7 +152,7 @@ class ListInteractorSpec {
         // Then
         coVerifyOrder {
             alarmRepository.updateEnabled(any(), any(), any())
-            alarmScheduler.setAlarm(any())
+            alarmScheduler.scheduleAlarms(any())
         }
     }
 

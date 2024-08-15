@@ -35,6 +35,9 @@ class AlarmMapper(
     private val ringtoneResolver: RingtoneResolverContract,
 ) : AlarmMapperContract {
 
+    /*
+    * AlarmUI -> Alarm
+    * */
     override fun mapToAlarm(alarmUI: AlarmUI): Alarm =
         with(alarmUI) {
             Alarm(
@@ -70,6 +73,9 @@ class AlarmMapper(
         get() = AlertType.entries
             .associateBy { alertTypeFormatter.format(it) }
 
+    /*
+    * Alarm -> AlarmUI
+    * */
     override fun mapToAlarmUI(alarm: Alarm): AlarmUI =
         with(alarm) {
             AlarmUI(

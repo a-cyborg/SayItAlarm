@@ -20,7 +20,6 @@ import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -63,6 +62,7 @@ class AlarmServiceControllerSpec {
     private val alarmRepository: RepositoryContract.AlarmRepository = mockk(relaxed = true)
     private val settingsRepository: RepositoryContract.SettingsRepository = mockk(relaxed = true)
     private val alarmService: AlarmServiceContract.AlarmService = mockk(relaxed = true)
+    private val alarmScheduler: AlarmServiceContract.AlarmScheduler = mockk(relaxed = true)
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 
     private val fixture = kotlinFixture()
@@ -80,6 +80,7 @@ class AlarmServiceControllerSpec {
         controller = AlarmServiceController(
             alarmRepository,
             settingsRepository,
+            alarmScheduler,
             dispatcher
         )
     }
@@ -116,7 +117,7 @@ class AlarmServiceControllerSpec {
     fun `When onServiceBind is invoked and the alarm fetch is failed, it terminate the service`() = runTest {
         // Given
         every { alarmRepository.getAlarm(any(), any()) } returns
-            async { Result.failure(IllegalStateException()) }
+            CompletableDeferred(Result.failure(IllegalStateException()))
 
         withContext(dispatcher) {
             controller.alarmState.test {
@@ -134,13 +135,13 @@ class AlarmServiceControllerSpec {
     @Test
     fun `When onServiceBind is invoked and the settings is fetched, it sets the settings`() = runTest {
         // Given
+        val captured = slot<Snooze>()
         val settings = Settings(
             TimeOut(fixture.fixture()),
             Snooze(fixture.fixture()),
             Theme.DARK
         )
-        every { settingsRepository.getSettings() } returns
-            flow { emit(Result.success(settings)) }
+        every { settingsRepository.getSettings() } returns flow { emit(Result.success(settings)) }
 
         withContext(dispatcher) {
             controller.alarmState.test {
@@ -150,10 +151,9 @@ class AlarmServiceControllerSpec {
 
                 // When
                 controller.startSnooze()
-                val captured = slot<Snooze>()
-                verify(exactly = 1) { alarmService.startSnooze(capture(captured)) }
 
                 // Then
+                verify(exactly = 1) { alarmScheduler.scheduleSnooze(alarm.id, capture(captured)) }
                 captured.captured mustBe settings.snooze
             }
         }
@@ -162,6 +162,7 @@ class AlarmServiceControllerSpec {
     @Test
     fun `When onServiceBind is invoked and the settings fetch is failed, it sets default settings`() = runTest {
         // Given
+        val captured = slot<Snooze>()
         every { settingsRepository.getSettings() } returns
             flow { emit(Result.failure(IllegalStateException())) }
 
@@ -174,10 +175,8 @@ class AlarmServiceControllerSpec {
                 // When
                 controller.startSnooze()
 
-                val captured = slot<Snooze>()
-                verify(exactly = 1) { alarmService.startSnooze(capture(captured)) }
-
                 // Then
+                verify(exactly = 1) { alarmScheduler.scheduleSnooze(any(), capture(captured)) }
                 captured.captured mustBe SettingsViewModel.getDefaultSettings().snooze
             }
         }
@@ -250,7 +249,7 @@ class AlarmServiceControllerSpec {
                 controller.startSnooze()
 
                 // Then
-                verify(exactly = 1) { alarmService.startSnooze(any()) }
+                verify(exactly = 1) { alarmService.startSnooze() }
             }
         }
     }

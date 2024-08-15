@@ -66,12 +66,7 @@ class EditViewModelSpec {
         AlarmMapper(timeFormatter, weeklyRepeatFormatter, alertTypeFormatter, ringtoneManager)
 
     private val viewModel: (Long, InteractorContract.EditInteractor) -> EditViewModel = { alarmId, interactor ->
-        EditViewModel(
-            alarmId,
-            interactor,
-            mapper,
-            alarmUiConverter,
-        )
+        EditViewModel(alarmId, interactor, mapper, alarmUiConverter)
     }
 
     @BeforeTest

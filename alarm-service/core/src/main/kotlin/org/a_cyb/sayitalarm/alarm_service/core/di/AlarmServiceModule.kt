@@ -21,7 +21,7 @@ val alarmServiceModule = module {
     }
 
     single<AlarmServiceContract.AlarmServiceController> {
-        AlarmServiceController(get(), get(), get(named("io")))
+        AlarmServiceController(get(), get(), get(), get(named("io")))
     }
 
     single<AlarmServiceContract.SayItRecognizer> {

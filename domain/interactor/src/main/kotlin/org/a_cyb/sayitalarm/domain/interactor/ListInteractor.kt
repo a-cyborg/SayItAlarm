@@ -31,7 +31,7 @@ class ListInteractor(
 
     private suspend fun setAlarmSchedule(id: Long, enabled: Boolean, scope: CoroutineScope) {
         if (enabled) {
-            alarmScheduler.setAlarm(scope)
+            alarmScheduler.scheduleAlarms(scope)
         } else {
             alarmScheduler.cancelAlarm(id, scope)
         }

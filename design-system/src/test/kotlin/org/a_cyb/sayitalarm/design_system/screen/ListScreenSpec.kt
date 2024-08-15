@@ -238,7 +238,6 @@ class ListScreenSpec : RoborazziTest() {
 }
 
 private class ListViewModelFake(
-    // private val viewModelScope: CoroutineScope,
     states: List<ListState>,
 ) : ListContract.ListViewModel {
     private val states = states.toMutableList()

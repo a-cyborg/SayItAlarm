@@ -12,54 +12,63 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.work.Configuration
 import androidx.work.WorkManager
+import androidx.work.impl.utils.SynchronousExecutor
 import androidx.work.testing.WorkManagerTestInitHelper
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
+import org.a_cyb.sayitalarm.entity.Snooze
 import org.a_cyb.sayitalarm.util.mustBe
-import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(AndroidJUnit4::class)
 class AlarmSchedulerSpec {
-
     private lateinit var context: Context
-    private val workManagerConfig = Configuration.Builder()
-        .setMinimumLoggingLevel(Log.DEBUG)
-        .build()
+    private lateinit var configuration: Configuration
+    private lateinit var workManager: WorkManager
 
     @Before
     fun setup() {
         context = ApplicationProvider.getApplicationContext()
-        WorkManagerTestInitHelper.initializeTestWorkManager(context, workManagerConfig)
+        configuration = Configuration.Builder()
+            .setMinimumLoggingLevel(Log.DEBUG)
+            .setExecutor(SynchronousExecutor())
+            .build()
 
-        Dispatchers.setMain(StandardTestDispatcher())
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
+        WorkManagerTestInitHelper.initializeTestWorkManager(context, configuration)
+        workManager = WorkManager.getInstance(context)
     }
 
     @Test
-    fun `When setAlarm is called it enqueues AlarmSchedulerWorker`() = runTest {
+    fun `When scheduleAllAlarms is called it enqueues AlarmSchedulerWorker`() = runTest {
         // Given
         val scheduler = AlarmScheduler(context)
 
         // When
-        scheduler.setAlarm(this)
+        scheduler.scheduleAlarms(this)
 
         val workInfo = WorkManager.getInstance(context)
             .getWorkInfosByTag(AlarmSchedulerWorker::class.qualifiedName!!)
             .get()
 
         // Then
+        workInfo.isEmpty() mustBe false
+        workInfo.size mustBe 1
+    }
+
+    @Test
+    fun `When scheduleSnooze is called it enqueues AlarmSchedulerWorker`() = runTest {
+        // Given
+        val scheduler = AlarmScheduler(context)
+
+        // When
+        scheduler.scheduleSnooze(3L, Snooze(15))
+
+        // Then
+        val workInfo = WorkManager.getInstance(context)
+            .getWorkInfosByTag(AlarmSchedulerWorker::class.qualifiedName!!)
+            .get()
+
         workInfo.isEmpty() mustBe false
         workInfo.size mustBe 1
     }

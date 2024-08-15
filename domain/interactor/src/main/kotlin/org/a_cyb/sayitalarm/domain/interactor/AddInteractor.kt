@@ -19,11 +19,8 @@ class AddInteractor(
 
     override fun save(alarm: Alarm, scope: CoroutineScope) {
         scope.launch {
-            alarmRepository
-                .save(alarm, this)
-
-            alarmScheduler
-                .setAlarm(this)
+            alarmRepository.save(alarm, this)
+            alarmScheduler.scheduleAlarms(this)
         }
     }
 }

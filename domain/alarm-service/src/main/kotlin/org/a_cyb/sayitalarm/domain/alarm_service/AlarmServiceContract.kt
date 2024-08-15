@@ -17,14 +17,15 @@ import org.a_cyb.sayitalarm.entity.Snooze
 sealed interface AlarmServiceContract {
 
     interface AlarmScheduler {
-        suspend fun setAlarm(scope: CoroutineScope)
+        suspend fun scheduleAlarms(scope: CoroutineScope)
+        fun scheduleSnooze(alarmId: Long, snooze: Snooze)
         suspend fun cancelAlarm(id: Long, scope: CoroutineScope)
     }
 
     interface AlarmService {
         fun ringAlarm(ringtone: Ringtone, alertType: AlertType)
         fun startSayIt()
-        fun startSnooze(snooze: Snooze)
+        fun startSnooze()
         fun stopService()
     }
 

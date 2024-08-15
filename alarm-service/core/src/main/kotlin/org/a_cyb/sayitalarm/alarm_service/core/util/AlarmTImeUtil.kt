@@ -17,15 +17,19 @@ import org.a_cyb.sayitalarm.entity.Hour
 import org.a_cyb.sayitalarm.entity.Minute
 import org.a_cyb.sayitalarm.entity.WeeklyRepeat
 
+fun getSnoozeTimeInMills(snoozeMin: Int): Long {
+    val snoozeTime = LocalDateTime.now().plusMinutes(snoozeMin.toLong())
+
+    return snoozeTime.toZonedMilliSec()
+}
+
 fun getNextAlarmTimeInMills(hour: Hour, minute: Minute, weeklyRepeat: WeeklyRepeat): Long {
     val alarmLocalDateTime = getNextAlarmTime(
         LocalTime.of(hour.hour, minute.minute),
         weeklyRepeat
     )
 
-    return ZonedDateTime
-        .of(alarmLocalDateTime, ZoneId.systemDefault())
-        .toEpochSecond() * 1000
+    return alarmLocalDateTime.toZonedMilliSec()
 }
 
 fun getNextAlarmTime(alarmTime: LocalTime, weeklyRepeat: WeeklyRepeat): LocalDateTime {
@@ -57,10 +61,14 @@ private fun getNextDayOfAlarm(alarmTime: LocalTime, weeklyRepeat: WeeklyRepeat):
             .firstOrNull { it > todayCode }
             ?: weeklyRepeat.weekdays.first()
 
-        nowDate
-            .with(TemporalAdjusters.next(DayOfWeek.of(nextDayCode)))
+        nowDate.with(TemporalAdjusters.next(DayOfWeek.of(nextDayCode)))
     }
 }
+
+private fun LocalDateTime.toZonedMilliSec(): Long =
+    ZonedDateTime
+        .of(this, ZoneId.systemDefault())
+        .toEpochSecond() * 1000
 
 private fun WeeklyRepeat.isRepeat(): Boolean =
     weekdays.isNotEmpty()

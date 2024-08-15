@@ -19,15 +19,13 @@ import org.a_cyb.sayitalarm.alarm_service.core.util.AudioVibeControllerContract
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
 import org.a_cyb.sayitalarm.entity.AlertType
 import org.a_cyb.sayitalarm.entity.Ringtone
-import org.a_cyb.sayitalarm.entity.Snooze
 import org.koin.android.ext.android.inject
 
 class AlarmService : AlarmServiceContract.AlarmService, Service() {
 
     private val binder: Binder = AlertServiceBinder()
-    private val audioVibeController: AudioVibeControllerContract by inject()
-
     private var alarmId by Delegates.notNull<Long>()
+    private val audioVibeController: AudioVibeControllerContract by inject()
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         alarmId = intent.getLongExtra(AlarmScheduler.EXTRA_ALARM_ID, 0L)
@@ -77,9 +75,9 @@ class AlarmService : AlarmServiceContract.AlarmService, Service() {
         audioVibeController.stopRinging()
     }
 
-    override fun startSnooze(snooze: Snooze) {
+    override fun startSnooze() {
         audioVibeController.stopRinging()
-        TODO()
+        stopService()
     }
 
     override fun stopService() {

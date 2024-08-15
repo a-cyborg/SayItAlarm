@@ -26,6 +26,7 @@ import org.a_cyb.sayitalarm.presentation.viewmodel.SettingsViewModel
 class AlarmServiceController(
     private val alarmRepository: RepositoryContract.AlarmRepository,
     private val settingsRepository: RepositoryContract.SettingsRepository,
+    private val alarmScheduler: AlarmServiceContract.AlarmScheduler,
     private val dispatcher: CoroutineDispatcher,
 ) : AlarmServiceController {
 
@@ -63,7 +64,6 @@ class AlarmServiceController(
     private fun startRingAlarm() {
         if (alarm == null) {
             // If the alarm is no longer in the database, terminate the application.
-            // TODO: Push a notification about the canceled alarm.
             alarmService!!.stopService()
         } else {
             alarmService!!.ringAlarm(alarm!!.ringtone, alarm!!.alertType)
@@ -85,7 +85,8 @@ class AlarmServiceController(
 
     override fun startSnooze() {
         runActionOrUpdateError {
-            alarmService?.startSnooze(settings!!.snooze)
+            alarmScheduler.scheduleSnooze(alarm!!.id, settings!!.snooze)
+            alarmService?.startSnooze()
         }
     }
 
@@ -93,11 +94,10 @@ class AlarmServiceController(
         alarmService?.stopService()
     }
 
-    private fun runActionOrUpdateError(action: (AlarmServiceContract.AlarmService.() -> Unit)) {
-        if (alarmService != null) {
-            alarmService!!.action()
-        } else {
-            _alarmState.value = AlarmServiceState.Error
+    private fun runActionOrUpdateError(action: () -> Unit) {
+        when (alarmService == null) {
+            false -> action()
+            true -> _alarmState.value = AlarmServiceState.Error
         }
     }
 }
