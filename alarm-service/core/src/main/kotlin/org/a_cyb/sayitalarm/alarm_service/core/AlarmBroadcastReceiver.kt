@@ -17,7 +17,7 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         when (intent.action) {
-            AlarmScheduler.ACTION_DELIVER_ALARM -> {
+            AlarmScheduler.INTENT_ACTION_DELIVER_ALARM -> {
                 AlarmAlertWakeLock.acquireWakeLock(context)
 
                 val alarmServiceIntent =

@@ -32,6 +32,7 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler.Companion.SCHEDULER_WORKER_INPUT_DATA_ALARM_ID
 import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler.Companion.SCHEDULER_WORKER_INPUT_DATA_SNOOZE_MIN
+import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler.Companion.SCHEDULER_WORKER_WORK_CANCEL_ALARM
 import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler.Companion.SCHEDULER_WORKER_WORK_SET_ALARM
 import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler.Companion.SCHEDULER_WORKER_WORK_SET_SNOOZE
 import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler.Companion.SCHEDULER_WORKER_WORK_TYPE
@@ -146,9 +147,9 @@ class AlarmSchedulerWorkerSpec {
         capturedIntent.captured.isImmutable mustBe true
         capturedIntent.captured.creatorPackage?.contains("org.a_cyb.sayitalarm.alarm_service") mustBe true
 
-        actualIntent.action mustBe AlarmScheduler.ACTION_DELIVER_ALARM
+        actualIntent.action mustBe AlarmScheduler.INTENT_ACTION_DELIVER_ALARM
         actualIntent.flags mustBe Intent.FLAG_RECEIVER_FOREGROUND
-        actualIntent.getLongExtra(AlarmScheduler.EXTRA_ALARM_ID, 0) mustBe alarm.id
+        actualIntent.getLongExtra(AlarmScheduler.INTENT_EXTRA_ALARM_ID, 0) mustBe alarm.id
         actualIntent.component!!.shortClassName mustBe AlarmBroadcastReceiver::class.qualifiedName
     }
 
@@ -211,8 +212,38 @@ class AlarmSchedulerWorkerSpec {
         verify(exactly = 1) { getSnoozeTimeInMills(capture(snoozeMinSlot)) }
 
         val actualIntent = (Shadow.extract(capturedIntent.captured) as ShadowPendingIntent).savedIntent
-        actualIntent.getLongExtra(AlarmScheduler.EXTRA_ALARM_ID, 0L) mustBe alarmId
+        actualIntent.getLongExtra(AlarmScheduler.INTENT_EXTRA_ALARM_ID, 0L) mustBe alarmId
         snoozeMinSlot.captured mustBe snoozeMin
+    }
+
+    @Test
+    fun `When doWork invoked with WORKER_WORK_CANCEL_ALARM it cancel alarm`() = runTest {
+        // Given
+        val alarmId: Long = fixture.fixture()
+        val capturedIntent = slot<PendingIntent>()
+        val cancelAlarmData = Data.Builder()
+            .putInt(SCHEDULER_WORKER_WORK_TYPE, SCHEDULER_WORKER_WORK_CANCEL_ALARM)
+            .putLong(SCHEDULER_WORKER_INPUT_DATA_ALARM_ID, alarmId)
+            .build()
+        val worker = TestListenableWorkerBuilder<AlarmSchedulerWorker>(context)
+            .setInputData(cancelAlarmData)
+            .build()
+
+        // When
+        worker.doWork()
+
+        // Then
+        verify(exactly = 1) { alarmManager.cancel(capture(capturedIntent)) }
+
+        capturedIntent.isCaptured mustBe true
+        capturedIntent.captured.isImmutable mustBe true
+        capturedIntent.captured.isBroadcast mustBe true
+
+        val actualIntent = (Shadow.extract(capturedIntent.captured) as ShadowPendingIntent).savedIntent
+        actualIntent.action mustBe AlarmScheduler.INTENT_ACTION_DELIVER_ALARM
+        actualIntent.flags mustBe Intent.FLAG_RECEIVER_FOREGROUND
+        actualIntent.component!!.shortClassName mustBe AlarmBroadcastReceiver::class.qualifiedName
+        actualIntent.getLongExtra(AlarmScheduler.INTENT_EXTRA_ALARM_ID, 0L) mustBe alarmId
     }
 
     private fun getRandomEnabledAlarms(size: Int, idOffset: Int = 0) =

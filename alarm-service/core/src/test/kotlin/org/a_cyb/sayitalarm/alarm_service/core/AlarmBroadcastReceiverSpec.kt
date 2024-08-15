@@ -37,7 +37,7 @@ class AlarmBroadcastReceiverSpec {
         // Given
         mockkStatic(ContextCompat::class)
 
-        val intent = Intent(AlarmScheduler.ACTION_DELIVER_ALARM)
+        val intent = Intent(AlarmScheduler.INTENT_ACTION_DELIVER_ALARM)
             .putExtras(Bundle())
 
         // When

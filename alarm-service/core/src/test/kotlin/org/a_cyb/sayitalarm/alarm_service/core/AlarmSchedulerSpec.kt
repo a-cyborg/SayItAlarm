@@ -92,4 +92,27 @@ class AlarmSchedulerSpec {
         actualAlarmId mustBe alarmId
         actualSnoozeMin mustBe snooze.snooze
     }
+
+    @Test
+    fun `When cancelAlarm is called it enqueues AlarmSchedulerWorker`() = runTest {
+        // Given
+        val scheduler = AlarmScheduler(context)
+        val capturedRequest = slot<WorkRequest>()
+        val alarmId: Long = fixture.fixture(range = 1..Int.MAX_VALUE)
+
+        // When
+        scheduler.cancelAlarm(alarmId, this)
+
+        // Then
+        verify(exactly = 1) { workManager.enqueue(capture(capturedRequest)) }
+
+        val actualWorkSpec = capturedRequest.captured.workSpec
+        val actualInput = actualWorkSpec.input
+        val actualWorkType = actualInput.getInt(AlarmScheduler.SCHEDULER_WORKER_WORK_TYPE, 0)
+        val actualAlarmId = actualInput.getLong(AlarmScheduler.SCHEDULER_WORKER_INPUT_DATA_ALARM_ID, 0)
+
+        actualWorkSpec.isPeriodic mustBe false
+        actualWorkType mustBe AlarmScheduler.SCHEDULER_WORKER_WORK_CANCEL_ALARM
+        actualAlarmId mustBe alarmId
+    }
 }

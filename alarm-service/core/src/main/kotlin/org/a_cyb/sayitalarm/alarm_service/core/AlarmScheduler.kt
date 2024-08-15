@@ -23,13 +23,7 @@ class AlarmScheduler(
             .putInt(SCHEDULER_WORKER_WORK_TYPE, SCHEDULER_WORKER_WORK_SET_ALARM)
             .build()
 
-        val request = OneTimeWorkRequestBuilder<AlarmSchedulerWorker>()
-            .setInputData(data)
-            .build()
-
-        WorkManager
-            .getInstance(context)
-            .enqueue(request)
+        enqueueWork(data)
     }
 
     override fun scheduleSnooze(alarmId: Long, snooze: Snooze) {
@@ -39,6 +33,19 @@ class AlarmScheduler(
             .putInt(SCHEDULER_WORKER_INPUT_DATA_SNOOZE_MIN, snooze.snooze)
             .build()
 
+        enqueueWork(data)
+    }
+
+    override suspend fun cancelAlarm(alarmId: Long, scope: CoroutineScope) {
+        val data = Data.Builder()
+            .putInt(SCHEDULER_WORKER_WORK_TYPE, SCHEDULER_WORKER_WORK_CANCEL_ALARM)
+            .putLong(SCHEDULER_WORKER_INPUT_DATA_ALARM_ID, alarmId)
+            .build()
+
+        enqueueWork(data)
+    }
+
+    private fun enqueueWork(data: Data) {
         val request = OneTimeWorkRequestBuilder<AlarmSchedulerWorker>()
             .setInputData(data)
             .build()
@@ -48,17 +55,15 @@ class AlarmScheduler(
             .enqueue(request)
     }
 
-    override suspend fun cancelAlarm(id: Long, scope: CoroutineScope) {
-    }
-
     companion object {
         const val SCHEDULER_WORKER_WORK_TYPE = "org.a_cyb.sayitalarm.SCHEDULER_WORKER_WORK_TYPE"
         const val SCHEDULER_WORKER_INPUT_DATA_SNOOZE_MIN = "org.a_cyb.sayitalarm.SCHEDULER_WORKER_INPUT_DATA_SNOOZE_MIN"
         const val SCHEDULER_WORKER_INPUT_DATA_ALARM_ID = "org.a_cyb.sayitalarm.SCHEDULER_WORKER_INPUT_DATA_ALARM_ID"
         const val SCHEDULER_WORKER_WORK_SET_ALARM = 30145
         const val SCHEDULER_WORKER_WORK_SET_SNOOZE = 13946
+        const val SCHEDULER_WORKER_WORK_CANCEL_ALARM = 13049
 
-        const val ACTION_DELIVER_ALARM = "org.a_cyb.sayitalarm.DELIVER_ALARM"
-        const val EXTRA_ALARM_ID = "org.a_cyb.sayitalarm.EXTRA_ALARM_ID"
+        const val INTENT_ACTION_DELIVER_ALARM = "org.a_cyb.sayitalarm.DELIVER_ALARM"
+        const val INTENT_EXTRA_ALARM_ID = "org.a_cyb.sayitalarm.EXTRA_ALARM_ID"
     }
 }

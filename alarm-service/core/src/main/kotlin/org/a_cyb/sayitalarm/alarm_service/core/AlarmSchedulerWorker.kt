@@ -34,6 +34,7 @@ internal class AlarmSchedulerWorker(
         return when (workType) {
             AlarmScheduler.SCHEDULER_WORKER_WORK_SET_ALARM -> scheduleEnabledAlarms()
             AlarmScheduler.SCHEDULER_WORKER_WORK_SET_SNOOZE -> scheduleSnooze()
+            AlarmScheduler.SCHEDULER_WORKER_WORK_CANCEL_ALARM -> cancelAlarm()
             else -> return Result.failure()
         }
     }
@@ -59,6 +60,18 @@ internal class AlarmSchedulerWorker(
         return Result.success()
     }
 
+    private fun cancelAlarm(): Result {
+        val alarmId = inputData.getLong(SCHEDULER_WORKER_INPUT_DATA_ALARM_ID, 0)
+        val deliverIntent = getDeliverAlarmIntent(alarmId)
+        val pendingIntent = getPendingIntent(false, alarmId.toInt(), deliverIntent)
+        val alarmManager = applicationContext.getSystemService(AlarmManager::class.java)
+
+        alarmManager.cancel(pendingIntent!!)
+        pendingIntent.cancel()
+
+        return Result.success()
+    }
+
     private fun setAlarmClock(alarmId: Long, alarmTimeInMills: Long) {
         val alarmManager = applicationContext.getSystemService(AlarmManager::class.java)
         val deliverIntent = getDeliverAlarmIntent(alarmId)
@@ -76,9 +89,9 @@ internal class AlarmSchedulerWorker(
 
     private fun getDeliverAlarmIntent(alarmId: Long): Intent =
         Intent(applicationContext, AlarmBroadcastReceiver::class.java)
-            .setAction(AlarmScheduler.ACTION_DELIVER_ALARM)
+            .setAction(AlarmScheduler.INTENT_ACTION_DELIVER_ALARM)
             .setFlags(Intent.FLAG_RECEIVER_FOREGROUND)
-            .putExtra(AlarmScheduler.EXTRA_ALARM_ID, alarmId)
+            .putExtra(AlarmScheduler.INTENT_EXTRA_ALARM_ID, alarmId)
 
     private fun getPendingIntent(isForDupeCheck: Boolean, alarmId: Int, intent: Intent): PendingIntent? {
         val flags = when (isForDupeCheck) {

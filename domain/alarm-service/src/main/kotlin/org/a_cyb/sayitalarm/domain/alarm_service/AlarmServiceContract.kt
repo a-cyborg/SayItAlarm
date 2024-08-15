@@ -19,7 +19,7 @@ sealed interface AlarmServiceContract {
     interface AlarmScheduler {
         suspend fun scheduleAlarms(scope: CoroutineScope)
         fun scheduleSnooze(alarmId: Long, snooze: Snooze)
-        suspend fun cancelAlarm(id: Long, scope: CoroutineScope)
+        suspend fun cancelAlarm(alarmId: Long, scope: CoroutineScope)
     }
 
     interface AlarmService {
