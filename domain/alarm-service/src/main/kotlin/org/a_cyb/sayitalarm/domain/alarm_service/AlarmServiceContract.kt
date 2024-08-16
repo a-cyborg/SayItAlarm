@@ -41,14 +41,46 @@ sealed interface AlarmServiceContract {
         sealed interface AlarmServiceState {
             data object Initial : AlarmServiceState
             data class Ringing(val label: Label) : AlarmServiceState
-            data class RunningSayIt(val scripts: SayItScripts) : AlarmServiceState
+            data object RunningSayIt : AlarmServiceState
             data object Completed : AlarmServiceState
             data object Error : AlarmServiceState
         }
     }
 
-    interface SayItRecognizer {
-        fun startSayItRecognizer()
-        fun stopSayItRecognizer()
+    interface SayItController {
+        val sayItState: StateFlow<SayItState>
+
+        fun startSayIt(scripts: SayItScripts)
+        fun stopSayIt()
+
+        sealed interface SayItState {
+            data object Initial : SayItState
+            data object Ready : SayItState
+            data class Processing(val progressState: ProgressCounter, val currentScript: String) : SayItState
+            data class Processed(val processResult: ProcessResult) : SayItState
+            data class Done(val sayItResult: SayItResult) : SayItState
+        }
+
+        data class ProgressCounter(val current: Int, val total: Int)
+        data class ProcessResult(val isSuccess: Boolean)
+        data class SayItResult(val isSuccess: Boolean, val message: String)
+    }
+
+    interface SttRecognizer {
+        val recognizerState: StateFlow<RecognizerState>
+        val rmsDbState: StateFlow<RecognizerRmsDb>
+
+        fun startListening()
+        fun stopSttRecognizer()
+
+        data class RecognizerRmsDb(val rmsDb: Float)
+
+        sealed interface RecognizerState {
+            data object Initial : RecognizerState
+            data object Ready : RecognizerState
+            data class Processing(val partialResults: String) : RecognizerState
+            data class Done(val result: String) : RecognizerState
+            data class Error(val cause: String) : RecognizerState
+        }
     }
 }
