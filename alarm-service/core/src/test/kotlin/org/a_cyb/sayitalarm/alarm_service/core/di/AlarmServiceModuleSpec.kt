@@ -12,6 +12,8 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.mockk.mockk
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.test.StandardTestDispatcher
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
 import org.a_cyb.sayitalarm.domain.repository.RepositoryContract
 import org.junit.Before
@@ -70,5 +72,43 @@ class AlarmServiceModuleSpec {
 
         // Then
         assertNotNull(controller)
+    }
+
+    @Test
+    fun `It injects SayItProcessor`() {
+        // Given
+        val extraModules = module {
+            single<AlarmServiceContract.SttRecognizer> { mockk(relaxed = true) }
+            single<CoroutineScope>(named("ioScope")) { CoroutineScope(StandardTestDispatcher()) }
+        }
+        val koinApp = koinApplication {
+            modules(
+                alarmServiceModule,
+                extraModules,
+            )
+        }
+
+        // When
+        val processor = koinApp.koin.getOrNull<AlarmServiceContract.SayItProcessor>()
+
+        // Then
+        assertNotNull(processor)
+    }
+
+    @Test
+    fun `It injects SttRecognizer`() {
+        // Given
+        val koinApp = koinApplication {
+            androidContext(context)
+            modules(
+                alarmServiceModule,
+            )
+        }
+
+        // When
+        val recognizer = koinApp.koin.getOrNull<AlarmServiceContract.SttRecognizer>()
+
+        // Then
+        assertNotNull(recognizer)
     }
 }

@@ -8,7 +8,8 @@ package org.a_cyb.sayitalarm.alarm_service.core.di
 
 import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler
 import org.a_cyb.sayitalarm.alarm_service.core.AlarmServiceController
-import org.a_cyb.sayitalarm.alarm_service.core.SayItRecognizer
+import org.a_cyb.sayitalarm.alarm_service.core.AndroidSttRecognizer
+import org.a_cyb.sayitalarm.alarm_service.core.SayItProcessor
 import org.a_cyb.sayitalarm.alarm_service.core.util.AudioVibeController
 import org.a_cyb.sayitalarm.alarm_service.core.util.AudioVibeControllerContract
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
@@ -21,11 +22,15 @@ val alarmServiceModule = module {
     }
 
     single<AlarmServiceContract.AlarmServiceController> {
-        AlarmServiceController(get(), get(), get(), get(named("io")))
+        AlarmServiceController(get(), get(), get(), get(named("ioScope")))
     }
 
-    single<AlarmServiceContract.SayItRecognizer> {
-        SayItRecognizer(get())
+    single<AlarmServiceContract.SayItProcessor> {
+        SayItProcessor(get(), get(named("ioScope")))
+    }
+
+    single<AlarmServiceContract.SttRecognizer> {
+        AndroidSttRecognizer(get())
     }
 
     single<AudioVibeControllerContract> {
