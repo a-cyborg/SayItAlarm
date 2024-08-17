@@ -17,20 +17,19 @@ import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
 import kotlinx.coroutines.CompletableDeferred
-import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import kotlinx.coroutines.withContext
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController.AlarmServiceState.Error
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController.AlarmServiceState.Initial
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController.AlarmServiceState.Ringing
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController.AlarmServiceState.RunningSayIt
+import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController.ControllerState
+import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController.ControllerState.Initial
+import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController.ControllerState.Ringing
 import org.a_cyb.sayitalarm.domain.repository.RepositoryContract
 import org.a_cyb.sayitalarm.entity.Alarm
 import org.a_cyb.sayitalarm.entity.AlarmType
@@ -63,7 +62,6 @@ class AlarmServiceControllerSpec {
     private val settingsRepository: RepositoryContract.SettingsRepository = mockk(relaxed = true)
     private val alarmService: AlarmServiceContract.AlarmService = mockk(relaxed = true)
     private val alarmScheduler: AlarmServiceContract.AlarmScheduler = mockk(relaxed = true)
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 
     private val fixture = kotlinFixture()
 
@@ -81,7 +79,7 @@ class AlarmServiceControllerSpec {
             alarmRepository,
             settingsRepository,
             alarmScheduler,
-            dispatcher
+            CoroutineScope(StandardTestDispatcher())
         )
     }
 
@@ -92,25 +90,23 @@ class AlarmServiceControllerSpec {
 
     @Test
     fun `It is in the Initial state`() {
-        controller.alarmState.value mustBe Initial
+        controller.controllerState.value mustBe Initial
     }
 
     @Test
     fun `When onServiceBind is invoked and the alarm is fetched, it rings the alarm and update the state`() = runTest {
         // Given
-        withContext(dispatcher) {
-            controller.alarmState.test {
-                skipItems(1)
+        controller.controllerState.test {
+            skipItems(1)
 
-                // When
-                controller.onServiceBind(alarmService, alarm.id)
+            // When
+            controller.onServiceBind(alarmService, alarm.id)
 
-                // Then
-                awaitItem() mustBe Ringing(alarm.label)
-            }
-
-            verify(exactly = 1) { alarmService.ringAlarm(any(), any()) }
+            // Then
+            awaitItem() mustBe Ringing(alarm.label)
         }
+
+        verify(exactly = 1) { alarmService.ringAlarm(any(), any()) }
     }
 
     @Test
@@ -119,16 +115,15 @@ class AlarmServiceControllerSpec {
         every { alarmRepository.getAlarm(any(), any()) } returns
             CompletableDeferred(Result.failure(IllegalStateException()))
 
-        withContext(dispatcher) {
-            controller.alarmState.test {
-                skipItems(1)
+        controller.controllerState.test {
+            skipItems(1)
 
-                // When
-                controller.onServiceBind(alarmService, alarm.id)
+            // When
+            controller.onServiceBind(alarmService, alarm.id)
+            advanceUntilIdle()
 
-                // Then
-                verify(exactly = 1) { alarmService.stopService() }
-            }
+            // Then
+            verify(exactly = 1) { alarmService.stopService() }
         }
     }
 
@@ -143,19 +138,17 @@ class AlarmServiceControllerSpec {
         )
         every { settingsRepository.getSettings() } returns flow { emit(Result.success(settings)) }
 
-        withContext(dispatcher) {
-            controller.alarmState.test {
-                // Given
-                controller.onServiceBind(alarmService, alarm.id)
-                skipItems(2)
+        controller.controllerState.test {
+            // Given
+            controller.onServiceBind(alarmService, alarm.id)
+            skipItems(2)
 
-                // When
-                controller.startSnooze()
+            // When
+            controller.startSnooze()
 
-                // Then
-                verify(exactly = 1) { alarmScheduler.scheduleSnooze(alarm.id, capture(captured)) }
-                captured.captured mustBe settings.snooze
-            }
+            // Then
+            verify(exactly = 1) { alarmScheduler.scheduleSnooze(alarm.id, capture(captured)) }
+            captured.captured mustBe settings.snooze
         }
     }
 
@@ -166,19 +159,17 @@ class AlarmServiceControllerSpec {
         every { settingsRepository.getSettings() } returns
             flow { emit(Result.failure(IllegalStateException())) }
 
-        withContext(dispatcher) {
-            controller.alarmState.test {
-                // Given
-                controller.onServiceBind(alarmService, alarm.id)
-                skipItems(2)
+        controller.controllerState.test {
+            // Given
+            controller.onServiceBind(alarmService, alarm.id)
+            skipItems(2)
 
-                // When
-                controller.startSnooze()
+            // When
+            controller.startSnooze()
 
-                // Then
-                verify(exactly = 1) { alarmScheduler.scheduleSnooze(any(), capture(captured)) }
-                captured.captured mustBe SettingsViewModel.getDefaultSettings().snooze
-            }
+            // Then
+            verify(exactly = 1) { alarmScheduler.scheduleSnooze(any(), capture(captured)) }
+            captured.captured mustBe SettingsViewModel.getDefaultSettings().snooze
         }
     }
 
@@ -187,17 +178,15 @@ class AlarmServiceControllerSpec {
         // Given
         val alarmService: AlarmServiceContract.AlarmService = mockk(relaxed = true)
 
-        withContext(dispatcher) {
-            controller.alarmState.test {
-                controller.onServiceBind(alarmService, alarm.id)
-                skipItems(2)
+        controller.controllerState.test {
+            controller.onServiceBind(alarmService, alarm.id)
+            skipItems(2)
 
-                // When
-                controller.onServiceDisconnected()
+            // When
+            controller.onServiceDisconnected()
 
-                // Then
-                awaitItem() mustBe Error
-            }
+            // Then
+            awaitItem() mustBe ControllerState.Error
         }
     }
 
@@ -207,25 +196,23 @@ class AlarmServiceControllerSpec {
             // Given
             val alarmService: AlarmServiceContract.AlarmService = mockk(relaxed = true)
 
-            withContext(dispatcher) {
-                controller.alarmState.test {
-                    controller.onServiceBind(alarmService, alarm.id)
-                    skipItems(2)
+            controller.controllerState.test {
+                controller.onServiceBind(alarmService, alarm.id)
+                skipItems(2)
 
-                    // When
-                    controller.startSayIt()
+                // When
+                controller.startSayIt()
 
-                    // Then
-                    awaitItem() mustBe RunningSayIt(alarm.sayItScripts)
-                }
-
-                verify(exactly = 1) { alarmService.startSayIt() }
+                // Then
+                awaitItem() mustBe ControllerState.RunningSayIt(alarm.sayItScripts)
             }
+
+            verify(exactly = 1) { alarmService.startSayIt() }
         }
 
     @Test
     fun `When the service is unbound and startSayIt is called, it sets the state to error`() = runTest {
-        controller.alarmState.test {
+        controller.controllerState.test {
             // Given
             skipItems(1)
 
@@ -233,30 +220,28 @@ class AlarmServiceControllerSpec {
             controller.startSayIt()
 
             // Then
-            awaitItem() mustBe Error
+            awaitItem() mustBe ControllerState.Error
         }
     }
 
     @Test
     fun `When the service is bound and startSnooze is called, it invokes the service snooze`() = runTest {
-        withContext(dispatcher) {
-            controller.alarmState.test {
-                // Given
-                controller.onServiceBind(alarmService, alarm.id)
-                skipItems(2)
+        controller.controllerState.test {
+            // Given
+            controller.onServiceBind(alarmService, alarm.id)
+            skipItems(2)
 
-                // When
-                controller.startSnooze()
+            // When
+            controller.startSnooze()
 
-                // Then
-                verify(exactly = 1) { alarmService.startSnooze() }
-            }
+            // Then
+            verify(exactly = 1) { alarmService.startSnooze() }
         }
     }
 
     @Test
     fun `When the service is unbound and snooze is called, it sets the state to error`() = runTest {
-        controller.alarmState.test {
+        controller.controllerState.test {
             // Given
             skipItems(1)
 
@@ -264,7 +249,7 @@ class AlarmServiceControllerSpec {
             controller.startSnooze()
 
             // Then
-            awaitItem() mustBe Error
+            awaitItem() mustBe ControllerState.Error
         }
     }
 
@@ -273,15 +258,13 @@ class AlarmServiceControllerSpec {
         // Given
         val alarmService: AlarmServiceContract.AlarmService = mockk(relaxed = true)
 
-        withContext(dispatcher) {
-            controller.onServiceBind(alarmService, alarm.id)
+        controller.onServiceBind(alarmService, alarm.id)
 
-            // When
-            controller.terminate()
+        // When
+        controller.terminate()
 
-            // Then
-            verify(exactly = 1) { alarmService.stopService() }
-        }
+        // Then
+        verify(exactly = 1) { alarmService.stopService() }
     }
 
     @Test

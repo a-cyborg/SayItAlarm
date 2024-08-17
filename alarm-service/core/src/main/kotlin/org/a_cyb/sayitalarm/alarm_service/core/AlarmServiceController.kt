@@ -6,18 +6,16 @@
 
 package org.a_cyb.sayitalarm.alarm_service.core
 
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController.AlarmServiceState
+import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController.ControllerState
 import org.a_cyb.sayitalarm.domain.repository.RepositoryContract
 import org.a_cyb.sayitalarm.entity.Alarm
 import org.a_cyb.sayitalarm.entity.Settings
@@ -27,26 +25,21 @@ class AlarmServiceController(
     private val alarmRepository: RepositoryContract.AlarmRepository,
     private val settingsRepository: RepositoryContract.SettingsRepository,
     private val alarmScheduler: AlarmServiceContract.AlarmScheduler,
-    private val dispatcher: CoroutineDispatcher,
+    private val scope: CoroutineScope,
 ) : AlarmServiceController {
 
     private var alarmService: AlarmServiceContract.AlarmService? = null
     private var alarm: Alarm? = null
     private var settings: Settings? = null
 
-    private val _alarmState: MutableStateFlow<AlarmServiceState> = MutableStateFlow(AlarmServiceState.Initial)
-    override val alarmState: StateFlow<AlarmServiceState> = _alarmState.asStateFlow()
+    private val _controllerState: MutableStateFlow<ControllerState> = MutableStateFlow(ControllerState.Initial)
+    override val controllerState: StateFlow<ControllerState> = _controllerState.asStateFlow()
 
     override fun onServiceBind(service: AlarmServiceContract.AlarmService, alarmId: Long) {
         alarmService = service
 
-        val scope = CoroutineScope(Job() + dispatcher)
-        scope
-            .launch { setAlarmAndSettings(alarmId, this) }
-            .invokeOnCompletion {
-                scope.cancel()
-                startRingAlarm()
-            }
+        scope.launch { setAlarmAndSettings(alarmId, this) }
+            .invokeOnCompletion { startRingAlarm() }
     }
 
     private suspend fun setAlarmAndSettings(alarmId: Long, scope: CoroutineScope) {
@@ -67,19 +60,19 @@ class AlarmServiceController(
             alarmService!!.stopService()
         } else {
             alarmService!!.ringAlarm(alarm!!.ringtone, alarm!!.alertType)
-            _alarmState.value = AlarmServiceState.Ringing(alarm!!.label)
+            ControllerState.Ringing(alarm!!.label).update()
         }
     }
 
     override fun onServiceDisconnected() {
         alarmService = null
-        _alarmState.value = AlarmServiceState.Error
+        ControllerState.Error.update()
     }
 
     override fun startSayIt() {
         runActionOrUpdateError {
             alarmService!!.startSayIt()
-            _alarmState.value = AlarmServiceState.RunningSayIt(alarm!!.sayItScripts)
+            ControllerState.RunningSayIt(alarm!!.sayItScripts).update()
         }
     }
 
@@ -97,7 +90,11 @@ class AlarmServiceController(
     private fun runActionOrUpdateError(action: () -> Unit) {
         when (alarmService == null) {
             false -> action()
-            true -> _alarmState.value = AlarmServiceState.Error
+            true -> ControllerState.Error.update()
         }
+    }
+
+    private fun ControllerState.update() {
+        _controllerState.update { this }
     }
 }
