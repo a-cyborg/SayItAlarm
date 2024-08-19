@@ -31,14 +31,14 @@ class AlarmServiceSpec {
     private lateinit var context: Context
     private lateinit var serviceIntent: Intent
 
-    @get:Rule
-    val serviceTestRule = ServiceTestRule()
-
-    @get:Rule
+    @get:Rule(order = 0)
     val mRuntimePermissionRule: GrantPermissionRule = GrantPermissionRule.grant(
         Manifest.permission.POST_NOTIFICATIONS,
         Manifest.permission.USE_FULL_SCREEN_INTENT
     )
+
+    @get:Rule(order = 1)
+    val serviceTestRule = ServiceTestRule()
 
     @Before
     fun setup() {
