@@ -74,6 +74,26 @@ class EditDistanceCalculatorSpec {
     }
 
     @Test
+    fun `calculateEditDistance empty source`() {
+        // Given
+        val source = ""
+        val target = "Lorem ipsum dolor sit amet."
+
+        // Then
+        calculateEditDistance(source, target) mustBe 22
+    }
+
+    @Test
+    fun `calculateEditDistance empty target`() {
+        // Given
+        val source = "Lorem ipsum dolor sit amet."
+        val target = ""
+
+        // Then
+        calculateEditDistance(source, target) mustBe 22
+    }
+
+    @Test
     fun `calculateEditDistance ignores periods`() {
         // Given
         val source = "Lorem ipsum dolor sit amet."
