@@ -30,7 +30,7 @@ sealed interface AlarmServiceContract {
     }
 
     interface AlarmServiceController {
-        val alarmState: StateFlow<AlarmServiceState>
+        val controllerState: StateFlow<ControllerState>
 
         fun onServiceBind(service: AlarmService, alarmId: Long)
         fun onServiceDisconnected()
@@ -38,32 +38,30 @@ sealed interface AlarmServiceContract {
         fun startSnooze()
         fun terminate()
 
-        sealed interface AlarmServiceState {
-            data object Initial : AlarmServiceState
-            data class Ringing(val label: Label) : AlarmServiceState
-            data object RunningSayIt : AlarmServiceState
-            data object Completed : AlarmServiceState
-            data object Error : AlarmServiceState
+        sealed interface ControllerState {
+            data object Initial : ControllerState
+            data class Ringing(val label: Label) : ControllerState
+            data class RunningSayIt(val scripts: SayItScripts) : ControllerState
+            data object Error : ControllerState
         }
     }
 
-    interface SayItController {
-        val sayItState: StateFlow<SayItState>
+    interface SayItProcessor {
+        val processorState: StateFlow<SayItProcessorState>
 
-        fun startSayIt(scripts: SayItScripts)
-        fun stopSayIt()
+        fun startSayIt(script: String)
+        fun stopProcessor()
 
-        sealed interface SayItState {
-            data object Initial : SayItState
-            data object Ready : SayItState
-            data class Processing(val progressState: ProgressCounter, val currentScript: String) : SayItState
-            data class Processed(val processResult: ProcessResult) : SayItState
-            data class Done(val sayItResult: SayItResult) : SayItState
+        sealed interface SayItProcessorState {
+            data object Initial : SayItProcessorState
+            data class Processing(val script: Script, val sttResult: SttResult) : SayItProcessorState
+            data class Processed(val processResult: ProcessResult, val sttResult: SttResult) : SayItProcessorState
+            data class Error(val cause: String) : SayItProcessorState
         }
 
-        data class ProgressCounter(val current: Int, val total: Int)
-        data class ProcessResult(val isSuccess: Boolean)
-        data class SayItResult(val isSuccess: Boolean, val message: String)
+        data class Script(val script: String)
+        data class SttResult(val text: String)
+        enum class ProcessResult { SUCCESS, FAILED }
     }
 
     interface SttRecognizer {
@@ -71,7 +69,7 @@ sealed interface AlarmServiceContract {
         val rmsDbState: StateFlow<RecognizerRmsDb>
 
         fun startListening()
-        fun stopSttRecognizer()
+        fun stopRecognizer()
 
         data class RecognizerRmsDb(val rmsDb: Float)
 
