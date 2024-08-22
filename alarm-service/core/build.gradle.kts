@@ -33,6 +33,7 @@ dependencies {
 
     coreLibraryDesugaring(libs.android.tools.desugarJdk)
     implementation(libs.androidx.work.workRuntime)
+    implementation(libs.androidx.navigation.compose)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
@@ -44,6 +45,7 @@ dependencies {
     testImplementation(libs.androidx.test.ext)
     testImplementation(libs.androidx.test.rules)
     testImplementation(libs.androidx.work.workTesting)
+    testImplementation(libs.androidx.navigation.testing)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.robolectric)
     testImplementation(libs.turbine)

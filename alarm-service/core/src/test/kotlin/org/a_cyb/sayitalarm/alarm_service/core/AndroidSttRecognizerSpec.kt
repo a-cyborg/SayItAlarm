@@ -95,7 +95,7 @@ class AndroidSttRecognizerSpec {
         every { SpeechRecognizer.createOnDeviceSpeechRecognizer(any()) } returns speechRecognizerMockk
 
         // When
-        recognizer.stopSttRecognizer()
+        recognizer.stopRecognizer()
 
         // Then
         verify { speechRecognizerMockk.stopListening() }

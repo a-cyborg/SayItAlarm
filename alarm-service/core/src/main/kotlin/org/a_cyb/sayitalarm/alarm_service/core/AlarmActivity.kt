@@ -21,11 +21,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.core.content.ContextCompat
-import org.a_cyb.sayitalarm.design_system.screen.AlarmScreen
+import org.a_cyb.sayitalarm.alarm_service.core.navigation.SiaAlarmServiceNavHost
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController
-import org.a_cyb.sayitalarm.presentation.viewmodel.AlarmViewModel
 import org.koin.android.ext.android.inject
-import org.koin.androidx.compose.koinViewModel
 
 class AlarmActivity : ComponentActivity() {
 
@@ -35,6 +33,7 @@ class AlarmActivity : ComponentActivity() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent?.action == AlarmService.ACTION_EXIT_APP) {
                 finishAndRemoveTask()
+                android.os.Process.killProcess(android.os.Process.myPid())
             }
         }
     }
@@ -47,7 +46,7 @@ class AlarmActivity : ComponentActivity() {
         setupScreenOn()
 
         setContent {
-            AlarmScreen(viewModel = koinViewModel<AlarmViewModel>())
+            SiaAlarmServiceNavHost()
         }
     }
 

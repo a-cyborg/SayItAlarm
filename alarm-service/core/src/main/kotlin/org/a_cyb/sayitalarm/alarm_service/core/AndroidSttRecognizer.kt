@@ -23,10 +23,9 @@ import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.SttRecogni
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.SttRecognizer.RecognizerRmsDb
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.SttRecognizer.RecognizerState
 
-class AndroidSttRecognizer(private val context: Context) : SttRecognizer {
+class AndroidSttRecognizer(private val context: Context) : SttRecognizer, RecognitionListener {
 
     private val recognizer: SpeechRecognizer by lazy { resolveSpeechRecognizer() }
-    private val recognizerListener: RecognitionListener by lazy { resolveListener() }
 
     private val _recognizerState: MutableStateFlow<RecognizerState> = MutableStateFlow(RecognizerState.Initial)
     override val recognizerState: StateFlow<RecognizerState> = _recognizerState.asStateFlow()
@@ -35,11 +34,11 @@ class AndroidSttRecognizer(private val context: Context) : SttRecognizer {
     override val rmsDbState: StateFlow<RecognizerRmsDb> = _rmsDbState.asStateFlow()
 
     override fun startListening() {
-        recognizer.setRecognitionListener(recognizerListener)
+        recognizer.setRecognitionListener(this)
         recognizer.startListening(getRecognizerIntent())
     }
 
-    override fun stopSttRecognizer() {
+    override fun stopRecognizer() {
         recognizer.stopListening()
         recognizer.destroy()
     }
@@ -52,50 +51,47 @@ class AndroidSttRecognizer(private val context: Context) : SttRecognizer {
         return SpeechRecognizer.createSpeechRecognizer(context)
     }
 
-    private fun getRecognizerIntent(): Intent =
-        Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-            .putExtra(EXTRA_CALLING_PACKAGE, context.packageName)
-            .putExtra(EXTRA_PREFER_OFFLINE, true)
+    private fun getRecognizerIntent(): Intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+        .putExtra(EXTRA_CALLING_PACKAGE, context.packageName)
+        .putExtra(EXTRA_PREFER_OFFLINE, true)
 
-    private fun resolveListener(): RecognitionListener = object : RecognitionListener {
-        override fun onReadyForSpeech(params: Bundle?) {
-            _recognizerState.update {
-                RecognizerState.Ready
-            }
+    override fun onReadyForSpeech(params: Bundle?) {
+        RecognizerState.Ready.update()
+    }
+
+    override fun onPartialResults(partialResults: Bundle?) {
+        val result = partialResults?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+        RecognizerState.Processing(result?.last() ?: "").update()
+    }
+
+    override fun onResults(results: Bundle?) {
+        val result = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+        RecognizerState.Done(result = result?.first() ?: "").update()
+    }
+
+    override fun onError(error: Int) {
+        if (error == SpeechRecognizer.ERROR_NO_MATCH) {
+            // This error frequently occurs when the voice is quite low.
+            // It can be resolved by listening again.
+            startListening()
+        } else {
+            RecognizerState.Error(resolveError(error)).update()
         }
+    }
 
-        override fun onRmsChanged(rmsdB: Float) {
-            _rmsDbState.update {
-                RecognizerRmsDb(rmsdB)
-            }
-        }
+    override fun onRmsChanged(rmsdB: Float) {
+        // _rmsDbState.update {
+        //     RecognizerRmsDb(rmsdB)
+        // }
+    }
 
-        override fun onError(error: Int) {
-            _recognizerState.update {
-                RecognizerState.Error(resolveError(error))
-            }
-        }
+    override fun onBeginningOfSpeech() {}
+    override fun onBufferReceived(buffer: ByteArray?) {}
+    override fun onEndOfSpeech() {}
+    override fun onEvent(eventType: Int, params: Bundle?) {}
 
-        override fun onResults(results: Bundle?) {
-            val result = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-
-            _recognizerState.update {
-                RecognizerState.Done(result = result?.first() ?: "")
-            }
-        }
-
-        override fun onPartialResults(partialResults: Bundle?) {
-            val result = partialResults?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-
-            _recognizerState.update {
-                RecognizerState.Processing(result?.first() ?: "")
-            }
-        }
-
-        override fun onBeginningOfSpeech() {}
-        override fun onBufferReceived(buffer: ByteArray?) {}
-        override fun onEndOfSpeech() {}
-        override fun onEvent(eventType: Int, params: Bundle?) {}
+    private fun RecognizerState.update() {
+        _recognizerState.update { this }
     }
 
     private fun resolveError(error: Int): String =
@@ -111,6 +107,7 @@ class AndroidSttRecognizer(private val context: Context) : SttRecognizer {
             SpeechRecognizer.ERROR_TOO_MANY_REQUESTS -> "Error_Too_Many_Requests"
             SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> "Error_Speech_Timeout"
             SpeechRecognizer.ERROR_RECOGNIZER_BUSY -> "Error_Recognizer_Busy"
-            else -> "Error_Unknown"
+            SpeechRecognizer.ERROR_CANNOT_LISTEN_TO_DOWNLOAD_EVENTS -> "Error_Cannot_Listen_To_Download_Events"
+            else -> "Unknown error = $error"
         }
 }

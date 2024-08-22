@@ -14,6 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import org.a_cyb.sayitalarm.design_system.screen.AlarmScreen
 import org.a_cyb.sayitalarm.design_system.screen.SayItScreen
 import org.a_cyb.sayitalarm.presentation.viewmodel.AlarmViewModel
+import org.a_cyb.sayitalarm.presentation.viewmodel.SayItViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -31,7 +32,7 @@ fun SiaAlarmServiceNavHost(
             )
         }
         composable(Route.SAY_IT_ROUTE) {
-            SayItScreen()
+            SayItScreen(koinViewModel<SayItViewModel>())
         }
     }
 }
