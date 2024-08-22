@@ -12,15 +12,12 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.takeWhile
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController.AlarmServiceState
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.SayItRecognizer
+import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController.ControllerState
 import org.a_cyb.sayitalarm.presentation.AlarmContract
 import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmUiState
-import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmUiState.Completed
 import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmUiState.Error
 import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmUiState.Initial
 import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmUiState.Ringing
-import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmUiState.VoiceInputProcessing
 import org.a_cyb.sayitalarm.presentation.command.CommandContract.Command
 import org.a_cyb.sayitalarm.presentation.command.CommandContract.CommandReceiver
 import org.a_cyb.sayitalarm.presentation.formatter.time.TimeFormatterContract
@@ -29,7 +26,6 @@ import org.a_cyb.sayitalarm.presentation.viewmodel.time_flow.TimeFlowContract
 class AlarmViewModel(
     timeFlow: TimeFlowContract,
     private val serviceController: AlarmServiceController,
-    private val sayItRecognizer: SayItRecognizer,
     private val timeFormatter: TimeFormatterContract,
 ) : AlarmContract.AlarmViewModel, ViewModel() {
 
@@ -42,7 +38,7 @@ class AlarmViewModel(
             initialValue = ""
         )
 
-    override val state: StateFlow<AlarmUiState> = serviceController.alarmState
+    override val state: StateFlow<AlarmUiState> = serviceController.controllerState
         .map(::mapToState)
         .stateIn(
             scope = scope,
@@ -50,26 +46,19 @@ class AlarmViewModel(
             initialValue = Initial
         )
 
-    private fun mapToState(alarmState: AlarmServiceState): AlarmUiState =
-        when (alarmState) {
-            is AlarmServiceState.Initial -> Initial
-            is AlarmServiceState.Ringing -> Ringing(alarmState.label.label)
-            is AlarmServiceState.RunningSayIt -> VoiceInputProcessing(alarmState.scripts.scripts)
-            is AlarmServiceState.Completed -> Completed
-            is AlarmServiceState.Error -> Error
+    private fun mapToState(controllerState: ControllerState): AlarmUiState =
+        when (controllerState) {
+            is ControllerState.Ringing -> Ringing(controllerState.label.label)
+            is ControllerState.Error -> Error
+            is ControllerState.Initial, is ControllerState.RunningSayIt -> Initial
         }
 
     override fun startSayIt() {
         serviceController.startSayIt()
-        sayItRecognizer.startSayItRecognizer()
     }
 
     override fun snooze() {
         serviceController.startSnooze()
-    }
-
-    override fun finishAlarm() {
-        serviceController.terminate()
     }
 
     override fun <T : CommandReceiver> runCommand(command: Command<T>) {
