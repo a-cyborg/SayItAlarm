@@ -22,6 +22,7 @@ import org.a_cyb.sayitalarm.presentation.AddContract
 import org.a_cyb.sayitalarm.presentation.AlarmContract
 import org.a_cyb.sayitalarm.presentation.EditContract
 import org.a_cyb.sayitalarm.presentation.ListContract
+import org.a_cyb.sayitalarm.presentation.SayItContract
 import org.a_cyb.sayitalarm.presentation.SettingsContract
 import org.a_cyb.sayitalarm.presentation.formatter.duration.DurationFormatterContract
 import org.a_cyb.sayitalarm.presentation.formatter.time.TimeFormatterContract
@@ -147,7 +148,6 @@ class ViewModelModuleSpec {
         // Given
         val externalModule = module {
             single<AlarmServiceContract.AlarmServiceController> { mockk(relaxed = true) }
-            single<AlarmServiceContract.SayItRecognizer> { mockk(relaxed = true) }
         }
 
         val koinApp = koinApplication {
@@ -166,6 +166,29 @@ class ViewModelModuleSpec {
 
         // Then
         assertNotNull(alarmViewModel)
+    }
+
+    @Test
+    fun `It injects SayItViewModel`() {
+        // Given
+        val externalModule = module {
+            single<AlarmServiceContract.AlarmServiceController> { mockk(relaxed = true) }
+            single<AlarmServiceContract.SttRecognizer> { mockk(relaxed = true) }
+            single<AlarmServiceContract.EditDistanceCalculator> { mockk(relaxed = true) }
+        }
+
+        val koinApp = koinApplication {
+            modules(
+                viewModelModule,
+                externalModule,
+            )
+        }
+
+        // When
+        val viewModel = koinApp.koin.getOrNull<SayItContract.SayItViewModel>()
+
+        // Then
+        assertNotNull(viewModel)
     }
 
     @Test

@@ -10,11 +10,13 @@ import org.a_cyb.sayitalarm.presentation.AddContract
 import org.a_cyb.sayitalarm.presentation.AlarmContract
 import org.a_cyb.sayitalarm.presentation.EditContract
 import org.a_cyb.sayitalarm.presentation.ListContract
+import org.a_cyb.sayitalarm.presentation.SayItContract
 import org.a_cyb.sayitalarm.presentation.SettingsContract
 import org.a_cyb.sayitalarm.presentation.viewmodel.AddViewModel
 import org.a_cyb.sayitalarm.presentation.viewmodel.AlarmViewModel
 import org.a_cyb.sayitalarm.presentation.viewmodel.EditViewModel
 import org.a_cyb.sayitalarm.presentation.viewmodel.ListViewModel
+import org.a_cyb.sayitalarm.presentation.viewmodel.SayItViewModel
 import org.a_cyb.sayitalarm.presentation.viewmodel.SettingsViewModel
 import org.a_cyb.sayitalarm.presentation.viewmodel.converter.AlarmUIConverterContract
 import org.a_cyb.sayitalarm.presentation.viewmodel.converter.AlarmUiConverter
@@ -45,8 +47,12 @@ val viewModelModule: Module = module {
     } bind SettingsContract.SettingsViewModel::class
 
     viewModel {
-        AlarmViewModel(get(), get(), get(), get())
+        AlarmViewModel(get(), get(), get())
     } bind AlarmContract.AlarmViewModel::class
+
+    viewModel {
+        SayItViewModel(get(), get(), get())
+    } bind SayItContract.SayItViewModel::class
 
     single<AlarmMapperContract> {
         AlarmMapper(get(), get(), get(), get())
