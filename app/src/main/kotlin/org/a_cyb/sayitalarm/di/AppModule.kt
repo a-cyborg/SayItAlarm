@@ -7,7 +7,9 @@
 package org.a_cyb.sayitalarm.di
 
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import org.a_cyb.sayitalarm.alarm_service.core.di.alarmServiceModule
 import org.a_cyb.sayitalarm.data.di.dataModule
 import org.a_cyb.sayitalarm.database.di.databaseModule
@@ -28,7 +30,12 @@ val appModule = module {
         formatterModule,
         ringtoneResolverModule,
         module {
-            single<CoroutineDispatcher>(named("io")) { Dispatchers.IO }
+            single<CoroutineDispatcher>(named("io")) {
+                Dispatchers.IO
+            }
+            single<CoroutineScope>(named("ioScope")) {
+                CoroutineScope(SupervisorJob() + Dispatchers.IO)
+            }
         },
     )
 }
