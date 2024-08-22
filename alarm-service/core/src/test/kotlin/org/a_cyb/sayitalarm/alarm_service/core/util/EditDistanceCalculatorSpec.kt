@@ -6,6 +6,8 @@
 
 package org.a_cyb.sayitalarm.alarm_service.core.util
 
+import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
+import org.a_cyb.sayitalarm.util.fulfils
 import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Test
 
@@ -18,7 +20,7 @@ class EditDistanceCalculatorSpec {
         val target = "Lorem ipsum dolor sit amet"
 
         // Then
-        calculateEditDistance(source, target) mustBe 0
+        EditDistanceCalculator.calculateEditDistance(source, target) mustBe 0
     }
 
     @Test
@@ -28,7 +30,7 @@ class EditDistanceCalculatorSpec {
         val target = "Lorem ipsum dolor sit amef"
 
         // Then
-        calculateEditDistance(source, target) mustBe 1
+        EditDistanceCalculator.calculateEditDistance(source, target) mustBe 1
     }
 
     @Test
@@ -38,7 +40,7 @@ class EditDistanceCalculatorSpec {
         val target = "Lorem ipsum dolorr sit amet"
 
         // Then
-        calculateEditDistance(source, target) mustBe 1
+        EditDistanceCalculator.calculateEditDistance(source, target) mustBe 1
     }
 
     @Test
@@ -48,7 +50,7 @@ class EditDistanceCalculatorSpec {
         val target = "Lorem ipsu dolor sit amet"
 
         // Then
-        calculateEditDistance(source, target) mustBe 1
+        EditDistanceCalculator.calculateEditDistance(source, target) mustBe 1
     }
 
     @Test
@@ -59,7 +61,7 @@ class EditDistanceCalculatorSpec {
         val target = "Larem ipsun dolor sut amyt"
 
         // Then
-        calculateEditDistance(source, target) mustBe 4
+        EditDistanceCalculator.calculateEditDistance(source, target) mustBe 4
     }
 
     @Test
@@ -70,7 +72,7 @@ class EditDistanceCalculatorSpec {
         val target = "Lorem ipsom dolor sit amett, consectetur adipsicing elit"
 
         // Then
-        calculateEditDistance(source, target) mustBe 4
+        EditDistanceCalculator.calculateEditDistance(source, target) mustBe 4
     }
 
     @Test
@@ -80,7 +82,7 @@ class EditDistanceCalculatorSpec {
         val target = "Lorem ipsum dolor sit amet."
 
         // Then
-        calculateEditDistance(source, target) mustBe 22
+        EditDistanceCalculator.calculateEditDistance(source, target) mustBe 22
     }
 
     @Test
@@ -90,7 +92,7 @@ class EditDistanceCalculatorSpec {
         val target = ""
 
         // Then
-        calculateEditDistance(source, target) mustBe 22
+        EditDistanceCalculator.calculateEditDistance(source, target) mustBe 22
     }
 
     @Test
@@ -100,7 +102,7 @@ class EditDistanceCalculatorSpec {
         val target = "Lorem ipsum dolor sit amet"
 
         // Then
-        calculateEditDistance(source, target) mustBe 0
+        EditDistanceCalculator.calculateEditDistance(source, target) mustBe 0
     }
 
     @Test
@@ -110,7 +112,7 @@ class EditDistanceCalculatorSpec {
         val target = "lorem ipsum dolor sit amet"
 
         // Then
-        calculateEditDistance(source, target) mustBe 0
+        EditDistanceCalculator.calculateEditDistance(source, target) mustBe 0
     }
 
     @Test
@@ -120,6 +122,11 @@ class EditDistanceCalculatorSpec {
         val target = "Lorem ipsum dolor sit a met"
 
         // Then
-        calculateEditDistance(source, target) mustBe 0
+        EditDistanceCalculator.calculateEditDistance(source, target) mustBe 0
+    }
+
+    @Test
+    fun `It fulfills EditDistanceCalculator`() {
+        EditDistanceCalculator fulfils AlarmServiceContract.EditDistanceCalculator::class
     }
 }

@@ -9,9 +9,9 @@ package org.a_cyb.sayitalarm.alarm_service.core.di
 import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler
 import org.a_cyb.sayitalarm.alarm_service.core.AlarmServiceController
 import org.a_cyb.sayitalarm.alarm_service.core.AndroidSttRecognizer
-import org.a_cyb.sayitalarm.alarm_service.core.SayItProcessor
 import org.a_cyb.sayitalarm.alarm_service.core.util.AudioVibeController
 import org.a_cyb.sayitalarm.alarm_service.core.util.AudioVibeControllerContract
+import org.a_cyb.sayitalarm.alarm_service.core.util.EditDistanceCalculator
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -25,12 +25,12 @@ val alarmServiceModule = module {
         AlarmServiceController(get(), get(), get(), get(named("ioScope")))
     }
 
-    single<AlarmServiceContract.SayItProcessor> {
-        SayItProcessor(get(), get(named("ioScope")))
-    }
-
     single<AlarmServiceContract.SttRecognizer> {
         AndroidSttRecognizer(get())
+    }
+
+    single<AlarmServiceContract.EditDistanceCalculator> {
+        EditDistanceCalculator
     }
 
     single<AudioVibeControllerContract> {

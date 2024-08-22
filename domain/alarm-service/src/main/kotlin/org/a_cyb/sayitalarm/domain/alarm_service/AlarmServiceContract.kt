@@ -46,24 +46,6 @@ sealed interface AlarmServiceContract {
         }
     }
 
-    interface SayItProcessor {
-        val processorState: StateFlow<SayItProcessorState>
-
-        fun startSayIt(script: String)
-        fun stopProcessor()
-
-        sealed interface SayItProcessorState {
-            data object Initial : SayItProcessorState
-            data class Processing(val script: Script, val sttResult: SttResult) : SayItProcessorState
-            data class Processed(val processResult: ProcessResult, val sttResult: SttResult) : SayItProcessorState
-            data class Error(val cause: String) : SayItProcessorState
-        }
-
-        data class Script(val script: String)
-        data class SttResult(val text: String)
-        enum class ProcessResult { SUCCESS, FAILED }
-    }
-
     interface SttRecognizer {
         val recognizerState: StateFlow<RecognizerState>
         val rmsDbState: StateFlow<RecognizerRmsDb>
@@ -80,5 +62,9 @@ sealed interface AlarmServiceContract {
             data class Done(val result: String) : RecognizerState
             data class Error(val cause: String) : RecognizerState
         }
+    }
+
+    interface EditDistanceCalculator {
+        fun calculateEditDistance(source: String, target: String): Int
     }
 }

@@ -8,31 +8,19 @@ package org.a_cyb.sayitalarm.alarm_service.core.di
 
 import kotlin.test.assertNotNull
 import android.content.Context
-import androidx.test.core.app.ApplicationProvider
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.mockk.mockk
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.test.StandardTestDispatcher
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
 import org.a_cyb.sayitalarm.domain.repository.RepositoryContract
-import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
 import org.koin.dsl.koinApplication
 import org.koin.dsl.module
 
-@RunWith(AndroidJUnit4::class)
 class AlarmServiceModuleSpec {
 
-    private lateinit var context: Context
-
-    @Before
-    fun setup() {
-        context = ApplicationProvider.getApplicationContext()
-    }
+    private val context: Context = mockk(relaxed = true)
 
     @Test
     fun `It injects AlarmScheduler`() {
@@ -57,7 +45,7 @@ class AlarmServiceModuleSpec {
         val extraModules = module {
             single<RepositoryContract.AlarmRepository> { mockk() }
             single<RepositoryContract.SettingsRepository> { mockk() }
-            single<CoroutineDispatcher>(named("io")) { mockk() }
+            single<CoroutineScope>(named("ioScope")) { mockk() }
         }
         val koinApp = koinApplication {
             androidContext(context)
@@ -75,27 +63,6 @@ class AlarmServiceModuleSpec {
     }
 
     @Test
-    fun `It injects SayItProcessor`() {
-        // Given
-        val extraModules = module {
-            single<AlarmServiceContract.SttRecognizer> { mockk(relaxed = true) }
-            single<CoroutineScope>(named("ioScope")) { CoroutineScope(StandardTestDispatcher()) }
-        }
-        val koinApp = koinApplication {
-            modules(
-                alarmServiceModule,
-                extraModules,
-            )
-        }
-
-        // When
-        val processor = koinApp.koin.getOrNull<AlarmServiceContract.SayItProcessor>()
-
-        // Then
-        assertNotNull(processor)
-    }
-
-    @Test
     fun `It injects SttRecognizer`() {
         // Given
         val koinApp = koinApplication {
@@ -110,5 +77,21 @@ class AlarmServiceModuleSpec {
 
         // Then
         assertNotNull(recognizer)
+    }
+
+    @Test
+    fun `It injects EditDistanceCalculator`() {
+        // Given
+        val koinApp = koinApplication {
+            modules(
+                alarmServiceModule,
+            )
+        }
+
+        // When
+        val calculator = koinApp.koin.getOrNull<AlarmServiceContract.EditDistanceCalculator>()
+
+        // Then
+        assertNotNull(calculator)
     }
 }
