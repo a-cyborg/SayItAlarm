@@ -15,7 +15,7 @@ import org.a_cyb.sayitalarm.design_system.atom.IconButtonNavigateBack
 import org.a_cyb.sayitalarm.design_system.atom.TextButtonSave
 import org.a_cyb.sayitalarm.design_system.atom.SpacerMedium
 import org.a_cyb.sayitalarm.design_system.molecule.PermissionLauncher
-import org.a_cyb.sayitalarm.design_system.molecule.TextBoxWarning
+import org.a_cyb.sayitalarm.design_system.molecule.TextBoxWarningTitle
 import org.a_cyb.sayitalarm.design_system.molecule.TopAppBarLarge
 import org.a_cyb.sayitalarm.design_system.organism.AlarmPanel
 import org.a_cyb.sayitalarm.presentation.AddContract
@@ -42,7 +42,7 @@ fun AddScreen(
         SpacerMedium()
 
         if (state.value is Error) {
-            TextBoxWarning(text = stringResource(id = R.string.info_add_and_edit_initialize_error))
+            TextBoxWarningTitle(text = stringResource(id = R.string.info_add_and_edit_initialize_error))
         }
 
         AlarmPanel(
