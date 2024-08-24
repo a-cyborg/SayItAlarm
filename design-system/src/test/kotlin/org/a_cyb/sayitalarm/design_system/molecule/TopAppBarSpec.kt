@@ -11,9 +11,9 @@ import androidx.compose.ui.test.onNodeWithText
 import org.a_cyb.sayitalarm.design_system.R
 import org.a_cyb.sayitalarm.design_system.RoborazziTest
 import org.a_cyb.sayitalarm.design_system.atom.IconButtonAdd
-import org.a_cyb.sayitalarm.design_system.atom.IconButtonEditText
 import org.a_cyb.sayitalarm.design_system.atom.IconButtonNavigateBack
 import org.a_cyb.sayitalarm.design_system.atom.IconButtonSettings
+import org.a_cyb.sayitalarm.design_system.atom.TextButtonEdit
 import org.junit.Test
 
 class TopAppBarSpec : RoborazziTest() {
@@ -21,11 +21,11 @@ class TopAppBarSpec : RoborazziTest() {
     private fun stringRes(id: Int) = subjectUnderTest.activity.getString(id)
 
     @Test
-    fun `It renders TopAppBarGlobal`() {
+    fun `It renders TopAppBarSmall`() {
         subjectUnderTest.setContent {
             TopAppBarSmall(
                 title = "SayIt",
-                firstIcon = { IconButtonEditText {} },
+                firstIcon = { TextButtonEdit {} },
                 secondIcon = { IconButtonAdd {} },
                 thirdIcon = { IconButtonSettings {} },
             )
@@ -33,7 +33,7 @@ class TopAppBarSpec : RoborazziTest() {
     }
 
     @Test
-    fun `Given TopAppBarGlobal with firstIcon it displays one icon`() {
+    fun `When using TopAppBarSmall with the firstIcon parameter, it displays a single icon`() {
         subjectUnderTest.setContent {
             TopAppBarSmall(
                 title = "SayIt",
@@ -47,7 +47,7 @@ class TopAppBarSpec : RoborazziTest() {
     }
 
     @Test
-    fun `Given TopAppBarGlobal with firstIcon and secondIcon it displays both icons`() {
+    fun `When using TopAppBarSmall with both firstIcon and secondIcon, it displays both icons`() {
         subjectUnderTest.setContent {
             TopAppBarSmall(
                 title = "SayIt",
@@ -63,13 +63,13 @@ class TopAppBarSpec : RoborazziTest() {
     }
 
     @Test
-    fun `It renders TopAppBarMedium`() {
+    fun `It renders TopAppBarLarge`() {
         with(subjectUnderTest) {
             setContent {
-                TopAppBarMedium(
+                TopAppBarLarge(
                     title = stringRes(R.string.say_it),
                     actions = {
-                        IconButtonEditText {}
+                        TextButtonEdit {}
                         IconButtonAdd {}
                         IconButtonSettings {}
                     }
@@ -77,30 +77,25 @@ class TopAppBarSpec : RoborazziTest() {
             }
 
             // Verify all actions are displayed
-            onNodeWithText(stringRes(R.string.edit))
-                .assertExists()
-            onNodeWithContentDescription(stringRes(R.string.action_add_alarm))
-                .assertExists()
-            onNodeWithContentDescription(stringRes(R.string.action_open_settings))
-                .assertExists()
+            onNodeWithText(stringRes(R.string.edit)).assertExists()
+            onNodeWithContentDescription(stringRes(R.string.action_add_alarm)).assertExists()
+            onNodeWithContentDescription(stringRes(R.string.action_open_settings)).assertExists()
         }
     }
 
     @Test
-    fun `It renders TopAppBarMedium with navigationIcon`() {
+    fun `It renders TopAppBarLarge with navigationIcon`() {
         with(subjectUnderTest) {
             setContent {
-                TopAppBarMedium(
+                TopAppBarLarge(
                     title = stringRes(R.string.say_it),
                     navigationIcon = { IconButtonNavigateBack {} },
                 )
             }
 
             // Verify navigationIcon and Title are displayed
-            onNodeWithText(stringRes(R.string.say_it))
-                .assertExists()
-            onNodeWithContentDescription(stringRes(R.string.action_navigate_back))
-                .assertExists()
+            onNodeWithText(stringRes(R.string.say_it)).assertExists()
+            onNodeWithContentDescription(stringRes(R.string.action_navigate_back)).assertExists()
         }
     }
 }

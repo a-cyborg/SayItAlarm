@@ -12,11 +12,11 @@ import androidx.compose.ui.res.stringResource
 import org.a_cyb.sayitalarm.design_system.R
 import org.a_cyb.sayitalarm.design_system.atom.ColumnScreenStandard
 import org.a_cyb.sayitalarm.design_system.atom.IconButtonNavigateBack
-import org.a_cyb.sayitalarm.design_system.atom.IconButtonSaveText
+import org.a_cyb.sayitalarm.design_system.atom.TextButtonSave
 import org.a_cyb.sayitalarm.design_system.atom.SpacerMedium
 import org.a_cyb.sayitalarm.design_system.molecule.PermissionLauncher
-import org.a_cyb.sayitalarm.design_system.molecule.TextRowWarning
-import org.a_cyb.sayitalarm.design_system.molecule.TopAppBarMedium
+import org.a_cyb.sayitalarm.design_system.molecule.TextBoxWarning
+import org.a_cyb.sayitalarm.design_system.molecule.TopAppBarLarge
 import org.a_cyb.sayitalarm.design_system.organism.AlarmPanel
 import org.a_cyb.sayitalarm.presentation.AddContract
 import org.a_cyb.sayitalarm.presentation.AddContract.AddState.Error
@@ -42,7 +42,7 @@ fun AddScreen(
         SpacerMedium()
 
         if (state.value is Error) {
-            TextRowWarning(text = stringResource(id = R.string.info_add_and_edit_initialize_error))
+            TextBoxWarning(text = stringResource(id = R.string.info_add_and_edit_initialize_error))
         }
 
         AlarmPanel(
@@ -57,13 +57,13 @@ private fun AddTopAppBar(
     onCancel: () -> Unit,
     onSave: () -> Unit,
 ) {
-    TopAppBarMedium(
+    TopAppBarLarge(
         title = stringResource(id = R.string.add),
         navigationIcon = {
             IconButtonNavigateBack(onCancel)
         },
         actions = {
-            IconButtonSaveText(onSave)
+            TextButtonSave(onSave)
         }
     )
 }

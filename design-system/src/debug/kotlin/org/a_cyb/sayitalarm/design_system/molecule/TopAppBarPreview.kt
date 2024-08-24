@@ -9,15 +9,15 @@ package org.a_cyb.sayitalarm.design_system.molecule
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import org.a_cyb.sayitalarm.design_system.atom.IconButtonAdd
-import org.a_cyb.sayitalarm.design_system.atom.IconButtonEditText
 import org.a_cyb.sayitalarm.design_system.atom.IconButtonSettings
+import org.a_cyb.sayitalarm.design_system.atom.TextButtonEdit
 
 @Preview
 @Composable
 fun TopAppBarSmallPreview() {
     TopAppBarSmall(
         title = "SayIt",
-        firstIcon = { IconButtonEditText {} },
+        firstIcon = { TextButtonEdit {} },
         secondIcon = { IconButtonAdd {} },
         thirdIcon = { IconButtonSettings {} },
     )
@@ -25,11 +25,11 @@ fun TopAppBarSmallPreview() {
 
 @Preview
 @Composable
-fun TopAppBarMediumPreview() {
-    TopAppBarMedium(
+fun TopAppBarLargePreview() {
+    TopAppBarLarge(
         title = "SayIt",
         actions = {
-            IconButtonEditText {}
+            TextButtonEdit {}
             IconButtonAdd {}
             IconButtonSettings {}
         }

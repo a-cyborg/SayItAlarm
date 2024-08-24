@@ -34,7 +34,7 @@ class AlarmScreenSpec : RoborazziTest() {
         with(subjectUnderTest) {
             // When
             setContent {
-                AlarmScreen(viewModel = viewModel)
+                AlarmScreen(viewModel = viewModel) {}
             }
 
             // Then
@@ -52,40 +52,44 @@ class AlarmScreenSpec : RoborazziTest() {
         with(subjectUnderTest) {
             // When
             setContent {
-                AlarmScreen(viewModel = viewModel)
+                AlarmScreen(viewModel = viewModel) {}
             }
 
             // Then
             onNodeWithText(viewModel.currentTime.value).assertExists()
             onNodeWithText(label).assertExists()
-            onNodeWithText(getString(R.string.say_it))
-                .assertExists()
+            onNodeWithText(getString(R.string.say_it)).assertExists()
                 .assertHasClickAction()
-            onNodeWithText(getString(R.string.snooze))
-                .assertExists()
+            onNodeWithText(getString(R.string.snooze)).assertExists()
                 .assertHasClickAction()
         }
     }
 
     @Test
-    fun `When SayItButton is clicked, it executes SayItCommand`() {
+    fun `When SayItButton is clicked, it executes SayItCommand and navigateToSayIt`() {
         // Given
         val label = "Good morning🌻"
         val viewModel = AlarmViewModelFake(AlarmUiState.Ringing(label))
+        var hasBeenCalled = false
 
         with(subjectUnderTest) {
             setContent {
-                AlarmScreen(viewModel = viewModel)
+                AlarmScreen(
+                    viewModel = viewModel,
+                    navigateToSayIt = {
+                        hasBeenCalled = true
+                    }
+                )
             }
 
             // When
-            onNodeWithText(getString(R.string.say_it))
-                .assertExists()
+            onNodeWithText(getString(R.string.say_it)).assertExists()
                 .performClick()
         }
 
         // Then
-        viewModel.invokedType mustBe AlarmViewModelFake.InvokedType.START_SAYIT
+        viewModel.invokedType mustBe AlarmViewModelFake.InvokedType.START_SAY_IT
+        hasBeenCalled mustBe true
     }
 
     @Test
@@ -96,7 +100,7 @@ class AlarmScreenSpec : RoborazziTest() {
 
         with(subjectUnderTest) {
             setContent {
-                AlarmScreen(viewModel = viewModel)
+                AlarmScreen(viewModel = viewModel) {}
             }
 
             // When
@@ -119,15 +123,11 @@ private class AlarmViewModelFake(state: AlarmUiState = AlarmUiState.Initial) : A
         get() = _invokedType
 
     override fun startSayIt() {
-        _invokedType = InvokedType.START_SAYIT
+        _invokedType = InvokedType.START_SAY_IT
     }
 
     override fun snooze() {
         _invokedType = InvokedType.SNOOZE
-    }
-
-    override fun finishAlarm() {
-        _invokedType = InvokedType.FINISH_ALARM
     }
 
     override fun <T : CommandContract.CommandReceiver> runCommand(command: CommandContract.Command<T>) {
@@ -136,9 +136,8 @@ private class AlarmViewModelFake(state: AlarmUiState = AlarmUiState.Initial) : A
     }
 
     enum class InvokedType {
-        START_SAYIT,
+        START_SAY_IT,
         SNOOZE,
-        FINISH_ALARM,
         NONE,
     }
 }

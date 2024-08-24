@@ -6,6 +6,7 @@
 
 package org.a_cyb.sayitalarm.alarm_service.core.navigation
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -26,12 +27,14 @@ fun SiaAlarmServiceNavHost(
         startDestination = Route.ALARM_ROUTE,
     ) {
         composable(Route.ALARM_ROUTE) {
+            BackHandler(true) {  /* No operation. */ }
             AlarmScreen(
                 viewModel = koinViewModel<AlarmViewModel>(),
                 navigateToSayIt = navController::navigateToSayIt
             )
         }
         composable(Route.SAY_IT_ROUTE) {
+            BackHandler(true) {  /* No operation. */ }
             SayItScreen(koinViewModel<SayItViewModel>())
         }
     }

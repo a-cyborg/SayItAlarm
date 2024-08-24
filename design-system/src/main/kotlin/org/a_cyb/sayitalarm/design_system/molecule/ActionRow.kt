@@ -12,9 +12,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import org.a_cyb.sayitalarm.design_system.atom.IconButtonCancelText
+import org.a_cyb.sayitalarm.design_system.atom.TextButtonCancel
 import org.a_cyb.sayitalarm.design_system.atom.IconButtonCollapse
-import org.a_cyb.sayitalarm.design_system.atom.IconButtonConfirmText
+import org.a_cyb.sayitalarm.design_system.atom.TextButtonConfirm
 
 @Composable
 fun ActionRowCancelAndConfirm(
@@ -26,8 +26,8 @@ fun ActionRowCancelAndConfirm(
         horizontalArrangement = Arrangement.SpaceAround,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        IconButtonCancelText { onCancel() }
-        IconButtonConfirmText { onConfirm() }
+        TextButtonCancel { onCancel() }
+        TextButtonConfirm { onConfirm() }
     }
 }
 

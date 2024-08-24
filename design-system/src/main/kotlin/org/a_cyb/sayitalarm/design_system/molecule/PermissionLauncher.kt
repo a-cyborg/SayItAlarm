@@ -19,7 +19,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import org.a_cyb.sayitalarm.design_system.R
 import org.a_cyb.sayitalarm.design_system.atom.DialogStandardFitContent
-import org.a_cyb.sayitalarm.design_system.atom.IconButtonRequestPermission
+import org.a_cyb.sayitalarm.design_system.atom.TextButtonRequestPermission
 import org.a_cyb.sayitalarm.design_system.atom.SpacerLarge
 
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalPermissionsApi::class)
@@ -64,12 +64,12 @@ fun PermissionRationaleDialog(
     onRequest: () -> Unit,
 ) {
     DialogStandardFitContent(onDismiss = onDismiss) {
-        TextRowTitleAndInfo(
+        TextBoxTitleAndInfo(
             title = stringResource(id = R.string.permission),
             info = stringResource(id = R.string.info_permission_rationale),
         )
         SpacerLarge()
-        IconButtonRequestPermission(
+        TextButtonRequestPermission(
             onClick = onRequest
         )
     }

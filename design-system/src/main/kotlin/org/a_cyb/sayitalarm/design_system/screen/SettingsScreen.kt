@@ -22,8 +22,8 @@ import org.a_cyb.sayitalarm.design_system.atom.SpacerLarge
 import org.a_cyb.sayitalarm.design_system.atom.SpacerXLarge
 import org.a_cyb.sayitalarm.design_system.molecule.PanelItemStandard
 import org.a_cyb.sayitalarm.design_system.molecule.PanelItemWithPopupPickerStandardWheel
-import org.a_cyb.sayitalarm.design_system.molecule.TextRowWarning
-import org.a_cyb.sayitalarm.design_system.molecule.TopAppBarMedium
+import org.a_cyb.sayitalarm.design_system.molecule.TextBoxWarningTitle
+import org.a_cyb.sayitalarm.design_system.molecule.TopAppBarLarge
 import org.a_cyb.sayitalarm.presentation.SettingsContract
 import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState.Error
 import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState.Initial
@@ -61,7 +61,7 @@ fun SettingsScreen(
             }
 
             Error -> {
-                TextRowWarning(text = stringResource(R.string.info_settings_initialize_error))
+                TextBoxWarningTitle(text = stringResource(R.string.info_settings_initialize_error))
             }
 
             Initial -> {}
@@ -73,7 +73,7 @@ fun SettingsScreen(
 
 @Composable
 private fun SettingSTopAppBar(onNavigateBack: () -> Unit) {
-    TopAppBarMedium(
+    TopAppBarLarge(
         title = stringResource(id = R.string.settings),
         navigationIcon = { IconButtonNavigateBack { onNavigateBack() } },
     )

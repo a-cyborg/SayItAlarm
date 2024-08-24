@@ -23,6 +23,30 @@ fun TextDisplayStandardSmallPreview() {
 
 @Preview
 @Composable
+fun TextDisplaySubtleSmallPreview() {
+    TextDisplaySubtleSmall(text = "SayIt")
+}
+
+@Preview
+@Composable
+fun TextDisplayAttentionSmallPreview() {
+    TextDisplayAttentionSmall(text = "SayIt")
+}
+
+@Preview
+@Composable
+fun TextDisplayDangerSmallPreview() {
+    TextDisplayDangerSmall(text = "SayIt")
+}
+
+@Preview
+@Composable
+fun TextDisplayWarningSmallPreview() {
+    TextDisplayWarningSmall(text = "SayIt")
+}
+
+@Preview
+@Composable
 fun TextHeadlineStandardPreview() {
     TextHeadlineStandardSmall(text = "SayIt")
 }
@@ -31,6 +55,24 @@ fun TextHeadlineStandardPreview() {
 @Composable
 fun TextTitleStandardLargePreview() {
     TextTitleStandardLarge(text = "SayIt")
+}
+
+@Preview
+@Composable
+fun TextTitleAttentionLargePreview() {
+    TextTitleAttentionLarge(text = "SayIt")
+}
+
+@Preview
+@Composable
+fun TextTitleSubtleLargePreview() {
+    TextTitleSubtleLarge(text = "SayIt")
+}
+
+@Preview
+@Composable
+fun TextTitleWarningLargePreview() {
+    TextTitleWarningLarge(text = "SayIt")
 }
 
 @Preview
@@ -47,19 +89,13 @@ fun TextTitleAttentionMediumPreview() {
 
 @Preview
 @Composable
-fun TextTitleAttentionLargePreview() {
-    TextTitleAttentionLarge(text = "SayIt")
-}
-
-@Preview
-@Composable
-fun TextTitleWarningPreview() {
+fun TextTitleWarningMediumPreview() {
     TextTitleWarningMedium(text = "SayIt")
 }
 
 @Preview
 @Composable
-fun TextTitleDangerPreview() {
+fun TextTitleDangerMediumPreview() {
     TextTitleDangerMedium(text = "SayIt")
 }
 
@@ -77,6 +113,6 @@ fun TextBodyStandardLargePreview() {
 
 @Preview
 @Composable
-fun TextBodyStandardMediumPreview() {
+fun TextBodyStandardSmallPreview() {
     TextBodyStandardSmall(text = "SayIt")
 }

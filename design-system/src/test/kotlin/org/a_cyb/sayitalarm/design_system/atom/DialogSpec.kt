@@ -70,7 +70,7 @@ class DialogSpec {
                     TopAppBarSmall(
                         title = "Add Alarm",
                         firstIcon = { IconButtonClose {} },
-                        secondIcon = { IconButtonSaveText {} },
+                        secondIcon = { TextButtonSave {} },
                     )
                 },
                 onDismiss = {

@@ -7,6 +7,7 @@
 package org.a_cyb.sayitalarm.design_system.molecule
 
 import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
@@ -17,6 +18,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.BlendMode
@@ -52,4 +54,20 @@ fun Modifier.animateCircleBorder(brush: Brush): Modifier {
             drawContent()
         }
         .background(color = Color.surface.standard, shape = CircleShape)
+}
+
+@Composable
+fun Modifier.animateSlowFlickering(): Modifier {
+    val infiniteTransition = rememberInfiniteTransition(label = "Flickering")
+    val flickeringAlpha by infiniteTransition.animateFloat(
+        initialValue = 0.33f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 2000, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse,
+        ),
+        label = "FlickeringAnimateFloat"
+    )
+
+    return this.alpha(flickeringAlpha)
 }

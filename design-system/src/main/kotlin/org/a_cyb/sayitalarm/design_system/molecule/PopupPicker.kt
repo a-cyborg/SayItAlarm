@@ -35,9 +35,9 @@ import kotlinx.coroutines.launch
 import org.a_cyb.sayitalarm.design_system.R
 import org.a_cyb.sayitalarm.design_system.atom.DialogStandardFitContent
 import org.a_cyb.sayitalarm.design_system.atom.DialogStandardFitContentScrollable
-import org.a_cyb.sayitalarm.design_system.atom.IconButtonDeleteText
 import org.a_cyb.sayitalarm.design_system.atom.PanelStandardLazy
 import org.a_cyb.sayitalarm.design_system.atom.SpacerMedium
+import org.a_cyb.sayitalarm.design_system.atom.TextButtonDelete
 import org.a_cyb.sayitalarm.design_system.atom.TextFieldSayItScript
 import org.a_cyb.sayitalarm.design_system.atom.TextTitleStandardLarge
 import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.SelectableRepeat
@@ -57,7 +57,7 @@ fun <T> PopUpPickerStandardWheel(
     val scope = rememberCoroutineScope()
 
     DialogStandardFitContent(onDismiss = onCancel) {
-        TextRowTitleAndInfo(title = title, info = info)
+        TextBoxTitleAndInfo(title = title, info = info)
         SpacerMedium()
         Box {
             WheelPicker(
@@ -116,7 +116,7 @@ fun PopupPickerRepeat(
 
     DialogStandardFitContent(onDismiss = onCancel) {
         PanelStandardLazy {
-            item { TextRowTitleAndInfo(title = title, info = "") }
+            item { TextBoxTitleAndInfo(title = title, info = "") }
             items(selectableRepeats) {
                 PanelItemStandard(valueLabel = it.name) {
                     RadioButton(
@@ -220,8 +220,8 @@ fun PopupPickerSayItScript(
             }
         )
         SpacerMedium()
-        TextRowWarning(text = stringResource(id = R.string.info_scripts_only_letter))
-        IconButtonDeleteText {
+        TextBoxWarningTitle(text = stringResource(id = R.string.info_scripts_only_letter))
+        TextButtonDelete {
             onDelete()
             onCancel()
         }

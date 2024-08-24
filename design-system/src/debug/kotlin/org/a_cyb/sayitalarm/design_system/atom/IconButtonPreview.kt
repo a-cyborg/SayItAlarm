@@ -17,32 +17,20 @@ fun IconButtonAddPreview() {
 
 @Preview
 @Composable
+fun IconButtonClosePreview() {
+    IconButtonClose {}
+}
+
+@Preview
+@Composable
 fun IconButtonDeletePreview() {
     IconButtonDelete {}
 }
 
 @Preview
 @Composable
-fun IconButtonDeleteTextPreview() {
-    IconButtonDeleteText {}
-}
-
-@Preview
-@Composable
-fun IconButtonDonePreview() {
-    IconButtonDone {}
-}
-
-@Preview
-@Composable
 fun IconButtonEditPreview() {
     IconButtonEdit {}
-}
-
-@Preview
-@Composable
-fun IconButtonEditTextPreview() {
-    IconButtonEditText {}
 }
 
 @Preview
@@ -67,28 +55,4 @@ fun IconButtonInfoPreview() {
 @Composable
 fun IconButtonCollapsePreview() {
     IconButtonCollapse {}
-}
-
-@Preview
-@Composable
-fun IconButtonSaveTextPreview() {
-    IconButtonSaveText {}
-}
-
-@Preview
-@Composable
-fun IconButtonCancelTextPreview() {
-    IconButtonCancelText {}
-}
-
-@Preview
-@Composable
-fun IconButtonConfirmTextPreview() {
-    IconButtonConfirmText {}
-}
-
-@Preview
-@Composable
-fun IconButtonSnoozeTextPreview() {
-    IconButtonSnoozeText {}
 }

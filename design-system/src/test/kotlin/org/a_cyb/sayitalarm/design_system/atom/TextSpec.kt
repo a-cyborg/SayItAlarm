@@ -33,6 +33,27 @@ class TextSpec : RoborazziTest() {
     }
 
     @Test
+    fun `It renders TextDisplayAttentionSmall`() {
+        subjectUnderTest.setContent {
+            TextDisplayAttentionSmall(text = "DisplayAttentionSmall")
+        }
+    }
+
+    @Test
+    fun `It renders TextDisplayDangerSmall`() {
+        subjectUnderTest.setContent {
+            TextDisplayDangerSmall(text = "DisplayDangerSmall")
+        }
+    }
+
+    @Test
+    fun `It renders TextDisplayWarningSmall`() {
+        subjectUnderTest.setContent {
+            TextDisplayWarningSmall(text = "DisplayWarningSmall")
+        }
+    }
+
+    @Test
     fun `It renders TextHeadlineStandardLarge`() {
         subjectUnderTest.setContent {
             TextHeadlineStandardLarge(text = "HeadlineStandardLarge")
@@ -54,6 +75,27 @@ class TextSpec : RoborazziTest() {
     }
 
     @Test
+    fun `It renders TextTitleAttentionLarge`() {
+        subjectUnderTest.setContent {
+            TextTitleAttentionLarge(text = "TitleAttentionLarge")
+        }
+    }
+
+    @Test
+    fun `It renders TextTitleSubtleLarge`() {
+        subjectUnderTest.setContent {
+            TextTitleSubtleLarge(text = "TitleSubtleLarge")
+        }
+    }
+
+    @Test
+    fun `It renders TextTitleWarningLarge`() {
+        subjectUnderTest.setContent {
+            TextTitleWarningLarge(text = "TitleWarningLarge")
+        }
+    }
+
+    @Test
     fun `It renders TextTitleStandardMedium`() {
         subjectUnderTest.setContent {
             TextTitleStandardMedium(text = "TitleStandardLarge")
@@ -64,13 +106,6 @@ class TextSpec : RoborazziTest() {
     fun `It renders TextTitleAttentionMedium`() {
         subjectUnderTest.setContent {
             TextTitleAttentionMedium(text = "TitleAttentionMedium")
-        }
-    }
-
-    @Test
-    fun `It renders TextTitleAttentionLarge`() {
-        subjectUnderTest.setContent {
-            TextTitleAttentionLarge(text = "TitleAttentionLarge")
         }
     }
 

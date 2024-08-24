@@ -8,6 +8,7 @@ package org.a_cyb.sayitalarm.design_system.atom
 
 import androidx.compose.ui.test.onNodeWithText
 import org.a_cyb.sayitalarm.design_system.RoborazziTest
+import org.a_cyb.sayitalarm.design_system.token.Brush
 import org.junit.Test
 
 class BoxSpec : RoborazziTest() {
@@ -21,5 +22,14 @@ class BoxSpec : RoborazziTest() {
 
         subjectUnderTest.onNodeWithText("BoxVerticalFading")
             .assertExists()
+    }
+
+    @Test
+    fun `It renders BoxAnimateCircleBorder with given content`() {
+        subjectUnderTest.setContent {
+            BoxAnimatedCircleBorder(brush = Brush.sweepGradientRainbow) {
+                TextTitleStandardLarge(text = "BoxCircle")
+            }
+        }
     }
 }

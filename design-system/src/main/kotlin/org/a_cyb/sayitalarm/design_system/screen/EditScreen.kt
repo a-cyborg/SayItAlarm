@@ -11,11 +11,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.res.stringResource
 import org.a_cyb.sayitalarm.design_system.R
 import org.a_cyb.sayitalarm.design_system.atom.ColumnScreenStandard
-import org.a_cyb.sayitalarm.design_system.atom.IconButtonConfirmText
+import org.a_cyb.sayitalarm.design_system.atom.TextButtonConfirm
 import org.a_cyb.sayitalarm.design_system.atom.IconButtonNavigateBack
 import org.a_cyb.sayitalarm.design_system.atom.SpacerMedium
-import org.a_cyb.sayitalarm.design_system.molecule.TextRowWarning
-import org.a_cyb.sayitalarm.design_system.molecule.TopAppBarMedium
+import org.a_cyb.sayitalarm.design_system.molecule.TextBoxWarningTitle
+import org.a_cyb.sayitalarm.design_system.molecule.TopAppBarLarge
 import org.a_cyb.sayitalarm.design_system.organism.AlarmPanel
 import org.a_cyb.sayitalarm.presentation.EditContract
 import org.a_cyb.sayitalarm.presentation.EditContract.EditViewModel.EditState.Error
@@ -50,7 +50,7 @@ fun EditScreen(
             }
 
             Error -> {
-                TextRowWarning(stringResource(id = R.string.info_add_and_edit_initialize_error))
+                TextBoxWarningTitle(stringResource(id = R.string.info_add_and_edit_initialize_error))
             }
 
             Initial -> {}
@@ -64,9 +64,9 @@ private fun EditTopAppBar(
     onCancel: () -> Unit,
     onConfirm: () -> Unit,
 ) {
-    TopAppBarMedium(
+    TopAppBarLarge(
         title = stringResource(id = R.string.edit),
         navigationIcon = { IconButtonNavigateBack(onCancel) },
-        actions = { IconButtonConfirmText(onConfirm) }
+        actions = { TextButtonConfirm(onConfirm) }
     )
 }

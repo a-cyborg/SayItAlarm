@@ -11,10 +11,10 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MediumTopAppBar
+import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import org.a_cyb.sayitalarm.design_system.atom.TextDisplaySubtleSmall
+import org.a_cyb.sayitalarm.design_system.atom.TextDisplayStandardLarge
 import org.a_cyb.sayitalarm.design_system.atom.TextHeadlineStandardSmall
 import org.a_cyb.sayitalarm.design_system.token.Color
 
@@ -46,13 +46,13 @@ fun TopAppBarSmall(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopAppBarMedium(
+fun TopAppBarLarge(
     title: String,
     navigationIcon: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
 ) {
-    MediumTopAppBar(
-        title = { TextDisplaySubtleSmall(text = title) },
+    LargeTopAppBar(
+        title = { TextDisplayStandardLarge(text = title) },
         navigationIcon = navigationIcon,
         actions = actions,
         colors = TopAppBarDefaults.topAppBarColors(

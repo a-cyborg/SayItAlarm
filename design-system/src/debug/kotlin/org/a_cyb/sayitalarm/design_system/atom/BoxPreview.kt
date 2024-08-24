@@ -8,11 +8,20 @@ package org.a_cyb.sayitalarm.design_system.atom
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import org.a_cyb.sayitalarm.design_system.token.Brush
 
 @Preview
 @Composable
 fun BoxVerticalFadingPreview() {
     BoxVerticalFading {
         TextDisplayStandardSmall(text = "BoxVerticalFading")
+    }
+}
+
+@Preview
+@Composable
+fun BoxAnimateCircleBorderPreview() {
+    BoxAnimatedCircleBorder(brush = Brush.sweepGradientRainbow) {
+        TextDisplayStandardSmall(text = "BoxCircle")
     }
 }

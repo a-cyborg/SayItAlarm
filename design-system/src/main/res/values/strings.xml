@@ -9,6 +9,7 @@
     <string name="info_add_and_edit_initialize_error">Oops! Something went wrong. Please restart the application and try again.</string>
     <string name="info_settings_initialize_error">Oops! Something went wrong while loading the settings. Please restart the application and try again.</string>
     <string name="info_list_initialize_error">Oops! Something went wrong while loading the alarms. Please restart the application and try again.</string>
+    <string name="info_say_it_error">Oops! Something went wrong. I apologize for the error.\n\n Please let me know about this issue, it will help us prevent it in the future. You can find contact information in the settings menu.\n\n Thank you for using SayIt. Have an amazing day!</string>
     <string name="info_list_no_alarm">Hey there! Just tap the + button to get started.</string>
     <string name="info_scripts">Please write down texts that uplift your spirits, improve your mental state, or something you want to achieve. One tip I\'d like to share is that it\'s proven affirming and focusing on these goals as if you have already achieved them can help you accomplish them more effectively.</string>
     <string name="info_scripts_only_letter">Please write the text using only letters. Text should be pronounceable.</string>
@@ -42,7 +43,16 @@
     <string name="version">Version</string>
     <string name="license">License</string>
     <string name="say_it">Say It</string>
-    <string name="loading">Loading...</string>
+    <string name="start">Start</string>
+    <string name="try_again">Try again</string>
+    <string name="loading">Loading…</string>
+    <string name="listening">Listening…</string>
+    <string name="ready">Ready</string>
+    <string name="success">Success</string>
+    <string name="failed">Failed</string>
+    <string name="error">Error</string>
+    <string name="exit">Exit</string>
+    <string name="finish">Finish</string>
     <!-- ContentDescription -->
     <string name="action_close">Close</string>
     <string name="action_add_alarm">Add alarm</string>

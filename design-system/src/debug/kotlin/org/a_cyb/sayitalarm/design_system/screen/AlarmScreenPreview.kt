@@ -17,13 +17,13 @@ import org.a_cyb.sayitalarm.presentation.command.CommandContract
 @Preview
 @Composable
 fun AlarmScreenInitialStatePreview() {
-    AlarmScreen(AlarmViewModelFake())
+    AlarmScreen(AlarmViewModelFake()) {}
 }
 
 @Preview
 @Composable
 fun AlarmScreenRingingStatePreview() {
-    AlarmScreen(AlarmViewModelFake(state = AlarmUiState.Ringing("Good morning 🌵")))
+    AlarmScreen(AlarmViewModelFake(state = AlarmUiState.Ringing("Good morning 🌵"))) {}
 }
 
 private class AlarmViewModelFake(
@@ -34,7 +34,5 @@ private class AlarmViewModelFake(
 
     override fun startSayIt() {}
     override fun snooze() {}
-    override fun finishAlarm() {}
-
     override fun <T : CommandContract.CommandReceiver> runCommand(command: CommandContract.Command<T>) {}
 }

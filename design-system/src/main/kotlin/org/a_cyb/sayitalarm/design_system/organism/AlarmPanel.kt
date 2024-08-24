@@ -6,6 +6,7 @@
 
 package org.a_cyb.sayitalarm.design_system.organism
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
@@ -40,7 +41,7 @@ import org.a_cyb.sayitalarm.design_system.molecule.PopupPickerRepeat
 import org.a_cyb.sayitalarm.design_system.molecule.PopupPickerRingtone
 import org.a_cyb.sayitalarm.design_system.molecule.PopupPickerSayItScript
 import org.a_cyb.sayitalarm.design_system.molecule.PopupPickerTime
-import org.a_cyb.sayitalarm.design_system.molecule.TextRowInfo
+import org.a_cyb.sayitalarm.design_system.molecule.TextBoxInfo
 import org.a_cyb.sayitalarm.entity.Hour
 import org.a_cyb.sayitalarm.entity.Minute
 import org.a_cyb.sayitalarm.entity.SayItScripts
@@ -235,8 +236,8 @@ private fun SayItScriptsPanel(
             }
         }
 
-        if (showInfoText) {
-            TextRowInfo(text = stringResource(id = R.string.info_scripts))
+        AnimatedVisibility(showInfoText) {
+            TextBoxInfo(text = stringResource(id = R.string.info_scripts))
             ActionRowCollapse { showInfoText = false }
         }
 

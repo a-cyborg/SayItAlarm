@@ -20,8 +20,10 @@ import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.ui.graphics.toArgb
 import androidx.core.content.ContextCompat
 import org.a_cyb.sayitalarm.alarm_service.core.navigation.SiaAlarmServiceNavHost
+import org.a_cyb.sayitalarm.design_system.token.Color
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController
 import org.koin.android.ext.android.inject
 
@@ -46,6 +48,10 @@ class AlarmActivity : ComponentActivity() {
         setupScreenOn()
 
         setContent {
+            Color.useDarkTheme()
+            window.statusBarColor = Color.surface.standard.toArgb()
+            window.navigationBarColor = Color.surface.standard.toArgb()
+
             SiaAlarmServiceNavHost()
         }
     }

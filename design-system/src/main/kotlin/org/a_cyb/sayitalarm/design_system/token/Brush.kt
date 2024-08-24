@@ -39,4 +39,20 @@ object Brush {
             Color.surface.strong,
         )
     )
+
+    val sweepGradientAttention = Brush.sweepGradient(
+        listOf(
+            Color.surface.standard,
+            Color.surface.success,
+            Color.surface.attention,
+        )
+    )
+
+    val sweepGradientDanger = Brush.sweepGradient(
+        listOf(
+            Color.surface.standard,
+            Color.text.warning,
+            Color.text.danger,
+        )
+    )
 }
