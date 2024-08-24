@@ -235,4 +235,3 @@ class TextButtonSpec : RoborazziTest() {
         assertTrue(hasBeenCalled)
     }
 }
-}
