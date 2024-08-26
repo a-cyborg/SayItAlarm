@@ -81,7 +81,7 @@ class SayItViewModelSpec {
     }
 
     @Test
-    fun `When forceQuite is called it invokes ServiceController's terminate and SttRecognizer's stopRecognizer`() {
+    fun `When forceQuite is called it invokes scheduleNextAlarm, terminate, and stopRecognizer`() {
         // Given
         val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator, soundEffectPlayer)
 
@@ -89,6 +89,7 @@ class SayItViewModelSpec {
         viewModel.forceQuit()
 
         // Then
+        verify { serviceController.scheduleNextAlarm(any()) }
         verify { serviceController.terminate() }
         verify { sttRecognizer.stopRecognizer() }
     }

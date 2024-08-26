@@ -36,6 +36,7 @@ sealed interface AlarmServiceContract {
         fun onServiceDisconnected()
         fun startSayIt()
         fun startSnooze()
+        fun scheduleNextAlarm(scope: CoroutineScope)
         fun terminate()
 
         sealed interface ControllerState {

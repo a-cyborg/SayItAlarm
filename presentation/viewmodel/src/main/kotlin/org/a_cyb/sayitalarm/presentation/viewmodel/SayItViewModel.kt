@@ -77,8 +77,12 @@ class SayItViewModel(
     }
 
     override fun forceQuit() {
-        sttRecognizer.stopRecognizer()
-        serviceController.terminate()
+        scope.launch {
+            serviceController.scheduleNextAlarm(this)
+        }.invokeOnCompletion {
+            sttRecognizer.stopRecognizer()
+            serviceController.terminate()
+        }
     }
 
     private fun handleRecognizerState(recognizerState: SttRecognizer.RecognizerState) {
@@ -120,7 +124,7 @@ class SayItViewModel(
         val maxAllowedErrors = script.length * ERROR_ACCEPTANCE_RATE
         val errorCounts = editDistanceCalculator.calculateEditDistance(script, sttResult)
 
-        return if (errorCounts <= maxAllowedErrors) true else false
+        return errorCounts <= maxAllowedErrors
     }
 
     private fun updateToSuccessOrFinished() {
@@ -141,7 +145,6 @@ class SayItViewModel(
 
     private fun isTheLastScript(): Boolean {
         val count = (_state.value as Processing).info.count
-
         return count.current == count.total
     }
 

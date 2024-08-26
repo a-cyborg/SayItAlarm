@@ -11,6 +11,7 @@ import app.cash.turbine.turbineScope
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -202,6 +203,10 @@ private class AlarmServiceControllerFake(
     }
 
     override fun startSnooze() {
+        updateState()
+    }
+
+    override fun scheduleNextAlarm(scope: CoroutineScope) {
         updateState()
     }
 

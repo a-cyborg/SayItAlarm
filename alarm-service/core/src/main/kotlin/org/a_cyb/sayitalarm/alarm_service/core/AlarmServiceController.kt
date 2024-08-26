@@ -76,6 +76,17 @@ class AlarmServiceController(
         }
     }
 
+    override fun scheduleNextAlarm(scope: CoroutineScope) {
+        if (alarm != null) {
+            scope.launch {
+                if (alarm!!.weeklyRepeat.weekdays.isEmpty()) {
+                    alarmRepository.update(alarm!!.copy(enabled = false), this)
+                }
+                alarmScheduler.scheduleAlarms(this)
+            }
+        }
+    }
+
     override fun startSnooze() {
         runActionOrUpdateError {
             alarmScheduler.scheduleSnooze(alarm!!.id, settings!!.snooze)

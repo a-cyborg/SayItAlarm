@@ -12,6 +12,7 @@ import java.util.Calendar.THURSDAY
 import java.util.Calendar.TUESDAY
 import java.util.Calendar.WEDNESDAY
 import app.cash.turbine.test
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
@@ -22,6 +23,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -236,6 +238,7 @@ class AlarmServiceControllerSpec {
 
             // Then
             verify(exactly = 1) { alarmService.startSnooze() }
+            verify(exactly = 1) { alarmScheduler.scheduleSnooze(any(), any()) }
         }
     }
 
@@ -266,6 +269,43 @@ class AlarmServiceControllerSpec {
         // Then
         verify(exactly = 1) { alarmService.stopService() }
     }
+
+    @Test
+    fun `When scheduleNextAlarm is called, it invokes Scheduler scheduleAlarms`() = runTest {
+        // Given
+        val scope = CoroutineScope(UnconfinedTestDispatcher())
+
+        controller.onServiceBind(alarmService, alarm.id)
+        advanceUntilIdle()
+
+        // When
+        controller.scheduleNextAlarm(scope)
+
+        // Then
+        coVerify { alarmScheduler.scheduleAlarms(any()) }
+    }
+
+    @Test
+    fun `When scheduleNextAlarm is called and the alarm is not repeatable, it invokes alarmRepository update`() =
+        runTest {
+            // Given
+            val scope = CoroutineScope(UnconfinedTestDispatcher())
+            val captured = slot<Alarm>()
+
+            every { alarmRepository.getAlarm(any(), any()) } returns
+                CompletableDeferred(Result.success(alarm.copy(weeklyRepeat = WeeklyRepeat())))
+
+            controller.onServiceBind(alarmService, alarm.id)
+            advanceUntilIdle()
+
+            // When
+            controller.scheduleNextAlarm(scope)
+
+            // Then
+            coVerify { alarmRepository.update(capture(captured), any()) }
+            coVerify { alarmScheduler.scheduleAlarms(any()) }
+            captured.captured.enabled mustBe false
+        }
 
     @Test
     fun `It fulfills AlarmServiceControllerContract`() {
