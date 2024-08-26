@@ -10,7 +10,6 @@ import android.content.Context
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import kotlinx.coroutines.CoroutineScope
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
 import org.a_cyb.sayitalarm.entity.Snooze
 
@@ -18,7 +17,7 @@ class AlarmScheduler(
     private val context: Context,
 ) : AlarmServiceContract.AlarmScheduler {
 
-    override suspend fun scheduleAlarms(scope: CoroutineScope) {
+    override fun scheduleAlarms() {
         val data = Data.Builder()
             .putInt(SCHEDULER_WORKER_WORK_TYPE, SCHEDULER_WORKER_WORK_SET_ALARM)
             .build()
@@ -36,7 +35,7 @@ class AlarmScheduler(
         enqueueWork(data)
     }
 
-    override suspend fun cancelAlarm(alarmId: Long, scope: CoroutineScope) {
+    override fun cancelAlarm(alarmId: Long) {
         val data = Data.Builder()
             .putInt(SCHEDULER_WORKER_WORK_TYPE, SCHEDULER_WORKER_WORK_CANCEL_ALARM)
             .putLong(SCHEDULER_WORKER_INPUT_DATA_ALARM_ID, alarmId)

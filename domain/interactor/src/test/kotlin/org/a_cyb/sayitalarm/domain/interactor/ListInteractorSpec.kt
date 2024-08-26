@@ -125,7 +125,7 @@ class ListInteractorSpec {
 
         // Then
         coVerify(exactly = 1) {
-            alarmScheduler.scheduleAlarms(any())
+            alarmScheduler.scheduleAlarms()
         }
     }
 
@@ -138,7 +138,7 @@ class ListInteractorSpec {
 
         // Then
         coVerify(exactly = 1) {
-            alarmScheduler.cancelAlarm(any(), any())
+            alarmScheduler.cancelAlarm(any())
         }
     }
 
@@ -152,7 +152,7 @@ class ListInteractorSpec {
         // Then
         coVerifyOrder {
             alarmRepository.updateEnabled(any(), any(), any())
-            alarmScheduler.scheduleAlarms(any())
+            alarmScheduler.scheduleAlarms()
         }
     }
 
@@ -176,7 +176,7 @@ class ListInteractorSpec {
 
         // Then
         coVerify(exactly = 1) {
-            alarmScheduler.cancelAlarm(any(), any())
+            alarmScheduler.cancelAlarm(any())
         }
     }
 
@@ -190,7 +190,7 @@ class ListInteractorSpec {
         // Then
         coVerifyOrder {
             alarmRepository.delete(any(), any())
-            alarmScheduler.cancelAlarm(any(), any())
+            alarmScheduler.cancelAlarm(any())
         }
     }
 

@@ -55,7 +55,7 @@ class AlarmSchedulerSpec {
         val capturedRequest = slot<WorkRequest>()
 
         // When
-        scheduler.scheduleAlarms(this)
+        scheduler.scheduleAlarms()
 
         // Then
         verify(exactly = 1) { workManager.enqueue(capture(capturedRequest)) }
@@ -101,7 +101,7 @@ class AlarmSchedulerSpec {
         val alarmId: Long = fixture.fixture(range = 1..Int.MAX_VALUE)
 
         // When
-        scheduler.cancelAlarm(alarmId, this)
+        scheduler.cancelAlarm(alarmId)
 
         // Then
         verify(exactly = 1) { workManager.enqueue(capture(capturedRequest)) }

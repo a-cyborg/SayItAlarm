@@ -33,7 +33,7 @@ class EditInteractor(
     override fun update(alarm: Alarm, scope: CoroutineScope) {
         scope.launch {
             alarmRepository.update(alarm, scope)
-            alarmScheduler.scheduleAlarms(scope)
+            alarmScheduler.scheduleAlarms()
         }
     }
 }

@@ -82,7 +82,7 @@ class AlarmServiceController(
                 if (alarm!!.weeklyRepeat.weekdays.isEmpty()) {
                     alarmRepository.update(alarm!!.copy(enabled = false), this)
                 }
-                alarmScheduler.scheduleAlarms(this)
+                alarmScheduler.scheduleAlarms()
             }
         }
     }

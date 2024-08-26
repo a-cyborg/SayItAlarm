@@ -282,7 +282,7 @@ class AlarmServiceControllerSpec {
         controller.scheduleNextAlarm(scope)
 
         // Then
-        coVerify { alarmScheduler.scheduleAlarms(any()) }
+        coVerify { alarmScheduler.scheduleAlarms() }
     }
 
     @Test
@@ -303,7 +303,7 @@ class AlarmServiceControllerSpec {
 
             // Then
             coVerify { alarmRepository.update(capture(captured), any()) }
-            coVerify { alarmScheduler.scheduleAlarms(any()) }
+            coVerify { alarmScheduler.scheduleAlarms() }
             captured.captured.enabled mustBe false
         }
 

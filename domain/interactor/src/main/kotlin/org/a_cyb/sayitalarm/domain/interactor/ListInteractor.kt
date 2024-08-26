@@ -25,23 +25,22 @@ class ListInteractor(
         scope.launch {
             alarmRepository.updateEnabled(id, enabled, this)
 
-            setAlarmSchedule(id, enabled, scope)
+            setAlarmSchedule(id, enabled)
         }
     }
 
-    private suspend fun setAlarmSchedule(id: Long, enabled: Boolean, scope: CoroutineScope) {
+    private fun setAlarmSchedule(id: Long, enabled: Boolean) {
         if (enabled) {
-            alarmScheduler.scheduleAlarms(scope)
+            alarmScheduler.scheduleAlarms()
         } else {
-            alarmScheduler.cancelAlarm(id, scope)
+            alarmScheduler.cancelAlarm(id)
         }
     }
 
     override fun deleteAlarm(id: Long, scope: CoroutineScope) {
         scope.launch {
             alarmRepository.delete(id, this)
-
-            alarmScheduler.cancelAlarm(id, this)
+            alarmScheduler.cancelAlarm(id)
         }
     }
 }

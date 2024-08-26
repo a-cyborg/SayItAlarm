@@ -17,9 +17,9 @@ import org.a_cyb.sayitalarm.entity.Snooze
 sealed interface AlarmServiceContract {
 
     interface AlarmScheduler {
-        suspend fun scheduleAlarms(scope: CoroutineScope)
+        fun scheduleAlarms()
         fun scheduleSnooze(alarmId: Long, snooze: Snooze)
-        suspend fun cancelAlarm(alarmId: Long, scope: CoroutineScope)
+        fun cancelAlarm(alarmId: Long)
     }
 
     interface AlarmService {

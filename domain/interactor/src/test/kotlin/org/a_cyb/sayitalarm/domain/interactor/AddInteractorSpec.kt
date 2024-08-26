@@ -77,7 +77,7 @@ class AddInteractorSpec {
 
         // Then
         coVerify(exactly = 1) {
-            alarmScheduler.scheduleAlarms(any())
+            alarmScheduler.scheduleAlarms()
         }
     }
 
@@ -92,7 +92,7 @@ class AddInteractorSpec {
 
         coVerifyOrder {
             alarmRepository.save(any(), any())
-            alarmScheduler.scheduleAlarms(any())
+            alarmScheduler.scheduleAlarms()
         }
     }
 
