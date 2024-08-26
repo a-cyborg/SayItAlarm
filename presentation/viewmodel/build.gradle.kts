@@ -22,6 +22,7 @@ dependencies {
     implementation(projects.presentation)
     implementation(projects.presentation.formatter)
     implementation(projects.systemService.ringtoneResolver)
+    implementation(projects.presentation.soundEffectPlayer)
 
     coreLibraryDesugaring(libs.android.tools.desugarJdk)
     implementation(libs.androidx.lifecycle.viewmodelAndroid)

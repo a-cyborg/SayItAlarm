@@ -41,9 +41,7 @@ class AddViewModel(
     private val _state: MutableStateFlow<AddState> = MutableStateFlow(Initial(getDefaultAlarmUI()))
     override val state: StateFlow<AddState> = _state.asStateFlow()
 
-    private fun getDefaultAlarmUI(): AlarmUI {
-        return mapper.mapToAlarmUI(defaultAlarm)
-    }
+    private fun getDefaultAlarmUI(): AlarmUI = mapper.mapToAlarmUI(defaultAlarm)
 
     override fun setTime(hour: Hour, minute: Minute) {
         updateStateWithCopy {

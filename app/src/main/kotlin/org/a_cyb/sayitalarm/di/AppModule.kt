@@ -15,6 +15,7 @@ import org.a_cyb.sayitalarm.data.di.dataModule
 import org.a_cyb.sayitalarm.database.di.databaseModule
 import org.a_cyb.sayitalarm.domain.interactor.di.interactorModule
 import org.a_cyb.sayitalarm.presentation.formatter.di.formatterModule
+import org.a_cyb.sayitalarm.presentation.sound_effect_player.di.soundEffectPlayerModule
 import org.a_cyb.sayitalarm.presentation.viewmodel.di.viewModelModule
 import org.a_cyb.sayitalarm.system_service.ringtone_resolver.di.ringtoneResolverModule
 import org.koin.core.qualifier.named
@@ -28,6 +29,7 @@ val appModule = module {
         databaseModule,
         alarmServiceModule,
         formatterModule,
+        soundEffectPlayerModule,
         ringtoneResolverModule,
         module {
             single<CoroutineDispatcher>(named("io")) {

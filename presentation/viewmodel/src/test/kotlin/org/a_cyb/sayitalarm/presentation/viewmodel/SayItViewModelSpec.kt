@@ -36,6 +36,7 @@ import org.a_cyb.sayitalarm.presentation.SayItContract.SayItState.Finished
 import org.a_cyb.sayitalarm.presentation.SayItContract.SayItState.Processing
 import org.a_cyb.sayitalarm.presentation.SayItContract.SttStatus
 import org.a_cyb.sayitalarm.presentation.command.CommandContract
+import org.a_cyb.sayitalarm.presentation.sound_effect_player.SoundEffectPlayerContract
 import org.a_cyb.sayitalarm.util.fulfils
 import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.After
@@ -49,6 +50,7 @@ class SayItViewModelSpec {
     private val serviceController: AlarmServiceController = mockk(relaxed = true)
     private val sttRecognizer: SttRecognizer = mockk(relaxed = true)
     private val editDistanceCalculator: EditDistanceCalculator = mockk(relaxed = true)
+    private val soundEffectPlayer: SoundEffectPlayerContract = mockk(relaxed = true)
 
     private val fixture = kotlinFixture()
 
@@ -69,7 +71,7 @@ class SayItViewModelSpec {
     @Test
     fun `When processScript is called it invokes SttRecognizer `() {
         // Given
-        val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator)
+        val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator, soundEffectPlayer)
 
         // When
         viewModel.processScript()
@@ -81,7 +83,7 @@ class SayItViewModelSpec {
     @Test
     fun `When forceQuite is called it invokes ServiceController's terminate and SttRecognizer's stopRecognizer`() {
         // Given
-        val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator)
+        val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator, soundEffectPlayer)
 
         // When
         viewModel.forceQuit()
@@ -97,7 +99,7 @@ class SayItViewModelSpec {
         every { serviceController.controllerState } returns
             MutableStateFlow(ControllerState.RunningSayIt(SayItScripts("SayIt")))
 
-        val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator)
+        val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator, soundEffectPlayer)
 
         // Then
         viewModel.state.value mustBe Processing(
@@ -116,7 +118,7 @@ class SayItViewModelSpec {
         every { serviceController.controllerState } returns MutableStateFlow(ControllerState.Error)
 
         // When
-        val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator)
+        val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator, soundEffectPlayer)
 
         // Then
         viewModel.state.value mustBe Error
@@ -126,7 +128,7 @@ class SayItViewModelSpec {
     fun `when the SttRecognizer is in the Ready, it sets the state to Listening`() = runTest {
         // Given
         val sttRecognizer = SttRecognizerFake(listOf(RecognizerState.Ready))
-        val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator)
+        val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator, soundEffectPlayer)
 
         viewModel.state.test {
             skipItems(1)
@@ -144,7 +146,7 @@ class SayItViewModelSpec {
         // Given
         val sttResult: String = fixture.fixture()
         val sttRecognizer = SttRecognizerFake(listOf(RecognizerState.Processing(sttResult)))
-        val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator)
+        val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator, soundEffectPlayer)
 
         viewModel.state.test {
             skipItems(1)
@@ -167,7 +169,7 @@ class SayItViewModelSpec {
         // It sets the serviceController.controller state to ControllerState.RunningSayIt(given_scripts)
         setupServiceController(scripts)
 
-        val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator)
+        val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator, soundEffectPlayer)
 
         viewModel.state.test {
             skipItems(1)
@@ -184,6 +186,7 @@ class SayItViewModelSpec {
                     status = SttStatus.SUCCESS
                 )
             )
+            verify { soundEffectPlayer.playSuccessSoundEffect() }
         }
     }
 
@@ -198,7 +201,7 @@ class SayItViewModelSpec {
         setupServiceController(scripts)
         every { editDistanceCalculator.calculateEditDistance(any(), any()) } returns Int.MAX_VALUE
 
-        val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator)
+        val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator, soundEffectPlayer)
 
         viewModel.state.test {
             skipItems(1)
@@ -215,6 +218,7 @@ class SayItViewModelSpec {
                     count = Count(current = 1, total = 3)
                 )
             )
+            verify { soundEffectPlayer.playFailureSoundEffect() }
         }
     }
 
@@ -230,7 +234,7 @@ class SayItViewModelSpec {
         val sttRecognizer = SttRecognizerFake(recognizerState)
         setupServiceController(scripts)
 
-        val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator)
+        val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator, soundEffectPlayer)
 
         viewModel.state.test {
             skipItems(1)
@@ -260,6 +264,7 @@ class SayItViewModelSpec {
 
             // Then
             awaitItem() mustBe Finished
+            verify { soundEffectPlayer.stopPlayer() }
         }
     }
 
@@ -268,13 +273,13 @@ class SayItViewModelSpec {
         // Given
         val lengthOfScript: Int = fixture.fixture(range = 9..90)
         val script = "A".repeat(lengthOfScript)
-        val sttRecognizer = SttRecognizerFake(listOf(RecognizerState.Done(""),))
+        val sttRecognizer = SttRecognizerFake(listOf(RecognizerState.Done("")))
 
         setupServiceController(listOf(script))
         every { editDistanceCalculator.calculateEditDistance(any(), any()) } returns
             (lengthOfScript * 0.2).toInt() + 1
 
-        val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator)
+        val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator, soundEffectPlayer)
 
         viewModel.state.test {
             skipItems(1)
@@ -306,7 +311,7 @@ class SayItViewModelSpec {
             every { editDistanceCalculator.calculateEditDistance(any(), any()) } returns
                 (lengthOfScript * 0.2).toInt() - 1
 
-            val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator)
+            val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator, soundEffectPlayer)
 
             viewModel.state.test {
                 skipItems(1)
@@ -322,7 +327,7 @@ class SayItViewModelSpec {
     @Test
     fun `Given runCommand is called it executes the given command`() {
         // Given
-        val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator)
+        val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator, soundEffectPlayer)
         val command: CommandContract.Command<SayItViewModel> = mockk(relaxed = true)
 
         // When
@@ -335,7 +340,7 @@ class SayItViewModelSpec {
     @Test
     fun `It fulfills SayItViewModel`() {
         // Given
-        val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator)
+        val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator, soundEffectPlayer)
 
         viewModel fulfils SayItContract.SayItViewModel::class
     }

@@ -51,7 +51,7 @@ val viewModelModule: Module = module {
     } bind AlarmContract.AlarmViewModel::class
 
     viewModel {
-        SayItViewModel(get(), get(), get())
+        SayItViewModel(get(), get(), get(), get())
     } bind SayItContract.SayItViewModel::class
 
     single<AlarmMapperContract> {

@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController.ControllerState
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.EditDistanceCalculator
@@ -26,11 +27,13 @@ import org.a_cyb.sayitalarm.presentation.SayItContract.SayItState.Processing
 import org.a_cyb.sayitalarm.presentation.SayItContract.SttStatus
 import org.a_cyb.sayitalarm.presentation.command.CommandContract.Command
 import org.a_cyb.sayitalarm.presentation.command.CommandContract.CommandReceiver
+import org.a_cyb.sayitalarm.presentation.sound_effect_player.SoundEffectPlayerContract
 
 class SayItViewModel(
     private val serviceController: AlarmServiceController,
     private val sttRecognizer: SttRecognizer,
     private val editDistanceCalculator: EditDistanceCalculator,
+    private val soundEffectPlayer: SoundEffectPlayerContract,
 ) : SayItContract.SayItViewModel, ViewModel() {
 
     private val _state: MutableStateFlow<SayItState> = MutableStateFlow(Initial)
@@ -105,8 +108,10 @@ class SayItViewModel(
         val isSuccess = isSuccess(script, sttResult)
 
         if (isSuccess) {
+            scope.launch { soundEffectPlayer.playSuccessSoundEffect() }
             updateToSuccessOrFinished()
         } else {
+            scope.launch { soundEffectPlayer.playFailureSoundEffect() }
             updateToFailure(sttResult)
         }
     }
@@ -120,6 +125,7 @@ class SayItViewModel(
 
     private fun updateToSuccessOrFinished() {
         if (isTheLastScript()) {
+            scope.launch { soundEffectPlayer.stopPlayer() }
             SayItState.Finished.update()
         } else {
             updateProcessing {
