@@ -7,5 +7,7 @@
 
 <resources>
     <string name="notification_alert_channel_name">Ringing alarms</string>
+    <string name="notification_schedule_channel_name">Scheduling alarms</string>
     <string name="notification_content_title">SayItAlarm</string>
+    <string name="notification_content_text_schedule">Scheduling alarms</string>
 </resources>

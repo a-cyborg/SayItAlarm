@@ -72,14 +72,37 @@ class AlarmNotificationSpec {
         val manager = NotificationManagerCompat.from(context)
 
         // When
-        val actualNotification = AlarmNotification
-            .getAlarmAlertNotification(context)
+        val actualNotification = AlarmNotification.getAlarmAlertNotification(context)
+        val channel = manager.getNotificationChannel(actualNotification.channelId)
 
         // Then
-        with(manager.getNotificationChannel(actualNotification.channelId)) {
-            assertNotNull(this)
-            this.importance mustBe NotificationManager.IMPORTANCE_HIGH
-            this.name mustBe context.getString(R.string.notification_alert_channel_name)
-        }
+        assertNotNull(channel)
+        channel.importance mustBe NotificationManager.IMPORTANCE_HIGH
+        channel.name mustBe context.getString(R.string.notification_alert_channel_name)
+    }
+
+    @Test
+    fun `When getPostBootSchedulingNotification is called it returns notification`() {
+        // When
+        val actualNotification = AlarmNotification.getPostBootSchedulingNotification(context)
+
+        // Then
+        actualNotification.priority mustBe NotificationCompat.PRIORITY_DEFAULT
+        actualNotification.category mustBe NotificationCompat.CATEGORY_STATUS
+        actualNotification.smallIcon.resId mustBe R.drawable.ic_notif_small
+    }
+
+    @Test
+    fun `When getPostBootSchedulingNotification is called it creates notificationChannel`() {
+        // Given
+        val manager = NotificationManagerCompat.from(context)
+
+        // When
+        val actualNotification = AlarmNotification.getPostBootSchedulingNotification(context)
+        val channel = manager.getNotificationChannel(actualNotification.channelId)
+
+        // Then
+        assertNotNull(channel)
+        channel.name mustBe context.getString(R.string.notification_schedule_channel_name)
     }
 }

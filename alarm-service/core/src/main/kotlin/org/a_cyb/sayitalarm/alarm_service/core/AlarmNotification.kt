@@ -18,6 +18,9 @@ import androidx.core.app.NotificationManagerCompat
 
 object AlarmNotification {
 
+    /**
+     * Alert notification
+     */
     fun getAlarmAlertNotification(context: Context): Notification {
         createNotificationChannel(
             NotificationManagerCompat.from(context),
@@ -30,12 +33,12 @@ object AlarmNotification {
 
         val pendingIntent = PendingIntent.getActivity(
             context,
-            ALARM_RINGING_NOTIFICATION_ID,
+            ALARM_ALERT_PENDING_INTENT_REQUEST_CODE,
             activityIntent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
 
-        val notificationBuilder = getNotificationBuilder(
+        val notificationBuilder = getAlertNotificationBuilder(
             context,
             context.getString(R.string.notification_content_title)
         )
@@ -45,10 +48,37 @@ object AlarmNotification {
             .build()
     }
 
-    private fun createNotificationChannel(
-        manager: NotificationManagerCompat,
-        chanelName: String,
-    ) {
+    private fun getAlertNotificationBuilder(context: Context, contentTitle: String): NotificationCompat.Builder =
+        NotificationCompat.Builder(context, ALARM_NOTIFICATION_CHANNEL_ID)
+            .setContentTitle(contentTitle)
+            .setSmallIcon(R.drawable.ic_notif_small)
+            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setCategory(NotificationCompat.CATEGORY_ALARM)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setAutoCancel(false)
+            .setWhen(0)
+            .setOnlyAlertOnce(true)
+
+    /**
+     * Scheduling notification.
+     */
+    fun getPostBootSchedulingNotification(context: Context): Notification {
+        createNotificationChannel(
+            NotificationManagerCompat.from(context),
+            context.getString(R.string.notification_schedule_channel_name)
+        )
+
+        val notificationBuilder = NotificationCompat.Builder(context, ALARM_NOTIFICATION_CHANNEL_ID)
+            .setContentTitle(context.getString(R.string.notification_content_title))
+            .setContentText(context.getString(R.string.notification_content_text_schedule))
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setCategory(NotificationCompat.CATEGORY_STATUS)
+            .setSmallIcon(R.drawable.ic_notif_small)
+
+        return notificationBuilder.build()
+    }
+
+    private fun createNotificationChannel(manager: NotificationManagerCompat, chanelName: String) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             manager.createNotificationChannel(
                 NotificationChannel(
@@ -60,18 +90,6 @@ object AlarmNotification {
         }
     }
 
-    private fun getNotificationBuilder(context: Context, contentTitle: String): NotificationCompat.Builder =
-        NotificationCompat.Builder(context, ALARM_NOTIFICATION_CHANNEL_ID)
-            .setContentTitle(contentTitle)
-            .setSmallIcon(R.drawable.ic_notif_small)
-            .setPriority(NotificationCompat.PRIORITY_MAX)
-            .setCategory(NotificationCompat.CATEGORY_ALARM)
-            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-            // .setOngoing(true)
-            .setAutoCancel(false)
-            .setWhen(0)
-            .setOnlyAlertOnce(true)
-
     private const val ALARM_NOTIFICATION_CHANNEL_ID = "siaAlarmNotificationChannel"
-    private const val ALARM_RINGING_NOTIFICATION_ID = 818
+    private const val ALARM_ALERT_PENDING_INTENT_REQUEST_CODE = 818
 }
