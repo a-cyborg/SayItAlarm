@@ -15,7 +15,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -86,10 +85,6 @@ fun TextFieldSayItScript(
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
 
-    LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
-    }
-
     TextField(
         value = text,
         onValueChange = onValueChange,
@@ -103,11 +98,13 @@ fun TextFieldSayItScript(
             focusedIndicatorColor = Color.surface.subtle,
             unfocusedContainerColor = Color.surface.standard,
             unfocusedIndicatorColor = Color.ColorPalette.transparent,
+            focusedTextColor = Color.text.standard,
+            unfocusedTextColor = Color.text.subtle,
         ),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
         keyboardActions = KeyboardActions(
             onDone = { focusManager.clearFocus() }
         ),
-        placeholder = { TextBodySubtleMedium(text = stringResource(id = R.string.say_it)) }
+        placeholder = { TextBodySubtleMedium(text = stringResource(id = R.string.info_scripts_only_letter)) }
     )
 }

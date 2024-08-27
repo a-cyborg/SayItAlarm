@@ -6,15 +6,17 @@
 
 package org.a_cyb.sayitalarm.design_system.atom
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import org.a_cyb.sayitalarm.design_system.token.Color
 
 @Composable
-fun DialogStandardFillMax(
+fun DialogStandardFillMaxScrollable(
     onDismiss: () -> Unit,
     topAppBar: @Composable () -> Unit,
     content: @Composable () -> Unit,
@@ -23,11 +25,15 @@ fun DialogStandardFillMax(
         onDismissRequest = onDismiss,
         properties = DialogProperties(usePlatformDefaultWidth = false),
     ) {
-        CardStandard {
-            topAppBar()
-
-            Box(modifier = Modifier.fillMaxSize()) {
+        Box(
+            Modifier
+                .fillMaxSize()
+                .background(Color.surface.standard)
+        ) {
+            ColumnScreenStandardScrollable {
+                topAppBar()
                 content()
+                SpacerXLarge()
             }
         }
     }

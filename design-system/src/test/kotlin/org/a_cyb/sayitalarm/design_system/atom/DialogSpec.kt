@@ -38,9 +38,9 @@ class DialogSpec {
     private fun getString(id: Int) = composeTestRule.activity.getString(id)
 
     @Test
-    fun `It renders a DialogStandardFillMax`() {
+    fun `It renders a DialogStandardFillMaxScrollable`() {
         composeTestRule.setContent {
-            DialogStandardFillMax(
+            DialogStandardFillMaxScrollable(
                 topAppBar = {
                     TopAppBarSmall(
                         title = "Dialog",
@@ -61,16 +61,15 @@ class DialogSpec {
     }
 
     @Test
-    fun `When pressBack is called given dialogStandardFillMax it propagates the given onDismiss action`() {
+    fun `When pressBack is called, it triggers DialogStandardFillMaxScrollable onDismiss action`() {
         var hasBeenCalled = false
 
         composeTestRule.setContent {
-            DialogStandardFillMax(
+            DialogStandardFillMaxScrollable(
                 topAppBar = {
                     TopAppBarSmall(
-                        title = "Add Alarm",
+                        title = "About",
                         firstIcon = { IconButtonClose {} },
-                        secondIcon = { TextButtonSave {} },
                     )
                 },
                 onDismiss = {
@@ -97,7 +96,7 @@ class DialogSpec {
     }
 
     @Test
-    fun `When pressBack is called given dialogStandardFitContent it propagates the given onDismiss action`() {
+    fun `When pressBack is called, it triggers dialogStandardFitContent onDismiss action`() {
         var hasBeenCalled = false
 
         composeTestRule.setContent {

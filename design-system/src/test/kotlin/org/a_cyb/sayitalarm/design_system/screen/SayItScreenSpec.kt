@@ -191,8 +191,7 @@ private class SayItViewModelFake(state: SayItState) : SayItContract.SayItViewMod
         _invokedType = InvokedType.PROCESS_SCRIPT
     }
 
-    override fun forceQuit() {
-        println("[***] Its called")
+    override fun finish() {
         _invokedType = InvokedType.FORCE_QUIT
     }
 

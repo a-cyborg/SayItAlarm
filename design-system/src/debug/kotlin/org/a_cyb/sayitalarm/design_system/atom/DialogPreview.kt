@@ -13,8 +13,8 @@ import org.a_cyb.sayitalarm.design_system.molecule.TopAppBarSmall
 
 @Preview
 @Composable
-fun DialogStandardFillMaxPreview() {
-    DialogStandardFillMax(
+fun DialogStandardFillMaxScrollablePreview() {
+    DialogStandardFillMaxScrollable(
         onDismiss = {},
         topAppBar = {
             TopAppBarSmall(
