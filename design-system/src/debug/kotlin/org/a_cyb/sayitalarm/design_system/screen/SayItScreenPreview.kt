@@ -71,7 +71,7 @@ private class SayItViewModelFake(state: SayItState) : SayItContract.SayItViewMod
     override val state: StateFlow<SayItState> = MutableStateFlow(state)
 
     override fun processScript() {}
-    override fun forceQuit() {}
+    override fun finish() {}
     override fun <T : CommandContract.CommandReceiver> runCommand(command: CommandContract.Command<T>) {}
 }
 

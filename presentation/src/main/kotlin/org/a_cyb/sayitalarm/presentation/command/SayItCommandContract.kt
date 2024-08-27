@@ -11,14 +11,14 @@ interface SayItCommandContract {
         fun processScript()
     }
 
-    fun interface ForceQuit : CommandContract.CommandReceiver {
-        fun forceQuit()
+    fun interface Finish : CommandContract.CommandReceiver {
+        fun finish()
     }
 }
 
 interface SayItCommandContractAll :
     SayItCommandContract.ProcessScript,
-    SayItCommandContract.ForceQuit
+    SayItCommandContract.Finish
 
 data object ProcessScriptCommand : CommandContract.Command<SayItCommandContract.ProcessScript> {
     override fun execute(receiver: SayItCommandContract.ProcessScript) {
@@ -26,9 +26,9 @@ data object ProcessScriptCommand : CommandContract.Command<SayItCommandContract.
     }
 }
 
-data object ForceQuitCommand : CommandContract.Command<SayItCommandContract.ForceQuit> {
-    override fun execute(receiver: SayItCommandContract.ForceQuit) {
-        receiver.forceQuit()
+data object FinishCommand : CommandContract.Command<SayItCommandContract.Finish> {
+    override fun execute(receiver: SayItCommandContract.Finish) {
+        receiver.finish()
     }
 }
 

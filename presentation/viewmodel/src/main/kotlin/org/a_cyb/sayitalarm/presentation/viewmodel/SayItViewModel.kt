@@ -76,13 +76,10 @@ class SayItViewModel(
         sttRecognizer.startListening()
     }
 
-    override fun forceQuit() {
-        scope.launch {
-            serviceController.scheduleNextAlarm(this)
-        }.invokeOnCompletion {
-            sttRecognizer.stopRecognizer()
-            serviceController.terminate()
-        }
+    override fun finish() {
+        serviceController.scheduleNextAlarm(scope)
+        sttRecognizer.stopRecognizer()
+        serviceController.terminate()
     }
 
     private fun handleRecognizerState(recognizerState: SttRecognizer.RecognizerState) {

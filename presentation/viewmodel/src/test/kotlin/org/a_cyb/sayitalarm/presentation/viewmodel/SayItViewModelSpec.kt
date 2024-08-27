@@ -86,7 +86,7 @@ class SayItViewModelSpec {
         val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator, soundEffectPlayer)
 
         // When
-        viewModel.forceQuit()
+        viewModel.finish()
 
         // Then
         verify { serviceController.scheduleNextAlarm(any()) }

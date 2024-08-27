@@ -32,18 +32,18 @@ class SayItCommandSpec {
 
     @Test
     fun `ForceQuit command fulfills Command`() {
-        ForceQuitCommand fulfils CommandContract.Command::class
+        FinishCommand fulfils CommandContract.Command::class
     }
 
     @Test
     fun `When ForceQuiCommand is executed, it runs forceQuit`() {
         // Given
-        val receiver: SayItCommandContract.ForceQuit = mockk(relaxed = true)
+        val receiver: SayItCommandContract.Finish = mockk(relaxed = true)
 
         // When
-        ForceQuitCommand.execute(receiver)
+        FinishCommand.execute(receiver)
 
         // Then
-        verify(exactly = 1) { receiver.forceQuit() }
+        verify(exactly = 1) { receiver.finish() }
     }
 }

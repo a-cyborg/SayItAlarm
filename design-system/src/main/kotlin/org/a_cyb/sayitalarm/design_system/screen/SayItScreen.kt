@@ -52,7 +52,7 @@ import org.a_cyb.sayitalarm.presentation.SayItContract.SayItViewModel
 import org.a_cyb.sayitalarm.presentation.SayItContract.SttStatus
 import org.a_cyb.sayitalarm.presentation.command.CommandContract
 import org.a_cyb.sayitalarm.presentation.command.CommandContract.CommandReceiver
-import org.a_cyb.sayitalarm.presentation.command.ForceQuitCommand
+import org.a_cyb.sayitalarm.presentation.command.FinishCommand
 import org.a_cyb.sayitalarm.presentation.command.ProcessScriptCommand
 
 @Composable
@@ -92,7 +92,7 @@ private fun ColumnScope.FinishScreen(
     SpacerMedium()
     DividerMedium()
     Spacer(Modifier.weight(1f))
-    TextButtonCircleFinish { runCommand(ForceQuitCommand) }
+    TextButtonCircleFinish { runCommand(FinishCommand) }
 }
 
 @Composable
@@ -105,7 +105,7 @@ private fun ColumnScope.ErrorScreen(
     SpacerXLarge()
     TextBoxWarningBody(text = stringResource(id = R.string.info_say_it_error))
     Spacer(Modifier.weight(1f))
-    TextButtonCircleExit { runCommand(ForceQuitCommand) }
+    TextButtonCircleExit { runCommand(FinishCommand) }
 }
 
 @Composable
@@ -113,11 +113,11 @@ private fun ColumnScope.ProcessingScreen(
     info: SayItInfo,
     runCommand: (CommandContract.Command<out CommandReceiver>) -> Unit,
 ) {
-    ProcessingSceneHeader(status = info.status, count = info.count)
+    ProcessingScreenHeader(status = info.status, count = info.count)
     TextBoxSayItScript(text = info.script)
     TextBoxSttResult(text = info.sttResult)
     Spacer(modifier = Modifier.weight(1f))
-    ProcessingSceneActionAndAnimation(
+    ProcessingActionAndAnimation(
         status = info.status,
         runCommand = { runCommand(it) }
     )
@@ -125,7 +125,7 @@ private fun ColumnScope.ProcessingScreen(
 }
 
 @Composable
-private fun ProcessingSceneHeader(status: SttStatus, count: Count) {
+private fun ProcessingScreenHeader(status: SttStatus, count: Count) {
     val counter by animateFloatAsState(
         targetValue = count.current / count.total.toFloat(),
         label = "SayItScriptCounter"
@@ -153,7 +153,7 @@ private fun StatusHeader(status: SttStatus, countAsText: String) {
 }
 
 @Composable
-private fun ProcessingSceneActionAndAnimation(
+private fun ProcessingActionAndAnimation(
     status: SttStatus,
     runCommand: (CommandContract.Command<out CommandReceiver>) -> Unit,
 ) {
