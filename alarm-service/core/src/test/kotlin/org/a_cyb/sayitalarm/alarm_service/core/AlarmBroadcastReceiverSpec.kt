@@ -10,6 +10,8 @@ import kotlin.test.Test
 import kotlin.test.assertTrue
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.ACTION_BOOT_COMPLETED
+import android.content.Intent.ACTION_TIMEZONE_CHANGED
 import android.content.pm.ResolveInfo
 import android.os.Bundle
 import androidx.core.content.ContextCompat
@@ -29,33 +31,54 @@ class AlarmBroadcastReceiverSpec {
 
     @Before
     fun setup() {
+        mockkStatic(ContextCompat::class)
+
         context = ApplicationProvider.getApplicationContext()
     }
 
     @Test
-    fun `When onReceive is invoked with ACTION_DELIVER_ALARM action it calls startForegroundService with the AlarmRingService component`() {
+    fun `When onReceive is invoked with ACTION_DELIVER_ALARM action it calls startForegroundService with the AlarmService`() {
         // Given
-        mockkStatic(ContextCompat::class)
-
+        val captureIntent = slot<Intent>()
         val intent = Intent(AlarmScheduler.INTENT_ACTION_DELIVER_ALARM)
             .putExtras(Bundle())
 
         // When
-        AlarmBroadcastReceiver()
-            .onReceive(context, intent)
-
-        val captureIntent = slot<Intent>()
-
-        verify(exactly = 1) {
-            ContextCompat.startForegroundService(
-                any(),
-                capture(captureIntent)
-            )
-        }
+        AlarmBroadcastReceiver().onReceive(context, intent)
 
         // Then
-        captureIntent.captured.component!!.className mustBe
-            AlarmService::class.qualifiedName
+        verify { ContextCompat.startForegroundService(any(), capture(captureIntent)) }
+        captureIntent.captured.component!!.className mustBe AlarmService::class.qualifiedName
+    }
+
+    @Test
+    fun `When onReceive is invoked with ACTION_BOOT_COMPLETED action it calls startForegroundService with the AlarmPostBootService`() {
+        // Given
+        val captureIntent = slot<Intent>()
+        val intent = Intent(ACTION_BOOT_COMPLETED)
+            .putExtras(Bundle())
+
+        // When
+        AlarmBroadcastReceiver().onReceive(context, intent)
+
+        // Then
+        verify { ContextCompat.startForegroundService(any(), capture(captureIntent)) }
+        captureIntent.captured.component!!.className mustBe AlarmScheduleService::class.qualifiedName
+    }
+
+    @Test
+    fun `When onReceive is invoked with ACTION_TIMEZONE_CHANGED action it calls startForegroundService with the AlarmPostBootService`() {
+        // Given
+        val captureIntent = slot<Intent>()
+        val intent = Intent(ACTION_TIMEZONE_CHANGED)
+            .putExtras(Bundle())
+
+        // When
+        AlarmBroadcastReceiver().onReceive(context, intent)
+
+        // Then
+        verify { ContextCompat.startForegroundService(any(), capture(captureIntent)) }
+        captureIntent.captured.component!!.className mustBe AlarmScheduleService::class.qualifiedName
     }
 
     @Test

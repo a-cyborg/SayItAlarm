@@ -61,6 +61,18 @@
                 which is the primary feature of the application.">
             </property>
         </service>
+
+        <service
+            android:name=".AlarmScheduleService"
+            android:directBootAware="true"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="specialUse" >
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Sets the alarms after a device reboot and when the timezone is changed.">
+            </property>
+        </service>
     </application>
 
 </manifest>
