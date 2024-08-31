@@ -56,6 +56,15 @@ class TextBoxSpec : RoborazziTest() {
     }
 
     @Test
+    fun `It renders TextBoxStandardBody`() {
+        subjectUnderTest.setContent {
+            TextBoxStandardBody(text = "TextBoxStandardBody")
+        }
+
+        subjectUnderTest.onNodeWithText("TextBoxStandardBody").assertExists()
+    }
+
+    @Test
     fun `It renders TextBoxSayItScript`() {
         subjectUnderTest.setContent {
             TextBoxSayItScript(text = "TextSayItScript")

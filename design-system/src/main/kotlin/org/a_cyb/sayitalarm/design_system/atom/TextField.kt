@@ -48,12 +48,7 @@ fun TextFieldLabel(
         value = text,
         onValueChange = { text = it },
         textStyle = Font.body.l.copy(textAlign = textAlign),
-        colors = TextFieldDefaults.colors().copy(
-            focusedContainerColor = Color.surface.subtle.copy(alpha = 0.1f),
-            focusedIndicatorColor = Color.surface.subtle,
-            unfocusedContainerColor = Color.surface.standard,
-            unfocusedIndicatorColor = Color.ColorPalette.transparent
-        ),
+        colors = getTextFieldColors(),
         placeholder = {
             Row(
                 horizontalArrangement = Arrangement.End,
@@ -93,18 +88,19 @@ fun TextFieldSayItScript(
             .height(height)
             .focusRequester(focusRequester),
         textStyle = Font.body.l,
-        colors = TextFieldDefaults.colors().copy(
-            focusedContainerColor = Color.surface.subtle.copy(alpha = 0.1f),
-            focusedIndicatorColor = Color.surface.subtle,
-            unfocusedContainerColor = Color.surface.standard,
-            unfocusedIndicatorColor = Color.ColorPalette.transparent,
-            focusedTextColor = Color.text.standard,
-            unfocusedTextColor = Color.text.subtle,
-        ),
+        colors = getTextFieldColors(),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-        keyboardActions = KeyboardActions(
-            onDone = { focusManager.clearFocus() }
-        ),
+        keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
         placeholder = { TextBodySubtleMedium(text = stringResource(id = R.string.info_scripts_only_letter)) }
     )
 }
+
+@Composable
+private fun getTextFieldColors() = TextFieldDefaults.colors().copy(
+    focusedContainerColor = Color.surface.subtle.copy(alpha = 0.1f),
+    focusedIndicatorColor = Color.surface.subtle,
+    unfocusedContainerColor = Color.surface.standard,
+    unfocusedIndicatorColor = Color.ColorPalette.transparent,
+    focusedTextColor = Color.text.standard,
+    unfocusedTextColor = Color.text.subtle,
+)

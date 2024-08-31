@@ -6,10 +6,14 @@
 
 package org.a_cyb.sayitalarm.design_system.atom
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import org.a_cyb.sayitalarm.design_system.R
 import org.a_cyb.sayitalarm.design_system.molecule.animateCircleBorder
@@ -137,5 +141,36 @@ fun TextButtonCircleExit(onClick: () -> Unit) {
         TextTitleWarningLarge(
             text = stringResource(id = R.string.exit)
         )
+    }
+}
+
+@Composable
+fun TextButtonCopy(copyString: String) {
+    val clipboardManager = LocalContext.current.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    val data = ClipData.newPlainText("sayItAlarmCopy", copyString)
+
+    TextButton(onClick = { clipboardManager.setPrimaryClip(data) }) {
+        TextBodyStandardSmallUnderline(text = stringResource(id = R.string.copy))
+    }
+}
+
+@Composable
+fun TextButtonEmail(onClick: () -> Unit) {
+    TextButton(onClick = onClick) {
+        TextBodySubtleMediumUnderline(text = stringResource(id = R.string.email))
+    }
+}
+
+@Composable
+fun TextButtonGooglePlay(onClick: () -> Unit) {
+    TextButton(onClick = onClick) {
+        TextBodySubtleMediumUnderline(text = stringResource(id = R.string.google_play))
+    }
+}
+
+@Composable
+fun TextButtonGitHub(onClick: () -> Unit) {
+    TextButton(onClick = onClick) {
+        TextBodySubtleMediumUnderline(text = stringResource(id = R.string.github))
     }
 }

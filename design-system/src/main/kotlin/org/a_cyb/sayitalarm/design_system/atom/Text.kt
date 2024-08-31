@@ -8,6 +8,7 @@ package org.a_cyb.sayitalarm.design_system.atom
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.text.style.TextDecoration
 import org.a_cyb.sayitalarm.design_system.token.Color
 import org.a_cyb.sayitalarm.design_system.token.Font
 
@@ -184,7 +185,6 @@ fun TextBodyWarningLarge(text: String) {
     )
 }
 
-
 @Composable
 fun TextBodySubtleMedium(text: String) {
     Text(
@@ -195,10 +195,28 @@ fun TextBodySubtleMedium(text: String) {
 }
 
 @Composable
+fun TextBodySubtleMediumUnderline(text: String) {
+    Text(
+        text = text,
+        color = Color.text.subtle,
+        style = Font.body.m.copy(textDecoration = TextDecoration.Underline)
+    )
+}
+
+@Composable
 fun TextBodyStandardSmall(text: String) {
     Text(
         text = text,
         color = Color.text.standard,
         style = Font.body.s,
+    )
+}
+
+@Composable
+fun TextBodyStandardSmallUnderline(text: String) {
+    Text(
+        text = text,
+        color = Color.text.standard,
+        style = Font.body.s.copy(textDecoration = TextDecoration.Underline),
     )
 }

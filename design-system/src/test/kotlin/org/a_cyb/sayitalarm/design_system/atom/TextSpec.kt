@@ -145,9 +145,23 @@ class TextSpec : RoborazziTest() {
     }
 
     @Test
+    fun `It renders TextBodySubtleMediumUnderline`() {
+        subjectUnderTest.setContent {
+            TextBodySubtleMediumUnderline(text = "BodySubtleMediumUnderline")
+        }
+    }
+
+    @Test
     fun `It renders TextBodyStandardSmall`() {
         subjectUnderTest.setContent {
             TextBodyStandardSmall(text = "BodyStandardSmall")
+        }
+    }
+
+    @Test
+    fun `It renders TextBodyStandardSmallUnderline`() {
+        subjectUnderTest.setContent {
+            TextBodySubtleMediumUnderline(text = "BodySubtleMediumUnderline")
         }
     }
 }

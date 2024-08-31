@@ -64,6 +64,13 @@ fun TextBoxWarningBody(text: String) {
 }
 
 @Composable
+fun TextBoxStandardBody(text: String) {
+    Box(Modifier.padding(Spacing.m)) {
+        TextTitleStandardMedium(text = text)
+    }
+}
+
+@Composable
 fun TextBoxSayItScript(text: String) {
     Box(
         modifier = Modifier.padding(Spacing.xl),

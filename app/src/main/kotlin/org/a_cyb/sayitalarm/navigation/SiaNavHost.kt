@@ -70,8 +70,8 @@ fun SiaNavHost(
         composable(SETTINGS_ROUTE) {
             SettingsScreen(
                 viewModel = koinViewModel<SettingsViewModel>(),
-                navigateToList = navController::navigateBackToList,
                 versionName = BuildConfig.VERSION_NAME,
+                navigateToList = navController::navigateBackToList,
             )
         }
     }

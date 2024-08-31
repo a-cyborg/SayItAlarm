@@ -6,14 +6,13 @@
 
 package org.a_cyb.sayitalarm.design_system.screen
 
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import org.a_cyb.sayitalarm.entity.Snooze
 import org.a_cyb.sayitalarm.entity.Theme
 import org.a_cyb.sayitalarm.entity.TimeOut
+import org.a_cyb.sayitalarm.presentation.SettingsContract
 import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState
 import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState.Error
 import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState.Success
@@ -21,11 +20,7 @@ import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsViewModel
 import org.a_cyb.sayitalarm.presentation.SettingsContract.TimeInput
 import org.a_cyb.sayitalarm.presentation.command.CommandContract
 
-@Suppress("EmptyFunctionBlock")
-internal class SettingsViewModelFake(
-    private val viewModelScope: CoroutineScope,
-    initState: SettingsState = Error,
-) : SettingsViewModel {
+internal class SettingsViewModelFake(initState: SettingsState = Error) : SettingsViewModel {
 
     private val _state: MutableStateFlow<SettingsState> = MutableStateFlow(initState)
     override val state: StateFlow<SettingsState> = _state
@@ -35,20 +30,15 @@ internal class SettingsViewModelFake(
         get() = _executedCommand
 
     override fun setTimeOut(timeOut: TimeOut) {
-        _executedCommand = ExecutedCommand.SET_TIMEOUT
-
         val settingsUI = (_state.value as Success).settingsUI.copy(
             timeOut = TimeInput(
                 timeOut.timeOut,
                 timeOut.timeOut.formatAsDuration()
             )
         )
+        _state.update { Success(settingsUI) }
 
-        viewModelScope.launch {
-            _state.update {
-                Success(settingsUI)
-            }
-        }
+        _executedCommand = ExecutedCommand.SET_TIMEOUT
     }
 
     override fun setSnooze(snooze: Snooze) {
@@ -59,20 +49,31 @@ internal class SettingsViewModelFake(
         _executedCommand = ExecutedCommand.SET_THEME
     }
 
+    override fun sendEmail() {
+        _executedCommand = ExecutedCommand.SEND_EMAIL
+    }
+
+    override fun openGitHub() {
+        _executedCommand = ExecutedCommand.OPEN_GITHUB
+    }
+
+    override fun openGooglePlay() {
+        _executedCommand = ExecutedCommand.OPEN_GOOGLE_PLAY
+    }
+
     override fun <T : CommandContract.CommandReceiver> runCommand(command: CommandContract.Command<T>) {
         @Suppress("UNCHECKED_CAST")
         command.execute(this as T)
     }
 
-    override val timeOuts: List<TimeInput> = (30..300).map {
-        TimeInput(it, it.formatAsDuration())
-    }
-
-    override val snoozes: List<TimeInput> = (5..60).map {
-        TimeInput(it, it.formatAsDuration())
-    }
-
+    override val timeOuts: List<TimeInput> = (30..300).map { TimeInput(it, it.formatAsDuration()) }
+    override val snoozes: List<TimeInput> = (5..60).map { TimeInput(it, it.formatAsDuration()) }
     override val themes: List<String> = Theme.entries.map { formatToCamelCase(it.name) }
+    override val contact: SettingsContract.Contact = SettingsContract.Contact(
+        email = "hello@email.com",
+        githubUrl = "www.github.com/sayItAlarm",
+        googlePlayUrl = "www.google-play.com/sayItAlarm"
+    )
 
     private fun formatToCamelCase(text: String): String = text.lowercase().replaceFirstChar(Char::titlecase)
     private fun Int.formatAsDuration(): String {
@@ -92,5 +93,8 @@ internal class SettingsViewModelFake(
         SET_TIMEOUT,
         SET_SNOOZE,
         SET_THEME,
+        SEND_EMAIL,
+        OPEN_GOOGLE_PLAY,
+        OPEN_GITHUB,
     }
 }

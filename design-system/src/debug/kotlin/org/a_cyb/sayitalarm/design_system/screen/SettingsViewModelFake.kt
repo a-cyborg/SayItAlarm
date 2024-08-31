@@ -33,16 +33,14 @@ class SettingsViewModelFake(
     private val _state: MutableStateFlow<SettingsState> = MutableStateFlow(initState)
     override val state: StateFlow<SettingsState> = _state
 
-    override val timeOuts: List<TimeInput> =
-        (30..300).map { TimeInput(it, it.formatAsDuration()) }
-
-    override val snoozes: List<TimeInput> =
-        (5..60).map { TimeInput(it, it.formatAsDuration()) }
-
+    override val timeOuts: List<TimeInput> = (30..300).map { TimeInput(it, it.formatAsDuration()) }
+    override val snoozes: List<TimeInput> = (5..60).map { TimeInput(it, it.formatAsDuration()) }
     override val themes: List<String> = listOf("Light", "Dark")
-
-    override val contact: SettingsContract.Contact
-        get() = TODO()
+    override val contact: SettingsContract.Contact = SettingsContract.Contact(
+        email = "hello@email.com",
+        githubUrl = "www.github.com/sayItAlarm",
+        googlePlayUrl = "www.google-play.com/sayItAlarm"
+    )
 
     override fun setTimeOut(timeOut: TimeOut) {}
     override fun setSnooze(snooze: Snooze) {}

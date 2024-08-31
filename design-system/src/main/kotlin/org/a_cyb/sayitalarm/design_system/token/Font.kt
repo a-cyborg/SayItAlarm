@@ -135,7 +135,7 @@ object Font {
         )
 
         val s = base.copy(
-            fontSize = 14.sp,
+            fontSize = 13.sp,
             lineHeight = 16.sp,
             letterSpacing = 0.4.sp,
         )
