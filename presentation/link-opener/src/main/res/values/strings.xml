@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <string name="info_activity_not_found_exception">Oops!, We couldn\’t open the link directly. Please copy the link and paste it into your browser.</string>
+    <string name="activity_chooser_title_email">Send email to SayItAlarm</string>
+</resources>

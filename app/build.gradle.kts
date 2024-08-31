@@ -63,6 +63,7 @@ dependencies {
     implementation(projects.presentation.viewmodel)
     implementation(projects.presentation.formatter)
     implementation(projects.presentation.soundEffectPlayer)
+    implementation(projects.presentation.linkOpener)
     implementation(projects.alarmService.core)
     implementation(projects.systemService.ringtoneResolver)
 
