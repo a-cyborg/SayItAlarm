@@ -10,6 +10,7 @@ import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import app.cash.turbine.test
 import io.mockk.mockk
+import io.mockk.slot
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -29,6 +30,7 @@ import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState.Success
 import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsUI
 import org.a_cyb.sayitalarm.presentation.SettingsContract.TimeInput
 import org.a_cyb.sayitalarm.presentation.command.CommandContract
+import org.a_cyb.sayitalarm.presentation.link_opener.LinkOpenerContract
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.DurationFormatterFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.SettingsInteractorFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.SettingsInteractorFake.InvokedType
@@ -52,6 +54,7 @@ class SettingsViewModelSpec {
 
     private val interactor = SettingsInteractorFake(listOf(Result.failure(IllegalStateException())))
     private val durationFormatter = DurationFormatterFake()
+    private val linkOpener: LinkOpenerContract = mockk(relaxed = true)
 
     @BeforeTest
     fun setup() {
@@ -65,15 +68,14 @@ class SettingsViewModelSpec {
 
     @Test
     fun `It is in the initial state`() {
-        SettingsViewModel(interactor, durationFormatter)
-            .state.value mustBe Initial
+        SettingsViewModel(interactor, durationFormatter, linkOpener).state.value mustBe Initial
     }
 
     @Test
     fun `Given interactor fails it sets InitialError state`() = runTest {
         val result = listOf(Result.failure<Settings>(RuntimeException()))
         val interactor = SettingsInteractorFake(result)
-        val viewModel = SettingsViewModel(interactor, durationFormatter)
+        val viewModel = SettingsViewModel(interactor, durationFormatter, linkOpener)
 
         viewModel.state.test {
             // When
@@ -89,7 +91,7 @@ class SettingsViewModelSpec {
         // Given
         val results = listOf(Result.success(settings))
         val interactor = SettingsInteractorFake(results)
-        val viewModel = SettingsViewModel(interactor, durationFormatter)
+        val viewModel = SettingsViewModel(interactor, durationFormatter, linkOpener)
 
         viewModel.state.test {
             // When
@@ -107,14 +109,14 @@ class SettingsViewModelSpec {
         val interactor = SettingsInteractorFake(results)
 
         // When
-        SettingsViewModel(interactor, durationFormatter)
+        SettingsViewModel(interactor, durationFormatter, linkOpener)
 
         // Then
         interactor.invoked mustBe InvokedType.INSERT_OR_IGNORE
     }
 
     @Test
-    fun `Given setTimeOut is called it propagates SettingsStateWithContent`() = runTest {
+    fun `Given setTimeOut is called it propagates Success`() = runTest {
         // Given
         val timeOut = TimeOut(60)
         val settingsUI = settingsUI.copy(
@@ -126,7 +128,7 @@ class SettingsViewModelSpec {
             Result.success(settings.copy(timeOut = timeOut)),
         )
         val interactor = SettingsInteractorFake(results)
-        val viewModel = SettingsViewModel(interactor, durationFormatter)
+        val viewModel = SettingsViewModel(interactor, durationFormatter, linkOpener)
 
         viewModel.state.test {
             skipItems(2)
@@ -141,7 +143,7 @@ class SettingsViewModelSpec {
     }
 
     @Test
-    fun `Given setSnooze is called it propagates SettingsStateWithContent`() = runTest {
+    fun `Given setSnooze is called it propagates Success`() = runTest {
         // Given
         val snooze = Snooze(20)
         val settingsUI = settingsUI.copy(
@@ -153,7 +155,7 @@ class SettingsViewModelSpec {
             Result.success(settings.copy(snooze = snooze)),
         )
         val interactor = SettingsInteractorFake(results)
-        val viewModel = SettingsViewModel(interactor, durationFormatter)
+        val viewModel = SettingsViewModel(interactor, durationFormatter, linkOpener)
 
         viewModel.state.test {
             skipItems(2)
@@ -170,7 +172,7 @@ class SettingsViewModelSpec {
     }
 
     @Test
-    fun `Given setTheme is called it propagates SettingsStateWithContent`() = runTest {
+    fun `Given setTheme is called it propagates Success`() = runTest {
         // Given
         val theme = Theme.DARK
         val settingsUI = settingsUI.copy(theme = "Dark")
@@ -180,7 +182,7 @@ class SettingsViewModelSpec {
             Result.success(settings.copy(theme = theme)),
         )
         val interactor = SettingsInteractorFake(results)
-        val viewModel = SettingsViewModel(interactor, durationFormatter)
+        val viewModel = SettingsViewModel(interactor, durationFormatter, linkOpener)
 
         viewModel.state.test {
             skipItems(2)
@@ -196,12 +198,54 @@ class SettingsViewModelSpec {
     }
 
     @Test
+    fun `When sendEmail is called it triggers LinkOpener openEmail`() {
+        // Given
+        val viewModel = SettingsViewModel(interactor, durationFormatter, linkOpener)
+        val emailSlot = slot<String>()
+        val titleSlot = slot<String>()
+
+        // When
+        viewModel.sendEmail()
+
+        // Then
+        verify { linkOpener.openEmail(capture(emailSlot), capture(titleSlot)) }
+        emailSlot.captured mustBe "SayItAlarm@gmail.com"
+        titleSlot.captured mustBe ""
+    }
+
+    @Test
+    fun `When openGooglePlay is called it triggers LinkOpener openGooglePlay`() {
+        // Given
+        val viewModel = SettingsViewModel(interactor, durationFormatter, linkOpener)
+
+        // When
+        viewModel.openGooglePlay()
+
+        // Then
+        verify { linkOpener.openGooglePlay() }
+    }
+
+    @Test
+    fun `When openGitHub is called it triggers LinkOpener openBrowserLink`() {
+        // Given
+        val viewModel = SettingsViewModel(interactor, durationFormatter, linkOpener)
+        val linkSlot = slot<String>()
+
+        // When
+        viewModel.openGitHub()
+
+        // Then
+        verify { linkOpener.openBrowserLink(capture(linkSlot)) }
+        linkSlot.captured mustBe "https://github.com/a-cyborg/SayItAlarm"
+    }
+
+    @Test
     fun `Given runCommand is called it executes the given command`() {
         // Given
         val command: CommandContract.Command<SettingsViewModel> = mockk(relaxed = true)
 
         // When
-        SettingsViewModel(interactor, durationFormatter).runCommand(command)
+        SettingsViewModel(interactor, durationFormatter, linkOpener).runCommand(command)
 
         // Then
         verify(exactly = 1) { command.execute(any()) }
@@ -209,7 +253,7 @@ class SettingsViewModelSpec {
 
     @Test
     fun `It fulfils SettingsViewModel`() {
-        SettingsViewModel(interactor, durationFormatter) fulfils
+        SettingsViewModel(interactor, durationFormatter, linkOpener) fulfils
             SettingsContract.SettingsViewModel::class
     }
 }

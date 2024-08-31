@@ -25,10 +25,12 @@ import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsUI
 import org.a_cyb.sayitalarm.presentation.SettingsContract.TimeInput
 import org.a_cyb.sayitalarm.presentation.command.CommandContract
 import org.a_cyb.sayitalarm.presentation.formatter.duration.DurationFormatterContract
+import org.a_cyb.sayitalarm.presentation.link_opener.LinkOpenerContract
 
 class SettingsViewModel(
     private val interactor: InteractorContract.SettingsInteractor,
     private val durationFormatter: DurationFormatterContract,
+    private val linkOpenerContract: LinkOpenerContract,
 ) : SettingsContract.SettingsViewModel, ViewModel() {
 
     init {
@@ -46,13 +48,11 @@ class SettingsViewModel(
             initialValue = Initial
         )
 
-    private fun mapToState(result: Result<Settings>): SettingsState {
-        return result.getOrNull()
-            ?.toStateWithContent()
-            ?: Error
-    }
+    private fun mapToState(result: Result<Settings>): SettingsState = result
+        .getOrNull()
+        ?.toSuccess() ?: Error
 
-    private fun Settings.toStateWithContent(): Success =
+    private fun Settings.toSuccess(): Success =
         Success(
             SettingsUI(
                 timeOut = toTimeInput(timeOut.timeOut),
@@ -61,12 +61,13 @@ class SettingsViewModel(
             )
         )
 
-    private fun toTimeInput(time: Int): TimeInput {
-        return TimeInput(
+    private fun toTimeInput(time: Int): TimeInput =
+        TimeInput(
             input = time,
             formatted = durationFormatter.format(time.minutes).short
         )
-    }
+
+    private fun String.toCamelCase(): String = lowercase().replaceFirstChar(Char::titlecase)
 
     override fun setTimeOut(timeOut: TimeOut) {
         interactor.setTimeOut(timeOut, scope)
@@ -77,12 +78,21 @@ class SettingsViewModel(
     }
 
     override fun setTheme(themeName: String) {
-        val theme = Theme.valueOf(themeName.uppercase())
-
+        val theme = Theme.entries.find { it.name == themeName.uppercase() } ?: Theme.LIGHT
         interactor.setTheme(theme, scope)
     }
 
-    private fun String.toCamelCase(): String = lowercase().replaceFirstChar(Char::titlecase)
+    override fun sendEmail() {
+        linkOpenerContract.openEmail(CONTACT_EMAIL, "")
+    }
+
+    override fun openGitHub() {
+        linkOpenerContract.openBrowserLink(CONTACT_GITHUB)
+    }
+
+    override fun openGooglePlay() {
+        linkOpenerContract.openGooglePlay()
+    }
 
     override fun <T : CommandContract.CommandReceiver> runCommand(command: CommandContract.Command<T>) {
         @Suppress("UNCHECKED_CAST")
@@ -98,12 +108,22 @@ class SettingsViewModel(
     override val themes: List<String>
         get() = Theme.entries.map { it.name.toCamelCase() }
 
+    override val contact: SettingsContract.Contact
+        get() = SettingsContract.Contact(
+            CONTACT_EMAIL,
+            CONTACT_GITHUB,
+            CONTACT_GOOGLE_PLAY,
+        )
+
     companion object {
-        private val TIME_OUT_RANGE = 30..300
-        private val SNOOZE_RANGE = 5..60
+        private const val CONTACT_EMAIL = "SayItAlarm@gmail.com"
+        private const val CONTACT_GITHUB = "https://github.com/a-cyborg/SayItAlarm"
+        private const val CONTACT_GOOGLE_PLAY = "https://play.google.com/store/apps/details?id=org.a_cyb.sayitalarm"
 
         private const val DEFAULT_TIMEOUT = 180
         private const val DEFAULT_SNOOZE = 15
+        private val TIME_OUT_RANGE = 30..300
+        private val SNOOZE_RANGE = 5..60
 
         fun getDefaultSettings(): Settings =
             Settings(

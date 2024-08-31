@@ -43,7 +43,7 @@ val viewModelModule: Module = module {
     } bind ListContract.ListViewModel::class
 
     viewModel {
-        SettingsViewModel(get(), get())
+        SettingsViewModel(get(), get(), get())
     } bind SettingsContract.SettingsViewModel::class
 
     viewModel {

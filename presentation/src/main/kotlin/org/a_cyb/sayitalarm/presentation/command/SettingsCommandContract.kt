@@ -21,12 +21,27 @@ interface SettingsCommandContract {
     fun interface SetTheme : CommandContract.CommandReceiver {
         fun setTheme(themeName: String)
     }
+
+    fun interface SendEmail : CommandContract.CommandReceiver {
+        fun sendEmail()
+    }
+
+    fun interface OpenGooglePlay : CommandContract.CommandReceiver {
+        fun openGooglePlay()
+    }
+
+    fun interface OpenGitHub : CommandContract.CommandReceiver {
+        fun openGitHub()
+    }
 }
 
 interface SettingsCommandContractAll :
     SettingsCommandContract.SetTimeOut,
     SettingsCommandContract.SetSnooze,
-    SettingsCommandContract.SetTheme
+    SettingsCommandContract.SetTheme,
+    SettingsCommandContract.SendEmail,
+    SettingsCommandContract.OpenGitHub,
+    SettingsCommandContract.OpenGooglePlay
 
 data class SetTimeOutCommand(val timeOut: Int) : CommandContract.Command<SettingsCommandContract.SetTimeOut> {
     override fun execute(receiver: SettingsCommandContract.SetTimeOut) {
@@ -45,3 +60,22 @@ data class SetThemeCommand(val themeName: String) : CommandContract.Command<Sett
         receiver.setTheme(themeName)
     }
 }
+
+data object SendEmailCommand : CommandContract.Command<SettingsCommandContract.SendEmail> {
+    override fun execute(receiver: SettingsCommandContract.SendEmail) {
+        receiver.sendEmail()
+    }
+}
+
+data object OpenGooglePlayCommand : CommandContract.Command<SettingsCommandContract.OpenGooglePlay> {
+    override fun execute(receiver: SettingsCommandContract.OpenGooglePlay) {
+        receiver.openGooglePlay()
+    }
+}
+
+data object OpenGitHubCommand : CommandContract.Command<SettingsCommandContract.OpenGitHub> {
+    override fun execute(receiver: SettingsCommandContract.OpenGitHub) {
+        receiver.openGitHub()
+    }
+}
+

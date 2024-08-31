@@ -17,6 +17,7 @@ interface SettingsContract {
         val timeOuts: List<TimeInput>
         val snoozes: List<TimeInput>
         val themes: List<String>
+        val contact: Contact
     }
 
     sealed interface SettingsState {
@@ -34,5 +35,11 @@ interface SettingsContract {
     data class TimeInput(
         val input: Int,
         val formatted: String,
+    )
+
+    data class Contact(
+        val email: String,
+        val githubUrl: String,
+        val googlePlayUrl: String,
     )
 }

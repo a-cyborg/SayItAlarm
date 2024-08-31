@@ -27,6 +27,7 @@ import org.a_cyb.sayitalarm.presentation.SettingsContract
 import org.a_cyb.sayitalarm.presentation.formatter.duration.DurationFormatterContract
 import org.a_cyb.sayitalarm.presentation.formatter.time.TimeFormatterContract
 import org.a_cyb.sayitalarm.presentation.formatter.weekday.WeekdayFormatterContract
+import org.a_cyb.sayitalarm.presentation.link_opener.LinkOpenerContract
 import org.a_cyb.sayitalarm.presentation.sound_effect_player.SoundEffectPlayerContract
 import org.a_cyb.sayitalarm.presentation.viewmodel.mapper.AlarmMapperContract
 import org.a_cyb.sayitalarm.presentation.viewmodel.time_flow.TimeFlowContract
@@ -128,6 +129,7 @@ class ViewModelModuleSpec {
         val externalModule = module {
             single<InteractorContract.SettingsInteractor> { mockk(relaxed = true) }
             single<DurationFormatterContract> { mockk() }
+            single<LinkOpenerContract> { mockk() }
         }
 
         val koinApp = koinApplication {

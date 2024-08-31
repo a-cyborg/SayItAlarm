@@ -31,6 +31,7 @@ include(
     ":presentation:viewmodel",
     ":presentation:formatter",
     ":presentation:sound-effect-player",
+    ":presentation:link-opener",
     ":design-system",
     ":alarm-service:core",
     ":system-service:ringtone-resolver",

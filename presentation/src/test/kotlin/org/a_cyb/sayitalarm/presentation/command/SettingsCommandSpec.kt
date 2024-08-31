@@ -21,7 +21,7 @@ class SettingsCommandSpec {
     @Test
     fun `Given SetTimeOutCommand execute is called it runs setTimeOut`() {
         // Given
-        val receiver: SettingsCommandContract.SetTimeOut = mockk(relaxed = true)
+        val receiver: SettingsCommandContractAll = mockk(relaxed = true)
 
         // When
         SetTimeOutCommand(1).execute(receiver = receiver)
@@ -38,7 +38,7 @@ class SettingsCommandSpec {
     @Test
     fun `Given SetSnoozeCommand execute is called it runs setSnooze`() {
         // Given
-        val receiver: SettingsCommandContract.SetSnooze = mockk(relaxed = true)
+        val receiver: SettingsCommandContractAll = mockk(relaxed = true)
 
         // When
         SetSnoozeCommand(1).execute(receiver = receiver)
@@ -55,12 +55,63 @@ class SettingsCommandSpec {
     @Test
     fun `Given SetThemeCommand execute is called it runs setTheme`() {
         // Given
-        val receiver: SettingsCommandContract.SetTheme = mockk(relaxed = true)
+        val receiver: SettingsCommandContractAll = mockk(relaxed = true)
 
         // When
         SetThemeCommand("Light").execute(receiver = receiver)
 
         // Then
         verify(exactly = 1) { receiver.setTheme(any()) }
+    }
+
+    @Test
+    fun `SendEmailCommand fulfils Command`() {
+        SendEmailCommand fulfils CommandContract.Command::class
+    }
+
+    @Test
+    fun `Given SendEmailCommand execute is called it runs sendEmail`() {
+        // Given
+        val receiver: SettingsCommandContractAll = mockk(relaxed = true)
+
+        // When
+        SendEmailCommand.execute(receiver = receiver)
+
+        // Then
+        verify(exactly = 1) { receiver.sendEmail() }
+    }
+
+    @Test
+    fun `OpenGooglePlayCommand fulfils Command`() {
+        OpenGooglePlayCommand fulfils CommandContract.Command::class
+    }
+
+    @Test
+    fun `Given OpenGooglePlayCommand execute is called it runs openGooglePlay`() {
+        // Given
+        val receiver: SettingsCommandContractAll = mockk(relaxed = true)
+
+        // When
+        OpenGooglePlayCommand.execute(receiver = receiver)
+
+        // Then
+        verify(exactly = 1) { receiver.openGooglePlay() }
+    }
+
+    @Test
+    fun `OpenGitHubCommand fulfils Command`() {
+        OpenGitHubCommand fulfils CommandContract.Command::class
+    }
+
+    @Test
+    fun `Given OpenGitHubCommand execute is called it runs openGooglePlay`() {
+        // Given
+        val receiver: SettingsCommandContractAll = mockk(relaxed = true)
+
+        // When
+        OpenGitHubCommand.execute(receiver = receiver)
+
+        // Then
+        verify(exactly = 1) { receiver.openGitHub() }
     }
 }

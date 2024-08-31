@@ -21,8 +21,9 @@ dependencies {
     implementation(projects.domain.alarmService)
     implementation(projects.presentation)
     implementation(projects.presentation.formatter)
-    implementation(projects.systemService.ringtoneResolver)
     implementation(projects.presentation.soundEffectPlayer)
+    implementation(projects.presentation.linkOpener)
+    implementation(projects.systemService.ringtoneResolver)
 
     coreLibraryDesugaring(libs.android.tools.desugarJdk)
     implementation(libs.androidx.lifecycle.viewmodelAndroid)

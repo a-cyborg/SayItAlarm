@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.a_cyb.sayitalarm.entity.Snooze
 import org.a_cyb.sayitalarm.entity.TimeOut
+import org.a_cyb.sayitalarm.presentation.SettingsContract
 import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState
 import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState.Success
 import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsUI
@@ -39,10 +40,16 @@ class SettingsViewModelFake(
         (5..60).map { TimeInput(it, it.formatAsDuration()) }
 
     override val themes: List<String> = listOf("Light", "Dark")
+
+    override val contact: SettingsContract.Contact
+        get() = TODO()
+
     override fun setTimeOut(timeOut: TimeOut) {}
     override fun setSnooze(snooze: Snooze) {}
     override fun setTheme(themeName: String) {}
-
+    override fun sendEmail() {}
+    override fun openGitHub() {}
+    override fun openGooglePlay() {}
     override fun <T : CommandContract.CommandReceiver> runCommand(command: CommandContract.Command<T>) {}
 
     private fun Int.formatAsDuration(): String {
