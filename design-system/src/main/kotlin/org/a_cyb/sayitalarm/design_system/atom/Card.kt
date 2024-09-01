@@ -7,6 +7,7 @@
 package org.a_cyb.sayitalarm.design_system.atom
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -67,5 +68,15 @@ fun CardStandardCenteredScrollable(content: @Composable () -> Unit) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             content()
         }
+    }
+}
+
+@Composable
+fun CardStandardFillMax(content: @Composable () -> Unit) {
+    Card(
+        modifier = Modifier.fillMaxSize(),
+        colors = CardDefaults.cardColors(containerColor = Color.surface.standard),
+    ) {
+        content()
     }
 }

@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.sayitalarm.android.application)
+    alias(libs.plugins.aboutLibraries)
 }
 
 val projectPackage = "org.a_cyb.sayitalarm"
@@ -75,7 +76,6 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
 
-    // Debug
     testImplementation(libs.androidx.navigation.testing)
     testImplementation(libs.robolectric)
     testImplementation(libs.mockk)

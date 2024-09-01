@@ -16,6 +16,30 @@ import androidx.compose.ui.window.DialogProperties
 import org.a_cyb.sayitalarm.design_system.token.Color
 
 @Composable
+fun DialogStandardFillMax(
+    onDismiss: () -> Unit,
+    topAppBar: @Composable () -> Unit,
+    content: @Composable () -> Unit,
+) {
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(usePlatformDefaultWidth = false),
+    ) {
+        Box(
+            Modifier
+                .fillMaxSize()
+                .background(Color.surface.standard)
+        ) {
+            CardStandardFillMax {
+                topAppBar()
+                content()
+                SpacerXLarge()
+            }
+        }
+    }
+}
+
+@Composable
 fun DialogStandardFillMaxScrollable(
     onDismiss: () -> Unit,
     topAppBar: @Composable () -> Unit,
