@@ -64,9 +64,11 @@ class AlarmServiceController(
         }
     }
 
-    override fun onServiceDisconnected() {
-        alarmService = null
-        ControllerState.Error.update()
+    override fun startSnooze() {
+        runActionOrUpdateError {
+            alarmScheduler.scheduleSnooze(alarm!!.id, settings!!.snooze)
+            alarmService?.startSnooze()
+        }
     }
 
     override fun startSayIt() {
@@ -78,20 +80,17 @@ class AlarmServiceController(
 
     override fun scheduleNextAlarm(scope: CoroutineScope) {
         if (alarm != null) {
-            scope.launch {
-                if (alarm!!.weeklyRepeat.weekdays.isEmpty()) {
-                    alarmRepository.update(alarm!!.copy(enabled = false), this)
-                }
+            if (alarm!!.weeklyRepeat.weekdays.isEmpty()) {
+                alarmRepository.update(alarm!!.copy(enabled = false), scope)
+            } else {
                 alarmScheduler.scheduleAlarms()
             }
         }
     }
 
-    override fun startSnooze() {
-        runActionOrUpdateError {
-            alarmScheduler.scheduleSnooze(alarm!!.id, settings!!.snooze)
-            alarmService?.startSnooze()
-        }
+    override fun onServiceDisconnected() {
+        alarmService = null
+        ControllerState.Error.update()
     }
 
     override fun terminate() {
