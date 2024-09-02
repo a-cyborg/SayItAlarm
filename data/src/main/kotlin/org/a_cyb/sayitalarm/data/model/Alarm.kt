@@ -31,30 +31,23 @@ fun AlarmDTO.toAlarm(): Alarm =
         sayItScripts = SayItScripts(sayItScripts.toScripts()),
     )
 
-private fun Long.asSetOfDayCode(): Set<Int> {
-    return (0..6).fold(mutableSetOf()) { acc, i ->
+private fun Long.asSetOfDayCode(): Set<Int> =
+    (0..6).fold(mutableSetOf()) { acc, i ->
         val isBitOn = (this shr i) and 1 == 1L
-
-        if (isBitOn) {
-            acc.add(i + 1)
-        }
+        if (isBitOn) acc.add(i + 1)
 
         acc
     }
-}
 
-private fun Long.asAlertType(): AlertType {
-    return AlertType.entries
-        .getOrElse(toInt()) { AlertType.SOUND_AND_VIBRATE }
-}
+private fun Long.asAlertType(): AlertType = AlertType.entries
+    .getOrElse(toInt()) { AlertType.SOUND_AND_VIBRATE }
 
-private fun Long.asAlarmType(): AlarmType {
-    return AlarmType.entries
-        .getOrElse(toInt()) { AlarmType.SAY_IT }
-}
+private fun Long.asAlarmType(): AlarmType = AlarmType.entries
+    .getOrElse(toInt()) { AlarmType.SAY_IT }
 
-private fun String.toScripts(): List<String> {
-    return split(",")
+private fun String.toScripts(): List<String> = when (isNotBlank()) {
+    true -> split(",")
+    false -> emptyList()
 }
 
 fun Alarm.toDTO() =
@@ -71,8 +64,7 @@ fun Alarm.toDTO() =
         sayItScripts = sayItScripts.scripts.joinToString(","),
     )
 
-private fun WeeklyRepeat.toLong(): Long {
-    return weekdays.fold(0b0000000) { acc, i ->
-        acc xor (1 shl i - 1)
-    }.toLong()
-}
+private fun WeeklyRepeat.toLong(): Long =
+    weekdays
+        .fold(0b0000000) { acc, i -> acc xor (1 shl i - 1) }
+        .toLong()
