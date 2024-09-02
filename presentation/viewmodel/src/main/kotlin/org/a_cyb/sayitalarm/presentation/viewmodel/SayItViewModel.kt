@@ -22,6 +22,7 @@ import org.a_cyb.sayitalarm.presentation.SayItContract.Count
 import org.a_cyb.sayitalarm.presentation.SayItContract.SayItInfo
 import org.a_cyb.sayitalarm.presentation.SayItContract.SayItState
 import org.a_cyb.sayitalarm.presentation.SayItContract.SayItState.Error
+import org.a_cyb.sayitalarm.presentation.SayItContract.SayItState.Finished
 import org.a_cyb.sayitalarm.presentation.SayItContract.SayItState.Initial
 import org.a_cyb.sayitalarm.presentation.SayItContract.SayItState.Processing
 import org.a_cyb.sayitalarm.presentation.SayItContract.SttStatus
@@ -56,7 +57,7 @@ class SayItViewModel(
     private fun setupSayIt() {
         when (sayItScripts.isNotEmpty()) {
             true -> Processing(getInitialInfo())
-            false -> Error
+            false -> Finished
         }.update()
     }
 
@@ -77,8 +78,8 @@ class SayItViewModel(
     }
 
     override fun finish() {
-        serviceController.scheduleNextAlarm(scope)
         sttRecognizer.stopRecognizer()
+        serviceController.scheduleNextAlarm(scope)
         serviceController.terminate()
     }
 
@@ -127,7 +128,7 @@ class SayItViewModel(
     private fun updateToSuccessOrFinished() {
         if (isTheLastScript()) {
             scope.launch { soundEffectPlayer.stopPlayer() }
-            SayItState.Finished.update()
+            Finished.update()
         } else {
             updateProcessing {
                 copy(
