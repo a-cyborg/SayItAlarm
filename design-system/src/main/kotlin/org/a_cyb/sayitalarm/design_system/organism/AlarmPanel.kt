@@ -35,6 +35,7 @@ import org.a_cyb.sayitalarm.design_system.molecule.ActionRowCollapse
 import org.a_cyb.sayitalarm.design_system.molecule.PanelItemClickableBordered
 import org.a_cyb.sayitalarm.design_system.molecule.PanelItemStandard
 import org.a_cyb.sayitalarm.design_system.molecule.PanelItemStandardClickable
+import org.a_cyb.sayitalarm.design_system.molecule.PanelItemStandardLarge
 import org.a_cyb.sayitalarm.design_system.molecule.PanelItemWithPopupPicker
 import org.a_cyb.sayitalarm.design_system.molecule.PanelItemWithPopupPickerStandardWheel
 import org.a_cyb.sayitalarm.design_system.molecule.PopupPickerRepeat
@@ -226,14 +227,12 @@ private fun SayItScriptsPanel(
     val scripts = remember { value.toMutableStateList() }
     val selectedIdx = remember { mutableIntStateOf(0) }
 
-    var showInfoText by rememberSaveable { mutableStateOf(false) }
+    var showInfoText by rememberSaveable { mutableStateOf(scripts.isEmpty()) } // If scripts is empty show info text.
     var showPopUpPicker by rememberSaveable { mutableStateOf(false) }
 
     PanelStandard {
-        PanelItemStandard(valueLabel = stringResource(id = R.string.say_it)) {
-            IconButtonInfo {
-                showInfoText = !showInfoText
-            }
+        PanelItemStandardLarge(valueLabel = stringResource(id = R.string.say_it)) {
+            IconButtonInfo { showInfoText = !showInfoText }
         }
 
         AnimatedVisibility(showInfoText) {
@@ -249,9 +248,7 @@ private fun SayItScriptsPanel(
             DividerStandard()
         }
 
-        IconButtonAdd(
-            contentDescription = stringResource(id = R.string.action_add_script)
-        ) {
+        IconButtonAdd(contentDescription = stringResource(id = R.string.action_add_script)) {
             selectedIdx.intValue = scripts.lastIndex + 1
             showPopUpPicker = true
         }

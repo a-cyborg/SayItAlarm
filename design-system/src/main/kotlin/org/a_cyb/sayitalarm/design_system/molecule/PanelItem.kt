@@ -33,6 +33,7 @@ import org.a_cyb.sayitalarm.design_system.atom.SpacerMedium
 import org.a_cyb.sayitalarm.design_system.atom.TextBodyStandardLarge
 import org.a_cyb.sayitalarm.design_system.atom.TextBodySubtleMedium
 import org.a_cyb.sayitalarm.design_system.atom.TextDisplayStandardSmall
+import org.a_cyb.sayitalarm.design_system.atom.TextTitleStandardLarge
 import org.a_cyb.sayitalarm.design_system.token.Color
 import org.a_cyb.sayitalarm.design_system.token.Shape
 import org.a_cyb.sayitalarm.design_system.token.Sizing
@@ -56,6 +57,27 @@ fun PanelItemStandard(
         afterContent()
     }
 }
+
+@Composable
+fun PanelItemStandardLarge(
+    valueLabel: String,
+    value: String = "",
+    afterContent: @Composable () -> Unit = { SpacerMedium() },
+) {
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .defaultMinSize(minHeight = Sizing.PanelRow.MinHeight),
+    ) {
+        TextTitleStandardLarge(text = valueLabel)
+        Spacer(Modifier.weight(1f))
+        TextBodySubtleMedium(text = value)
+        afterContent()
+    }
+}
+
 
 @Composable
 fun PanelItemStandardClickable(
