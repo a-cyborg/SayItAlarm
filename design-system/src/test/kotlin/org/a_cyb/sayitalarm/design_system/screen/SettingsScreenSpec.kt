@@ -62,7 +62,7 @@ class SettingsScreenSpec {
     private fun getString(id: Int) = composeTestRule.activity.getString(id)
 
     @Test
-    fun `When the viewModel is in success state it renders SettingsUI`() = runTest {
+    fun `When the viewModel is in success state, it renders SettingsUI`() = runTest {
         // Given & When
         composeTestRule.setContent {
             SettingsScreen(SettingsViewModelFake(successSate), versionName) {}
@@ -79,7 +79,7 @@ class SettingsScreenSpec {
     }
 
     @Test
-    fun `When viewModel is in error state it displays error message and InfoPanel`() {
+    fun `When viewModel is in error state, it displays error message and InfoPanel`() {
         // Given & When
         composeTestRule.setContent {
             SettingsScreen(SettingsViewModelFake(Error), versionName) {}
@@ -89,7 +89,7 @@ class SettingsScreenSpec {
         with(composeTestRule) {
             onNodeWithText(getString(R.string.info_settings_initialize_error)).assertExists()
             onNodeWithText(getString(R.string.about)).assertExists()
-            onNodeWithText(getString(R.string.license)).assertExists()
+            onNodeWithText(getString(R.string.licenses)).assertExists()
             onNodeWithText(getString(R.string.version)).assertExists()
 
             onNodeWithText(getString(R.string.timeout)).assertDoesNotExist()
@@ -101,7 +101,7 @@ class SettingsScreenSpec {
     }
 
     @Test
-    fun `When PanelItemTimeOut edit button is clicked it displays PopUpPickerStandardWheel`() {
+    fun `When PanelItemTimeOut edit button is clicked, it displays PopUpPickerStandardWheel`() {
         // Given
         composeTestRule.setContent {
             SettingsScreen(SettingsViewModelFake(successSate), versionName) {}
@@ -116,7 +116,7 @@ class SettingsScreenSpec {
     }
 
     @Test
-    fun `When panelItemSnooze edit button is clicked it displays PopUpPickerStandardWheel`() {
+    fun `When panelItemSnooze edit button is clicked, it displays PopUpPickerStandardWheel`() {
         // Given
         composeTestRule.setContent {
             SettingsScreen(SettingsViewModelFake(successSate), versionName) {}
@@ -132,7 +132,7 @@ class SettingsScreenSpec {
     }
 
     @Test
-    fun `Given panelItemTheme edit button click it displays PopUpPickerStandardWheel`() {
+    fun `When panelItemTheme edit button is clicked, it displays PopUpPickerStandardWheel`() {
         // Given
         composeTestRule.setContent {
             SettingsScreen(SettingsViewModelFake(successSate), versionName) {}
@@ -148,7 +148,7 @@ class SettingsScreenSpec {
     }
 
     @Test
-    fun `Given About button click it displays AboutDialog`() {
+    fun `When panelItemAbout edit button is clicked, it displays AboutDialog`() {
         // Given
         composeTestRule.setContent {
             SettingsScreen(SettingsViewModelFake(successSate), versionName) {}
@@ -168,7 +168,7 @@ class SettingsScreenSpec {
     }
 
     @Test
-    fun `When navigateBack button is clicked executes navigateToList`() {
+    fun `When navigateBack button is clicked, executes navigateToList`() {
         // Given
         var hasBennCalled = false
         composeTestRule.setContent {
@@ -189,7 +189,7 @@ class SettingsScreenSpec {
     * */
 
     @Test
-    fun `When timeOutPopUpPicker is displayed and confirm is clicked it executes setTimeOutCommand`() = runTest {
+    fun `When timeOutPopUpPicker is displayed and confirm is clicked, it executes setTimeOutCommand`() = runTest {
         // Given
         val viewModel = SettingsViewModelFake(successSate)
         composeTestRule.setContent { SettingsScreen(viewModel, versionName) {} }
@@ -203,7 +203,7 @@ class SettingsScreenSpec {
     }
 
     @Test
-    fun `When snooze popUpPicker is displayed and confirm click it executes setSnoozeCommand`() = runTest {
+    fun `When snooze popUpPicker is displayed and confirm is clicked, it executes setSnoozeCommand`() = runTest {
         // Given
         val viewModel = SettingsViewModelFake(successSate)
         composeTestRule.setContent { SettingsScreen(viewModel, versionName) {} }

@@ -9,6 +9,7 @@ package org.a_cyb.sayitalarm.design_system.screen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -20,11 +21,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import com.mikepenz.aboutlibraries.ui.compose.LibrariesContainer
 import org.a_cyb.sayitalarm.design_system.R
 import org.a_cyb.sayitalarm.design_system.atom.ColumnScreenStandardScrollable
+import org.a_cyb.sayitalarm.design_system.atom.DialogStandardFillMax
 import org.a_cyb.sayitalarm.design_system.atom.DialogStandardFillMaxScrollable
 import org.a_cyb.sayitalarm.design_system.atom.DividerStandard
-import org.a_cyb.sayitalarm.design_system.atom.IconButtonClose
 import org.a_cyb.sayitalarm.design_system.atom.IconButtonEdit
 import org.a_cyb.sayitalarm.design_system.atom.IconButtonNavigateBack
 import org.a_cyb.sayitalarm.design_system.atom.PanelStandard
@@ -190,7 +192,7 @@ fun InfoPanel(
 ) {
     PanelStandard(
         { PanelItemAbout(contact, execute) },
-        { PanelItemLicense() },
+        { PanelItemLicenses() },
         { PanelItemVersion(versionName) },
     )
 }
@@ -235,10 +237,10 @@ private fun AboutDialog(
 }
 
 @Composable
-private fun AboutDialogTopBar(navigateBack: () -> Unit) {
+private fun AboutDialogTopBar(onDismiss: () -> Unit) {
     TopAppBarLarge(
         title = stringResource(id = R.string.about),
-        navigationIcon = { IconButtonClose(onClick = navigateBack) },
+        navigationIcon = { IconButtonNavigateBack(onClick = onDismiss) },
     )
 }
 
@@ -261,15 +263,29 @@ private fun ContactRow(
 }
 
 @Composable
-fun PanelItemLicense() {
-    var showText by remember { mutableStateOf(false) }
+fun PanelItemLicenses() {
+    var isShowLicenses by remember { mutableStateOf(false) }
 
-    PanelItemStandard(valueLabel = stringResource(id = R.string.license)) {
-        IconButtonEdit { showText = true }
+    PanelItemStandard(valueLabel = stringResource(id = R.string.licenses)) {
+        IconButtonEdit { isShowLicenses = true }
     }
 
-    if (showText) {
+    if (isShowLicenses) {
+        DialogStandardFillMax(
+            onDismiss = { isShowLicenses = false },
+            topAppBar = { LicensesDialogTopBar { isShowLicenses = false } }
+        ) {
+            LibrariesContainer(modifier = Modifier.fillMaxSize())
+        }
     }
+}
+
+@Composable
+private fun LicensesDialogTopBar(onDisMiss: () -> Unit) {
+    TopAppBarLarge(
+        title = stringResource(id = R.string.licenses),
+        navigationIcon = { IconButtonNavigateBack(onClick = onDisMiss) },
+    )
 }
 
 @Composable
