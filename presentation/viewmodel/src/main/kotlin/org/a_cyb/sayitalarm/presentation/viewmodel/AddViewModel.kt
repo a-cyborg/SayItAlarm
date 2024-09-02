@@ -95,12 +95,13 @@ class AddViewModel(
     }
 
     override fun save() {
-        if (_state.value is Success) {
-            interactor.save(
-                mapper.mapToAlarm((_state.value as Success).alarmUI),
-                scope
-            )
+        val alarmUi: AlarmUI? = when (_state.value) {
+            is Success -> (_state.value as Success).alarmUI
+            is Initial -> (_state.value as Initial).alarmUI
+            else -> null
         }
+
+        alarmUi?.let { interactor.save(mapper.mapToAlarm(it), scope) }
     }
 
     override fun <T : CommandReceiver> runCommand(command: Command<T>) {
