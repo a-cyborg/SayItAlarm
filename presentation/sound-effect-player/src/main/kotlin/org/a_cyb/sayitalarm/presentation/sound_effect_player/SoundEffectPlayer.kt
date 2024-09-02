@@ -19,6 +19,10 @@ class SoundEffectPlayer(private val context: Context) : SoundEffectPlayerContrac
         soundPool = SoundPool.Builder()
             .setAudioAttributes(getAudioAttributes())
             .build()
+
+        soundPool?.setOnLoadCompleteListener { soundPool, sampleId, _ ->
+            soundPool.play(sampleId, 1f, 1f, 1, 0, 1f)
+        }
     }
 
     private fun getAudioAttributes() = AudioAttributes.Builder()
