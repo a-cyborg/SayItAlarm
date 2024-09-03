@@ -20,6 +20,7 @@ interface AlarmContract {
     sealed interface AlarmUiState {
         data object Initial : AlarmUiState
         data class Ringing(val label: String) : AlarmUiState
+        data object Stopped : AlarmUiState
         data object Error : AlarmUiState
     }
 }

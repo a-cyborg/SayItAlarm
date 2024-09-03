@@ -18,6 +18,7 @@ import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmUiState
 import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmUiState.Error
 import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmUiState.Initial
 import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmUiState.Ringing
+import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmUiState.Stopped
 import org.a_cyb.sayitalarm.presentation.command.CommandContract.Command
 import org.a_cyb.sayitalarm.presentation.command.CommandContract.CommandReceiver
 import org.a_cyb.sayitalarm.presentation.formatter.time.TimeFormatterContract
@@ -48,9 +49,10 @@ class AlarmViewModel(
 
     private fun mapToState(controllerState: ControllerState): AlarmUiState =
         when (controllerState) {
+            is ControllerState.Initial -> Initial
             is ControllerState.Ringing -> Ringing(controllerState.label.label)
+            is ControllerState.RunningSayIt -> Stopped
             is ControllerState.Error -> Error
-            is ControllerState.Initial, is ControllerState.RunningSayIt -> Initial
         }
 
     override fun startSayIt() {
