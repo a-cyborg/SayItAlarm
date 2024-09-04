@@ -13,9 +13,8 @@ import androidx.compose.ui.tooling.preview.Preview
 @Composable
 fun TextFieldStandardPreview() {
     TextFieldLabel(
-        value = "",
-        hint = "TextField",
-        onDone = { _ -> },
+        text = "",
+        onValueChange = { _ -> },
     )
 }
 

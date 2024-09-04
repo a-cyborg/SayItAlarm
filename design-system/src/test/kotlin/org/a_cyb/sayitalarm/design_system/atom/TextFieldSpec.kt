@@ -15,9 +15,8 @@ class TextFieldSpec : RoborazziTest() {
     fun `It renders TextFieldStandardAlignEnd`() {
         subjectUnderTest.setContent {
             TextFieldLabel(
-                value = "",
-                hint = "SayIt",
-                onDone = { _ -> }
+                text = "",
+                onValueChange = { _ -> }
             )
         }
     }

@@ -29,9 +29,8 @@ fun EditScreenPreview() {
     )
 }
 
-private class EditViewModelFake: EditViewModel {
-    override val state: StateFlow<EditState> =
-        MutableStateFlow(Success(FakeAlarmUIData.defaultAlarmUI))
+private class EditViewModelFake : EditViewModel {
+    override val state: StateFlow<EditState> = MutableStateFlow(Success(FakeAlarmUIData.defaultAlarmUI))
 
     override fun setTime(hour: Hour, minute: Minute) {}
     override fun setWeeklyRepeat(selectableRepeats: List<AlarmPanelContract.SelectableRepeat>) {}
@@ -40,6 +39,5 @@ private class EditViewModelFake: EditViewModel {
     override fun setRingtone(ringtoneUI: AlarmPanelContract.RingtoneUI) {}
     override fun setScripts(scripts: SayItScripts) {}
     override fun save() {}
-
     override fun <T : CommandContract.CommandReceiver> runCommand(command: CommandContract.Command<T>) {}
 }

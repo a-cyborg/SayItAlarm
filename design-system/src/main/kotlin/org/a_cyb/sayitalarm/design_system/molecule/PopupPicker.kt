@@ -38,11 +38,10 @@ import org.a_cyb.sayitalarm.design_system.atom.DialogStandardFitContentScrollabl
 import org.a_cyb.sayitalarm.design_system.atom.PanelStandardLazy
 import org.a_cyb.sayitalarm.design_system.atom.SpacerMedium
 import org.a_cyb.sayitalarm.design_system.atom.TextButtonDelete
+import org.a_cyb.sayitalarm.design_system.atom.TextFieldLabel
 import org.a_cyb.sayitalarm.design_system.atom.TextFieldSayItScript
 import org.a_cyb.sayitalarm.design_system.atom.TextTitleStandardLarge
 import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.SelectableRepeat
-
-// import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.SelectableRepeat
 
 @Composable
 fun <T> PopUpPickerStandardWheel(
@@ -82,10 +81,7 @@ fun PopupPickerTime(
     onConfirm: (Int, Int) -> Unit,
     onCancel: () -> Unit,
 ) {
-    val timePickerState = rememberTimePickerState(
-        initialHour = hour,
-        initialMinute = minute
-    )
+    val timePickerState = rememberTimePickerState(initialHour = hour, initialMinute = minute)
 
     DialogStandardFitContentScrollable(onDismiss = onCancel) {
         TimePicker(state = timePickerState)
@@ -107,11 +103,7 @@ fun PopupPickerRepeat(
     onCancel: () -> Unit
 ) {
     val selections: MutableMap<String, Boolean> = remember {
-        mutableStateMapOf(
-            *selectableRepeats
-                .map { it.name to it.selected }
-                .toTypedArray()
-        )
+        mutableStateMapOf(*selectableRepeats.map { it.name to it.selected }.toTypedArray())
     }
 
     DialogStandardFitContent(onDismiss = onCancel) {
@@ -135,11 +127,9 @@ fun PopupPickerRepeat(
                 ActionRowCancelAndConfirm(
                     onCancel = onCancel,
                     onConfirm = {
-                        val selected: List<SelectableRepeat> =
-                            selectableRepeats.map { selectable ->
-                                selectable
-                                    .copy(selected = selections[selectable.name] ?: false)
-                            }
+                        val selected = selectableRepeats.map { selectable ->
+                            selectable.copy(selected = selections[selectable.name] ?: false)
+                        }
 
                         onConfirm(selected)
                         onCancel()
@@ -180,15 +170,37 @@ fun PopupPickerRingtone(
             }
         )
 
-    val intent = Intent(RingtoneManager.ACTION_RINGTONE_PICKER).apply {
-        putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALL)
-        putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false)
-        putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true)
-        putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, selectedUri.toUri())
-    }
+    val intent = Intent(RingtoneManager.ACTION_RINGTONE_PICKER)
+        .putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALL)
+        .putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false)
+        .putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true)
+        .putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, selectedUri.toUri())
 
     SideEffect {
         ringtonePickerLauncher.launch(intent)
+    }
+}
+
+@Composable
+fun PopupPickerLabel(
+    label: String,
+    onConfirm: (String) -> Unit,
+    onCancel: () -> Unit,
+) {
+    var text by rememberSaveable(label) { mutableStateOf(label) }
+
+    DialogStandardFitContent(onDismiss = onCancel) {
+        TextTitleStandardLarge(text = stringResource(id = R.string.label))
+        SpacerMedium()
+        TextFieldLabel(text = text) { text = it }
+        SpacerMedium()
+        ActionRowCancelAndConfirm(
+            onCancel = onCancel,
+            onConfirm = {
+                onConfirm(text)
+                onCancel()
+            }
+        )
     }
 }
 
@@ -206,9 +218,8 @@ fun PopupPickerSayItScript(
         SpacerMedium()
         TextFieldSayItScript(
             text = text,
-            onValueChange = { it ->
-                text = it
-                    .filter { it.isLetter() || it.isWhitespace() }
+            onValueChange = { inputStr ->
+                text = inputStr.filter { it.isLetter() || it.isWhitespace() }
             }
         )
         SpacerMedium()

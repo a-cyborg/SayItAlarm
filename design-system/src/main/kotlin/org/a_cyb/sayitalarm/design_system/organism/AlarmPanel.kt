@@ -7,10 +7,10 @@
 package org.a_cyb.sayitalarm.design_system.organism
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -18,26 +18,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import org.a_cyb.sayitalarm.design_system.R
-import org.a_cyb.sayitalarm.design_system.atom.ColumnScreenStandardScrollableTapDetectable
+import org.a_cyb.sayitalarm.design_system.atom.ColumnScreenStandardScrollable
 import org.a_cyb.sayitalarm.design_system.atom.DividerStandard
 import org.a_cyb.sayitalarm.design_system.atom.IconButtonAdd
 import org.a_cyb.sayitalarm.design_system.atom.IconButtonInfo
 import org.a_cyb.sayitalarm.design_system.atom.PanelStandard
 import org.a_cyb.sayitalarm.design_system.atom.SpacerLarge
 import org.a_cyb.sayitalarm.design_system.atom.TextDisplayStandardLarge
-import org.a_cyb.sayitalarm.design_system.atom.TextFieldLabel
 import org.a_cyb.sayitalarm.design_system.atom.TextTitleStandardLarge
 import org.a_cyb.sayitalarm.design_system.molecule.ActionRowCollapse
 import org.a_cyb.sayitalarm.design_system.molecule.PanelItemClickableBordered
-import org.a_cyb.sayitalarm.design_system.molecule.PanelItemStandard
 import org.a_cyb.sayitalarm.design_system.molecule.PanelItemStandardClickable
 import org.a_cyb.sayitalarm.design_system.molecule.PanelItemStandardLarge
 import org.a_cyb.sayitalarm.design_system.molecule.PanelItemWithPopupPicker
 import org.a_cyb.sayitalarm.design_system.molecule.PanelItemWithPopupPickerStandardWheel
+import org.a_cyb.sayitalarm.design_system.molecule.PopupPickerLabel
 import org.a_cyb.sayitalarm.design_system.molecule.PopupPickerRepeat
 import org.a_cyb.sayitalarm.design_system.molecule.PopupPickerRingtone
 import org.a_cyb.sayitalarm.design_system.molecule.PopupPickerSayItScript
@@ -65,15 +62,7 @@ fun AlarmPanel(
     alarmUI: AlarmUI,
     executor: (CommandContract.Command<out CommandReceiver>) -> Unit,
 ) {
-    val focusManager = LocalFocusManager.current
-
-    SideEffect {
-        focusManager.clearFocus()
-    }
-
-    ColumnScreenStandardScrollableTapDetectable(
-        onTap = { _ -> focusManager.clearFocus() }  // Clear focus from the label text field
-    ) {
+    ColumnScreenStandardScrollable {
         TimePanel(
             time = alarmUI.timeUI,
             onConfirm = { hour, minute ->
@@ -150,12 +139,14 @@ private fun PanelItemLabel(
     label: String,
     executor: (CommandContract.Command<out CommandReceiver>) -> Unit,
 ) {
-    PanelItemStandard(valueLabel = stringResource(id = R.string.label)) {
-        TextFieldLabel(
-            value = label,
-            hint = stringResource(id = R.string.label),
-            textAlign = TextAlign.End,
-            onDone = { executor(SetLabelCommand(it)) }
+    PanelItemWithPopupPicker(
+        valueLabel = stringResource(id = R.string.label),
+        value = label
+    ) { onCancel ->
+        PopupPickerLabel(
+            label = label,
+            onConfirm = { executor(SetLabelCommand(it)) },
+            onCancel = onCancel
         )
     }
 }
@@ -236,8 +227,10 @@ private fun SayItScriptsPanel(
         }
 
         AnimatedVisibility(showInfoText) {
-            TextBoxInfo(text = stringResource(id = R.string.info_scripts))
-            ActionRowCollapse { showInfoText = false }
+            Column {
+                TextBoxInfo(text = stringResource(id = R.string.info_scripts))
+                ActionRowCollapse { showInfoText = false }
+            }
         }
 
         scripts.mapIndexed { index, script ->

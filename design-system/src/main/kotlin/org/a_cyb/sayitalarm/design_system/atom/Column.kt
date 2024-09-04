@@ -7,7 +7,6 @@
 package org.a_cyb.sayitalarm.design_system.atom
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -21,8 +20,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
 import org.a_cyb.sayitalarm.design_system.R
 import org.a_cyb.sayitalarm.design_system.token.Color
@@ -58,28 +55,6 @@ fun ColumnScreenStandardScrollable(content: @Composable ColumnScope.() -> Unit) 
             .fillMaxSize()
             .windowInsetsPadding(WindowInsets.safeDrawing)
             .verticalScroll(rememberScrollState())
-            .background(Color.surface.standard),
-    ) {
-        content()
-        Footer()
-    }
-}
-
-@Composable
-fun ColumnScreenStandardScrollableTapDetectable(
-    onTap: (Offset) -> Unit,
-    content: @Composable ColumnScope.() -> Unit,
-) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top,
-        modifier = Modifier
-            .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.safeDrawing)
-            .verticalScroll(rememberScrollState())
-            .pointerInput(Unit) {
-                detectTapGestures(onTap = onTap)
-            }
             .background(Color.surface.standard),
     ) {
         content()

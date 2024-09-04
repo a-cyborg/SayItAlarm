@@ -11,20 +11,21 @@ import android.content.Context
 import android.media.RingtoneManager
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsFocused
-import androidx.compose.ui.test.assertIsNotFocused
+import androidx.compose.ui.test.hasScrollAction
 import androidx.compose.ui.test.hasSetTextAction
 import androidx.compose.ui.test.isDialog
+import androidx.compose.ui.test.isSelectable
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onAllNodesWithText
-import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onParent
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performImeAction
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.takahirom.roborazzi.ExperimentalRoborazziApi
 import com.github.takahirom.roborazzi.RobolectricDeviceQualifiers
@@ -35,7 +36,6 @@ import org.a_cyb.sayitalarm.design_system.FakeAlarmUIData
 import org.a_cyb.sayitalarm.design_system.R
 import org.a_cyb.sayitalarm.design_system.organism.CommandExecutorFake.InvokedType
 import org.a_cyb.sayitalarm.design_system.roborazziOf
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.SelectableRepeat
 import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.WeeklyRepeatUI
 import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Rule
@@ -58,342 +58,215 @@ class AlarmPanelSpec {
     @get:Rule
     val roborazziRule = roborazziOf(composeTestRule, RoborazziRule.CaptureType.None)
 
-    private fun stringRes(id: Int) = composeTestRule.activity.getString(id)
+    private val alarmUI = FakeAlarmUIData.defaultAlarmUI
 
-    @Test
-    fun `It renders AlarmPanel`() {
-        with(composeTestRule) {
-            setContent {
-                AlarmPanel(
-                    alarmUI = alarmUI,
-                    executor = {}
-                )
-            }
-
-            onRoot()
-                .captureRoboImage()
-        }
-    }
+    private fun getString(id: Int) = composeTestRule.activity.getString(id)
 
     @Test
     fun `It displays AlarmUI`() {
-        val everyday = alarmUI.weeklyRepeatUI.selectableRepeats
-            .map { SelectableRepeat(it.name, it.code, true) }
+        // Given
         val alarmUI = alarmUI.copy(
-            weeklyRepeatUI = WeeklyRepeatUI("Everyday", everyday),
-            label = "Test Label",
-            sayItScripts = listOf("Test script.")
+            weeklyRepeatUI = WeeklyRepeatUI("Everyday", alarmUI.weeklyRepeatUI.selectableRepeats),
         )
 
-        with(composeTestRule) {
-            // When
-            setContent {
-                AlarmPanel(
-                    alarmUI = alarmUI,
-                    executor = {}
-                )
-            }
+        // When
+        composeTestRule.setContent {
+            AlarmPanel(alarmUI = alarmUI) {}
+        }
 
-            // Then
-            onNodeWithText("8:00 AM")
-                .assertExists()
-            onNodeWithText("Everyday")
-                .assertExists()
-            onNodeWithText("Test Label")
-                .assertExists()
-            onNodeWithText("Drip")
-                .assertExists()
-            onNodeWithText("Sound and vibration")
-                .assertExists()
-            onNodeWithText("Test script.")
-                .assertExists()
+        // Then
+        with(composeTestRule) {
+            onNodeWithText(getString(R.string.label)).assertExists()
+            onNodeWithText(getString(R.string.repeat)).assertExists()
+            onNodeWithText(getString(R.string.ringtone)).assertExists()
+            onNodeWithText(getString(R.string.alert_type)).assertExists()
+            onNodeWithText(alarmUI.timeUI.formattedTime).assertExists()
+            onNodeWithText(alarmUI.weeklyRepeatUI.formatted).assertExists()
+            onNodeWithText(alarmUI.ringtoneUI.title).assertExists()
+            onNodeWithText("Sound and vibration").assertExists()
+            onNodeWithText(getString(R.string.info_scripts)).assertExists()
+            onAllNodesWithContentDescription(getString(R.string.action_edit)).fetchSemanticsNodes().size mustBe 4
+            onNodeWithContentDescription(getString(R.string.action_info)).assertExists().assertHasClickAction()
+
+            onRoot().captureRoboImage()
         }
     }
 
     @Test
-    fun `When TimePanel is clicked it displays PopupPickerTime`() {
+    fun `When TimePanel is clicked, it displays PopupPickerTime`() {
+        // Given
+        composeTestRule.setContent { AlarmPanel(alarmUI = alarmUI) {} }
+
+        // When
+        composeTestRule.onNodeWithText(alarmUI.timeUI.formattedTime).performClick()
+
+        // Then
+        composeTestRule.onNodeWithText("PM").assertExists()
+        composeTestRule.onNodeWithText(getString(R.string.confirm)).assertExists().assertHasClickAction()
+        composeTestRule.onNodeWithText(getString(R.string.cancel)).assertExists().assertHasClickAction()
+
+        captureScreenRoboImage()
+    }
+
+    @Test
+    fun `When Label row edit button is clicked, it displays PopupPickerLabel`() {
+        // Given
+        composeTestRule.setContent { AlarmPanel(alarmUI = alarmUI) {} }
+
+        // When
+        composeTestRule
+            .onAllNodesWithContentDescription(getString(R.string.action_edit))[0].performClick()
+
+        // Then
+        composeTestRule.onNode(hasSetTextAction()).assertExists().assertIsFocused()
+        composeTestRule.onNodeWithText(getString(R.string.confirm)).assertExists().assertHasClickAction()
+        composeTestRule.onNodeWithText(getString(R.string.cancel)).assertExists().assertHasClickAction()
+
+        captureScreenRoboImage()
+    }
+
+    @Test
+    fun `When WeeklyRepeat row edit button is clicked it displays PopupPickerRepeat`() {
+        // Given
+        composeTestRule.setContent { AlarmPanel(alarmUI = alarmUI) {} }
+
+        // When
+        composeTestRule
+            .onAllNodesWithContentDescription(getString(R.string.action_edit))[1].performClick()
+
+        // Then
         with(composeTestRule) {
-            // Given
-            setContent {
-                AlarmPanel(
-                    alarmUI = alarmUI,
-                    executor = {}
-                )
+            alarmUI.weeklyRepeatUI.selectableRepeats.forEach {
+                onNodeWithText(it.name).assertExists()
             }
+            onAllNodes(isSelectable()).fetchSemanticsNodes().size mustBe 7
+            onNodeWithText(getString(R.string.confirm)).assertExists()
+            onNodeWithText(getString(R.string.cancel)).assertExists()
+        }
+        captureScreenRoboImage()
+    }
 
-            // When
-            onNodeWithText("8:00 AM")
-                .performClick()
+    @Test
+    fun `When Ringtone row edit button is clicked, it displays PopupPickerRingtone`() {
+        // Given
+        var context: Context? = null
 
-            // Then
-            onNodeWithText("PM")
-                .assertExists()
+        composeTestRule.setContent {
+            context = LocalContext.current
+            AlarmPanel(alarmUI = alarmUI) {}
+        }
+
+        val launchedActivity = Shadow.extract<ShadowActivity>(context as ComponentActivity)
+
+        // When
+        composeTestRule
+            .onAllNodesWithContentDescription(getString(R.string.action_edit))[2].performClick()
+        composeTestRule.waitForIdle()
+
+        // Then
+        assertEquals(RingtoneManager.ACTION_RINGTONE_PICKER, launchedActivity.nextStartedActivity.action)
+    }
+
+    @Test
+    fun `When AlertType row edit button is clicked, it displays PopupPickerStandardWheel`() {
+        // Given
+        composeTestRule.setContent { AlarmPanel(alarmUI = alarmUI) {} }
+
+        // When
+        composeTestRule
+            .onAllNodesWithContentDescription(getString(R.string.action_edit))[3].performClick()
+
+        // Then
+        with(composeTestRule) {
+            onNodeWithText("Sound only").assertExists()
+            onNodeWithText("Sound only").onParent().assert(hasScrollAction())
+            onNodeWithText(getString(R.string.confirm)).assertExists().assertHasClickAction()
+            onNodeWithText(getString(R.string.cancel)).assertExists().assertHasClickAction()
+        }
+        captureScreenRoboImage()
+    }
+
+    @Test
+    fun `When say it scripts info button is clicked it displays informational text`() {
+        // Given
+        composeTestRule.setContent {
+            AlarmPanel(alarmUI = alarmUI.copy(sayItScripts = listOf("Say it script"))) {}
+        }
+
+        // When
+        composeTestRule.onNodeWithContentDescription(getString(R.string.action_info)).performClick()
+
+        // Then
+        composeTestRule.onNodeWithText(getString(R.string.info_scripts)).assertExists()
+        composeTestRule.onNodeWithContentDescription(getString(R.string.action_collapse)).assertExists()
+            .assertHasClickAction()
+    }
+
+    @Test
+    fun `When say it scripts info text is displayed and IconButtonRowCollapse is clicked it hides info text`() {
+        // Given
+        composeTestRule.setContent { AlarmPanel(alarmUI = alarmUI) {} }
+        composeTestRule.onNodeWithText(getString(R.string.info_scripts)).assertExists()
+
+        // When
+        composeTestRule.onNodeWithContentDescription(getString(R.string.action_collapse)).performClick()
+
+        // Then
+        composeTestRule.onNodeWithText(getString(R.string.info_scripts)).assertDoesNotExist()
+    }
+
+    @Test
+    fun `When say it script panel + button is clicked, it displays PopupPickerSayItScript`() {
+        // Given
+        composeTestRule.setContent { AlarmPanel(alarmUI = alarmUI) {} }
+
+        // When
+        composeTestRule.onNodeWithContentDescription(getString(R.string.action_add_script)).performClick()
+
+        // Then
+        with(composeTestRule) {
+            onAllNodesWithText(getString(R.string.info_scripts_only_letter)).fetchSemanticsNodes().size mustBe 2
+            onNode(hasSetTextAction()).assertExists()
+            onNodeWithText(getString(R.string.confirm)).assertExists()
+            onNodeWithText(getString(R.string.cancel)).assertExists()
+            onNodeWithText(getString(R.string.delete)).assertExists()
+        }
+        captureScreenRoboImage()
+    }
+
+    @Test
+    fun `When more then one sayItScripts is given, it displays scripts in clickable row`() {
+        // Given
+        val sayItScripts = listOf("This is the first test script", "This is the second test script")
+
+        // When
+        composeTestRule.setContent {
+            AlarmPanel(alarmUI = alarmUI.copy(sayItScripts = sayItScripts)) { }
+        }
+
+        // Then
+        sayItScripts.forEach {
+            composeTestRule.onNodeWithText(it).assertExists().assertHasClickAction()
         }
 
         captureScreenRoboImage()
     }
 
     @Test
-    fun `When Label row is clicked it gains focus and displays the keyboard`() {
-        with(composeTestRule) {
-            // Given
-            setContent {
-                AlarmPanel(
-                    alarmUI = alarmUI,
-                    executor = {}
-                )
-            }
-
-            // When
-            onNode(hasSetTextAction()) // hasImeAction
-                .performClick()
-
-            // Then
-            onNode(hasSetTextAction())
-                .assertIsFocused()
-
-            // waitUntil {
-            //     composeTestRule.activity.window.decorView.rootWindowInsets
-            //         .isVisible(android.view.WindowInsets.Type.ime())
-            // }
-
-            onRoot()
-                .captureRoboImage()
-        }
-    }
-
-    @Test
-    fun `When Label row is focused and tapping outside releases the focus`() {
-        with(composeTestRule) {
-            // Given
-            setContent {
-                AlarmPanel(
-                    alarmUI = alarmUI,
-                    executor = {}
-                )
-            }
-
-            onNode(hasSetTextAction())
-                .performClick()
-            onNode(hasSetTextAction())
-                .assertIsFocused()
-
-            // When
-            onRoot()
-                .performClick()
-
-            // Then
-            onNode(hasSetTextAction())
-                .assertIsNotFocused()
-        }
-    }
-
-    @Test
-    fun `When WeeklyRepeat row edit button is clicked it displays PopupPickerRepeat`() {
-        with(composeTestRule) {
-            // Given
-            setContent {
-                AlarmPanel(
-                    alarmUI = alarmUI,
-                    executor = {}
-                )
-            }
-
-            // When
-            onAllNodesWithContentDescription(stringRes(R.string.action_edit))
-                .onFirst()
-                .performClick()
-
-            // Then
-            onNodeWithText("Monday")
-                .assertExists()
-
-            captureScreenRoboImage()
-        }
-    }
-
-    @Test
-    fun `When Ringtone row edit button is clicked it displays PopupPickerRingtone`() {
-        var context: Context? = null
-
-        with(composeTestRule) {
-            // Given
-            setContent {
-                context = LocalContext.current
-
-                AlarmPanel(
-                    alarmUI = alarmUI,
-                    executor = {}
-                )
-            }
-
-            val launchedActivity = Shadow
-                .extract<ShadowActivity>(context as ComponentActivity)
-
-            // When
-            onAllNodesWithContentDescription(stringRes(R.string.action_edit))[1]
-                .performClick()
-
-            waitForIdle()
-
-            // Then
-            assertEquals(
-                RingtoneManager.ACTION_RINGTONE_PICKER,
-                launchedActivity.nextStartedActivity.action
-            )
-        }
-    }
-
-    @Test
-    fun `When AlertType row edit button is clicked it displays PopupPickerStandardWheel`() {
-        with(composeTestRule) {
-            // Given
-            setContent {
-                AlarmPanel(
-                    alarmUI = alarmUI,
-                    executor = {}
-                )
-            }
-
-            // When
-            onAllNodesWithContentDescription(stringRes(R.string.action_edit))[2]
-                .performClick()
-
-            // Then
-            onNodeWithText("Sound only")
-                .assertExists()
-
-            captureScreenRoboImage()
-        }
-    }
-
-    @Test
-    fun `When say it scripts info button is clicked it displays informational text`() {
-        with(composeTestRule) {
-            // Given
-            setContent {
-                AlarmPanel(
-                    alarmUI = alarmUI,
-                    executor = {}
-                )
-            }
-
-            // When
-            onNodeWithContentDescription(stringRes(R.string.action_info))
-                .performClick()
-
-            // Then
-            onNodeWithText(stringRes(R.string.info_scripts))
-                .assertExists()
-
-            onRoot()
-                .captureRoboImage()
-        }
-    }
-
-    @Test
-    fun `When say it scripts info text is displayed and IconButtonRowCollapse is clicked it hides info text`() {
-        with(composeTestRule) {
-            // Given
-            setContent {
-                AlarmPanel(
-                    alarmUI = alarmUI,
-                    executor = {}
-                )
-            }
-
-            onNodeWithContentDescription(stringRes(R.string.action_info))
-                .performClick()
-
-            onNodeWithText(stringRes(R.string.info_scripts))
-                .assertExists()
-
-            // When
-            onNodeWithContentDescription(stringRes(R.string.action_collapse))
-                .performClick()
-
-            // Then
-            onNodeWithText(stringRes(R.string.info_scripts))
-                .assertDoesNotExist()
-
-            onRoot()
-                .captureRoboImage()
-        }
-    }
-
-    @Test
-    fun `When say it script panel + button clicked it displays PopupPickerSayItScript`() {
-        with(composeTestRule) {
-            // Given
-            setContent {
-                AlarmPanel(
-                    alarmUI = alarmUI,
-                    executor = {}
-                )
-            }
-
-            // When
-            onNodeWithContentDescription(stringRes(R.string.action_add_script))
-                .performClick()
-
-            // Then
-            onNodeWithText(stringRes(R.string.info_scripts_only_letter))
-                .assertExists()
-
-            captureScreenRoboImage()
-        }
-    }
-
-    @Test
-    fun `When more then one say it scripts is given it displays script in clickable row`() {
-        with(composeTestRule) {
-            // Given
-            val alarmUI = alarmUI.copy(sayItScripts = listOf("Hi, there"))
-
-            // When
-            setContent {
-                AlarmPanel(
-                    alarmUI = alarmUI,
-                    executor = {}
-                )
-            }
-
-            // Then
-            onNodeWithText("Hi, there")
-                .assertExists()
-                .assertHasClickAction()
-
-            onRoot()
-                .captureRoboImage()
-        }
-    }
-
-    @Test
-    fun `When say it script row is clicked it displays PopupPickerSayItScript with the script`() {
+    fun `When sayItScript row is clicked, it displays PopupPickerSayItScript with the script`() {
         // Given
-        val alarmUI = alarmUI.copy(sayItScripts = listOf("Hi, there"))
-
-        with(composeTestRule) {
-            setContent {
-                AlarmPanel(
-                    alarmUI = alarmUI,
-                    executor = {}
-                )
-            }
-
-            // When
-            onNodeWithText("Hi, there")
-                .performClick()
-
-            // Then
-            onNodeWithText(stringRes(R.string.info_scripts_only_letter))
-                .assertExists()
-            onAllNodesWithText("Hi, there")
-                .fetchSemanticsNodes()
-                .size mustBe 2
-
-            captureScreenRoboImage()
+        val sayItScripts = listOf("This is the first test script", "This is the second test script")
+        composeTestRule.setContent {
+            AlarmPanel(alarmUI = alarmUI.copy(sayItScripts = sayItScripts)) { }
         }
+
+        // When
+        composeTestRule.onNodeWithText(sayItScripts[0]).performClick()
+
+        // Then
+        composeTestRule.onNodeWithText(getString(R.string.info_scripts_only_letter)).assertExists()
+
+        captureScreenRoboImage()
     }
 
     /*
@@ -416,7 +289,7 @@ class AlarmPanelSpec {
                 .assertExists()
 
             // When
-            onNodeWithText(stringRes(R.string.cancel))
+            onNodeWithText(getString(R.string.cancel))
                 .performClick()
 
             // Then
@@ -444,41 +317,13 @@ class AlarmPanelSpec {
                 .assertExists()
 
             // When
-            onNodeWithText(stringRes(R.string.confirm))
+            onNodeWithText(getString(R.string.confirm))
                 .performClick()
 
             // Then
             onNode(isDialog())
                 .assertDoesNotExist()
             onNodeWithText("PM")
-                .assertDoesNotExist()
-        }
-    }
-
-    @Test
-    fun `When PopupPickerSayItScript is displayed and onCancel is clicked it dismiss the picker`() {
-        with(composeTestRule) {
-            // Given
-            setContent {
-                AlarmPanel(
-                    alarmUI = alarmUI,
-                    executor = {}
-                )
-            }
-
-            onNodeWithContentDescription(stringRes(R.string.action_add_script))
-                .performClick()
-            onNodeWithText(stringRes(R.string.info_scripts_only_letter))
-                .assertExists()
-
-            // When
-            onNodeWithText(stringRes(R.string.cancel))
-                .performClick()
-
-            // Then
-            onNode(isDialog())
-                .assertDoesNotExist()
-            onNodeWithText(stringRes(R.string.info_scripts_only_letter))
                 .assertDoesNotExist()
         }
     }
@@ -494,20 +339,13 @@ class AlarmPanelSpec {
                 )
             }
 
-            onNodeWithContentDescription(stringRes(R.string.action_add_script))
-                .performClick()
-            onNodeWithText(stringRes(R.string.info_scripts_only_letter))
-                .assertExists()
+            onNodeWithContentDescription(getString(R.string.action_add_script)).performClick()
 
             // When
-            onNodeWithText(stringRes(R.string.confirm))
-                .performClick()
+            onNodeWithText(getString(R.string.confirm)).performClick()
 
             // Then
-            onNode(isDialog())
-                .assertDoesNotExist()
-            onNodeWithText(stringRes(R.string.info_scripts_only_letter))
-                .assertDoesNotExist()
+            onNode(isDialog()).assertDoesNotExist()
         }
     }
 
@@ -532,35 +370,12 @@ class AlarmPanelSpec {
                 .performClick()
 
             // When
-            onNodeWithText(stringRes(R.string.confirm))
+            onNodeWithText(getString(R.string.confirm))
                 .performClick()
         }
 
         // Then
         commandExecutor.invokedType mustBe InvokedType.SET_TIME
-    }
-
-    @Test
-    fun `When Label is focused and onDone ime action is invoked it runs executor setLabel`() {
-        // Given
-        val commandExecutor = CommandExecutorFake()
-
-        with(composeTestRule) {
-            setContent {
-                AlarmPanel(
-                    alarmUI = alarmUI,
-                    executor = { commandExecutor.runCommand(it) }
-                )
-            }
-
-            // When
-            onNode(hasSetTextAction())
-                .performClick()
-                .performImeAction() // ImeAction.Done
-        }
-
-        // Then
-        commandExecutor.invokedType mustBe InvokedType.SET_LABEL
     }
 
     @Test
@@ -577,13 +392,10 @@ class AlarmPanelSpec {
             }
 
             // Open PopupPickerRepeat
-            onAllNodesWithContentDescription(stringRes(R.string.action_edit))
-                .onFirst()
-                .performClick()
+            onAllNodesWithContentDescription(getString(R.string.action_edit))[1].performClick()
 
             // When
-            onNodeWithText(stringRes(R.string.confirm))
-                .performClick()
+            onNodeWithText(getString(R.string.confirm)).performClick()
 
             // Then
             commandExecutor.invokedType mustBe InvokedType.SET_WEEKLY_REPEAT
@@ -603,13 +415,10 @@ class AlarmPanelSpec {
                 )
             }
 
-            // Open PopupPickerRepeat
-            onNodeWithContentDescription(stringRes(R.string.action_add_script))
-                .performClick()
+            onNodeWithContentDescription(getString(R.string.action_add_script)).performClick()
 
             // When
-            onNodeWithText(stringRes(R.string.confirm))
-                .performClick()
+            onNodeWithText(getString(R.string.confirm)).performClick()
 
             // Then
             commandExecutor.invokedType mustBe InvokedType.SET_SCRIPTS
@@ -629,17 +438,16 @@ class AlarmPanelSpec {
                 )
             }
 
-            onAllNodesWithContentDescription(stringRes(R.string.action_edit))[2]
+            onAllNodesWithContentDescription(getString(R.string.action_edit))[3]
                 .performClick()
 
             // When
-            onNodeWithText(stringRes(R.string.confirm))
-                .performClick()
+            onNodeWithText(getString(R.string.confirm)).performClick()
 
             // Then
             commandExecutor.invokedType mustBe InvokedType.SET_ALERT_TYPE
         }
     }
 
-    private val alarmUI = FakeAlarmUIData.defaultAlarmUI
+
 }
