@@ -21,21 +21,28 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import org.a_cyb.sayitalarm.design_system.R
 import org.a_cyb.sayitalarm.design_system.atom.ColumnScreenStandard
+import org.a_cyb.sayitalarm.design_system.atom.DialogStandardFitContentScrollable
+import org.a_cyb.sayitalarm.design_system.atom.DividerMedium
 import org.a_cyb.sayitalarm.design_system.atom.DividerStandard
 import org.a_cyb.sayitalarm.design_system.atom.IconButtonAdd
 import org.a_cyb.sayitalarm.design_system.atom.IconButtonDelete
 import org.a_cyb.sayitalarm.design_system.atom.IconButtonEdit
+import org.a_cyb.sayitalarm.design_system.atom.IconButtonInfo
 import org.a_cyb.sayitalarm.design_system.atom.IconButtonSettings
 import org.a_cyb.sayitalarm.design_system.atom.SpacerLarge
 import org.a_cyb.sayitalarm.design_system.atom.SpacerMedium
 import org.a_cyb.sayitalarm.design_system.atom.SpacerSmall
+import org.a_cyb.sayitalarm.design_system.atom.SpacerXLarge
 import org.a_cyb.sayitalarm.design_system.atom.SpacerXSmall
 import org.a_cyb.sayitalarm.design_system.atom.SwitchStandard
+import org.a_cyb.sayitalarm.design_system.atom.TextButtonClose
 import org.a_cyb.sayitalarm.design_system.atom.TextButtonDone
+import org.a_cyb.sayitalarm.design_system.atom.TextButtonDownload
 import org.a_cyb.sayitalarm.design_system.atom.TextButtonEdit
 import org.a_cyb.sayitalarm.design_system.atom.TextHeadlineStandardLarge
 import org.a_cyb.sayitalarm.design_system.atom.TextTitleStandardMedium
@@ -53,6 +60,7 @@ import org.a_cyb.sayitalarm.presentation.ListContract.ListViewModel
 import org.a_cyb.sayitalarm.presentation.command.CommandContract
 import org.a_cyb.sayitalarm.presentation.command.CommandContract.CommandReceiver
 import org.a_cyb.sayitalarm.presentation.command.DeleteAlarmCommand
+import org.a_cyb.sayitalarm.presentation.command.DownloadRecognizerModelCommand
 import org.a_cyb.sayitalarm.presentation.command.SetEnabledCommand
 
 enum class ListScreenMode { EDIT, VIEW }
@@ -65,6 +73,8 @@ fun ListScreen(
     navigateToSettings: () -> Unit,
 ) {
     val state = viewModel.state.collectAsState()
+    val isOfflineDownloadNeed = viewModel.isOfflineAvailable.collectAsState()
+
     var mode by rememberSaveable { mutableStateOf(VIEW) }
 
     LaunchedEffect(Unit) {
@@ -86,6 +96,7 @@ fun ListScreen(
 
                 if (alarms.isEmpty()) {
                     TextBoxInfo(text = stringResource(id = R.string.info_list_no_alarm))
+                    SpacerXLarge()
                 }
 
                 LazyColumn(modifier = Modifier.background(Color.surface.standard)) {
@@ -96,6 +107,12 @@ fun ListScreen(
                             navigateToEdit = { navigateToEdit(it.id) },
                             executor = { command -> viewModel.runCommand(command) }
                         )
+                    }
+
+                    item {
+                        AnimatedVisibility(isOfflineDownloadNeed.value) {
+                            DownloadRecognizerModelSection { viewModel.runCommand(DownloadRecognizerModelCommand) }
+                        }
                     }
                 }
             }
@@ -179,5 +196,31 @@ private fun RowScope.AlarmInfo(time: String, labelAndRepeat: String) {
         SpacerSmall()
         TextTitleStandardMedium(text = labelAndRepeat)
         SpacerXSmall()
+    }
+}
+
+@Composable
+private fun DownloadRecognizerModelSection(onDownloadClick: () -> Unit) {
+    var showInfoText by rememberSaveable { mutableStateOf(false) } // If scripts is empty show info text.
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        DividerMedium()
+        SpacerMedium()
+        TextTitleStandardMedium(text = stringResource(id = R.string.info_stt_recognizer_android_download_available))
+        Row(horizontalArrangement = Arrangement.SpaceBetween) {
+            TextButtonDownload(onClick = onDownloadClick)
+            IconButtonInfo { showInfoText = !showInfoText }
+        }
+    }
+
+    AnimatedVisibility(showInfoText) {
+        DialogStandardFitContentScrollable(onDismiss = { showInfoText = false }) {
+            TextBoxInfo(text = stringResource(id = R.string.info_stt_recognizer_android_why_download))
+            SpacerXLarge()
+            TextButtonClose { showInfoText = false }
+        }
     }
 }

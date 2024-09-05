@@ -8,12 +8,14 @@ package org.a_cyb.sayitalarm.presentation
 
 import kotlinx.coroutines.flow.StateFlow
 import org.a_cyb.sayitalarm.presentation.command.CommandContract
+import org.a_cyb.sayitalarm.presentation.command.DownloadRecognizerModel
 import org.a_cyb.sayitalarm.presentation.command.ListCommandContractAll
 
 interface ListContract {
 
-    interface ListViewModel : ListCommandContractAll, CommandContract.CommandExecutor {
+    interface ListViewModel : ListCommandContractAll, DownloadRecognizerModel, CommandContract.CommandExecutor {
         val state: StateFlow<ListState>
+        val isOfflineAvailable: StateFlow<Boolean>
     }
 
     sealed interface ListState {

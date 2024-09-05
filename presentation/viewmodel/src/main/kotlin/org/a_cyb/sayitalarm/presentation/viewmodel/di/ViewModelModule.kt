@@ -39,7 +39,7 @@ val viewModelModule: Module = module {
     } bind EditContract.EditViewModel::class
 
     viewModel {
-        ListViewModel(get(), get(), get())
+        ListViewModel(get(), get(), get(), get())
     } bind ListContract.ListViewModel::class
 
     viewModel {

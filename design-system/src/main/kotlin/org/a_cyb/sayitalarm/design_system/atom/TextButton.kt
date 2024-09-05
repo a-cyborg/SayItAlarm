@@ -63,6 +63,13 @@ fun TextButtonConfirm(onClick: () -> Unit) {
 }
 
 @Composable
+fun TextButtonClose(onClick: () -> Unit) {
+    TextButton(onClick = onClick) {
+        TextTitleAttentionMedium(text = stringResource(id = R.string.close))
+    }
+}
+
+@Composable
 fun TextButtonSnooze(onClick: () -> Unit) {
     TextButton(onClick = onClick) {
         TextTitleAttentionMedium(text = stringResource(id = R.string.snooze))
@@ -174,3 +181,11 @@ fun TextButtonGitHub(onClick: () -> Unit) {
         TextBodySubtleMediumUnderline(text = stringResource(id = R.string.github))
     }
 }
+
+@Composable
+fun TextButtonDownload(onClick: () -> Unit) {
+    TextButton(onClick = onClick) {
+        TextTitleAttentionMedium(text = stringResource(id = R.string.download))
+    }
+}
+
