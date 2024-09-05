@@ -65,7 +65,11 @@ private class ListViewModelFake(
 ) : ListContract.ListViewModel {
 
     override val state: StateFlow<ListState> = MutableStateFlow(initState)
+    override val isOfflineAvailable: StateFlow<Boolean> = MutableStateFlow(true)
+
     override fun setEnabled(id: Long, enabled: Boolean) {}
     override fun deleteAlarm(id: Long) {}
+    override fun downloadRecognizerModel() {}
+
     override fun <T : CommandContract.CommandReceiver> runCommand(command: CommandContract.Command<T>) {}
 }

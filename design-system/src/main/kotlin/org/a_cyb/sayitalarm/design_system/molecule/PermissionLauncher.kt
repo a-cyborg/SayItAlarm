@@ -19,10 +19,10 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import org.a_cyb.sayitalarm.design_system.R
 import org.a_cyb.sayitalarm.design_system.atom.DialogStandardFitContent
-import org.a_cyb.sayitalarm.design_system.atom.TextButtonRequestPermission
 import org.a_cyb.sayitalarm.design_system.atom.SpacerLarge
+import org.a_cyb.sayitalarm.design_system.atom.TextButtonRequestPermission
 
-@OptIn(ExperimentalPermissionsApi::class, ExperimentalPermissionsApi::class)
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun PermissionLauncher() {
     val permissionState = rememberMultiplePermissionsState(permissions = getPermissions())
@@ -44,9 +44,7 @@ fun PermissionLauncher() {
 }
 
 private fun getPermissions(): List<String> {
-    val permissions = mutableListOf(
-        Manifest.permission.RECORD_AUDIO,
-    )
+    val permissions = mutableListOf(Manifest.permission.RECORD_AUDIO)
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         permissions.add(Manifest.permission.POST_NOTIFICATIONS)
@@ -69,8 +67,6 @@ fun PermissionRationaleDialog(
             info = stringResource(id = R.string.info_permission_rationale),
         )
         SpacerLarge()
-        TextButtonRequestPermission(
-            onClick = onRequest
-        )
+        TextButtonRequestPermission(onClick = onRequest)
     }
 }

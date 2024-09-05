@@ -30,6 +30,11 @@ internal fun Project.configureKotlinAndroid(
         kotlinOptions {
             jvmTarget = JavaVersion.VERSION_17.toString()
         }
+
+        @Suppress("UnstableApiUsage")
+        testOptions {
+            animationsDisabled = true
+        }
     }
 }
 

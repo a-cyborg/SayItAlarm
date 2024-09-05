@@ -69,6 +69,7 @@ fun SayItScreenPreview_Initial() {
 
 private class SayItViewModelFake(state: SayItState) : SayItContract.SayItViewModel {
     override val state: StateFlow<SayItState> = MutableStateFlow(state)
+    override val isOffline: StateFlow<SayItContract.IsOffline> = MutableStateFlow(SayItContract.IsOffline.False)
 
     override fun processScript() {}
     override fun finish() {}

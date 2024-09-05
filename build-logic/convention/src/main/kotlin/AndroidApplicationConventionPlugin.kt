@@ -25,8 +25,6 @@ internal class AndroidApplicationConventionPlugin : Plugin<Project> {
                 configureKotlinAndroid(this)
                 configureAndroidCompose(this)
                 defaultConfig.targetSdk = 34
-                @Suppress("UnstableApiUsage")
-                testOptions.animationsDisabled = true
             }
 
             dependencies {

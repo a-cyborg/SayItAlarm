@@ -25,7 +25,6 @@ import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServi
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController.ControllerState
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.EditDistanceCalculator
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.SttRecognizer
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.SttRecognizer.RecognizerRmsDb
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.SttRecognizer.RecognizerState
 import org.a_cyb.sayitalarm.entity.SayItScripts
 import org.a_cyb.sayitalarm.presentation.SayItContract
@@ -366,8 +365,7 @@ private class SttRecognizerFake(state: List<RecognizerState>) : SttRecognizer {
     private val _recognizerState: MutableStateFlow<RecognizerState> = MutableStateFlow(RecognizerState.Initial)
     override val recognizerState: StateFlow<RecognizerState> = _recognizerState.asStateFlow()
 
-    override val rmsDbState: StateFlow<RecognizerRmsDb>
-        get() = TODO()
+    override val isOnDevice: StateFlow<SttRecognizer.IsOnDevice> = MutableStateFlow(SttRecognizer.IsOnDevice.True)
 
     override fun startListening() {
         _recognizerState.update { states.removeFirst() }

@@ -14,15 +14,15 @@ class SoundEffectPlayer(private val context: Context) : SoundEffectPlayerContrac
     private var soundPool: SoundPool? = null
     private val successSoundsId by lazy { loadSuccessSound() }
     private val failSoundsId by lazy { loadFailSound() }
+    private val loadCompleteListener = SoundPool.OnLoadCompleteListener { soundPool, sampleId, _ ->
+        soundPool.play(sampleId, 1f, 1f, 1, 0, 1f)
+    }
 
     init {
         soundPool = SoundPool.Builder()
             .setAudioAttributes(getAudioAttributes())
             .build()
-
-        soundPool?.setOnLoadCompleteListener { soundPool, sampleId, _ ->
-            soundPool.play(sampleId, 1f, 1f, 1, 0, 1f)
-        }
+            .apply { setOnLoadCompleteListener(loadCompleteListener) }
     }
 
     private fun getAudioAttributes() = AudioAttributes.Builder()

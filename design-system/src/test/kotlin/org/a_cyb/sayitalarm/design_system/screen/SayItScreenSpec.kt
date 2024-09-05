@@ -183,6 +183,8 @@ class SayItScreenSpec : RoborazziTest() {
 
 private class SayItViewModelFake(state: SayItState) : SayItContract.SayItViewModel {
     override val state: StateFlow<SayItState> = MutableStateFlow(state)
+    override val isOffline: StateFlow<SayItContract.IsOffline> = MutableStateFlow(SayItContract.IsOffline.True)
+
     private var _invokedType: InvokedType = InvokedType.NONE
     val invokedType: InvokedType
         get() = _invokedType

@@ -30,9 +30,7 @@ fun AddScreenPreview() {
 }
 
 private class AddViewModelFake : AddContract.AddViewModel {
-
-    override val state: StateFlow<AddState> =
-        MutableStateFlow(Success(FakeAlarmUIData.defaultAlarmUI))
+    override val state: StateFlow<AddState> = MutableStateFlow(Success(FakeAlarmUIData.defaultAlarmUI))
 
     override fun setTime(hour: Hour, minute: Minute) {}
     override fun setWeeklyRepeat(selectableRepeats: List<AlarmPanelContract.SelectableRepeat>) {}

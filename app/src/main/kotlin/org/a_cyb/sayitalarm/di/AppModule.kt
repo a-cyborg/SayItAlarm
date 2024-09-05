@@ -34,12 +34,8 @@ val appModule = module {
         linkOpenerModule,
         ringtoneResolverModule,
         module {
-            single<CoroutineDispatcher>(named("io")) {
-                Dispatchers.IO
-            }
-            single<CoroutineScope>(named("ioScope")) {
-                CoroutineScope(SupervisorJob() + Dispatchers.IO)
-            }
+            single<CoroutineDispatcher>(named("io")) { Dispatchers.IO }
+            single<CoroutineScope>(named("ioScope")) { CoroutineScope(SupervisorJob() + Dispatchers.IO) }
         },
     )
 }

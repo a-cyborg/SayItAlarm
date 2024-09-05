@@ -26,10 +26,7 @@ object AlarmAlertWakeLock {
 
     private fun getPartialWakeLock(context: Context): PowerManager.WakeLock =
         (context.getSystemService(Context.POWER_SERVICE) as PowerManager)
-            .newWakeLock(
-                PowerManager.PARTIAL_WAKE_LOCK,
-                WAKELOCK_TAG
-            )
+            .newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, WAKELOCK_TAG)
 
     fun releaseWakeLock() {
         wakeLock?.release()

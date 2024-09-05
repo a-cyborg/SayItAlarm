@@ -11,7 +11,6 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
-import java.time.ZonedDateTime
 import java.time.temporal.TemporalAdjusters
 import org.a_cyb.sayitalarm.entity.Hour
 import org.a_cyb.sayitalarm.entity.Minute
@@ -24,10 +23,7 @@ fun getSnoozeTimeInMills(snoozeMin: Int): Long {
 }
 
 fun getNextAlarmTimeInMills(hour: Hour, minute: Minute, weeklyRepeat: WeeklyRepeat): Long {
-    val alarmLocalDateTime = getNextAlarmTime(
-        LocalTime.of(hour.hour, minute.minute),
-        weeklyRepeat
-    )
+    val alarmLocalDateTime = getNextAlarmTime(LocalTime.of(hour.hour, minute.minute), weeklyRepeat)
 
     return alarmLocalDateTime.toZonedMilliSec()
 }
@@ -46,29 +42,21 @@ private fun getNextDayOfAlarm(alarmTime: LocalTime, weeklyRepeat: WeeklyRepeat):
     val todayCode = nowDate.dayOfWeek.value
 
     // The alarm time for today is still upcoming.
-    if (alarmTime.isAfter(nowTime) &&
-        (weeklyRepeat.weekdays.contains(todayCode) || !weeklyRepeat.isRepeat())
-    ) {
-        return LocalDate.now()
+    if (alarmTime.isAfter(nowTime) && (weeklyRepeat.weekdays.contains(todayCode) || !weeklyRepeat.isRepeat())) {
+        return nowDate
     }
 
     // The alarm time for today has already passed.
     return if (!weeklyRepeat.isRepeat()) {
         nowDate.plusDays(1)
     } else {
-        // If no day is available this week, select the first available date next week.
+        // If all repeating days have passed this week, then the first repeating day in the next week.
         val nextDayCode = weeklyRepeat.weekdays
-            .firstOrNull { it > todayCode }
-            ?: weeklyRepeat.weekdays.first()
+            .firstOrNull { it > todayCode } ?: weeklyRepeat.weekdays.first()
 
         nowDate.with(TemporalAdjusters.next(DayOfWeek.of(nextDayCode)))
     }
 }
 
-private fun LocalDateTime.toZonedMilliSec(): Long =
-    ZonedDateTime
-        .of(this, ZoneId.systemDefault())
-        .toEpochSecond() * 1000
-
-private fun WeeklyRepeat.isRepeat(): Boolean =
-    weekdays.isNotEmpty()
+private fun LocalDateTime.toZonedMilliSec(): Long = atZone(ZoneId.systemDefault()).toEpochSecond() * 1000
+private fun WeeklyRepeat.isRepeat(): Boolean = weekdays.isNotEmpty()

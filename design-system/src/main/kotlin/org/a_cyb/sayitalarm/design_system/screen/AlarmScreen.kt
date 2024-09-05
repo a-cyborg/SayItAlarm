@@ -15,10 +15,10 @@ import androidx.compose.ui.res.stringResource
 import org.a_cyb.sayitalarm.design_system.R
 import org.a_cyb.sayitalarm.design_system.atom.BoxAnimatedCircleBorder
 import org.a_cyb.sayitalarm.design_system.atom.ColumnScreenVerticalCenter
-import org.a_cyb.sayitalarm.design_system.atom.TextButtonCircleSayIt
-import org.a_cyb.sayitalarm.design_system.atom.TextButtonSnooze
 import org.a_cyb.sayitalarm.design_system.atom.SpacerSmall
 import org.a_cyb.sayitalarm.design_system.atom.SpacerXLarge
+import org.a_cyb.sayitalarm.design_system.atom.TextButtonCircleSayIt
+import org.a_cyb.sayitalarm.design_system.atom.TextButtonSnooze
 import org.a_cyb.sayitalarm.design_system.atom.TextDisplayStandardLarge
 import org.a_cyb.sayitalarm.design_system.atom.TextDisplayStandardSmall
 import org.a_cyb.sayitalarm.design_system.atom.TextTitleStandardLarge
@@ -26,6 +26,7 @@ import org.a_cyb.sayitalarm.design_system.token.Brush
 import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmUiState.Error
 import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmUiState.Initial
 import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmUiState.Ringing
+import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmUiState.Stopped
 import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmViewModel
 import org.a_cyb.sayitalarm.presentation.command.SnoozeCommand
 import org.a_cyb.sayitalarm.presentation.command.StartSayItCommand
@@ -55,6 +56,7 @@ fun AlarmScreen(
                 )
 
             is Error -> TextDisplayStandardLarge(text = "Error🌛")
+            is Stopped -> {}
         }
     }
 }
