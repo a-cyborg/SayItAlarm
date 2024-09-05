@@ -10,7 +10,6 @@ import java.util.concurrent.Executors
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.speech.ModelDownloadListener
 import android.speech.RecognitionSupport
 import android.speech.RecognitionSupportCallback
 import android.speech.RecognizerIntent
@@ -59,27 +58,7 @@ class TemptRecognizerOfflineHelper(private val context: Context) : AlarmServiceC
         val recognizer = SpeechRecognizer.createSpeechRecognizer(context)
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            downloadSttModelWithListener(recognizer, intent)
-        } else {
-            recognizer.triggerModelDownload(intent)
-            _isOfflineAvailable.update { false }
-        }
-    }
-
-    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
-    private fun downloadSttModelWithListener(recognizer: SpeechRecognizer, intent: Intent) {
-        val executor = Executors.newSingleThreadExecutor()
-        val listener = object : ModelDownloadListener {
-            override fun onSuccess() {
-                _isOfflineAvailable.update { false }
-            }
-
-            override fun onProgress(completedPercent: Int) {}
-            override fun onScheduled() {}
-            override fun onError(error: Int) {}
-        }
-
-        recognizer.triggerModelDownload(intent, executor, listener)
+        recognizer.triggerModelDownload(intent)
+        _isOfflineAvailable.update { false }
     }
 }
