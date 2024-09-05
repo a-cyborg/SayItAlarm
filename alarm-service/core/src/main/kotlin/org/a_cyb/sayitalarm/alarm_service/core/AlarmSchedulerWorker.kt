@@ -52,7 +52,6 @@ internal class AlarmSchedulerWorker(
     private fun scheduleSnooze(): Result {
         val alarmId = inputData.getLong(SCHEDULER_WORKER_INPUT_DATA_ALARM_ID, 0)
         val snoozeMin = inputData.getInt(SCHEDULER_WORKER_INPUT_DATA_SNOOZE_MIN, 5)
-        // val snoozeAlarmTime = System.currentTimeMillis() + snoozeMin.minutes.inWholeMilliseconds
         val snoozeAlarmTime = getSnoozeTimeInMills(snoozeMin)
 
         setAlarmClock(alarmId, snoozeAlarmTime)

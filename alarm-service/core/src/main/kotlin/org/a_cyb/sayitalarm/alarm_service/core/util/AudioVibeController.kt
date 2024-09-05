@@ -12,11 +12,9 @@ import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
-import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.provider.Settings
-import androidx.annotation.RequiresApi
 import org.a_cyb.sayitalarm.alarm_service.core.AlarmService.Companion.DEFAULT_ALERT_TYPE_ORDINAL
 import org.a_cyb.sayitalarm.entity.AlertType
 
@@ -30,28 +28,23 @@ object AudioVibeController : AudioVibeControllerContract {
     private var vibrator: Vibrator? = null
     private var mediaPlayer: MediaPlayer? = null
 
-    private val audioFocusChangeListener = AudioManager
-        .OnAudioFocusChangeListener { focusChange ->
-            when (focusChange) {
-                AudioManager.AUDIOFOCUS_GAIN -> mediaPlayer?.start()
-                AudioManager.AUDIOFOCUS_LOSS -> mediaPlayer?.stop()
-            }
+    private val audioFocusChangeListener = AudioManager.OnAudioFocusChangeListener { focusChange ->
+        when (focusChange) {
+            AudioManager.AUDIOFOCUS_GAIN -> mediaPlayer?.start()
+            AudioManager.AUDIOFOCUS_LOSS -> mediaPlayer?.stop()
         }
+    }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    private val audioFocusRequest: AudioFocusRequest =
-        AudioFocusRequest
-            .Builder(AudioManager.AUDIOFOCUS_GAIN)
-            .setAudioAttributes(getAudioAttribute())
-            .setAcceptsDelayedFocusGain(true)
-            .setOnAudioFocusChangeListener(audioFocusChangeListener)
-            .build()
+    private val audioFocusRequest: AudioFocusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+        .setAudioAttributes(getAudioAttribute())
+        .setAcceptsDelayedFocusGain(true)
+        .setOnAudioFocusChangeListener(audioFocusChangeListener)
+        .build()
 
-    private fun getAudioAttribute(): AudioAttributes =
-        AudioAttributes.Builder()
-            .setUsage(AudioAttributes.USAGE_ALARM)
-            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-            .build()
+    private fun getAudioAttribute(): AudioAttributes = AudioAttributes.Builder()
+        .setUsage(AudioAttributes.USAGE_ALARM)
+        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+        .build()
 
     override fun startRinging(context: Context, ringtone: String?, alertTypeOrdinal: Int?) {
         val audioUri = resolveRingtoneUri(ringtone)
@@ -72,27 +65,19 @@ object AudioVibeController : AudioVibeControllerContract {
             ?.let { Uri.parse(ringtone) }
             ?: Settings.System.DEFAULT_ALARM_ALERT_URI
 
-    private fun resolveAlertType(alertTypeOrdinal: Int?): AlertType =
-        AlertType.entries
-            .getOrNull(alertTypeOrdinal ?: DEFAULT_ALERT_TYPE_ORDINAL)
-            ?: AlertType.SOUND_AND_VIBRATE
+    private fun resolveAlertType(alertTypeOrdinal: Int?): AlertType = AlertType.entries
+        .getOrNull(alertTypeOrdinal ?: DEFAULT_ALERT_TYPE_ORDINAL)
+        ?: AlertType.SOUND_AND_VIBRATE
 
-    private fun playRingtone(context: Context, audioUri: Uri) {
+    private fun playRingtone(context: Context, ringtoneUri: Uri) {
         audioManager = (context.getSystemService(Context.AUDIO_SERVICE) as AudioManager).apply {
-            setStreamVolume(
-                AudioManager.STREAM_ALARM,
-                getStreamMaxVolume(AudioManager.STREAM_ALARM),
-                0
-            )
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                requestAudioFocus(audioFocusRequest)
-            }
+            setStreamVolume(AudioManager.STREAM_ALARM, getStreamMaxVolume(AudioManager.STREAM_ALARM), 0)
+            requestAudioFocus(audioFocusRequest)
         }
 
         mediaPlayer = MediaPlayer().apply {
             try {
-                setDataSource(context, audioUri)
+                setDataSource(context, ringtoneUri)
                 setAudioAttributes(getAudioAttribute())
                 isLooping = true
                 prepare()
@@ -108,19 +93,13 @@ object AudioVibeController : AudioVibeControllerContract {
 
         vibrator = (context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator).apply {
             if (hasVibrator()) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    vibrate(VibrationEffect.createWaveform(vibrationPatter, 0))
-                } else {
-                    vibrate(vibrationPatter, 0)
-                }
+                vibrate(VibrationEffect.createWaveform(vibrationPatter, 0))
             }
         }
     }
 
     override fun stopRinging() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            audioManager?.abandonAudioFocusRequest(audioFocusRequest)
-        }
+        audioManager?.abandonAudioFocusRequest(audioFocusRequest)
         mediaPlayer?.stop()
         mediaPlayer?.release()
         vibrator?.cancel()

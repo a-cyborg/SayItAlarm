@@ -71,14 +71,12 @@ class AlarmActivity : ComponentActivity() {
                 or WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON
         )
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            (getSystemService(KEYGUARD_SERVICE) as KeyguardManager)
-                .requestDismissKeyguard(this, null)
+        (getSystemService(KEYGUARD_SERVICE) as KeyguardManager)
+            .requestDismissKeyguard(this, null)
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-                setShowWhenLocked(true)
-                setTurnScreenOn(true)
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            setShowWhenLocked(true)
+            setTurnScreenOn(true)
         }
     }
 

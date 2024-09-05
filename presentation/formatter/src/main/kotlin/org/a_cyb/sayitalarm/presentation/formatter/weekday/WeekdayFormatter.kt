@@ -10,7 +10,6 @@ import java.util.Locale
 import android.content.Context
 import android.icu.text.DateFormatSymbols
 import android.icu.text.ListFormatter
-import android.os.Build
 import org.a_cyb.sayitalarm.presentation.formatter.R
 
 class WeekdayFormatter(
@@ -61,14 +60,7 @@ class WeekdayFormatter(
             else -> joinDayNames(this)
         }
 
-    private fun joinDayNames(dayNames: List<String>): String =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            ListFormatter
-                .getInstance(locale)
-                .format(dayNames)
-        } else {
-            dayNames.joinToString(", ")
-        }
+    private fun joinDayNames(dayNames: List<String>): String = ListFormatter.getInstance(locale).format(dayNames)
 
     companion object {
         val EVERYDAY = (1..7).toSet()
