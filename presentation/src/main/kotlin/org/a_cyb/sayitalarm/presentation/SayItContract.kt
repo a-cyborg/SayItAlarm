@@ -13,6 +13,7 @@ import org.a_cyb.sayitalarm.presentation.command.SayItCommandContractAll
 interface SayItContract {
     interface SayItViewModel : SayItCommandContractAll, CommandContract.CommandExecutor {
         val state: StateFlow<SayItState>
+        val isOffline: StateFlow<IsOffline>
     }
 
     sealed interface SayItState {
@@ -31,4 +32,5 @@ interface SayItContract {
 
     data class Count(val current: Int, val total: Int)
     enum class SttStatus { READY, LISTENING, SUCCESS, FAILED, }
+    enum class IsOffline { True, False }
 }

@@ -42,19 +42,17 @@ sealed interface AlarmServiceContract {
         sealed interface ControllerState {
             data object Initial : ControllerState
             data class Ringing(val label: Label) : ControllerState
-            data class RunningSayIt(val scripts: SayItScripts) : ControllerState
+            data class RunningSayIt(val sayItScripts: SayItScripts) : ControllerState
             data object Error : ControllerState
         }
     }
 
     interface SttRecognizer {
         val recognizerState: StateFlow<RecognizerState>
-        val rmsDbState: StateFlow<RecognizerRmsDb>
+        val isOnDevice: StateFlow<IsOnDevice>
 
         fun startListening()
         fun stopRecognizer()
-
-        data class RecognizerRmsDb(val rmsDb: Float)
 
         sealed interface RecognizerState {
             data object Initial : RecognizerState
@@ -63,6 +61,13 @@ sealed interface AlarmServiceContract {
             data class Done(val result: String) : RecognizerState
             data class Error(val cause: String) : RecognizerState
         }
+
+        enum class IsOnDevice { True, False }
+    }
+
+    interface SttRecognizerOnDeviceHelper {
+        val isOfflineAvailable: StateFlow<Boolean>
+        fun downloadSttModel()
     }
 
     interface EditDistanceCalculator {
