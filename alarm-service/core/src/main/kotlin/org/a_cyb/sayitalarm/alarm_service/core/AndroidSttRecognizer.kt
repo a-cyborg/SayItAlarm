@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.SttRecognizer
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.SttRecognizer.RecognizerRmsDb
+import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.SttRecognizer.IsOnDevice
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.SttRecognizer.RecognizerState
 
 class AndroidSttRecognizer(private val context: Context) : SttRecognizer, RecognitionListener {
@@ -30,8 +30,8 @@ class AndroidSttRecognizer(private val context: Context) : SttRecognizer, Recogn
     private val _recognizerState: MutableStateFlow<RecognizerState> = MutableStateFlow(RecognizerState.Initial)
     override val recognizerState: StateFlow<RecognizerState> = _recognizerState.asStateFlow()
 
-    private val _rmsDbState: MutableStateFlow<RecognizerRmsDb> = MutableStateFlow(RecognizerRmsDb(0f))
-    override val rmsDbState: StateFlow<RecognizerRmsDb> = _rmsDbState.asStateFlow()
+    private val _isOnDevice: MutableStateFlow<IsOnDevice> = MutableStateFlow(IsOnDevice.True)
+    override val isOnDevice: StateFlow<IsOnDevice> = _isOnDevice.asStateFlow()
 
     override fun startListening() {
         recognizer.setRecognitionListener(this)
@@ -43,13 +43,15 @@ class AndroidSttRecognizer(private val context: Context) : SttRecognizer, Recogn
         recognizer.destroy()
     }
 
-    private fun resolveSpeechRecognizer(): SpeechRecognizer {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            if (SpeechRecognizer.isOnDeviceRecognitionAvailable(context))
-                return SpeechRecognizer.createOnDeviceSpeechRecognizer(context)
+    private fun resolveSpeechRecognizer(): SpeechRecognizer =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+            && SpeechRecognizer.isOnDeviceRecognitionAvailable(context)
+        ) {
+            SpeechRecognizer.createOnDeviceSpeechRecognizer(context)
+        } else {
+            _isOnDevice.update { IsOnDevice.False }
+            SpeechRecognizer.createSpeechRecognizer(context)
         }
-        return SpeechRecognizer.createSpeechRecognizer(context)
-    }
 
     private fun getRecognizerIntent(): Intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
         .putExtra(EXTRA_CALLING_PACKAGE, context.packageName)
@@ -61,38 +63,32 @@ class AndroidSttRecognizer(private val context: Context) : SttRecognizer, Recogn
 
     override fun onPartialResults(partialResults: Bundle?) {
         val result = partialResults?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-        RecognizerState.Processing(result?.last() ?: "").update()
+        RecognizerState.Processing(result?.lastOrNull() ?: "").update()
     }
 
     override fun onResults(results: Bundle?) {
         val result = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-        RecognizerState.Done(result = result?.first() ?: "").update()
+        RecognizerState.Done(result = result?.firstOrNull() ?: "").update()
     }
 
     override fun onError(error: Int) {
         if (error == SpeechRecognizer.ERROR_NO_MATCH) {
-            // This error frequently occurs when the voice is quite low.
-            // It can be resolved by listening again.
+            // This error frequently occurs. It can be resolved by listening again.
             startListening()
         } else {
             RecognizerState.Error(resolveError(error)).update()
         }
     }
 
-    override fun onRmsChanged(rmsdB: Float) {
-        // _rmsDbState.update {
-        //     RecognizerRmsDb(rmsdB)
-        // }
+    private fun RecognizerState.update() {
+        _recognizerState.update { this }
     }
 
     override fun onBeginningOfSpeech() {}
     override fun onBufferReceived(buffer: ByteArray?) {}
+    override fun onRmsChanged(rmsdB: Float) {}
     override fun onEndOfSpeech() {}
     override fun onEvent(eventType: Int, params: Bundle?) {}
-
-    private fun RecognizerState.update() {
-        _recognizerState.update { this }
-    }
 
     private fun resolveError(error: Int): String =
         when (error) {

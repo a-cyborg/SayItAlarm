@@ -7,10 +7,13 @@
 package org.a_cyb.sayitalarm.presentation.viewmodel
 
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController
@@ -19,6 +22,7 @@ import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.EditDistan
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.SttRecognizer
 import org.a_cyb.sayitalarm.presentation.SayItContract
 import org.a_cyb.sayitalarm.presentation.SayItContract.Count
+import org.a_cyb.sayitalarm.presentation.SayItContract.IsOffline
 import org.a_cyb.sayitalarm.presentation.SayItContract.SayItInfo
 import org.a_cyb.sayitalarm.presentation.SayItContract.SayItState
 import org.a_cyb.sayitalarm.presentation.SayItContract.SayItState.Error
@@ -39,6 +43,15 @@ class SayItViewModel(
 
     private val _state: MutableStateFlow<SayItState> = MutableStateFlow(Initial)
     override val state: StateFlow<SayItState> = _state.asStateFlow()
+
+    override val isOffline: StateFlow<IsOffline> = sttRecognizer.isOnDevice
+        .map { if (it == SttRecognizer.IsOnDevice.True) IsOffline.True else IsOffline.False }
+        .stateIn(
+            scope = scope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = IsOffline.False
+        )
+
     private val sayItScripts: List<String> by lazy { resolveSayItScripts() }
 
     init {
@@ -51,7 +64,7 @@ class SayItViewModel(
 
     private fun resolveSayItScripts(): List<String> =
         (serviceController.controllerState.value as? ControllerState.RunningSayIt)
-            ?.scripts?.scripts
+            ?.sayItScripts?.scripts
             ?: emptyList()
 
     private fun setupSayIt() {
@@ -148,10 +161,7 @@ class SayItViewModel(
 
     private fun updateToFailure(sttResult: String) {
         updateProcessing {
-            copy(
-                sttResult = sttResult,
-                status = SttStatus.FAILED
-            )
+            copy(sttResult = sttResult, status = SttStatus.FAILED)
         }
     }
 
