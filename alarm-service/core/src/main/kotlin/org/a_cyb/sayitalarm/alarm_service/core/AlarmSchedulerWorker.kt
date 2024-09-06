@@ -94,8 +94,8 @@ internal class AlarmSchedulerWorker(
 
     private fun getPendingIntent(isForDupeCheck: Boolean, alarmId: Int, intent: Intent): PendingIntent? {
         val flags = when (isForDupeCheck) {
-            true -> PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE
-            false -> PendingIntent.FLAG_IMMUTABLE
+            true -> PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_ONE_SHOT
+            false -> PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_ONE_SHOT
         }
 
         return PendingIntent.getBroadcast(applicationContext, alarmId, intent, flags)
