@@ -13,6 +13,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.ServiceConnection
+import android.content.pm.ActivityInfo
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
@@ -51,6 +52,7 @@ class AlarmActivity : ComponentActivity() {
             Color.useDarkTheme()
             window.statusBarColor = Color.surface.standard.toArgb()
             window.navigationBarColor = Color.surface.standard.toArgb()
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
             SiaAlarmServiceNavHost()
         }
@@ -69,6 +71,9 @@ class AlarmActivity : ComponentActivity() {
         window.addFlags(
             WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
                 or WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON
+                or WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                or WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
+                or WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
         )
 
         (getSystemService(KEYGUARD_SERVICE) as KeyguardManager)

@@ -63,6 +63,21 @@ fun ColumnScreenStandardScrollable(content: @Composable ColumnScope.() -> Unit) 
 }
 
 @Composable
+fun ColumnScreenStandardScrollableNoFooter(content: @Composable ColumnScope.() -> Unit) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top,
+        modifier = Modifier
+            .fillMaxSize()
+            .windowInsetsPadding(WindowInsets.safeDrawing)
+            .verticalScroll(rememberScrollState())
+            .background(Color.surface.standard),
+    ) {
+        content()
+    }
+}
+
+@Composable
 fun ColumnScreenVerticalCenter(content: @Composable ColumnScope.() -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
