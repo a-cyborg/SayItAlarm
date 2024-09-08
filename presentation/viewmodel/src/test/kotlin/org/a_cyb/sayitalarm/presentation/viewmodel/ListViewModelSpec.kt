@@ -9,14 +9,18 @@ package org.a_cyb.sayitalarm.presentation.viewmodel
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import app.cash.turbine.test
+import io.mockk.clearAllMocks
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
 import org.a_cyb.sayitalarm.entity.Alarm
 import org.a_cyb.sayitalarm.presentation.ListContract
 import org.a_cyb.sayitalarm.presentation.ListContract.AlarmInfo
@@ -40,37 +44,36 @@ class ListViewModelSpec {
 
     private val timeFormatter: TimeFormatterContract = TimeFormatterFake()
     private val weekdayFormatter: WeekdayFormatterContract = WeekdayFormatterFake()
+    private val recognizerOfflineHelper: AlarmServiceContract.SttRecognizerOnDeviceHelper = mockk(relaxed = true)
 
     @BeforeTest
     fun setup() {
         Dispatchers.setMain(StandardTestDispatcher())
+
+        every { recognizerOfflineHelper.isOfflineAvailable } answers { MutableStateFlow(true) }
     }
 
     @AfterTest
     fun tearDown() {
         Dispatchers.resetMain()
+
+        clearAllMocks()
     }
 
     @Test
     fun `It is in the Initial State`() {
-        val viewModel = ListViewModel(
-            ListInteractorFake(),
-            timeFormatter,
-            weekdayFormatter
-        )
+        val viewModel = ListViewModel(ListInteractorFake(), timeFormatter, weekdayFormatter, recognizerOfflineHelper)
 
         viewModel.state.value mustBe Initial
     }
 
     @Test
-    fun `When interactor initialization fails it is in InitialError state`() = runTest {
-        // Given
+    fun `When interactor initialization fails, it sets the state to InitialError`() = runTest {
+        // Given & When
         val results = listOf(Result.failure<List<Alarm>>(IllegalStateException()))
         val interactor = ListInteractorFake(results)
+        val viewModel = ListViewModel(interactor, timeFormatter, weekdayFormatter, recognizerOfflineHelper)
 
-        val viewModel = ListViewModel(interactor, timeFormatter, weekdayFormatter)
-
-        // When
         viewModel.state.test {
             skipItems(1) // Initial
 
@@ -80,13 +83,12 @@ class ListViewModelSpec {
     }
 
     @Test
-    fun `Given interactor success with alarm it sets Success`() = runTest {
-        // Given
+    fun `When interactor initialization success, it sets the state to Success`() = runTest {
+        // Given & When
         val result = listOf(Result.success(alarms))
         val interactor = ListInteractorFake(result)
-        val viewModel = ListViewModel(interactor, timeFormatter, weekdayFormatter)
+        val viewModel = ListViewModel(interactor, timeFormatter, weekdayFormatter, recognizerOfflineHelper)
 
-        // When
         viewModel.state.test {
             skipItems(1)
 
@@ -96,44 +98,58 @@ class ListViewModelSpec {
     }
 
     @Test
-    fun `When setEnabled is called it propagates success state`() = runTest {
+    fun `When setEnabled is called, it calls interactor set enabled and propagates the success state`() = runTest {
         // Given
         val updatedAlarms = alarms.toMutableList().apply {
             set(2, alarms[2].copy(enabled = true))
         }
-        val results = listOf(
-            Result.success(alarms),
-            Result.success(updatedAlarms)
-        )
+        val results = listOf(Result.success(alarms), Result.success(updatedAlarms))
         val interactor = ListInteractorFake(results)
-        val viewModel = ListViewModel(interactor, timeFormatter, weekdayFormatter)
+        val viewModel = ListViewModel(interactor, timeFormatter, weekdayFormatter, recognizerOfflineHelper)
 
         viewModel.state.test {
-            skipItems(2)  // Initial
+            skipItems(2)
 
             // When
             viewModel.setEnabled(3, false)
 
-            val expected = alarmInfo.toMutableList()
-                .apply { set(2, alarmInfo[2].copy(enabled = true)) }
+            val expected = alarmInfo.toMutableList().apply {
+                set(2, alarmInfo[2].copy(enabled = true))
+            }
 
             // Then
             awaitItem() mustBe Success(expected)
-
             interactor.invokedType mustBe InvokedType.SET_ENABLED
         }
     }
 
     @Test
-    fun `Given deleteAlarm is called it propagates success`() = runTest {
+    fun `When interactor setEnabled fails, it sets the state to the Error`() = runTest{
+        // Given
+        val results = listOf(Result.success(alarms), Result.failure(IllegalStateException()))
+        val interactor = ListInteractorFake(results)
+        val viewModel = ListViewModel(interactor, timeFormatter, weekdayFormatter, recognizerOfflineHelper)
+
+        viewModel.state.test {
+            skipItems(2)
+
+            // When
+            viewModel.setEnabled(3, false)
+
+            // Then
+            awaitItem() mustBe ListContract.ListState.Error(alarmInfo)
+            interactor.invokedType mustBe InvokedType.SET_ENABLED
+        }
+
+    }
+
+    @Test
+    fun `When deleteAlarm is called, it calls interactor delete and propagates the success state`() = runTest {
         // Given
         val updatedAlarms = alarms.toMutableList().apply { removeLast() }
-        val results = listOf(
-            Result.success(alarms),
-            Result.success(updatedAlarms)
-        )
+        val results = listOf(Result.success(alarms), Result.success(updatedAlarms))
         val interactor = ListInteractorFake(results)
-        val viewModel = ListViewModel(interactor, timeFormatter, weekdayFormatter)
+        val viewModel = ListViewModel(interactor, timeFormatter, weekdayFormatter, recognizerOfflineHelper)
 
         viewModel.state.test {
             skipItems(2)
@@ -141,12 +157,10 @@ class ListViewModelSpec {
             // When
             viewModel.deleteAlarm(2)
 
-            val expected = alarmInfo.toMutableList()
-                .apply { removeLast() }
+            val expected = alarmInfo.toMutableList().apply { removeLast() }
 
             // Then
             awaitItem() mustBe Success(expected)
-
             interactor.invokedType mustBe InvokedType.DELETE_ALARM
         }
     }
@@ -155,7 +169,7 @@ class ListViewModelSpec {
     fun `Given runCommand is called it executes the given command`() {
         // Given
         val interactor = ListInteractorFake()
-        val viewModel = ListViewModel(interactor, timeFormatter, weekdayFormatter)
+        val viewModel = ListViewModel(interactor, timeFormatter, weekdayFormatter, recognizerOfflineHelper)
         val command: CommandContract.Command<ListViewModel> = mockk(relaxed = true)
 
         // When
@@ -168,7 +182,7 @@ class ListViewModelSpec {
     @Test
     fun `It fulfills ListViewModel`() {
         val interactor = ListInteractorFake()
-        val viewModel = ListViewModel(interactor, timeFormatter, weekdayFormatter)
+        val viewModel = ListViewModel(interactor, timeFormatter, weekdayFormatter, recognizerOfflineHelper)
 
         viewModel fulfils ListContract.ListViewModel::class
     }

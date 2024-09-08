@@ -43,8 +43,7 @@ class ListViewModel(
         )
 
     private fun toState(result: Result<List<Alarm>>): ListState =
-        result.getOrNull()
-            ?.let(::toSuccess) ?: toError()
+        result.getOrNull()?.let(::toSuccess) ?: toError()
 
     private fun toError(): ListState =
         when (state.value is ListStateWithContent) {

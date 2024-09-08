@@ -26,6 +26,8 @@ import org.a_cyb.sayitalarm.design_system.atom.IconButtonAdd
 import org.a_cyb.sayitalarm.design_system.atom.IconButtonInfo
 import org.a_cyb.sayitalarm.design_system.atom.PanelStandard
 import org.a_cyb.sayitalarm.design_system.atom.SpacerLarge
+import org.a_cyb.sayitalarm.design_system.atom.SpacerMedium
+import org.a_cyb.sayitalarm.design_system.atom.SpacerSmall
 import org.a_cyb.sayitalarm.design_system.atom.TextDisplayStandardLarge
 import org.a_cyb.sayitalarm.design_system.atom.TextTitleStandardLarge
 import org.a_cyb.sayitalarm.design_system.molecule.ActionRowCollapse
@@ -238,7 +240,9 @@ private fun SayItScriptsPanel(
                 selectedIdx.intValue = index
                 showPopUpPicker = true
             }
+            SpacerSmall()
             DividerStandard()
+            SpacerMedium()
         }
 
         IconButtonAdd(contentDescription = stringResource(id = R.string.action_add_script)) {

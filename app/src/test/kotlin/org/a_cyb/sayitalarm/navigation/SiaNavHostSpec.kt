@@ -10,6 +10,7 @@ import android.app.Application
 import android.content.Context
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertHasClickAction
+import androidx.compose.ui.test.assertHasNoClickAction
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
@@ -21,7 +22,6 @@ import androidx.test.platform.app.InstrumentationRegistry
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.test.runTest
 import org.a_cyb.sayitalarm.design_system.R
 import org.a_cyb.sayitalarm.presentation.AddContract
@@ -67,125 +67,102 @@ class SiaNavHostSpec {
     }
 
     private val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
+
     private fun getStringRes(id: Int) = context.getString(id)
 
     @Test
     fun `It start from ListScreen`() {
         with(composeTestRule) {
-            onNodeWithText(getStringRes(R.string.edit))
+            onNodeWithText(getStringRes(R.string.edit)).assertExists().assertHasClickAction()
+            onNodeWithContentDescription(getStringRes(R.string.action_open_settings)).assertExists()
                 .assertHasClickAction()
-                .assertExists()
-
-            onNodeWithContentDescription(getStringRes(R.string.action_open_settings))
+            onNodeWithContentDescription(getStringRes(R.string.action_add_alarm)).assertExists()
                 .assertHasClickAction()
-                .assertExists()
         }
     }
 
     @Test
-    fun `When add icon button is clicked it navigate to AddScreen`() = runTest {
+    fun `When add icon button is clicked, it navigate to AddScreen`() = runTest {
         with(composeTestRule) {
             // When
-            onNodeWithContentDescription(getStringRes(R.string.action_add_alarm))
-                .performClick()
+            onNodeWithContentDescription(getStringRes(R.string.action_add_alarm)).performClick()
 
             // Then
-            onNodeWithText(getStringRes(R.string.add))
-                .assertExists()
+            onNodeWithText(getStringRes(R.string.add)).assertExists()
         }
     }
 
     @Test
-    fun `When it is in AddScreen and navigateBack button is clicked it returns to ListScreen`() {
+    fun `When it is on the AddScreen and the navigateBack button is clicked, it returns to the ListScreen`() {
         with(composeTestRule) {
             // Given
-            onNodeWithContentDescription(getStringRes(R.string.action_add_alarm))
-                .performClick()
-
-            onNodeWithText(getStringRes(R.string.add))
-                .assertExists()
+            onNodeWithContentDescription(getStringRes(R.string.action_add_alarm)).performClick()
 
             // When
-            onNodeWithContentDescription(getStringRes(R.string.action_navigate_back))
-                .performClick()
+            onNodeWithContentDescription(getStringRes(R.string.action_navigate_back)).performClick()
 
             // Then
-            onNodeWithText(getStringRes(R.string.edit))
-                .assertHasClickAction()
-                .assertExists()
+            onNodeWithText(getStringRes(R.string.edit)).assertExists()
+            onNodeWithContentDescription(getStringRes(R.string.action_open_settings)).assertExists()
         }
     }
 
     @Test
-    fun `When settings icon button is clicked it navigate to SettingsScreen`() {
+    fun `When settings icon button is clicked, it navigate to the SettingsScreen`() {
         with(composeTestRule) {
             // When
-            onNodeWithContentDescription(getStringRes(R.string.action_open_settings))
-                .performClick()
+            onNodeWithContentDescription(getStringRes(R.string.action_open_settings)).performClick()
 
             // Then
-            onNodeWithText(getStringRes(R.string.settings))
-                .assertExists()
-            onNodeWithText(getStringRes(R.string.about))
-                .assertExists()
-            onNodeWithText(getStringRes(R.string.license))
-                .assertExists()
+            onNodeWithText(getStringRes(R.string.settings)).assertExists().assertHasNoClickAction()
+            onNodeWithText(getStringRes(R.string.about)).assertExists().assertHasNoClickAction()
+            onNodeWithText(getStringRes(R.string.licenses)).assertExists().assertHasNoClickAction()
         }
     }
 
     @Test
-    fun `When it is in SettingsScreen and navigateBack button is clicked it returns to ListScreen`() {
+    fun `When it is on the SettingsScreen and the navigateBack button is clicked, it returns to the ListScreen`() {
         with(composeTestRule) {
             // Given
-            onNodeWithContentDescription(getStringRes(R.string.action_open_settings))
-                .performClick()
-
-            onNodeWithText(getStringRes(R.string.settings))
-                .assertExists()
+            onNodeWithContentDescription(getStringRes(R.string.action_open_settings)).performClick()
 
             // When
-            onNodeWithContentDescription(getStringRes(R.string.action_navigate_back))
-                .performClick()
+            onNodeWithContentDescription(getStringRes(R.string.action_navigate_back)).performClick()
 
             // Then
-            onNodeWithText(getStringRes(R.string.edit))
-                .assertHasClickAction()
-                .assertExists()
+            onNodeWithText(getStringRes(R.string.edit)).assertExists()
+            onNodeWithContentDescription(getStringRes(R.string.action_add_alarm)).assertExists()
         }
     }
 
     @Test
-    fun `When alarm list row edit button is clicked it navigate to EditScreen`() {
+    fun `When on the ListScreen in edit mode and the edit button is clicked, it navigates to the the EditScreen`() {
+        with(composeTestRule) {
+            // Given
+            onNodeWithText(getStringRes(R.string.edit)).performClick() // Activate edit mode.
+
+            // When
+            onNodeWithContentDescription(getStringRes(R.string.action_edit)).performClick()
+
+            // Then
+            onNodeWithText(getStringRes(R.string.edit)).assertExists().assertHasNoClickAction()
+            onNodeWithText(getStringRes(R.string.confirm)).assertExists().assertHasClickAction()
+        }
+    }
+
+    @Test
+    fun `When on the EditScreen and the navigateBack button is clicked, it returns to the ListScreen`() {
         with(composeTestRule) {
             // Given
             onNodeWithText(getStringRes(R.string.edit)).performClick()
+            onNodeWithContentDescription(getStringRes(R.string.action_edit)).performClick()
 
             // When
-            onNodeWithContentDescription(getStringRes(R.string.action_edit))
-                .performClick()
+            onNodeWithContentDescription(getStringRes(R.string.action_navigate_back)).performClick()
 
             // Then
-            onNodeWithText(getStringRes(R.string.confirm))
-                .assertExists()
-        }
-    }
-
-    @Test
-    fun `When it is in EditScreen and navigateBack button is clicked it returns to ListScreen`() {
-        with(composeTestRule) {
-            // Given
-            onNodeWithText(getStringRes(R.string.edit))
-                .performClick()  // Enter edit mode
-            onNodeWithContentDescription(getStringRes(R.string.action_edit))
-                .performClick() // Edit screen
-
-            // When
-            onNodeWithContentDescription(getStringRes(R.string.action_navigate_back))
-                .performClick()
-
-            // Then
-            onNodeWithContentDescription(getStringRes(R.string.action_open_settings))
-                .assertExists()
+            onNodeWithContentDescription(getStringRes(R.string.action_open_settings)).assertExists()
+            onNodeWithContentDescription(getStringRes(R.string.action_add_alarm)).assertExists()
         }
     }
 
@@ -207,22 +184,23 @@ class SiaNavHostSpec {
                 )
             )
         )
-        every { listViewModelFake.state } returns
-            listState.asStateFlow()
-        every { addViewModelFake.state } returns
-            MutableStateFlow(AddState.Initial(FakeAlarmUIData.defaultAlarmUI)).asStateFlow()
-        every { editViewModelFake.state } returns
-            MutableStateFlow(EditContract.EditViewModel.EditState.Initial).asStateFlow()
-        every { settingsViewModelFake.state } returns
-            MutableStateFlow(SettingsContract.SettingsState.Initial).asStateFlow()
+        val addState = MutableStateFlow(AddState.Initial(FakeAlarmUIData.defaultAlarmUI))
+        val editState = MutableStateFlow(EditContract.EditViewModel.EditState.Initial)
+        val settingsState = MutableStateFlow(SettingsContract.SettingsState.Initial)
+        val offlineState = MutableStateFlow(true)
 
-        val viewmodelModule =
-            module {
-                viewModel { listViewModelFake } bind ListContract.ListViewModel::class
-                viewModel { addViewModelFake } bind AddContract.AddViewModel::class
-                viewModel { editViewModelFake } bind EditContract.EditViewModel::class
-                viewModel { settingsViewModelFake } bind SettingsContract.SettingsViewModel::class
-            }
+        every { listViewModelFake.state } returns listState
+        every { listViewModelFake.isOfflineAvailable } returns offlineState
+        every { addViewModelFake.state } returns addState
+        every { editViewModelFake.state } returns editState
+        every { settingsViewModelFake.state } returns settingsState
+
+        val viewmodelModule = module {
+            viewModel { listViewModelFake } bind ListContract.ListViewModel::class
+            viewModel { addViewModelFake } bind AddContract.AddViewModel::class
+            viewModel { editViewModelFake } bind EditContract.EditViewModel::class
+            viewModel { settingsViewModelFake } bind SettingsContract.SettingsViewModel::class
+        }
 
         loadKoinModules(viewmodelModule)
     }

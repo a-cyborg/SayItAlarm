@@ -6,7 +6,6 @@
 
 package org.a_cyb.sayitalarm.presentation.viewmodel
 
-import android.util.Log
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -56,7 +55,6 @@ class SayItViewModel(
     private val sayItScripts: List<String> by lazy { resolveSayItScripts() }
 
     init {
-        Log.d("SayItViewModel***[", ": Init viewmodel")
         setupSayIt()
 
         sttRecognizer.recognizerState

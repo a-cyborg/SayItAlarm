@@ -223,17 +223,16 @@ class SayItViewModelSpec {
     }
 
     @Test
-    fun `When the SttRecognizer is in Done and It's the last script, It sets the state to Finish`() = runTest {
+    fun `When the SttRecognizer state is in Done and It's the last script, It sets the state to Finish`() = runTest {
         // Given
         val scripts: List<String> = List(3) { fixture.fixture() }
+        setupServiceController(scripts)
         val recognizerState = listOf(
             RecognizerState.Done(scripts[0]),
             RecognizerState.Done(scripts[1]),
             RecognizerState.Done(scripts[2]),
         )
         val sttRecognizer = SttRecognizerFake(recognizerState)
-        setupServiceController(scripts)
-
         val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator, soundEffectPlayer)
 
         viewModel.state.test {
@@ -264,7 +263,6 @@ class SayItViewModelSpec {
 
             // Then
             awaitItem() mustBe Finished
-            verify { soundEffectPlayer.stopPlayer() }
         }
     }
 
@@ -323,6 +321,21 @@ class SayItViewModelSpec {
                 awaitItem() mustBe Finished
             }
         }
+
+    @Test
+    fun `When finish is called, it calls ServiceController scheduleNextAlarm and close all the services`() {
+        // Given
+        val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator, soundEffectPlayer)
+
+        // When
+        viewModel.finish()
+
+        // then
+        verify { sttRecognizer.stopRecognizer() }
+        verify { soundEffectPlayer.stopPlayer() }
+        verify { serviceController.scheduleNextAlarm(any()) }
+        verify { serviceController.terminate() }
+    }
 
     @Test
     fun `Given runCommand is called it executes the given command`() {

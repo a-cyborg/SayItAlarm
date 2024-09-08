@@ -20,18 +20,22 @@
         \n\n Optional:
         \n\t\u2022 Music and Audio: You can choose audio files to use as alarm sounds. </string>
     <string name="info_about">
-        Have you ever wanted your first waking thought to be about something you deeply desire? or
-        Have you ever wanted to start a day with a bit more passion?\n\n
-        SayItAlarm is born for this, but also if \n\n
-        Have you ever woken up immediately when the worries from last night come up? or
-        Have you ever felt hopeless when you woke up?\n\n
-        To me, all the time SayIt helped me, I wish it could help you too.
-        It\'s all about SayIt, but If I may add something more…\n\n
-        SayIt is an open-source project. You can read the entire application code on GitHub.\n\n
-        As SayIt does not collect any data, it\'s hard to identify problems. Please report any issues by writing a review on Google Play or emailing me.\n\n
-        Also, I like to receive emails if you have anything to tell me. Please feel free to email me.\n\n
+        Have you ever wanted your first waking thought to be about something you deeply desire? Or
+        have you ever wanted to start a day with a bit more passion?\n\n
+        SayItAlarm is born for this, but also if\n\n
+        Have you ever woken up immediately when the worries from last night come up? Or
+        have you ever felt hopeless when you woke up?\n\n
+        Research shows that self-affirmation boosts performance and mental health. Speaking makes your brain focus.
+        Daily practice signals what\’s important. The brain then protects these ideas and helps achieve them.
+        I\'ve seen improvements using SayItAlarm every day. I hope it helps you too.\n\n
+        It\'s all about SayItAlarm, but if I may add something more…\n\n
+        SayItAlarm is an open-source project. You can read the entire application code on GitHub.
+        As SayItAlarm does not collect any data, it\'s hard to identify problems. I\'m here to help.
+        Please report any issues by writing a review on Google Play or emailing me.
+        Sending you a smile! I love getting emails. Feel free to reach out.  Let\'s say it!\n\n
         Love,\n
-        Mima </string>
+        Mima
+    </string>
     <string name="info_stt_recognizer_online">🟢 Now speech recognition is running over the internet.</string>
     <string name="info_stt_recognizer_android_download_available">You can download the speech-to-text model.</string>
     <string name="info_stt_recognizer_android_why_download">Currently, SayIt uses Android\'s speech-to-text library.

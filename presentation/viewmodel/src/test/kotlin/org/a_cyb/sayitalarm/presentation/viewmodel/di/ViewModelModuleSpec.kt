@@ -42,6 +42,7 @@ class ViewModelModuleSpec {
         single<TimeFormatterContract> { mockk() }
         single<WeekdayFormatterContract> { mockk() }
         single<AlarmMapperContract> { mockk(relaxed = true) }
+        single<AlarmServiceContract.SttRecognizerOnDeviceHelper> { mockk(relaxed = true) }
     }
 
     @BeforeTest
