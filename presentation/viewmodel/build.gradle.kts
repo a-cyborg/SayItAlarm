@@ -20,10 +20,10 @@ dependencies {
     implementation(projects.domain.interactor)
     implementation(projects.domain.alarmService)
     implementation(projects.presentation.contracts)
-    implementation(projects.systemService.ringtoneResolver)
+    implementation(projects.util.formatter)
     implementation(projects.util.linkOpener)
     implementation(projects.util.soundEffectPlayer)
-    implementation(projects.util.formatter)
+    implementation(projects.util.ringtoneResolver)
 
     coreLibraryDesugaring(libs.android.tools.desugarJdk)
     implementation(libs.androidx.lifecycle.viewmodelAndroid)

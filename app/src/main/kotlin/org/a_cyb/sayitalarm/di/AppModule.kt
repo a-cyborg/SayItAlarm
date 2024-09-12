@@ -15,7 +15,7 @@ import org.a_cyb.sayitalarm.data.di.dataModule
 import org.a_cyb.sayitalarm.database.di.databaseModule
 import org.a_cyb.sayitalarm.domain.interactor.di.interactorModule
 import org.a_cyb.sayitalarm.presentation.viewmodel.di.viewModelModule
-import org.a_cyb.sayitalarm.system_service.ringtone_resolver.di.ringtoneResolverModule
+import org.a_cyb.sayitalarm.util.ringtone_resolver.di.ringtoneResolverModule
 import org.a_cyb.sayitalarm.util.formatter.di.formatterModule
 import org.a_cyb.sayitalarm.util.link_opener.di.linkOpenerModule
 import org.a_cyb.sayitalarm.util.sound_effect_player.di.soundEffectPlayerModule

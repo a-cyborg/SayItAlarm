@@ -23,7 +23,7 @@ import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.Selectable
 import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.SelectableRepeat
 import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.TimeUI
 import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.WeeklyRepeatUI
-import org.a_cyb.sayitalarm.system_service.ringtone_resolver.RingtoneResolverContract
+import org.a_cyb.sayitalarm.util.ringtone_resolver.RingtoneResolverContract
 
 class AlarmMapper(
     private val timeFormatter: org.a_cyb.sayitalarm.util.formatter.time.TimeFormatterContract,

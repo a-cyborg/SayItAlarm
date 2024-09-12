@@ -19,7 +19,7 @@ import org.a_cyb.sayitalarm.presentation.viewmodel.fake.FakeAlarmData
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.RingtoneResolverFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.TimeFormatterFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.WeekdayFormatterFake
-import org.a_cyb.sayitalarm.system_service.ringtone_resolver.RingtoneResolverContract
+import org.a_cyb.sayitalarm.util.ringtone_resolver.RingtoneResolverContract
 import org.a_cyb.sayitalarm.util.formatter.enum.EnumFormatterContract
 import org.a_cyb.sayitalarm.util.formatter.time.TimeFormatterContract
 import org.a_cyb.sayitalarm.util.formatter.weekday.WeekdayFormatterContract

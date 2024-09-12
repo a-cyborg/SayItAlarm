@@ -31,10 +31,9 @@ include(
     ":presentation:viewmodel",
     ":design-system",
     ":alarm-service:core",
-    ":system-service:ringtone-resolver",
-    ":system-service:permission-manager",
     ":util",
     ":util:link-opener",
     ":util:sound-effect-player",
-    ":util:formatter"
+    ":util:formatter",
+    ":util:ringtone-resolver",
 )

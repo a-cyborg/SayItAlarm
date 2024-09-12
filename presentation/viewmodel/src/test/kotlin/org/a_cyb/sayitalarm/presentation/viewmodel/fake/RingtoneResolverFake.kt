@@ -6,7 +6,7 @@
 
 package org.a_cyb.sayitalarm.presentation.viewmodel.fake
 
-import org.a_cyb.sayitalarm.system_service.ringtone_resolver.RingtoneResolverContract
+import org.a_cyb.sayitalarm.util.ringtone_resolver.RingtoneResolverContract
 
 class RingtoneResolverFake : RingtoneResolverContract {
 
