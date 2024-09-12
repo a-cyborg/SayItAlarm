@@ -14,9 +14,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.a_cyb.sayitalarm.design_system.R
 import org.a_cyb.sayitalarm.design_system.RoborazziTest
-import org.a_cyb.sayitalarm.presentation.AlarmContract
-import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmUiState
-import org.a_cyb.sayitalarm.presentation.command.CommandContract
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmContract
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmContract.AlarmUiState
+import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract
 import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Test
 import org.robolectric.annotation.Config

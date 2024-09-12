@@ -43,19 +43,19 @@ import org.a_cyb.sayitalarm.design_system.molecule.TextBoxStandardBody
 import org.a_cyb.sayitalarm.design_system.molecule.TextBoxWarningTitle
 import org.a_cyb.sayitalarm.design_system.molecule.TopAppBarLarge
 import org.a_cyb.sayitalarm.design_system.token.Spacing
-import org.a_cyb.sayitalarm.presentation.SettingsContract
-import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState.Error
-import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState.Initial
-import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState.Success
-import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsViewModel
-import org.a_cyb.sayitalarm.presentation.command.CommandContract
-import org.a_cyb.sayitalarm.presentation.command.CommandContract.CommandReceiver
-import org.a_cyb.sayitalarm.presentation.command.OpenGitHubCommand
-import org.a_cyb.sayitalarm.presentation.command.OpenGooglePlayCommand
-import org.a_cyb.sayitalarm.presentation.command.SendEmailCommand
-import org.a_cyb.sayitalarm.presentation.command.SetSnoozeCommand
-import org.a_cyb.sayitalarm.presentation.command.SetThemeCommand
-import org.a_cyb.sayitalarm.presentation.command.SetTimeOutCommand
+import org.a_cyb.sayitalarm.presentation.contracts.SettingsContract
+import org.a_cyb.sayitalarm.presentation.contracts.SettingsContract.SettingsState.Error
+import org.a_cyb.sayitalarm.presentation.contracts.SettingsContract.SettingsState.Initial
+import org.a_cyb.sayitalarm.presentation.contracts.SettingsContract.SettingsState.Success
+import org.a_cyb.sayitalarm.presentation.contracts.SettingsContract.SettingsViewModel
+import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract
+import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract.CommandReceiver
+import org.a_cyb.sayitalarm.presentation.contracts.command.OpenGitHubCommand
+import org.a_cyb.sayitalarm.presentation.contracts.command.OpenGooglePlayCommand
+import org.a_cyb.sayitalarm.presentation.contracts.command.SendEmailCommand
+import org.a_cyb.sayitalarm.presentation.contracts.command.SetSnoozeCommand
+import org.a_cyb.sayitalarm.presentation.contracts.command.SetThemeCommand
+import org.a_cyb.sayitalarm.presentation.contracts.command.SetTimeOutCommand
 
 @Composable
 fun SettingsScreen(

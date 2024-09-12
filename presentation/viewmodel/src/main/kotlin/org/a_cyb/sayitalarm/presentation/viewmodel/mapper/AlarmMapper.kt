@@ -16,22 +16,19 @@ import org.a_cyb.sayitalarm.entity.Minute
 import org.a_cyb.sayitalarm.entity.Ringtone
 import org.a_cyb.sayitalarm.entity.SayItScripts
 import org.a_cyb.sayitalarm.entity.WeeklyRepeat
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.AlarmUI
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.AlertTypeUI
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.RingtoneUI
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.SelectableAlertType
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.SelectableRepeat
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.TimeUI
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.WeeklyRepeatUI
-import org.a_cyb.sayitalarm.presentation.formatter.enum.EnumFormatterContract
-import org.a_cyb.sayitalarm.presentation.formatter.time.TimeFormatterContract
-import org.a_cyb.sayitalarm.presentation.formatter.weekday.WeekdayFormatterContract
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.AlarmUI
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.AlertTypeUI
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.RingtoneUI
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.SelectableAlertType
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.SelectableRepeat
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.TimeUI
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.WeeklyRepeatUI
 import org.a_cyb.sayitalarm.system_service.ringtone_resolver.RingtoneResolverContract
 
 class AlarmMapper(
-    private val timeFormatter: TimeFormatterContract,
-    private val weeklyRepeatFormatter: WeekdayFormatterContract,
-    private val alertTypeFormatter: EnumFormatterContract.AlertTypeFormatter,
+    private val timeFormatter: org.a_cyb.sayitalarm.util.formatter.time.TimeFormatterContract,
+    private val weeklyRepeatFormatter: org.a_cyb.sayitalarm.util.formatter.weekday.WeekdayFormatterContract,
+    private val alertTypeFormatter: org.a_cyb.sayitalarm.util.formatter.enum.EnumFormatterContract.AlertTypeFormatter,
     private val ringtoneResolver: RingtoneResolverContract,
 ) : AlarmMapperContract {
 

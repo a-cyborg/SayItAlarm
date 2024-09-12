@@ -18,19 +18,16 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
 import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
-import org.a_cyb.sayitalarm.presentation.AddContract
-import org.a_cyb.sayitalarm.presentation.AlarmContract
-import org.a_cyb.sayitalarm.presentation.EditContract
-import org.a_cyb.sayitalarm.presentation.ListContract
-import org.a_cyb.sayitalarm.presentation.SayItContract
-import org.a_cyb.sayitalarm.presentation.SettingsContract
-import org.a_cyb.sayitalarm.presentation.formatter.duration.DurationFormatterContract
-import org.a_cyb.sayitalarm.presentation.formatter.time.TimeFormatterContract
-import org.a_cyb.sayitalarm.presentation.formatter.weekday.WeekdayFormatterContract
-import org.a_cyb.sayitalarm.presentation.link_opener.LinkOpenerContract
-import org.a_cyb.sayitalarm.presentation.sound_effect_player.SoundEffectPlayerContract
+import org.a_cyb.sayitalarm.presentation.contracts.AddContract
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmContract
+import org.a_cyb.sayitalarm.presentation.contracts.EditContract
+import org.a_cyb.sayitalarm.presentation.contracts.ListContract
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract
+import org.a_cyb.sayitalarm.presentation.contracts.SettingsContract
 import org.a_cyb.sayitalarm.presentation.viewmodel.mapper.AlarmMapperContract
 import org.a_cyb.sayitalarm.presentation.viewmodel.time_flow.TimeFlowContract
+import org.a_cyb.sayitalarm.util.formatter.time.TimeFormatterContract
+import org.a_cyb.sayitalarm.util.formatter.weekday.WeekdayFormatterContract
 import org.koin.core.parameter.parametersOf
 import org.koin.dsl.koinApplication
 import org.koin.dsl.module
@@ -129,8 +126,8 @@ class ViewModelModuleSpec {
         // Given
         val externalModule = module {
             single<InteractorContract.SettingsInteractor> { mockk(relaxed = true) }
-            single<DurationFormatterContract> { mockk() }
-            single<LinkOpenerContract> { mockk() }
+            single<org.a_cyb.sayitalarm.util.formatter.duration.DurationFormatterContract> { mockk() }
+            single<org.a_cyb.sayitalarm.util.link_opener.LinkOpenerContract> { mockk() }
         }
 
         val koinApp = koinApplication {
@@ -179,7 +176,7 @@ class ViewModelModuleSpec {
             single<AlarmServiceContract.AlarmServiceController> { mockk(relaxed = true) }
             single<AlarmServiceContract.SttRecognizer> { mockk(relaxed = true) }
             single<AlarmServiceContract.EditDistanceCalculator> { mockk(relaxed = true) }
-            single<SoundEffectPlayerContract> { mockk(relaxed = true) }
+            single<org.a_cyb.sayitalarm.util.sound_effect_player.SoundEffectPlayerContract> { mockk(relaxed = true) }
         }
 
         val koinApp = koinApplication {

@@ -20,19 +20,19 @@ import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServi
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController.ControllerState
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.EditDistanceCalculator
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.SttRecognizer
-import org.a_cyb.sayitalarm.presentation.SayItContract
-import org.a_cyb.sayitalarm.presentation.SayItContract.Count
-import org.a_cyb.sayitalarm.presentation.SayItContract.IsOffline
-import org.a_cyb.sayitalarm.presentation.SayItContract.SayItInfo
-import org.a_cyb.sayitalarm.presentation.SayItContract.SayItState
-import org.a_cyb.sayitalarm.presentation.SayItContract.SayItState.Error
-import org.a_cyb.sayitalarm.presentation.SayItContract.SayItState.Finished
-import org.a_cyb.sayitalarm.presentation.SayItContract.SayItState.Initial
-import org.a_cyb.sayitalarm.presentation.SayItContract.SayItState.Processing
-import org.a_cyb.sayitalarm.presentation.SayItContract.SttStatus
-import org.a_cyb.sayitalarm.presentation.command.CommandContract.Command
-import org.a_cyb.sayitalarm.presentation.command.CommandContract.CommandReceiver
-import org.a_cyb.sayitalarm.presentation.sound_effect_player.SoundEffectPlayerContract
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.Count
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.IsOffline
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItInfo
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItState
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItState.Error
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItState.Finished
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItState.Initial
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItState.Processing
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SttStatus
+import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract.Command
+import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract.CommandReceiver
+import org.a_cyb.sayitalarm.util.sound_effect_player.SoundEffectPlayerContract
 
 class SayItViewModel(
     private val serviceController: AlarmServiceController,

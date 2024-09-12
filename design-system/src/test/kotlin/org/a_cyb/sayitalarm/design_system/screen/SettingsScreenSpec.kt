@@ -27,10 +27,10 @@ import kotlinx.coroutines.test.runTest
 import org.a_cyb.sayitalarm.design_system.R
 import org.a_cyb.sayitalarm.design_system.roborazziOf
 import org.a_cyb.sayitalarm.design_system.screen.SettingsViewModelFake.ExecutedCommand
-import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState.Error
-import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState.Success
-import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsUI
-import org.a_cyb.sayitalarm.presentation.SettingsContract.TimeInput
+import org.a_cyb.sayitalarm.presentation.contracts.SettingsContract.SettingsState.Error
+import org.a_cyb.sayitalarm.presentation.contracts.SettingsContract.SettingsState.Success
+import org.a_cyb.sayitalarm.presentation.contracts.SettingsContract.SettingsUI
+import org.a_cyb.sayitalarm.presentation.contracts.SettingsContract.TimeInput
 import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Rule
 import org.junit.Test

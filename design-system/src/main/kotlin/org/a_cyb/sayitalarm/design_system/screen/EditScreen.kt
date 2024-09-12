@@ -17,11 +17,11 @@ import org.a_cyb.sayitalarm.design_system.atom.SpacerMedium
 import org.a_cyb.sayitalarm.design_system.molecule.TextBoxWarningTitle
 import org.a_cyb.sayitalarm.design_system.molecule.TopAppBarLarge
 import org.a_cyb.sayitalarm.design_system.organism.AlarmPanel
-import org.a_cyb.sayitalarm.presentation.EditContract
-import org.a_cyb.sayitalarm.presentation.EditContract.EditViewModel.EditState.Error
-import org.a_cyb.sayitalarm.presentation.EditContract.EditViewModel.EditState.Initial
-import org.a_cyb.sayitalarm.presentation.EditContract.EditViewModel.EditState.Success
-import org.a_cyb.sayitalarm.presentation.command.SaveCommand
+import org.a_cyb.sayitalarm.presentation.contracts.EditContract
+import org.a_cyb.sayitalarm.presentation.contracts.EditContract.EditViewModel.EditState.Error
+import org.a_cyb.sayitalarm.presentation.contracts.EditContract.EditViewModel.EditState.Initial
+import org.a_cyb.sayitalarm.presentation.contracts.EditContract.EditViewModel.EditState.Success
+import org.a_cyb.sayitalarm.presentation.contracts.command.SaveCommand
 
 @Composable
 fun EditScreen(

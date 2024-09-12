@@ -45,19 +45,19 @@ import org.a_cyb.sayitalarm.design_system.molecule.TextBoxInfo
 import org.a_cyb.sayitalarm.entity.Hour
 import org.a_cyb.sayitalarm.entity.Minute
 import org.a_cyb.sayitalarm.entity.SayItScripts
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.AlarmUI
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.RingtoneUI
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.TimeUI
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.WeeklyRepeatUI
-import org.a_cyb.sayitalarm.presentation.command.CommandContract
-import org.a_cyb.sayitalarm.presentation.command.CommandContract.CommandReceiver
-import org.a_cyb.sayitalarm.presentation.command.SetAlertTypeCommand
-import org.a_cyb.sayitalarm.presentation.command.SetLabelCommand
-import org.a_cyb.sayitalarm.presentation.command.SetRingtoneCommand
-import org.a_cyb.sayitalarm.presentation.command.SetScriptsCommand
-import org.a_cyb.sayitalarm.presentation.command.SetTimeCommand
-import org.a_cyb.sayitalarm.presentation.command.SetWeeklyRepeatCommand
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.AlarmUI
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.RingtoneUI
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.TimeUI
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.WeeklyRepeatUI
+import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract
+import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract.CommandReceiver
+import org.a_cyb.sayitalarm.presentation.contracts.command.SetAlertTypeCommand
+import org.a_cyb.sayitalarm.presentation.contracts.command.SetLabelCommand
+import org.a_cyb.sayitalarm.presentation.contracts.command.SetRingtoneCommand
+import org.a_cyb.sayitalarm.presentation.contracts.command.SetScriptsCommand
+import org.a_cyb.sayitalarm.presentation.contracts.command.SetTimeCommand
+import org.a_cyb.sayitalarm.presentation.contracts.command.SetWeeklyRepeatCommand
 
 @Composable
 fun AlarmPanel(

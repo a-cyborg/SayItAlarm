@@ -7,13 +7,13 @@
 package org.a_cyb.sayitalarm.navigation
 
 import org.a_cyb.sayitalarm.entity.AlertType
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.AlarmUI
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.AlertTypeUI
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.RingtoneUI
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.SelectableAlertType
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.SelectableRepeat
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.TimeUI
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.WeeklyRepeatUI
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.AlarmUI
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.AlertTypeUI
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.RingtoneUI
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.SelectableAlertType
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.SelectableRepeat
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.TimeUI
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.WeeklyRepeatUI
 
 object FakeAlarmUIData {
 

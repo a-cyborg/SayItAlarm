@@ -18,12 +18,12 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.test.runTest
 import org.a_cyb.sayitalarm.design_system.R
 import org.a_cyb.sayitalarm.design_system.RoborazziTest
-import org.a_cyb.sayitalarm.presentation.ListContract
-import org.a_cyb.sayitalarm.presentation.ListContract.ListState
-import org.a_cyb.sayitalarm.presentation.ListContract.ListState.Initial
-import org.a_cyb.sayitalarm.presentation.ListContract.ListState.InitialError
-import org.a_cyb.sayitalarm.presentation.ListContract.ListState.Success
-import org.a_cyb.sayitalarm.presentation.command.CommandContract
+import org.a_cyb.sayitalarm.presentation.contracts.ListContract
+import org.a_cyb.sayitalarm.presentation.contracts.ListContract.ListState
+import org.a_cyb.sayitalarm.presentation.contracts.ListContract.ListState.Initial
+import org.a_cyb.sayitalarm.presentation.contracts.ListContract.ListState.InitialError
+import org.a_cyb.sayitalarm.presentation.contracts.ListContract.ListState.Success
+import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract
 import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Test
 import org.robolectric.annotation.Config
@@ -244,6 +244,7 @@ private class ListViewModelFake(
 
     private val _state: MutableStateFlow<ListState> = MutableStateFlow(Initial)
     override val state: StateFlow<ListState> = _state
+    override val isOfflineAvailable: StateFlow<Boolean> = MutableStateFlow(true)
 
     private var _invokedType: InvokedType = InvokedType.NONE
     val invokedType: InvokedType
@@ -274,6 +275,8 @@ private class ListViewModelFake(
 
         updateState()
     }
+
+    override fun downloadRecognizerModel() {}
 
     override fun <T : CommandContract.CommandReceiver> runCommand(command: CommandContract.Command<T>) {
         @Suppress("UNCHECKED_CAST")

@@ -23,13 +23,13 @@ import org.a_cyb.sayitalarm.design_system.atom.TextDisplayStandardLarge
 import org.a_cyb.sayitalarm.design_system.atom.TextDisplayStandardSmall
 import org.a_cyb.sayitalarm.design_system.atom.TextTitleStandardLarge
 import org.a_cyb.sayitalarm.design_system.token.Brush
-import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmUiState.Error
-import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmUiState.Initial
-import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmUiState.Ringing
-import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmUiState.Stopped
-import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmViewModel
-import org.a_cyb.sayitalarm.presentation.command.SnoozeCommand
-import org.a_cyb.sayitalarm.presentation.command.StartSayItCommand
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmContract.AlarmUiState.Error
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmContract.AlarmUiState.Initial
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmContract.AlarmUiState.Ringing
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmContract.AlarmUiState.Stopped
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmContract.AlarmViewModel
+import org.a_cyb.sayitalarm.presentation.contracts.command.SnoozeCommand
+import org.a_cyb.sayitalarm.presentation.contracts.command.StartSayItCommand
 
 @Composable
 fun AlarmScreen(

@@ -20,15 +20,15 @@ import org.a_cyb.sayitalarm.entity.Minute
 import org.a_cyb.sayitalarm.entity.Ringtone
 import org.a_cyb.sayitalarm.entity.SayItScripts
 import org.a_cyb.sayitalarm.entity.WeeklyRepeat
-import org.a_cyb.sayitalarm.presentation.AddContract
-import org.a_cyb.sayitalarm.presentation.AddContract.AddState
-import org.a_cyb.sayitalarm.presentation.AddContract.AddState.Initial
-import org.a_cyb.sayitalarm.presentation.AddContract.AddState.Success
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.AlarmUI
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.RingtoneUI
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.SelectableRepeat
-import org.a_cyb.sayitalarm.presentation.command.CommandContract.Command
-import org.a_cyb.sayitalarm.presentation.command.CommandContract.CommandReceiver
+import org.a_cyb.sayitalarm.presentation.contracts.AddContract
+import org.a_cyb.sayitalarm.presentation.contracts.AddContract.AddState
+import org.a_cyb.sayitalarm.presentation.contracts.AddContract.AddState.Initial
+import org.a_cyb.sayitalarm.presentation.contracts.AddContract.AddState.Success
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.AlarmUI
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.RingtoneUI
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.SelectableRepeat
+import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract.Command
+import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract.CommandReceiver
 import org.a_cyb.sayitalarm.presentation.viewmodel.converter.AlarmUIConverterContract
 import org.a_cyb.sayitalarm.presentation.viewmodel.mapper.AlarmMapperContract
 

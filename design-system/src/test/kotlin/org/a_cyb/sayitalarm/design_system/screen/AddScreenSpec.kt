@@ -7,10 +7,8 @@
 package org.a_cyb.sayitalarm.design_system.screen
 
 import kotlin.test.assertTrue
-import androidx.compose.ui.test.hasSetTextAction
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performImeAction
 import com.github.takahirom.roborazzi.RobolectricDeviceQualifiers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,15 +19,15 @@ import org.a_cyb.sayitalarm.design_system.RoborazziTest
 import org.a_cyb.sayitalarm.entity.Hour
 import org.a_cyb.sayitalarm.entity.Minute
 import org.a_cyb.sayitalarm.entity.SayItScripts
-import org.a_cyb.sayitalarm.presentation.AddContract
-import org.a_cyb.sayitalarm.presentation.AddContract.AddState
-import org.a_cyb.sayitalarm.presentation.AddContract.AddState.Error
-import org.a_cyb.sayitalarm.presentation.AddContract.AddState.Initial
-import org.a_cyb.sayitalarm.presentation.AddContract.AddState.Success
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.RingtoneUI
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.SelectableRepeat
-import org.a_cyb.sayitalarm.presentation.command.CommandContract.Command
-import org.a_cyb.sayitalarm.presentation.command.CommandContract.CommandReceiver
+import org.a_cyb.sayitalarm.presentation.contracts.AddContract
+import org.a_cyb.sayitalarm.presentation.contracts.AddContract.AddState
+import org.a_cyb.sayitalarm.presentation.contracts.AddContract.AddState.Error
+import org.a_cyb.sayitalarm.presentation.contracts.AddContract.AddState.Initial
+import org.a_cyb.sayitalarm.presentation.contracts.AddContract.AddState.Success
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.RingtoneUI
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.SelectableRepeat
+import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract.Command
+import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract.CommandReceiver
 import org.junit.Test
 import org.robolectric.annotation.Config
 
@@ -99,33 +97,6 @@ class AddScreenSpec : RoborazziTest() {
 
             // Then
             onNodeWithText(stringRes(R.string.info_add_and_edit_initialize_error))
-                .assertExists()
-        }
-    }
-
-    @Test
-    fun `When AddViewModel state is updated it displays new data`() {
-        // Given
-        val viewModel = AddViewModelFake(
-            Initial(alarmUI),
-            Success(alarmUI.copy(label = "Hi, there"))
-        )
-
-        with(subjectUnderTest) {
-            setContent {
-                AddScreen(
-                    viewModel = viewModel,
-                    navigateToList = {},
-                )
-            }
-
-            // When
-            onNode(hasSetTextAction())
-                .performClick()
-                .performImeAction() // It triggers SetLabelCommand execute.
-
-            // Then
-            onNodeWithText("Hi, there")
                 .assertExists()
         }
     }

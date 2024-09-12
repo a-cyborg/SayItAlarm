@@ -8,7 +8,7 @@ package org.a_cyb.sayitalarm.design_system.screen
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import org.a_cyb.sayitalarm.presentation.SettingsContract
+import org.a_cyb.sayitalarm.presentation.contracts.SettingsContract
 
 @Preview
 @Composable

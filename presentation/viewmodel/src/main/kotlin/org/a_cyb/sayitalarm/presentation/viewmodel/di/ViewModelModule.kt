@@ -6,12 +6,12 @@
 
 package org.a_cyb.sayitalarm.presentation.viewmodel.di
 
-import org.a_cyb.sayitalarm.presentation.AddContract
-import org.a_cyb.sayitalarm.presentation.AlarmContract
-import org.a_cyb.sayitalarm.presentation.EditContract
-import org.a_cyb.sayitalarm.presentation.ListContract
-import org.a_cyb.sayitalarm.presentation.SayItContract
-import org.a_cyb.sayitalarm.presentation.SettingsContract
+import org.a_cyb.sayitalarm.presentation.contracts.AddContract
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmContract
+import org.a_cyb.sayitalarm.presentation.contracts.EditContract
+import org.a_cyb.sayitalarm.presentation.contracts.ListContract
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract
+import org.a_cyb.sayitalarm.presentation.contracts.SettingsContract
 import org.a_cyb.sayitalarm.presentation.viewmodel.AddViewModel
 import org.a_cyb.sayitalarm.presentation.viewmodel.AlarmViewModel
 import org.a_cyb.sayitalarm.presentation.viewmodel.EditViewModel

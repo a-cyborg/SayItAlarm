@@ -24,19 +24,16 @@ import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
 import org.a_cyb.sayitalarm.entity.AlertType
 import org.a_cyb.sayitalarm.entity.Hour
 import org.a_cyb.sayitalarm.entity.Minute
-import org.a_cyb.sayitalarm.presentation.AddContract
-import org.a_cyb.sayitalarm.presentation.AddContract.AddState.Initial
-import org.a_cyb.sayitalarm.presentation.AddContract.AddState.Success
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.AlarmUI
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.AlertTypeUI
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.RingtoneUI
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.SelectableAlertType
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.TimeUI
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.WeeklyRepeatUI
-import org.a_cyb.sayitalarm.presentation.command.SaveCommand
-import org.a_cyb.sayitalarm.presentation.formatter.enum.EnumFormatterContract
-import org.a_cyb.sayitalarm.presentation.formatter.time.TimeFormatterContract
-import org.a_cyb.sayitalarm.presentation.formatter.weekday.WeekdayFormatterContract
+import org.a_cyb.sayitalarm.presentation.contracts.AddContract
+import org.a_cyb.sayitalarm.presentation.contracts.AddContract.AddState.Initial
+import org.a_cyb.sayitalarm.presentation.contracts.AddContract.AddState.Success
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.AlarmUI
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.AlertTypeUI
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.RingtoneUI
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.SelectableAlertType
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.TimeUI
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.WeeklyRepeatUI
+import org.a_cyb.sayitalarm.presentation.contracts.command.SaveCommand
 import org.a_cyb.sayitalarm.presentation.viewmodel.converter.AlarmUiConverter
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.AlertTypeFormatterFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.FakeAlarmData
@@ -56,9 +53,9 @@ class AddViewModelSpec {
 
     private val fixture = kotlinFixture()
 
-    private val timeFormatter: TimeFormatterContract = TimeFormatterFake()
-    private val weeklyRepeatFormatter: WeekdayFormatterContract = WeekdayFormatterFake()
-    private val alertTypeFormatter: EnumFormatterContract.AlertTypeFormatter = AlertTypeFormatterFake()
+    private val timeFormatter: org.a_cyb.sayitalarm.util.formatter.time.TimeFormatterContract = TimeFormatterFake()
+    private val weeklyRepeatFormatter: org.a_cyb.sayitalarm.util.formatter.weekday.WeekdayFormatterContract = WeekdayFormatterFake()
+    private val alertTypeFormatter: org.a_cyb.sayitalarm.util.formatter.enum.EnumFormatterContract.AlertTypeFormatter = AlertTypeFormatterFake()
     private val ringtoneResolver: RingtoneResolverContract = RingtoneResolverFake()
     private val mapper: AlarmMapperContract =
         AlarmMapper(timeFormatter, weeklyRepeatFormatter, alertTypeFormatter, ringtoneResolver)

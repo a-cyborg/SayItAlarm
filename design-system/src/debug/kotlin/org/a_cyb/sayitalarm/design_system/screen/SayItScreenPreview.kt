@@ -10,20 +10,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import org.a_cyb.sayitalarm.design_system.token.Color
-import org.a_cyb.sayitalarm.presentation.SayItContract
-import org.a_cyb.sayitalarm.presentation.SayItContract.SayItState
-import org.a_cyb.sayitalarm.presentation.SayItContract.SayItState.Error
-import org.a_cyb.sayitalarm.presentation.SayItContract.SayItState.Finished
-import org.a_cyb.sayitalarm.presentation.SayItContract.SayItState.Initial
-import org.a_cyb.sayitalarm.presentation.SayItContract.SayItState.Processing
-import org.a_cyb.sayitalarm.presentation.SayItContract.SttStatus
-import org.a_cyb.sayitalarm.presentation.command.CommandContract
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItState
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItState.Error
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItState.Finished
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItState.Initial
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItState.Processing
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SttStatus
+import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract
 
 @Preview
 @Composable
 fun SayItScreenPreview_Processing_Ready() {
-    Color.useDarkTheme()
+    // Color.useDarkTheme()
     val state = Processing(sayItInfo)
     SayItScreen(viewModel = SayItViewModelFake(state))
 }
@@ -69,16 +68,23 @@ fun SayItScreenPreview_Initial() {
 
 private class SayItViewModelFake(state: SayItState) : SayItContract.SayItViewModel {
     override val state: StateFlow<SayItState> = MutableStateFlow(state)
-    override val isOffline: StateFlow<SayItContract.IsOffline> = MutableStateFlow(SayItContract.IsOffline.False)
+    override val isOffline: StateFlow<SayItContract.IsOffline> = MutableStateFlow(SayItContract.IsOffline.True)
 
     override fun processScript() {}
     override fun finish() {}
     override fun <T : CommandContract.CommandReceiver> runCommand(command: CommandContract.Command<T>) {}
 }
 
+// private val sayItInfo = SayItContract.SayItInfo(
+//     script = "I embrace this hour with enthusiasm.",
+//     sttResult = "I embrace this",
+//     status = SttStatus.READY,
+//     count = SayItContract.Count(3, 7)
+// )
+
 private val sayItInfo = SayItContract.SayItInfo(
-    script = "I embrace this hour with enthusiasm.",
-    sttResult = "I embrace this",
+    script = "All I need is within me right now.",
+    sttResult = "All I need is",
     status = SttStatus.READY,
     count = SayItContract.Count(3, 7)
 )

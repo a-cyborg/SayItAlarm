@@ -36,7 +36,7 @@ import org.a_cyb.sayitalarm.design_system.FakeAlarmUIData
 import org.a_cyb.sayitalarm.design_system.R
 import org.a_cyb.sayitalarm.design_system.organism.CommandExecutorFake.InvokedType
 import org.a_cyb.sayitalarm.design_system.roborazziOf
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.WeeklyRepeatUI
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.WeeklyRepeatUI
 import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Rule
 import org.junit.Test

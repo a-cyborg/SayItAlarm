@@ -52,16 +52,16 @@ import org.a_cyb.sayitalarm.design_system.molecule.TopAppBarLarge
 import org.a_cyb.sayitalarm.design_system.screen.ListScreenMode.EDIT
 import org.a_cyb.sayitalarm.design_system.screen.ListScreenMode.VIEW
 import org.a_cyb.sayitalarm.design_system.token.Color
-import org.a_cyb.sayitalarm.presentation.ListContract
-import org.a_cyb.sayitalarm.presentation.ListContract.ListState.Error
-import org.a_cyb.sayitalarm.presentation.ListContract.ListState.InitialError
-import org.a_cyb.sayitalarm.presentation.ListContract.ListState.Success
-import org.a_cyb.sayitalarm.presentation.ListContract.ListViewModel
-import org.a_cyb.sayitalarm.presentation.command.CommandContract
-import org.a_cyb.sayitalarm.presentation.command.CommandContract.CommandReceiver
-import org.a_cyb.sayitalarm.presentation.command.DeleteAlarmCommand
-import org.a_cyb.sayitalarm.presentation.command.DownloadRecognizerModelCommand
-import org.a_cyb.sayitalarm.presentation.command.SetEnabledCommand
+import org.a_cyb.sayitalarm.presentation.contracts.ListContract
+import org.a_cyb.sayitalarm.presentation.contracts.ListContract.ListState.Error
+import org.a_cyb.sayitalarm.presentation.contracts.ListContract.ListState.InitialError
+import org.a_cyb.sayitalarm.presentation.contracts.ListContract.ListState.Success
+import org.a_cyb.sayitalarm.presentation.contracts.ListContract.ListViewModel
+import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract
+import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract.CommandReceiver
+import org.a_cyb.sayitalarm.presentation.contracts.command.DeleteAlarmCommand
+import org.a_cyb.sayitalarm.presentation.contracts.command.DownloadRecognizerModelCommand
+import org.a_cyb.sayitalarm.presentation.contracts.command.SetEnabledCommand
 
 enum class ListScreenMode { EDIT, VIEW }
 

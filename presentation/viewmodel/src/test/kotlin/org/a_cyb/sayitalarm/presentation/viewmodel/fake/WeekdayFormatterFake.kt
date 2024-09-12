@@ -6,8 +6,8 @@
 
 package org.a_cyb.sayitalarm.presentation.viewmodel.fake
 
-import org.a_cyb.sayitalarm.presentation.formatter.weekday.WeekdayFormatter
-import org.a_cyb.sayitalarm.presentation.formatter.weekday.WeekdayFormatterContract
+import org.a_cyb.sayitalarm.util.formatter.weekday.WeekdayFormatter
+import org.a_cyb.sayitalarm.util.formatter.weekday.WeekdayFormatterContract
 
 class WeekdayFormatterFake : WeekdayFormatterContract {
 

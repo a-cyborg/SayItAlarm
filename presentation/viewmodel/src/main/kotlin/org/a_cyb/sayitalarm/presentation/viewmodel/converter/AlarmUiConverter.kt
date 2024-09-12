@@ -8,13 +8,13 @@ package org.a_cyb.sayitalarm.presentation.viewmodel.converter
 
 import org.a_cyb.sayitalarm.entity.Hour
 import org.a_cyb.sayitalarm.entity.Minute
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.AlertTypeUI
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.SelectableAlertType
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.SelectableRepeat
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.TimeUI
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.WeeklyRepeatUI
-import org.a_cyb.sayitalarm.presentation.formatter.time.TimeFormatterContract
-import org.a_cyb.sayitalarm.presentation.formatter.weekday.WeekdayFormatterContract
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.AlertTypeUI
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.SelectableAlertType
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.SelectableRepeat
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.TimeUI
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.WeeklyRepeatUI
+import org.a_cyb.sayitalarm.util.formatter.time.TimeFormatterContract
+import org.a_cyb.sayitalarm.util.formatter.weekday.WeekdayFormatterContract
 
 class AlarmUiConverter(
     private val timeFormatter: TimeFormatterContract,

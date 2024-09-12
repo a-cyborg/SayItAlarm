@@ -19,7 +19,7 @@ android {
 
     dependencies {
         implementation(projects.entity)
-        implementation(projects.presentation)
+        implementation(projects.presentation.contracts)
 
         implementation(libs.androidx.compose.material3)
         implementation(libs.accompanist.permissions)

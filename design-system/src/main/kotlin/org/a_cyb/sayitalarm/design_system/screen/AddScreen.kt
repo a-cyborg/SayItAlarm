@@ -18,9 +18,9 @@ import org.a_cyb.sayitalarm.design_system.molecule.PermissionLauncher
 import org.a_cyb.sayitalarm.design_system.molecule.TextBoxWarningTitle
 import org.a_cyb.sayitalarm.design_system.molecule.TopAppBarLarge
 import org.a_cyb.sayitalarm.design_system.organism.AlarmPanel
-import org.a_cyb.sayitalarm.presentation.AddContract
-import org.a_cyb.sayitalarm.presentation.AddContract.AddState.Error
-import org.a_cyb.sayitalarm.presentation.command.SaveCommand
+import org.a_cyb.sayitalarm.presentation.contracts.AddContract
+import org.a_cyb.sayitalarm.presentation.contracts.AddContract.AddState.Error
+import org.a_cyb.sayitalarm.presentation.contracts.command.SaveCommand
 
 @Composable
 fun AddScreen(

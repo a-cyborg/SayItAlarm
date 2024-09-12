@@ -9,9 +9,9 @@ package org.a_cyb.sayitalarm.design_system.organism
 import org.a_cyb.sayitalarm.entity.Hour
 import org.a_cyb.sayitalarm.entity.Minute
 import org.a_cyb.sayitalarm.entity.SayItScripts
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract
-import org.a_cyb.sayitalarm.presentation.command.AlarmPanelCommandContractAll
-import org.a_cyb.sayitalarm.presentation.command.CommandContract
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract
+import org.a_cyb.sayitalarm.presentation.contracts.command.AlarmPanelCommandContractAll
+import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract
 
 class CommandExecutorFake :
     AlarmPanelCommandContractAll,

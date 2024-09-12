@@ -24,11 +24,11 @@ import io.mockk.mockk
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
 import org.a_cyb.sayitalarm.design_system.R
-import org.a_cyb.sayitalarm.presentation.AddContract
-import org.a_cyb.sayitalarm.presentation.AddContract.AddState
-import org.a_cyb.sayitalarm.presentation.EditContract
-import org.a_cyb.sayitalarm.presentation.ListContract
-import org.a_cyb.sayitalarm.presentation.SettingsContract
+import org.a_cyb.sayitalarm.presentation.contracts.AddContract
+import org.a_cyb.sayitalarm.presentation.contracts.AddContract.AddState
+import org.a_cyb.sayitalarm.presentation.contracts.EditContract
+import org.a_cyb.sayitalarm.presentation.contracts.ListContract
+import org.a_cyb.sayitalarm.presentation.contracts.SettingsContract
 import org.a_cyb.sayitalarm.presentation.viewmodel.AddViewModel
 import org.a_cyb.sayitalarm.presentation.viewmodel.EditViewModel
 import org.a_cyb.sayitalarm.presentation.viewmodel.ListViewModel
@@ -73,7 +73,8 @@ class SiaNavHostSpec {
     @Test
     fun `It start from ListScreen`() {
         with(composeTestRule) {
-            onNodeWithText(getStringRes(R.string.edit)).assertExists().assertHasClickAction()
+            onNodeWithText(getStringRes(R.string.edit)).assertExists()
+                .assertHasClickAction()
             onNodeWithContentDescription(getStringRes(R.string.action_open_settings)).assertExists()
                 .assertHasClickAction()
             onNodeWithContentDescription(getStringRes(R.string.action_add_alarm)).assertExists()

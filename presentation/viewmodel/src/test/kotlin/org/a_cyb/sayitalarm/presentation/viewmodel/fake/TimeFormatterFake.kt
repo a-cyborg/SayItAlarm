@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import org.a_cyb.sayitalarm.entity.Hour
 import org.a_cyb.sayitalarm.entity.Minute
-import org.a_cyb.sayitalarm.presentation.formatter.time.TimeFormatterContract
+import org.a_cyb.sayitalarm.util.formatter.time.TimeFormatterContract
 
 class TimeFormatterFake : TimeFormatterContract {
 

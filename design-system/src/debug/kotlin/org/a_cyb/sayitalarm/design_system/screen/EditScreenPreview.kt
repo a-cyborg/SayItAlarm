@@ -14,11 +14,11 @@ import org.a_cyb.sayitalarm.design_system.organism.FakeAlarmUIData
 import org.a_cyb.sayitalarm.entity.Hour
 import org.a_cyb.sayitalarm.entity.Minute
 import org.a_cyb.sayitalarm.entity.SayItScripts
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract
-import org.a_cyb.sayitalarm.presentation.EditContract.EditViewModel
-import org.a_cyb.sayitalarm.presentation.EditContract.EditViewModel.EditState
-import org.a_cyb.sayitalarm.presentation.EditContract.EditViewModel.EditState.Success
-import org.a_cyb.sayitalarm.presentation.command.CommandContract
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract
+import org.a_cyb.sayitalarm.presentation.contracts.EditContract.EditViewModel
+import org.a_cyb.sayitalarm.presentation.contracts.EditContract.EditViewModel.EditState
+import org.a_cyb.sayitalarm.presentation.contracts.EditContract.EditViewModel.EditState.Success
+import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract
 
 @Preview
 @Composable

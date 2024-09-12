@@ -15,17 +15,17 @@ import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
 import org.a_cyb.sayitalarm.entity.Alarm
 import org.a_cyb.sayitalarm.entity.Label
 import org.a_cyb.sayitalarm.entity.WeeklyRepeat
-import org.a_cyb.sayitalarm.presentation.ListContract
-import org.a_cyb.sayitalarm.presentation.ListContract.AlarmInfo
-import org.a_cyb.sayitalarm.presentation.ListContract.ListState
-import org.a_cyb.sayitalarm.presentation.ListContract.ListState.Error
-import org.a_cyb.sayitalarm.presentation.ListContract.ListState.Initial
-import org.a_cyb.sayitalarm.presentation.ListContract.ListState.InitialError
-import org.a_cyb.sayitalarm.presentation.ListContract.ListState.Success
-import org.a_cyb.sayitalarm.presentation.ListContract.ListStateWithContent
-import org.a_cyb.sayitalarm.presentation.command.CommandContract
-import org.a_cyb.sayitalarm.presentation.formatter.time.TimeFormatterContract
-import org.a_cyb.sayitalarm.presentation.formatter.weekday.WeekdayFormatterContract
+import org.a_cyb.sayitalarm.presentation.contracts.ListContract
+import org.a_cyb.sayitalarm.presentation.contracts.ListContract.AlarmInfo
+import org.a_cyb.sayitalarm.presentation.contracts.ListContract.ListState
+import org.a_cyb.sayitalarm.presentation.contracts.ListContract.ListState.Error
+import org.a_cyb.sayitalarm.presentation.contracts.ListContract.ListState.Initial
+import org.a_cyb.sayitalarm.presentation.contracts.ListContract.ListState.InitialError
+import org.a_cyb.sayitalarm.presentation.contracts.ListContract.ListState.Success
+import org.a_cyb.sayitalarm.presentation.contracts.ListContract.ListStateWithContent
+import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract
+import org.a_cyb.sayitalarm.util.formatter.time.TimeFormatterContract
+import org.a_cyb.sayitalarm.util.formatter.weekday.WeekdayFormatterContract
 
 class ListViewModel(
     private val interactor: InteractorContract.ListInteractor,

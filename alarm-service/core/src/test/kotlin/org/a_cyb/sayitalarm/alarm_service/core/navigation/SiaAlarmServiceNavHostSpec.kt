@@ -24,10 +24,10 @@ import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.a_cyb.sayitalarm.design_system.R
-import org.a_cyb.sayitalarm.presentation.AlarmContract
-import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmUiState
-import org.a_cyb.sayitalarm.presentation.SayItContract
-import org.a_cyb.sayitalarm.presentation.SayItContract.SttStatus
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmContract
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmContract.AlarmUiState
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SttStatus
 import org.a_cyb.sayitalarm.presentation.viewmodel.AlarmViewModel
 import org.a_cyb.sayitalarm.presentation.viewmodel.SayItViewModel
 import org.junit.After

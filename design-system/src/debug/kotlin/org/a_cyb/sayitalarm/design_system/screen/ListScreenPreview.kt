@@ -10,10 +10,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import org.a_cyb.sayitalarm.presentation.ListContract
-import org.a_cyb.sayitalarm.presentation.ListContract.ListState
-import org.a_cyb.sayitalarm.presentation.ListContract.ListState.Success
-import org.a_cyb.sayitalarm.presentation.command.CommandContract
+import org.a_cyb.sayitalarm.presentation.contracts.ListContract
+import org.a_cyb.sayitalarm.presentation.contracts.ListContract.ListState
+import org.a_cyb.sayitalarm.presentation.contracts.ListContract.ListState.Success
+import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract
 
 @Preview
 @Composable

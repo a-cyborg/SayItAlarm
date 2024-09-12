@@ -19,15 +19,15 @@ import org.a_cyb.sayitalarm.entity.Alarm
 import org.a_cyb.sayitalarm.entity.Hour
 import org.a_cyb.sayitalarm.entity.Minute
 import org.a_cyb.sayitalarm.entity.SayItScripts
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.AlarmUI
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.RingtoneUI
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.SelectableRepeat
-import org.a_cyb.sayitalarm.presentation.EditContract
-import org.a_cyb.sayitalarm.presentation.EditContract.EditViewModel.EditState
-import org.a_cyb.sayitalarm.presentation.EditContract.EditViewModel.EditState.Error
-import org.a_cyb.sayitalarm.presentation.EditContract.EditViewModel.EditState.Initial
-import org.a_cyb.sayitalarm.presentation.EditContract.EditViewModel.EditState.Success
-import org.a_cyb.sayitalarm.presentation.command.CommandContract
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.AlarmUI
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.RingtoneUI
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.SelectableRepeat
+import org.a_cyb.sayitalarm.presentation.contracts.EditContract
+import org.a_cyb.sayitalarm.presentation.contracts.EditContract.EditViewModel.EditState
+import org.a_cyb.sayitalarm.presentation.contracts.EditContract.EditViewModel.EditState.Error
+import org.a_cyb.sayitalarm.presentation.contracts.EditContract.EditViewModel.EditState.Initial
+import org.a_cyb.sayitalarm.presentation.contracts.EditContract.EditViewModel.EditState.Success
+import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract
 import org.a_cyb.sayitalarm.presentation.viewmodel.converter.AlarmUIConverterContract
 import org.a_cyb.sayitalarm.presentation.viewmodel.mapper.AlarmMapperContract
 

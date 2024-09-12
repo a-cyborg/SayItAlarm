@@ -16,16 +16,16 @@ import org.a_cyb.sayitalarm.entity.Settings
 import org.a_cyb.sayitalarm.entity.Snooze
 import org.a_cyb.sayitalarm.entity.Theme
 import org.a_cyb.sayitalarm.entity.TimeOut
-import org.a_cyb.sayitalarm.presentation.SettingsContract
-import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState
-import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState.Error
-import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState.Initial
-import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState.Success
-import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsUI
-import org.a_cyb.sayitalarm.presentation.SettingsContract.TimeInput
-import org.a_cyb.sayitalarm.presentation.command.CommandContract
-import org.a_cyb.sayitalarm.presentation.formatter.duration.DurationFormatterContract
-import org.a_cyb.sayitalarm.presentation.link_opener.LinkOpenerContract
+import org.a_cyb.sayitalarm.presentation.contracts.SettingsContract
+import org.a_cyb.sayitalarm.presentation.contracts.SettingsContract.SettingsState
+import org.a_cyb.sayitalarm.presentation.contracts.SettingsContract.SettingsState.Error
+import org.a_cyb.sayitalarm.presentation.contracts.SettingsContract.SettingsState.Initial
+import org.a_cyb.sayitalarm.presentation.contracts.SettingsContract.SettingsState.Success
+import org.a_cyb.sayitalarm.presentation.contracts.SettingsContract.SettingsUI
+import org.a_cyb.sayitalarm.presentation.contracts.SettingsContract.TimeInput
+import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract
+import org.a_cyb.sayitalarm.util.formatter.duration.DurationFormatterContract
+import org.a_cyb.sayitalarm.util.link_opener.LinkOpenerContract
 
 class SettingsViewModel(
     private val interactor: InteractorContract.SettingsInteractor,

@@ -10,9 +10,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmUiState
-import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmViewModel
-import org.a_cyb.sayitalarm.presentation.command.CommandContract
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmContract.AlarmUiState
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmContract.AlarmViewModel
+import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract
 
 @Preview
 @Composable

@@ -13,16 +13,16 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.takeWhile
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController.ControllerState
-import org.a_cyb.sayitalarm.presentation.AlarmContract
-import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmUiState
-import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmUiState.Error
-import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmUiState.Initial
-import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmUiState.Ringing
-import org.a_cyb.sayitalarm.presentation.AlarmContract.AlarmUiState.Stopped
-import org.a_cyb.sayitalarm.presentation.command.CommandContract.Command
-import org.a_cyb.sayitalarm.presentation.command.CommandContract.CommandReceiver
-import org.a_cyb.sayitalarm.presentation.formatter.time.TimeFormatterContract
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmContract
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmContract.AlarmUiState
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmContract.AlarmUiState.Error
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmContract.AlarmUiState.Initial
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmContract.AlarmUiState.Ringing
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmContract.AlarmUiState.Stopped
+import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract.Command
+import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract.CommandReceiver
 import org.a_cyb.sayitalarm.presentation.viewmodel.time_flow.TimeFlowContract
+import org.a_cyb.sayitalarm.util.formatter.time.TimeFormatterContract
 
 class AlarmViewModel(
     timeFlow: TimeFlowContract,

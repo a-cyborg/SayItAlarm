@@ -27,7 +27,7 @@ dependencies {
     implementation(projects.entity)
     implementation(projects.domain.alarmService)
     implementation(projects.domain.repository)
-    implementation(projects.presentation)
+    implementation(projects.presentation.contracts)
     implementation(projects.presentation.viewmodel)
     implementation(projects.designSystem)
 

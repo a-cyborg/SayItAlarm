@@ -48,19 +48,19 @@ import org.a_cyb.sayitalarm.design_system.molecule.TextBoxWarningBody
 import org.a_cyb.sayitalarm.design_system.molecule.animateSlowFlickering
 import org.a_cyb.sayitalarm.design_system.token.Color
 import org.a_cyb.sayitalarm.design_system.token.Spacing
-import org.a_cyb.sayitalarm.presentation.SayItContract
-import org.a_cyb.sayitalarm.presentation.SayItContract.Count
-import org.a_cyb.sayitalarm.presentation.SayItContract.SayItInfo
-import org.a_cyb.sayitalarm.presentation.SayItContract.SayItState.Error
-import org.a_cyb.sayitalarm.presentation.SayItContract.SayItState.Finished
-import org.a_cyb.sayitalarm.presentation.SayItContract.SayItState.Initial
-import org.a_cyb.sayitalarm.presentation.SayItContract.SayItState.Processing
-import org.a_cyb.sayitalarm.presentation.SayItContract.SayItViewModel
-import org.a_cyb.sayitalarm.presentation.SayItContract.SttStatus
-import org.a_cyb.sayitalarm.presentation.command.CommandContract
-import org.a_cyb.sayitalarm.presentation.command.CommandContract.CommandReceiver
-import org.a_cyb.sayitalarm.presentation.command.FinishCommand
-import org.a_cyb.sayitalarm.presentation.command.ProcessScriptCommand
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.Count
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItInfo
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItState.Error
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItState.Finished
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItState.Initial
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItState.Processing
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItViewModel
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SttStatus
+import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract
+import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract.CommandReceiver
+import org.a_cyb.sayitalarm.presentation.contracts.command.FinishCommand
+import org.a_cyb.sayitalarm.presentation.contracts.command.ProcessScriptCommand
 
 @Composable
 fun SayItScreen(

@@ -41,7 +41,7 @@ import org.a_cyb.sayitalarm.design_system.atom.TextButtonDelete
 import org.a_cyb.sayitalarm.design_system.atom.TextFieldLabel
 import org.a_cyb.sayitalarm.design_system.atom.TextFieldSayItScript
 import org.a_cyb.sayitalarm.design_system.atom.TextTitleStandardLarge
-import org.a_cyb.sayitalarm.presentation.AlarmPanelContract.SelectableRepeat
+import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.SelectableRepeat
 
 @Composable
 fun <T> PopUpPickerStandardWheel(

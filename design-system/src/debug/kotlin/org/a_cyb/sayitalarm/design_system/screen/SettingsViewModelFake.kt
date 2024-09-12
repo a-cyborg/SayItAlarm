@@ -11,13 +11,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.a_cyb.sayitalarm.entity.Snooze
 import org.a_cyb.sayitalarm.entity.TimeOut
-import org.a_cyb.sayitalarm.presentation.SettingsContract
-import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState
-import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsState.Success
-import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsUI
-import org.a_cyb.sayitalarm.presentation.SettingsContract.SettingsViewModel
-import org.a_cyb.sayitalarm.presentation.SettingsContract.TimeInput
-import org.a_cyb.sayitalarm.presentation.command.CommandContract
+import org.a_cyb.sayitalarm.presentation.contracts.SettingsContract
+import org.a_cyb.sayitalarm.presentation.contracts.SettingsContract.SettingsState
+import org.a_cyb.sayitalarm.presentation.contracts.SettingsContract.SettingsState.Success
+import org.a_cyb.sayitalarm.presentation.contracts.SettingsContract.SettingsUI
+import org.a_cyb.sayitalarm.presentation.contracts.SettingsContract.SettingsViewModel
+import org.a_cyb.sayitalarm.presentation.contracts.SettingsContract.TimeInput
+import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract
 
 @Suppress("EmptyFunctionBlock")
 class SettingsViewModelFake(
