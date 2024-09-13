@@ -22,8 +22,6 @@ import org.a_cyb.sayitalarm.presentation.viewmodel.converter.AlarmUIConverterCon
 import org.a_cyb.sayitalarm.presentation.viewmodel.converter.AlarmUiConverter
 import org.a_cyb.sayitalarm.presentation.viewmodel.mapper.AlarmMapper
 import org.a_cyb.sayitalarm.presentation.viewmodel.mapper.AlarmMapperContract
-import org.a_cyb.sayitalarm.presentation.viewmodel.time_flow.TimeFlow
-import org.a_cyb.sayitalarm.presentation.viewmodel.time_flow.TimeFlowContract
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.module.Module
 import org.koin.dsl.bind
@@ -60,9 +58,5 @@ val viewModelModule: Module = module {
 
     factory<AlarmUIConverterContract> {
         AlarmUiConverter(get(), get())
-    }
-
-    factory<TimeFlowContract> {
-        TimeFlow
     }
 }

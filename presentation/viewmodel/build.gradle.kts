@@ -24,6 +24,7 @@ dependencies {
     implementation(projects.util.linkOpener)
     implementation(projects.util.soundEffectPlayer)
     implementation(projects.util.ringtoneResolver)
+    implementation(projects.util.timeFlow)
 
     coreLibraryDesugaring(libs.android.tools.desugarJdk)
     implementation(libs.androidx.lifecycle.viewmodelAndroid)

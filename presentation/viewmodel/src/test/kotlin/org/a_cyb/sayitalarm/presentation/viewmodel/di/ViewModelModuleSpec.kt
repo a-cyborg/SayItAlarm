@@ -25,9 +25,9 @@ import org.a_cyb.sayitalarm.presentation.contracts.ListContract
 import org.a_cyb.sayitalarm.presentation.contracts.SayItContract
 import org.a_cyb.sayitalarm.presentation.contracts.SettingsContract
 import org.a_cyb.sayitalarm.presentation.viewmodel.mapper.AlarmMapperContract
-import org.a_cyb.sayitalarm.presentation.viewmodel.time_flow.TimeFlowContract
 import org.a_cyb.sayitalarm.util.formatter.time.TimeFormatterContract
 import org.a_cyb.sayitalarm.util.formatter.weekday.WeekdayFormatterContract
+import org.a_cyb.sayitalarm.util.time_flow.TimeFlowContract
 import org.koin.core.parameter.parametersOf
 import org.koin.dsl.koinApplication
 import org.koin.dsl.module
@@ -149,6 +149,7 @@ class ViewModelModuleSpec {
         // Given
         val externalModule = module {
             single<AlarmServiceContract.AlarmServiceController> { mockk(relaxed = true) }
+            single<TimeFlowContract> { mockk(relaxed = true) }
         }
 
         val koinApp = koinApplication {
@@ -191,21 +192,5 @@ class ViewModelModuleSpec {
 
         // Then
         assertNotNull(viewModel)
-    }
-
-    @Test
-    fun `It injects TimeFlow`() {
-        // Given
-        val koinApp = koinApplication {
-            modules(
-                viewModelModule,
-            )
-        }
-
-        // When
-        val timeFlow = koinApp.koin.getOrNull<TimeFlowContract>()
-
-        // Then
-        assertNotNull(timeFlow)
     }
 }

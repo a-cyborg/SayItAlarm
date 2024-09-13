@@ -36,4 +36,5 @@ include(
     ":util:sound-effect-player",
     ":util:formatter",
     ":util:ringtone-resolver",
+    ":util:time-flow"
 )

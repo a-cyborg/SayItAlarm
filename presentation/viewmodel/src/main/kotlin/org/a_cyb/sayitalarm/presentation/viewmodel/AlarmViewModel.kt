@@ -21,8 +21,8 @@ import org.a_cyb.sayitalarm.presentation.contracts.AlarmContract.AlarmUiState.Ri
 import org.a_cyb.sayitalarm.presentation.contracts.AlarmContract.AlarmUiState.Stopped
 import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract.Command
 import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract.CommandReceiver
-import org.a_cyb.sayitalarm.presentation.viewmodel.time_flow.TimeFlowContract
 import org.a_cyb.sayitalarm.util.formatter.time.TimeFormatterContract
+import org.a_cyb.sayitalarm.util.time_flow.TimeFlowContract
 
 class AlarmViewModel(
     timeFlow: TimeFlowContract,
