@@ -36,7 +36,7 @@ class AlarmViewModel(
         .stateIn(
             scope = scope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = ""
+            initialValue = "",
         )
 
     override val state: StateFlow<AlarmUiState> = serviceController.controllerState
@@ -44,7 +44,7 @@ class AlarmViewModel(
         .stateIn(
             scope = scope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = Initial
+            initialValue = Initial,
         )
 
     private fun mapToState(controllerState: ControllerState): AlarmUiState =

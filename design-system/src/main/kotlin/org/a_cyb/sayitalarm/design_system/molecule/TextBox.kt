@@ -34,7 +34,7 @@ import org.a_cyb.sayitalarm.design_system.token.Spacing
 fun TextBoxTitleAndInfo(title: String, info: String = "") {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.padding(horizontal = Spacing.m)
+        modifier = Modifier.padding(horizontal = Spacing.m),
     ) {
         TextTitleStandardLarge(text = title)
         SpacerLarge()
@@ -130,7 +130,6 @@ fun TextBoxStatusHeaderError() {
     )
 }
 
-
 @Composable
 private fun TextRowHeaderStatusBox(
     headerTitle: @Composable () -> Unit,
@@ -148,4 +147,3 @@ private fun TextRowHeaderStatusBox(
         }
     }
 }
-

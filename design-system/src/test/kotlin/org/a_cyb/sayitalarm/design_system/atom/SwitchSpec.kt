@@ -6,7 +6,6 @@
 
 package org.a_cyb.sayitalarm.design_system.atom
 
-import kotlin.test.assertFalse
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.SemanticsMatcher
@@ -14,6 +13,7 @@ import androidx.compose.ui.test.assertIsOn
 import androidx.compose.ui.test.performClick
 import org.a_cyb.sayitalarm.design_system.RoborazziTest
 import org.junit.Test
+import kotlin.test.assertFalse
 
 class SwitchSpec : RoborazziTest() {
 

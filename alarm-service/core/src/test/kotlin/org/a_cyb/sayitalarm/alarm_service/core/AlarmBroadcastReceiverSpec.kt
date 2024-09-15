@@ -6,8 +6,6 @@
 
 package org.a_cyb.sayitalarm.alarm_service.core
 
-import kotlin.test.Test
-import kotlin.test.assertTrue
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.ACTION_BOOT_COMPLETED
@@ -23,6 +21,8 @@ import io.mockk.verify
 import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Before
 import org.junit.runner.RunWith
+import kotlin.test.Test
+import kotlin.test.assertTrue
 
 @RunWith(AndroidJUnit4::class)
 class AlarmBroadcastReceiverSpec {
@@ -86,7 +86,7 @@ class AlarmBroadcastReceiverSpec {
         val resolvedInfo = context.packageManager
             .queryBroadcastReceivers(
                 Intent("android.intent.action.BOOT_COMPLETED"),
-                0
+                0,
             )
 
         assertTrue(isContainsAlarmBroadcastReceiver(resolvedInfo))
@@ -97,7 +97,7 @@ class AlarmBroadcastReceiverSpec {
         val resolvedInfo = context.packageManager
             .queryBroadcastReceivers(
                 Intent("android.intent.action.TIMEZONE_CHANGED"),
-                0
+                0,
             )
 
         assertTrue(isContainsAlarmBroadcastReceiver(resolvedInfo))
@@ -108,7 +108,7 @@ class AlarmBroadcastReceiverSpec {
         val resolvedInfo = context.packageManager
             .queryBroadcastReceivers(
                 Intent("android.intent.action.LOCKED_BOOT_COMPLETED"),
-                0
+                0,
             )
 
         assertTrue(isContainsAlarmBroadcastReceiver(resolvedInfo))
@@ -119,7 +119,7 @@ class AlarmBroadcastReceiverSpec {
         val resolvedInfo = context.packageManager
             .queryBroadcastReceivers(
                 Intent("org.a_cyb.sayitalarm.DELIVER_ALARM"),
-                0
+                0,
             )
 
         assertTrue(isContainsAlarmBroadcastReceiver(resolvedInfo))

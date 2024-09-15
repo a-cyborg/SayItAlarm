@@ -72,7 +72,7 @@ class TopAppBarSpec : RoborazziTest() {
                         TextButtonEdit {}
                         IconButtonAdd {}
                         IconButtonSettings {}
-                    }
+                    },
                 )
             }
 

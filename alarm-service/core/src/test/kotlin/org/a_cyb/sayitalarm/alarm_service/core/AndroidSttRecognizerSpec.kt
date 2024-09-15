@@ -6,7 +6,6 @@
 
 package org.a_cyb.sayitalarm.alarm_service.core
 
-import kotlin.test.Test
 import android.content.Context
 import android.content.Intent
 import android.speech.RecognizerIntent.EXTRA_CALLING_PACKAGE
@@ -27,6 +26,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
+import kotlin.test.Test
 
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [33])

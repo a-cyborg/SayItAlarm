@@ -87,7 +87,7 @@ fun ListScreen(
             onEditClick = { mode = EDIT },
             onDoneClick = { mode = VIEW },
             onAddClick = navigateToAdd,
-            onSettingsClick = navigateToSettings
+            onSettingsClick = navigateToSettings,
         )
         SpacerLarge()
         when (state.value) {
@@ -105,7 +105,7 @@ fun ListScreen(
                             alarmInfo = it,
                             screenMode = mode,
                             navigateToEdit = { navigateToEdit(it.id) },
-                            executor = { command -> viewModel.runCommand(command) }
+                            executor = { command -> viewModel.runCommand(command) },
                         )
                     }
 
@@ -143,7 +143,7 @@ private fun ListTopAppBar(
             }
             IconButtonAdd { onAddClick() }
             IconButtonSettings { onSettingsClick() }
-        }
+        },
     )
 }
 
@@ -165,7 +165,7 @@ private fun AlarmListItem(
         content = {
             AlarmInfo(
                 time = alarmInfo.time,
-                labelAndRepeat = alarmInfo.labelAndWeeklyRepeat
+                labelAndRepeat = alarmInfo.labelAndWeeklyRepeat,
             )
         },
         afterContent = {
@@ -180,7 +180,7 @@ private fun AlarmListItem(
                     SpacerMedium()
                 }
             }
-        }
+        },
     )
     DividerStandard()
     SpacerLarge()

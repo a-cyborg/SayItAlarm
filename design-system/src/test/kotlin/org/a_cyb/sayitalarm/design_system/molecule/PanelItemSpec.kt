@@ -71,7 +71,7 @@ class PanelItemSpec {
                 info = getString(id = R.string.info_timeout),
                 values = listOf("3hr"),
                 selectedItemIdx = 0,
-                popUpPickerOnConfirm = { _ -> }
+                popUpPickerOnConfirm = { _ -> },
             )
         }
 
@@ -88,7 +88,7 @@ class PanelItemSpec {
                 info = getString(id = R.string.info_timeout),
                 values = listOf("3hr"),
                 selectedItemIdx = 0,
-                popUpPickerOnConfirm = { _ -> }
+                popUpPickerOnConfirm = { _ -> },
             )
         }
 
@@ -153,7 +153,7 @@ class PanelItemSpec {
             setContent {
                 PanelItemStandardClickable(
                     valueLabel = "Test",
-                    onClick = { hasBeenCalled = true }
+                    onClick = { hasBeenCalled = true },
                 )
             }
 

@@ -40,7 +40,7 @@ fun PopupPickerTimePreview() {
         hour = 8,
         minute = 30,
         onConfirm = { _, _ -> },
-        onCancel = {}
+        onCancel = {},
     )
 }
 
@@ -53,7 +53,7 @@ fun PopupPickerRepeatPreview() {
         title = stringResource(id = R.string.repeat),
         selectableRepeats = selectableRepeats,
         onConfirm = { _ -> },
-        onCancel = {}
+        onCancel = {},
     )
 }
 
@@ -74,6 +74,6 @@ fun PopupPickerSayItScriptPreview() {
         script = "Test",
         onConfirm = { _ -> },
         onCancel = {},
-        onDelete = {}
+        onDelete = {},
     )
 }

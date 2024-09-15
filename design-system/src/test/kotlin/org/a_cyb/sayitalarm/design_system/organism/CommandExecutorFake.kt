@@ -15,8 +15,7 @@ import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract
 
 class CommandExecutorFake :
     AlarmPanelCommandContractAll,
-    CommandContract.CommandExecutor
-{
+    CommandContract.CommandExecutor {
     private var _invokedType: InvokedType = InvokedType.NONE
     val invokedType: InvokedType
         get() = _invokedType

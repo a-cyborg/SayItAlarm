@@ -16,7 +16,6 @@ import org.a_cyb.sayitalarm.alarm_service.core.util.AlarmAlertWakeLock
 class AlarmBroadcastReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-
         when (intent.action) {
             AlarmScheduler.INTENT_ACTION_DELIVER_ALARM -> {
                 AlarmAlertWakeLock.acquireWakeLock(context)

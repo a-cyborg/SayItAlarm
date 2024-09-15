@@ -17,7 +17,7 @@ import org.a_cyb.sayitalarm.design_system.token.Icon
 @Composable
 fun IconButtonAdd(
     contentDescription: String = stringResource(id = R.string.action_add_alarm),
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     IconButton(onClick = onClick) {
         Icon(

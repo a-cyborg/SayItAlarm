@@ -86,5 +86,5 @@ private val sayItInfo = SayItContract.SayItInfo(
     script = "All I need is within me right now.",
     sttResult = "All I need is",
     status = SttStatus.READY,
-    count = SayItContract.Count(3, 7)
+    count = SayItContract.Count(3, 7),
 )

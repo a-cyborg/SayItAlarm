@@ -6,8 +6,6 @@
 
 package org.a_cyb.sayitalarm.data.model
 
-import kotlin.test.Test
-import java.util.Calendar
 import org.a_cyb.sayitalarm.entity.Alarm
 import org.a_cyb.sayitalarm.entity.AlarmType
 import org.a_cyb.sayitalarm.entity.AlertType
@@ -18,6 +16,8 @@ import org.a_cyb.sayitalarm.entity.Ringtone
 import org.a_cyb.sayitalarm.entity.SayItScripts
 import org.a_cyb.sayitalarm.entity.WeeklyRepeat
 import org.a_cyb.sayitalarm.util.mustBe
+import java.util.Calendar
+import kotlin.test.Test
 import org.acyb.sayitalarm.database.Alarm as AlarmDTO
 
 class AlarmSpec {
@@ -27,7 +27,7 @@ class AlarmSpec {
         // Given
         val hour = 3
         val minute = 33
-        val weeklyRepeat = 85  // 0b1010101 : [Sun, Tue, Tur, Sat].
+        val weeklyRepeat = 85 // 0b1010101 : [Sun, Tue, Tur, Sat].
         val label = "Label"
         val enabled = true
         val alertType: Long = AlertType.SOUND_ONLY.ordinal.toLong()
@@ -46,7 +46,7 @@ class AlarmSpec {
                 alertType,
                 ringtone,
                 alarmType,
-                sayItScripts
+                sayItScripts,
             )
 
         // When
@@ -63,15 +63,15 @@ class AlarmSpec {
                         Calendar.SUNDAY,
                         Calendar.TUESDAY,
                         Calendar.THURSDAY,
-                        Calendar.SATURDAY
-                    )
+                        Calendar.SATURDAY,
+                    ),
                 ),
                 label = Label(label),
                 enabled = enabled,
                 alertType = AlertType.SOUND_ONLY,
                 ringtone = Ringtone(ringtone),
                 alarmType = AlarmType.SAY_IT,
-                sayItScripts = SayItScripts(listOf("script A", "script B", "script C"))
+                sayItScripts = SayItScripts(listOf("script A", "script B", "script C")),
             )
     }
 
@@ -88,15 +88,15 @@ class AlarmSpec {
                         Calendar.SUNDAY,
                         Calendar.TUESDAY,
                         Calendar.THURSDAY,
-                        Calendar.SATURDAY
-                    )
+                        Calendar.SATURDAY,
+                    ),
                 ),
                 label = Label("Label"),
                 enabled = true,
                 alertType = AlertType.SOUND_AND_VIBRATE,
                 ringtone = Ringtone("content://media/internal/audio/media/190?title=Drip&canonical=1"),
                 alarmType = AlarmType.SAY_IT,
-                sayItScripts = SayItScripts(listOf("script A", "script B", "script C"))
+                sayItScripts = SayItScripts(listOf("script A", "script B", "script C")),
             )
 
         // When
@@ -114,7 +114,7 @@ class AlarmSpec {
                 alertType = 2,
                 ringtone = "content://media/internal/audio/media/190?title=Drip&canonical=1",
                 alarmType = 0,
-                sayItScripts = "script A,script B,script C"
+                sayItScripts = "script A,script B,script C",
             )
     }
 }

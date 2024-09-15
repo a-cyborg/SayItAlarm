@@ -6,8 +6,6 @@
 
 package org.a_cyb.sayitalarm.util.formatter.di
 
-import kotlin.test.assertNotNull
-import java.util.Locale
 import android.content.Context
 import android.icu.text.DateFormatSymbols
 import android.icu.text.ListFormatter
@@ -20,13 +18,15 @@ import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
+import org.a_cyb.sayitalarm.util.formatter.duration.DurationFormatterContract
 import org.a_cyb.sayitalarm.util.formatter.enum.EnumFormatterContract
 import org.a_cyb.sayitalarm.util.formatter.time.TimeFormatterContract
 import org.a_cyb.sayitalarm.util.formatter.weekday.WeekdayFormatterContract
-import org.a_cyb.sayitalarm.util.formatter.duration.DurationFormatterContract
 import org.junit.Test
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.koinApplication
+import java.util.Locale
+import kotlin.test.assertNotNull
 
 class FormatterModuleSpec {
 

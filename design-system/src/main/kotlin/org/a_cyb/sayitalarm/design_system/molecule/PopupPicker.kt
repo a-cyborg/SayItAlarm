@@ -100,7 +100,7 @@ fun PopupPickerRepeat(
     title: String,
     selectableRepeats: List<SelectableRepeat>,
     onConfirm: (List<SelectableRepeat>) -> Unit,
-    onCancel: () -> Unit
+    onCancel: () -> Unit,
 ) {
     val selections: MutableMap<String, Boolean> = remember {
         mutableStateMapOf(*selectableRepeats.map { it.name to it.selected }.toTypedArray())
@@ -118,7 +118,7 @@ fun PopupPickerRepeat(
                                 true -> selections[it.name] = false
                                 else -> selections[it.name] = true
                             }
-                        }
+                        },
                     )
                 }
             }
@@ -133,7 +133,7 @@ fun PopupPickerRepeat(
 
                         onConfirm(selected)
                         onCancel()
-                    }
+                    },
                 )
             }
         }
@@ -167,7 +167,7 @@ fun PopupPickerRingtone(
                     }
                 }
                 onCancel()
-            }
+            },
         )
 
     val intent = Intent(RingtoneManager.ACTION_RINGTONE_PICKER)
@@ -199,7 +199,7 @@ fun PopupPickerLabel(
             onConfirm = {
                 onConfirm(text)
                 onCancel()
-            }
+            },
         )
     }
 }
@@ -220,7 +220,7 @@ fun PopupPickerSayItScript(
             text = text,
             onValueChange = { inputStr ->
                 text = inputStr.filter { it.isLetter() || it.isWhitespace() }
-            }
+            },
         )
         SpacerMedium()
         ActionRowCancelAndConfirm(
@@ -228,7 +228,7 @@ fun PopupPickerSayItScript(
             onConfirm = {
                 onConfirm(text)
                 onCancel()
-            }
+            },
         )
         SpacerMedium()
         TextBoxWarningTitle(text = stringResource(id = R.string.info_scripts_only_letter))

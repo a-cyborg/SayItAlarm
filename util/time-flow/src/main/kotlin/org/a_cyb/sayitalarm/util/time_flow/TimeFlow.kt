@@ -6,12 +6,12 @@
 
 package org.a_cyb.sayitalarm.util.time_flow
 
-import java.time.LocalTime
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.a_cyb.sayitalarm.entity.Hour
 import org.a_cyb.sayitalarm.entity.Minute
+import java.time.LocalTime
 
 object TimeFlow : TimeFlowContract {
     override val currentTimeFlow: Flow<Pair<Hour, Minute>> = flow {

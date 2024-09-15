@@ -12,8 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import org.a_cyb.sayitalarm.design_system.atom.TextButtonCancel
 import org.a_cyb.sayitalarm.design_system.atom.IconButtonCollapse
+import org.a_cyb.sayitalarm.design_system.atom.TextButtonCancel
 import org.a_cyb.sayitalarm.design_system.atom.TextButtonConfirm
 
 @Composable
@@ -37,7 +37,7 @@ fun ActionRowCollapse(
 ) {
     Row(
         horizontalArrangement = Arrangement.End,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
     ) {
         IconButtonCollapse { onClick() }
     }

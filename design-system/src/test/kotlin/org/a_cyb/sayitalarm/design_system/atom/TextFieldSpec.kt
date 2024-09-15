@@ -16,7 +16,7 @@ class TextFieldSpec : RoborazziTest() {
         subjectUnderTest.setContent {
             TextFieldLabel(
                 text = "",
-                onValueChange = { _ -> }
+                onValueChange = { _ -> },
             )
         }
     }
@@ -26,7 +26,7 @@ class TextFieldSpec : RoborazziTest() {
         subjectUnderTest.setContent {
             TextFieldSayItScript(
                 text = "SayIt",
-                onValueChange = { _ -> }
+                onValueChange = { _ -> },
             )
         }
     }

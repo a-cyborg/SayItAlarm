@@ -108,7 +108,7 @@ class SayItViewModelSpec {
                 sttResult = "",
                 status = SttStatus.READY,
                 count = Count(1, 1),
-            )
+            ),
         )
     }
 
@@ -180,11 +180,11 @@ class SayItViewModelSpec {
             // Then
             awaitItem() mustBe Processing(
                 SayItInfo(
-                    script = scripts[1], // On success, it sets the script to the next script.
-                    count = Count(2, 3), // On success, it increases the counter.
-                    sttResult = "", // On success, it resets the SttResult.
-                    status = SttStatus.SUCCESS
-                )
+                    script = scripts[1],
+                    count = Count(2, 3),
+                    sttResult = "",
+                    status = SttStatus.SUCCESS,
+                ),
             )
             verify { soundEffectPlayer.playSuccessSoundEffect() }
         }
@@ -215,8 +215,8 @@ class SayItViewModelSpec {
                     script = scripts[0],
                     sttResult = wrongResult,
                     status = SttStatus.FAILED,
-                    count = Count(current = 1, total = 3)
-                )
+                    count = Count(current = 1, total = 3),
+                ),
             )
             verify { soundEffectPlayer.playFailureSoundEffect() }
         }
@@ -245,8 +245,8 @@ class SayItViewModelSpec {
                     script = scripts[1],
                     sttResult = "",
                     status = SttStatus.SUCCESS,
-                    count = Count(current = 2, total = 3)
-                )
+                    count = Count(current = 2, total = 3),
+                ),
             )
 
             viewModel.processScript()
@@ -255,8 +255,8 @@ class SayItViewModelSpec {
                     script = scripts[2],
                     sttResult = "",
                     status = SttStatus.SUCCESS,
-                    count = Count(current = 3, total = 3)
-                )
+                    count = Count(current = 3, total = 3),
+                ),
             )
 
             viewModel.processScript()
@@ -291,8 +291,8 @@ class SayItViewModelSpec {
                     script = script,
                     sttResult = "",
                     status = SttStatus.FAILED,
-                    count = Count(current = 1, total = 1)
-                )
+                    count = Count(current = 1, total = 1),
+                ),
             )
         }
     }

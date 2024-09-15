@@ -45,7 +45,7 @@ class EditScreenSpec : RoborazziTest() {
     fun `When EditViewModel is in Success state it displays AlarmUI`() {
         // Given
         val alarmUI = alarmUI.copy(
-            timeUI = TimeUI(3, 33, "3: 33 AM")
+            timeUI = TimeUI(3, 33, "3: 33 AM"),
         )
         val viewModel = EditViewModelFake(Success(alarmUI))
 
@@ -54,7 +54,7 @@ class EditScreenSpec : RoborazziTest() {
             setContent {
                 EditScreen(
                     viewModel = viewModel,
-                    navigateToList = {}
+                    navigateToList = {},
                 )
             }
 
@@ -89,7 +89,7 @@ class EditScreenSpec : RoborazziTest() {
         // Given
         val viewModel = EditViewModelFake(
             Success(alarmUI),
-            Success(alarmUI.copy(timeUI = TimeUI(6, 0, "6:00 AM")))
+            Success(alarmUI.copy(timeUI = TimeUI(6, 0, "6:00 AM"))),
         )
 
         with(subjectUnderTest) {
@@ -99,7 +99,6 @@ class EditScreenSpec : RoborazziTest() {
                     navigateToList = {},
                 )
             }
-
 
             onNodeWithText("8:00 AM")
                 .performClick()

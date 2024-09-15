@@ -125,10 +125,10 @@ class AlarmViewModelSpec {
         )
 
         viewModel.currentTime.test {
-            skipItems(2)  // Initial & One currentTime item
+            skipItems(2) // Initial & One currentTime item
 
             // When
-            controller.onServiceBind(mockk(), 0L)  // It goes into the Error state.
+            controller.onServiceBind(mockk(), 0L) // It goes into the Error state.
 
             // Then
             expectNoEvents()
@@ -184,10 +184,10 @@ private class AlarmServiceControllerFake(
     results: List<ControllerState> = listOf(ControllerState.Initial),
 ) : AlarmServiceController {
 
-    private val _results = results.toMutableList()
+    private val results = results.toMutableList()
 
-    private val _alarmState: MutableStateFlow<ControllerState> = MutableStateFlow(ControllerState.Initial)
-    override val controllerState: StateFlow<ControllerState> = _alarmState.asStateFlow()
+    private val _controllerState: MutableStateFlow<ControllerState> = MutableStateFlow(ControllerState.Initial)
+    override val controllerState: StateFlow<ControllerState> = _controllerState.asStateFlow()
 
     override fun onServiceBind(service: AlarmService, alarmId: Long) {
         updateState()
@@ -212,6 +212,6 @@ private class AlarmServiceControllerFake(
     override fun terminate() {}
 
     private fun updateState() {
-        _alarmState.update { _results.removeFirst() }
+        _controllerState.update { results.removeFirst() }
     }
 }

@@ -16,7 +16,7 @@ import org.acyb.sayitalarm.database.SettingsQueries
 import org.acyb.sayitalarm.database.Get as SettingsDTO
 
 class SettingsDataSource(
-    private val settingsQueries: SettingsQueries
+    private val settingsQueries: SettingsQueries,
 ) : DataSourceContract.SettingsDataSource {
 
     override fun getSettings(dispatcher: CoroutineDispatcher): Flow<Result<SettingsDTO>> =
@@ -36,7 +36,7 @@ class SettingsDataSource(
         settingsQueries.insert(
             settings.timeOut,
             settings.snooze,
-            settings.theme
+            settings.theme,
         )
     }
 

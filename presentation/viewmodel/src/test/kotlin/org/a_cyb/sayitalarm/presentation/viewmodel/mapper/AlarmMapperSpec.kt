@@ -6,8 +6,6 @@
 
 package org.a_cyb.sayitalarm.presentation.viewmodel.mapper
 
-import kotlin.test.Test
-import java.util.Calendar
 import org.a_cyb.sayitalarm.entity.AlertType
 import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.AlarmUI
 import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.AlertTypeUI
@@ -19,11 +17,13 @@ import org.a_cyb.sayitalarm.presentation.viewmodel.fake.FakeAlarmData
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.RingtoneResolverFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.TimeFormatterFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.WeekdayFormatterFake
-import org.a_cyb.sayitalarm.util.ringtone_resolver.RingtoneResolverContract
 import org.a_cyb.sayitalarm.util.formatter.enum.EnumFormatterContract
 import org.a_cyb.sayitalarm.util.formatter.time.TimeFormatterContract
 import org.a_cyb.sayitalarm.util.formatter.weekday.WeekdayFormatterContract
 import org.a_cyb.sayitalarm.util.mustBe
+import org.a_cyb.sayitalarm.util.ringtone_resolver.RingtoneResolverContract
+import java.util.Calendar
+import kotlin.test.Test
 
 class AlarmMapperSpec {
     private val timeFormatter: TimeFormatterContract = TimeFormatterFake()
@@ -35,7 +35,7 @@ class AlarmMapperSpec {
             timeFormatter,
             weeklyRepeatFormatter,
             alertTypeFormatter,
-            ringtoneManager
+            ringtoneManager,
         )
 
     @Test
@@ -70,24 +70,24 @@ class AlarmMapperSpec {
         timeUI = TimeUI(
             hour = 9,
             minute = 0,
-            formattedTime = "9:00 AM"
+            formattedTime = "9:00 AM",
         ),
         weeklyRepeatUI = WeeklyRepeatUI(
             formatted = "every weekend",
             selectableRepeats = FakeAlarmData.selectableRepeats.map {
                 it.copy(selected = it.code in listOf(Calendar.SATURDAY, Calendar.SUNDAY))
-            }
+            },
         ),
         label = testAlarm.label.label,
         alertTypeUI = AlertTypeUI(
             FakeAlarmData.selectableAlertTypes.map {
                 it.copy(selected = it.name == alertTypeFormatter.format(AlertType.SOUND_AND_VIBRATE))
-            }
+            },
         ),
         ringtoneUI = RingtoneUI(
             title = "passion_hour_ringtone",
-            uri = testAlarm.ringtone.ringtone
+            uri = testAlarm.ringtone.ringtone,
         ),
-        sayItScripts = testAlarm.sayItScripts.scripts
+        sayItScripts = testAlarm.sayItScripts.scripts,
     )
 }

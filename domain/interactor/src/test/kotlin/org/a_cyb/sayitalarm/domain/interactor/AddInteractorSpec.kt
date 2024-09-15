@@ -6,8 +6,6 @@
 
 package org.a_cyb.sayitalarm.domain.interactor
 
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
 import io.mockk.clearAllMocks
 import io.mockk.coVerify
 import io.mockk.coVerifyOrder
@@ -34,6 +32,8 @@ import org.a_cyb.sayitalarm.entity.SayItScripts
 import org.a_cyb.sayitalarm.entity.WeeklyRepeat
 import org.a_cyb.sayitalarm.util.fulfils
 import org.junit.Test
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class AddInteractorSpec {
@@ -100,7 +100,7 @@ class AddInteractorSpec {
     fun `It fulfills AddInteractor`() {
         AddInteractor(
             alarmRepository,
-            alarmScheduler
+            alarmScheduler,
         ) fulfils InteractorContract.AddInteractor::class
     }
 
@@ -115,6 +115,6 @@ class AddInteractorSpec {
             alertType = AlertType.SOUND_ONLY,
             ringtone = Ringtone(""),
             alarmType = AlarmType.SAY_IT,
-            sayItScripts = SayItScripts()
+            sayItScripts = SayItScripts(),
         )
 }

@@ -6,8 +6,6 @@
 
 package org.a_cyb.sayitalarm.presentation.viewmodel
 
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
 import app.cash.turbine.test
 import io.mockk.clearAllMocks
 import io.mockk.every
@@ -38,6 +36,8 @@ import org.a_cyb.sayitalarm.util.formatter.weekday.WeekdayFormatterContract
 import org.a_cyb.sayitalarm.util.fulfils
 import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Test
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ListViewModelSpec {
@@ -124,7 +124,7 @@ class ListViewModelSpec {
     }
 
     @Test
-    fun `When interactor setEnabled fails, it sets the state to the Error`() = runTest{
+    fun `When interactor setEnabled fails, it sets the state to the Error`() = runTest {
         // Given
         val results = listOf(Result.success(alarms), Result.failure(IllegalStateException()))
         val interactor = ListInteractorFake(results)
@@ -140,7 +140,6 @@ class ListViewModelSpec {
             awaitItem() mustBe ListContract.ListState.Error(alarmInfo)
             interactor.invokedType mustBe InvokedType.SET_ENABLED
         }
-
     }
 
     @Test
@@ -193,19 +192,19 @@ class ListViewModelSpec {
             id = 1,
             time = "6:00 AM",
             labelAndWeeklyRepeat = "Wake Up, every weekday",
-            enabled = true
+            enabled = true,
         ),
         AlarmInfo(
             id = 2,
             time = "8:30 PM",
             labelAndWeeklyRepeat = "Workout, Mon, Wed, and Fri",
-            enabled = true
+            enabled = true,
         ),
         AlarmInfo(
             id = 3,
             time = "9:00 AM",
             labelAndWeeklyRepeat = "Passion Hour, every weekend",
-            enabled = false
-        )
+            enabled = false,
+        ),
     )
 }

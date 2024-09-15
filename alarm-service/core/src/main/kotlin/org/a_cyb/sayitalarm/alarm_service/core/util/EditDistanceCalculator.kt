@@ -6,8 +6,8 @@
 
 package org.a_cyb.sayitalarm.alarm_service.core.util
 
-import java.util.Locale
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
+import java.util.Locale
 
 /*
 * TODO: This implementation is basic. Update with a more robust solution in the future.

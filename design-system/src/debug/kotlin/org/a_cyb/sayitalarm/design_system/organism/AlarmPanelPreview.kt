@@ -15,6 +15,6 @@ fun AlarmPanelPreview() {
     val alarmUI = FakeAlarmUIData.defaultAlarmUI
     AlarmPanel(
         alarmUI = alarmUI,
-        executor = { _ -> }
+        executor = { _ -> },
     )
 }

@@ -6,9 +6,6 @@
 
 package org.a_cyb.sayitalarm.presentation.viewmodel
 
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import java.util.Calendar
 import app.cash.turbine.test
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -31,8 +28,8 @@ import org.a_cyb.sayitalarm.presentation.contracts.EditContract.EditViewModel.Ed
 import org.a_cyb.sayitalarm.presentation.contracts.EditContract.EditViewModel.EditState.Initial
 import org.a_cyb.sayitalarm.presentation.contracts.EditContract.EditViewModel.EditState.Success
 import org.a_cyb.sayitalarm.presentation.contracts.command.SaveCommand
-import org.a_cyb.sayitalarm.presentation.viewmodel.converter.AlarmUIConverterContract
 import org.a_cyb.sayitalarm.presentation.viewmodel.converter.AlarmUiConverter
+import org.a_cyb.sayitalarm.presentation.viewmodel.converter.AlarmUiConverterContract
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.AlertTypeFormatterFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.EditInteractorFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.EditInteractorFake.InvokedType
@@ -42,15 +39,18 @@ import org.a_cyb.sayitalarm.presentation.viewmodel.fake.TimeFormatterFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.WeekdayFormatterFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.mapper.AlarmMapper
 import org.a_cyb.sayitalarm.presentation.viewmodel.mapper.AlarmMapperContract
-import org.a_cyb.sayitalarm.util.ringtone_resolver.RingtoneResolverContract
 import org.a_cyb.sayitalarm.util.formatter.enum.EnumFormatterContract
 import org.a_cyb.sayitalarm.util.formatter.time.TimeFormatterContract
 import org.a_cyb.sayitalarm.util.formatter.weekday.WeekdayFormatterContract
 import org.a_cyb.sayitalarm.util.fulfils
 import org.a_cyb.sayitalarm.util.mustBe
+import org.a_cyb.sayitalarm.util.ringtone_resolver.RingtoneResolverContract
 import org.junit.Test
 import tech.antibytes.kfixture.fixture
 import tech.antibytes.kfixture.kotlinFixture
+import java.util.Calendar
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class EditViewModelSpec {
@@ -61,7 +61,7 @@ class EditViewModelSpec {
     private val weeklyRepeatFormatter: WeekdayFormatterContract = WeekdayFormatterFake()
     private val alertTypeFormatter: EnumFormatterContract.AlertTypeFormatter = AlertTypeFormatterFake()
     private val ringtoneManager: RingtoneResolverContract = RingtoneResolverFake()
-    private val alarmUiConverter: AlarmUIConverterContract = AlarmUiConverter(timeFormatter, weeklyRepeatFormatter)
+    private val alarmUiConverter: AlarmUiConverterContract = AlarmUiConverter(timeFormatter, weeklyRepeatFormatter)
     private val mapper: AlarmMapperContract =
         AlarmMapper(timeFormatter, weeklyRepeatFormatter, alertTypeFormatter, ringtoneManager)
 
@@ -83,7 +83,7 @@ class EditViewModelSpec {
     fun `It is in Initial state`() {
         // Given
         val interactor = EditInteractorFake(
-            Result.failure(IllegalStateException())
+            Result.failure(IllegalStateException()),
         )
         val viewModel = viewModel(3L, interactor)
 
@@ -94,7 +94,7 @@ class EditViewModelSpec {
     fun `When interactor getAlarm succeeds it is in Success state with AlarmUI`() = runTest {
         // Given
         val interactor = EditInteractorFake(
-            Result.success(alarm)
+            Result.success(alarm),
         )
         val viewModel = viewModel(3L, interactor)
 
@@ -111,7 +111,7 @@ class EditViewModelSpec {
     fun `When interactor getAlarm failed it is in Error state`() = runTest {
         // Given
         val interactor = EditInteractorFake(
-            Result.failure(IllegalStateException())
+            Result.failure(IllegalStateException()),
         )
         val viewModel = viewModel(3L, interactor)
 
@@ -128,7 +128,7 @@ class EditViewModelSpec {
     fun `When initialized it triggers interactor getAlarm`() {
         // Given
         val interactor = EditInteractorFake(
-            Result.failure(IllegalStateException())
+            Result.failure(IllegalStateException()),
         )
 
         // When
@@ -142,7 +142,7 @@ class EditViewModelSpec {
     fun `When setTime is called and succeeds it is in Success state with updated AlarmUI data`() = runTest {
         // Given
         val interactor = EditInteractorFake(
-            Result.success(alarm)
+            Result.success(alarm),
         )
         val viewModel = viewModel(3L, interactor)
 
@@ -158,8 +158,8 @@ class EditViewModelSpec {
             // Then
             awaitItem() mustBe Success(
                 alarmUI.copy(
-                    TimeUI(hour.hour, minute.minute, "3:33 AM")
-                )
+                    TimeUI(hour.hour, minute.minute, "3:33 AM"),
+                ),
             )
         }
     }
@@ -169,7 +169,7 @@ class EditViewModelSpec {
         runTest {
             // Given
             val interactor = EditInteractorFake(
-                Result.success(alarm)
+                Result.success(alarm),
             )
             val viewModel = viewModel(3L, interactor)
 
@@ -189,9 +189,9 @@ class EditViewModelSpec {
                     alarmUI.copy(
                         weeklyRepeatUI = WeeklyRepeatUI(
                             formatted = "Mon, Wed, and Fri",
-                            selectableRepeats = selectableRepeats
-                        )
-                    )
+                            selectableRepeats = selectableRepeats,
+                        ),
+                    ),
                 )
             }
         }
@@ -200,7 +200,7 @@ class EditViewModelSpec {
     fun `Given setLabel is called and succeeds it is in Success state with updated AlarmUI data`() = runTest {
         // Given
         val interactor = EditInteractorFake(
-            Result.success(alarm)
+            Result.success(alarm),
         )
         val viewModel = viewModel(3L, interactor)
 
@@ -214,7 +214,7 @@ class EditViewModelSpec {
 
             // Then
             awaitItem() mustBe Success(
-                alarmUI.copy(label = label)
+                alarmUI.copy(label = label),
             )
         }
     }
@@ -224,7 +224,7 @@ class EditViewModelSpec {
         runTest {
             // Given
             val interactor = EditInteractorFake(
-                Result.success(alarm)
+                Result.success(alarm),
             )
             val viewModel = viewModel(3L, interactor)
 
@@ -241,8 +241,8 @@ class EditViewModelSpec {
                 // Then
                 awaitItem() mustBe Success(
                     alarmUI.copy(
-                        alertTypeUI = AlertTypeUI(selectable)
-                    )
+                        alertTypeUI = AlertTypeUI(selectable),
+                    ),
                 )
             }
         }
@@ -252,14 +252,14 @@ class EditViewModelSpec {
         runTest {
             // Given
             val interactor = EditInteractorFake(
-                Result.success(alarm)
+                Result.success(alarm),
             )
             val viewModel = viewModel(3L, interactor)
 
             val selected = FakeAlarmData.alarms[1].ringtone
             val ringtoneUI = RingtoneUI(
                 ringtoneManager.getRingtoneTitle(selected.ringtone).getOrNull()!!,
-                selected.ringtone
+                selected.ringtone,
             )
 
             viewModel.state.test {
@@ -270,7 +270,7 @@ class EditViewModelSpec {
 
                 // Then
                 awaitItem() mustBe Success(
-                    alarmUI.copy(ringtoneUI = ringtoneUI)
+                    alarmUI.copy(ringtoneUI = ringtoneUI),
                 )
             }
         }
@@ -280,7 +280,7 @@ class EditViewModelSpec {
         runTest {
             // Given
             val interactor = EditInteractorFake(
-                Result.success(alarm)
+                Result.success(alarm),
             )
             val viewModel = viewModel(3L, interactor)
 
@@ -295,8 +295,8 @@ class EditViewModelSpec {
                 // Then
                 awaitItem() mustBe Success(
                     alarmUI.copy(
-                        sayItScripts = scripts.scripts
-                    )
+                        sayItScripts = scripts.scripts,
+                    ),
                 )
             }
         }
@@ -305,7 +305,7 @@ class EditViewModelSpec {
     fun `When save is called it triggers interactor update`() = runTest {
         // Given
         val interactor = EditInteractorFake(
-            Result.success(alarm)
+            Result.success(alarm),
         )
         val viewModel = viewModel(3L, interactor)
 
@@ -324,7 +324,7 @@ class EditViewModelSpec {
     fun `When save is called it maps AlarmUI to Alarm and triggers interactor save`() = runTest {
         // Given
         val interactor = EditInteractorFake(
-            Result.success(alarm)
+            Result.success(alarm),
         )
         val viewModel = viewModel(3L, interactor)
 
@@ -344,14 +344,14 @@ class EditViewModelSpec {
         interactor.updatedAlarm mustBe alarm.copy(
             hour = hour,
             minute = minute,
-            enabled = true
+            enabled = true,
         )
     }
 
     @Test
     fun `It fulfills EditViewModel`() {
         val interactor = EditInteractorFake(
-            Result.failure(IllegalStateException())
+            Result.failure(IllegalStateException()),
         )
 
         viewModel(3L, interactor) fulfils EditContract.EditViewModel::class
@@ -362,7 +362,7 @@ class EditViewModelSpec {
         // Given
         // Given
         val interactor = EditInteractorFake(
-            Result.success(alarm)
+            Result.success(alarm),
         )
         val viewModel = viewModel(3L, interactor)
 
@@ -383,15 +383,15 @@ class EditViewModelSpec {
             timeUI = TimeUI(9, 0, "9:00 AM"),
             weeklyRepeatUI = WeeklyRepeatUI(
                 "every weekend",
-                setWeeklyRepeatUI(listOf(Calendar.SUNDAY, Calendar.SATURDAY))
+                setWeeklyRepeatUI(listOf(Calendar.SUNDAY, Calendar.SATURDAY)),
             ),
             label = alarm.label.label,
             alertTypeUI = AlertTypeUI(FakeAlarmData.selectableAlertTypes),
             ringtoneUI = RingtoneUI(
                 ringtoneManager.getRingtoneTitle(alarm.ringtone.ringtone).getOrNull()!!,
-                alarm.ringtone.ringtone
+                alarm.ringtone.ringtone,
             ),
-            sayItScripts = alarm.sayItScripts.scripts
+            sayItScripts = alarm.sayItScripts.scripts,
         )
 
     private fun setWeeklyRepeatUI(codes: List<Int>): List<AlarmPanelContract.SelectableRepeat> {

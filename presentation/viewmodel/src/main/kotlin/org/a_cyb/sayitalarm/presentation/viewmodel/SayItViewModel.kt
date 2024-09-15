@@ -49,7 +49,7 @@ class SayItViewModel(
         .stateIn(
             scope = scope,
             started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = IsOffline.False
+            initialValue = IsOffline.False,
         )
 
     private val sayItScripts: List<String> by lazy { resolveSayItScripts() }

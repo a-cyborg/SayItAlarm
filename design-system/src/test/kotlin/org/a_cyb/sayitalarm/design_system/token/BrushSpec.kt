@@ -23,7 +23,7 @@ class BrushSpec : RoborazziTest() {
                 Modifier
                     .clip(CircleShape)
                     .background(Brush.sweepGradientRainbow)
-                    .size(Sizing.CircleButton.Large)
+                    .size(Sizing.CircleButton.Large),
             )
         }
     }
@@ -35,7 +35,7 @@ class BrushSpec : RoborazziTest() {
                 Modifier
                     .clip(CircleShape)
                     .background(Brush.sweepGradientGray)
-                    .size(Sizing.CircleButton.Large)
+                    .size(Sizing.CircleButton.Large),
             )
         }
     }
@@ -47,7 +47,7 @@ class BrushSpec : RoborazziTest() {
                 Modifier
                     .clip(CircleShape)
                     .background(Brush.sweepGradientAttention)
-                    .size(Sizing.CircleButton.Large)
+                    .size(Sizing.CircleButton.Large),
             )
         }
     }
@@ -59,7 +59,7 @@ class BrushSpec : RoborazziTest() {
                 Modifier
                     .clip(CircleShape)
                     .background(Brush.sweepGradientDanger)
-                    .size(Sizing.CircleButton.Large)
+                    .size(Sizing.CircleButton.Large),
             )
         }
     }

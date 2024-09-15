@@ -29,7 +29,7 @@ object Brush {
             Color.text.attention,
             Color.text.inverse,
             Color.text.subtle,
-        )
+        ),
     )
 
     val sweepGradientGray = Brush.sweepGradient(
@@ -37,7 +37,7 @@ object Brush {
             Color.surface.standard,
             Color.surface.subtle,
             Color.surface.strong,
-        )
+        ),
     )
 
     val sweepGradientAttention = Brush.sweepGradient(
@@ -45,7 +45,7 @@ object Brush {
             Color.surface.standard,
             Color.surface.success,
             Color.surface.attention,
-        )
+        ),
     )
 
     val sweepGradientDanger = Brush.sweepGradient(
@@ -53,6 +53,6 @@ object Brush {
             Color.surface.standard,
             Color.text.warning,
             Color.text.danger,
-        )
+        ),
     )
 }

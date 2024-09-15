@@ -6,11 +6,6 @@
 
 package org.a_cyb.sayitalarm.database
 
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-import kotlin.test.assertNotNull
-import kotlin.test.assertNull
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import org.a_cyb.sayitalarm.util.isNot
@@ -18,6 +13,11 @@ import org.a_cyb.sayitalarm.util.mustBe
 import org.acyb.sayitalarm.database.Settings
 import tech.antibytes.kfixture.fixture
 import tech.antibytes.kfixture.kotlinFixture
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 
 class SettingsSchemaSpec {
 
@@ -44,7 +44,7 @@ class SettingsSchemaSpec {
             true,
             180,
             15,
-            0
+            0,
         )
 
     @Test
@@ -57,7 +57,7 @@ class SettingsSchemaSpec {
             .insert(
                 settingsEntity.timeOut,
                 settingsEntity.snooze,
-                settingsEntity.theme
+                settingsEntity.theme,
             )
 
         val fetched = sayItDB.settingsQueries
@@ -78,14 +78,14 @@ class SettingsSchemaSpec {
             .copy(
                 timeOut = 300,
                 snooze = 30,
-                theme = 1
+                theme = 1,
             )
 
         sayItDB.settingsQueries
             .insert(
                 existingSettings.timeOut,
                 existingSettings.snooze,
-                existingSettings.theme
+                existingSettings.theme,
             )
 
         val newInsertSettings = getDefaultSettings()
@@ -95,7 +95,7 @@ class SettingsSchemaSpec {
             .insert(
                 newInsertSettings.timeOut,
                 newInsertSettings.snooze,
-                newInsertSettings.theme
+                newInsertSettings.theme,
             )
 
         val actual = sayItDB.settingsQueries
@@ -133,7 +133,7 @@ class SettingsSchemaSpec {
             .insert(
                 settingsEntity.timeOut,
                 settingsEntity.snooze,
-                settingsEntity.theme
+                settingsEntity.theme,
             )
 
         // When
@@ -157,7 +157,7 @@ class SettingsSchemaSpec {
             .insert(
                 settingsEntity.timeOut,
                 settingsEntity.snooze,
-                settingsEntity.theme
+                settingsEntity.theme,
             )
 
         // When
@@ -181,7 +181,7 @@ class SettingsSchemaSpec {
             .insert(
                 settingsEntity.timeOut,
                 settingsEntity.snooze,
-                settingsEntity.theme
+                settingsEntity.theme,
             )
 
         // When

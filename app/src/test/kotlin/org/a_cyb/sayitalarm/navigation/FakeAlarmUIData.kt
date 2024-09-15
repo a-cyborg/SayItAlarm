@@ -35,7 +35,7 @@ object FakeAlarmUIData {
             .map {
                 SelectableAlertType(
                     name = it.format(),
-                    selected = it == AlertType.SOUND_AND_VIBRATE
+                    selected = it == AlertType.SOUND_AND_VIBRATE,
                 )
             }
 
@@ -53,8 +53,8 @@ object FakeAlarmUIData {
             alertTypeUI = AlertTypeUI(defaultSelectableAlertTypes),
             ringtoneUI = RingtoneUI(
                 "Drip",
-                "content://media/internal/audio/media/190?title=Drip&canonical=1"
+                "content://media/internal/audio/media/190?title=Drip&canonical=1",
             ),
-            sayItScripts = emptyList()
+            sayItScripts = emptyList(),
         )
 }

@@ -54,7 +54,7 @@ class DialogSpec {
         composeTestRule.setContent {
             DialogStandardFillMax(
                 onDismiss = {},
-                topAppBar = { DialogTestTopAppBar() }
+                topAppBar = { DialogTestTopAppBar() },
             ) {
                 TextTitleStandardMedium(text = "DialogStandardFillMax")
             }

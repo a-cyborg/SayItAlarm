@@ -29,7 +29,7 @@ data class SayItScripts(val scripts: List<String>) {
 enum class AlertType {
     SOUND_ONLY,
     VIBRATE_ONLY,
-    SOUND_AND_VIBRATE
+    SOUND_AND_VIBRATE,
 }
 
 enum class AlarmType {

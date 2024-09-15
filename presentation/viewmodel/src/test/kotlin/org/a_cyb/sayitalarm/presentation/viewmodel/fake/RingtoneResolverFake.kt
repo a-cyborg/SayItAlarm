@@ -15,7 +15,7 @@ class RingtoneResolverFake : RingtoneResolverContract {
             ringtone.split("//")
                 .last()
                 .split(".")
-                .first()
+                .first(),
         )
 
     override fun getDefaultRingtone(): Result<String> = Result.success("file://Radial.mp3")

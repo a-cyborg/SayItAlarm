@@ -6,12 +6,12 @@
 
 package org.a_cyb.sayitalarm.design_system.molecule
 
-import org.a_cyb.sayitalarm.design_system.screen.SettingsViewModelFake
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import org.a_cyb.sayitalarm.design_system.R
 import org.a_cyb.sayitalarm.design_system.atom.IconButtonEdit
+import org.a_cyb.sayitalarm.design_system.screen.SettingsViewModelFake
 
 @Preview
 @Composable
@@ -41,6 +41,6 @@ fun PanelItemPreviewWithPopUpPickerStandardWheelPreview() {
         info = stringResource(id = R.string.info_timeout),
         values = fakeViewModel.timeOuts.map { it.formatted },
         selectedItemIdx = 150,
-        popUpPickerOnConfirm = { _ -> }
+        popUpPickerOnConfirm = { _ -> },
     )
 }

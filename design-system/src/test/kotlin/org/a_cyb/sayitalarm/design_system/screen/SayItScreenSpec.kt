@@ -128,7 +128,7 @@ class SayItScreenSpec : RoborazziTest() {
         // Given
         val sayItInfo = sayItInfo.copy(
             status = SttStatus.SUCCESS,
-            sttResult = sayItInfo.script
+            sttResult = sayItInfo.script,
         )
         val viewModel = SayItViewModelFake(Processing(sayItInfo))
 
@@ -153,7 +153,7 @@ class SayItScreenSpec : RoborazziTest() {
         // Given
         val sayItInfo = sayItInfo.copy(
             status = SttStatus.FAILED,
-            sttResult = "It's wrong"
+            sttResult = "It's wrong",
         )
         val viewModel = SayItViewModelFake(Processing(sayItInfo))
 
@@ -177,7 +177,7 @@ class SayItScreenSpec : RoborazziTest() {
         script = "I embrace this hour with enthusiasm.",
         sttResult = "I embrace this",
         status = SttStatus.READY,
-        count = SayItContract.Count(3, 7)
+        count = SayItContract.Count(3, 7),
     )
 }
 
@@ -208,5 +208,3 @@ private class SayItViewModelFake(state: SayItState) : SayItContract.SayItViewMod
         NONE,
     }
 }
-
-

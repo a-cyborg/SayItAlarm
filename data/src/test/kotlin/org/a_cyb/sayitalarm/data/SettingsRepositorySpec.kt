@@ -6,7 +6,6 @@
 
 package org.a_cyb.sayitalarm.data
 
-import kotlin.test.AfterTest
 import app.cash.turbine.test
 import io.mockk.clearMocks
 import io.mockk.coVerify
@@ -27,6 +26,7 @@ import org.a_cyb.sayitalarm.entity.TimeOut
 import org.a_cyb.sayitalarm.util.fulfils
 import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Test
+import kotlin.test.AfterTest
 import org.acyb.sayitalarm.database.Get as SettingsDTO
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -63,8 +63,8 @@ class SettingsRepositorySpec {
                     Settings(
                         timeOut = TimeOut(300),
                         snooze = Snooze(15),
-                        theme = Theme.LIGHT
-                    )
+                        theme = Theme.LIGHT,
+                    ),
                 )
                 awaitItem() mustBe results[2]
 
@@ -146,6 +146,6 @@ class SettingsRepositorySpec {
         SettingsDTO(
             timeOut = 300,
             snooze = 15,
-            theme = 0
+            theme = 0,
         )
 }

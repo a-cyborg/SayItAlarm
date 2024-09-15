@@ -6,12 +6,12 @@
 
 package org.a_cyb.sayitalarm.util.formatter.time
 
-import java.util.Calendar
-import java.util.Date
 import android.content.Context
 import android.text.format.DateFormat
 import org.a_cyb.sayitalarm.entity.Hour
 import org.a_cyb.sayitalarm.entity.Minute
+import java.util.Calendar
+import java.util.Date
 
 internal class TimeFormatter internal constructor(
     context: Context,

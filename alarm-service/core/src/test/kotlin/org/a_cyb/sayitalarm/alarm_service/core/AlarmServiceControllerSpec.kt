@@ -6,11 +6,6 @@
 
 package org.a_cyb.sayitalarm.alarm_service.core
 
-import java.util.Calendar.FRIDAY
-import java.util.Calendar.MONDAY
-import java.util.Calendar.THURSDAY
-import java.util.Calendar.TUESDAY
-import java.util.Calendar.WEDNESDAY
 import app.cash.turbine.test
 import io.mockk.coVerify
 import io.mockk.every
@@ -54,6 +49,11 @@ import org.junit.Before
 import org.junit.Test
 import tech.antibytes.kfixture.fixture
 import tech.antibytes.kfixture.kotlinFixture
+import java.util.Calendar.FRIDAY
+import java.util.Calendar.MONDAY
+import java.util.Calendar.THURSDAY
+import java.util.Calendar.TUESDAY
+import java.util.Calendar.WEDNESDAY
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class AlarmServiceControllerSpec {
@@ -81,7 +81,7 @@ class AlarmServiceControllerSpec {
             alarmRepository,
             settingsRepository,
             alarmScheduler,
-            CoroutineScope(StandardTestDispatcher())
+            CoroutineScope(StandardTestDispatcher()),
         )
     }
 
@@ -136,7 +136,7 @@ class AlarmServiceControllerSpec {
         val settings = Settings(
             TimeOut(fixture.fixture()),
             Snooze(fixture.fixture()),
-            Theme.DARK
+            Theme.DARK,
         )
         every { settingsRepository.getSettings() } returns flow { emit(Result.success(settings)) }
 
@@ -325,7 +325,7 @@ class AlarmServiceControllerSpec {
         sayItScripts = SayItScripts(
             "I am peaceful and whole.",
             "I do all things in love.",
-            "I embrace change seamlessly and rise to the new opportunity it presents."
-        )
+            "I embrace change seamlessly and rise to the new opportunity it presents.",
+        ),
     )
 }

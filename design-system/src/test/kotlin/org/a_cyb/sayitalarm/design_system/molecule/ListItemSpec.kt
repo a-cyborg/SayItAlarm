@@ -33,7 +33,7 @@ class ListItemSpec : RoborazziTest() {
                         SpacerMedium()
                     }
                 },
-                afterContent = { SwitchStandard(checked = true) {} }
+                afterContent = { SwitchStandard(checked = true) {} },
             )
         }
     }
@@ -53,7 +53,7 @@ class ListItemSpec : RoborazziTest() {
                         SpacerMedium()
                     }
                 },
-                afterContent = { IconButtonEdit {} }
+                afterContent = { IconButtonEdit {} },
             )
         }
     }

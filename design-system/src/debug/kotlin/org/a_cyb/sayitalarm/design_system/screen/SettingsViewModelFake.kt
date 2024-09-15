@@ -20,15 +20,7 @@ import org.a_cyb.sayitalarm.presentation.contracts.SettingsContract.TimeInput
 import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract
 
 @Suppress("EmptyFunctionBlock")
-class SettingsViewModelFake(
-    initState: SettingsState = Success(
-        SettingsUI(
-            timeOut = TimeInput(180, formatted = "3 hr"),
-            snooze = TimeInput(15, formatted = "15 min"),
-            theme = "Light",
-        )
-    ),
-) : SettingsViewModel, ViewModel() {
+class SettingsViewModelFake(initState: SettingsState = Success(successUi)) : SettingsViewModel, ViewModel() {
 
     private val _state: MutableStateFlow<SettingsState> = MutableStateFlow(initState)
     override val state: StateFlow<SettingsState> = _state
@@ -39,7 +31,7 @@ class SettingsViewModelFake(
     override val contact: SettingsContract.Contact = SettingsContract.Contact(
         email = "hello@email.com",
         githubUrl = "www.github.com/sayItAlarm",
-        googlePlayUrl = "www.google-play.com/sayItAlarm"
+        googlePlayUrl = "www.google-play.com/sayItAlarm",
     )
 
     override fun setTimeOut(timeOut: TimeOut) {}
@@ -62,3 +54,10 @@ class SettingsViewModelFake(
         }
     }
 }
+
+private val successUi =
+    SettingsUI(
+        timeOut = TimeInput(180, formatted = "3 hr"),
+        snooze = TimeInput(15, formatted = "15 min"),
+        theme = "Light",
+    )

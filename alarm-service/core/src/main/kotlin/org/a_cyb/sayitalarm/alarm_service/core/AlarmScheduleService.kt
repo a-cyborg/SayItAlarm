@@ -37,19 +37,19 @@ class AlarmScheduleService : Service() {
                 startForeground(
                     FOREGROUND_ID,
                     notification,
-                    ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE
+                    ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE,
                 )
             } else {
                 startForeground(
                     FOREGROUND_ID,
                     notification,
-                    ServiceInfo.FOREGROUND_SERVICE_TYPE_NONE
+                    ServiceInfo.FOREGROUND_SERVICE_TYPE_NONE,
                 )
             }
         } else {
             startForeground(
                 FOREGROUND_ID,
-                notification
+                notification,
             )
         }
     }

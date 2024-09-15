@@ -32,6 +32,6 @@ fun TopAppBarLargePreview() {
             TextButtonEdit {}
             IconButtonAdd {}
             IconButtonSettings {}
-        }
+        },
     )
 }

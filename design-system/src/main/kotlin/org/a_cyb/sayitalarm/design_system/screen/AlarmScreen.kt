@@ -73,7 +73,7 @@ fun ColumnScope.LoadingScreen() {
 private fun LoadingCircleBox() {
     BoxAnimatedCircleBorder(brush = Brush.sweepGradientGray) {
         TextTitleStandardLarge(
-            text = stringResource(id = R.string.loading)
+            text = stringResource(id = R.string.loading),
         )
     }
 }

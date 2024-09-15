@@ -73,7 +73,7 @@ class AlarmActivity : ComponentActivity() {
                 or WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON
                 or WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
                 or WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
-                or WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+                or WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON,
         )
 
         (getSystemService(KEYGUARD_SERVICE) as KeyguardManager)
@@ -91,7 +91,7 @@ class AlarmActivity : ComponentActivity() {
         bindService(
             Intent(this, AlarmService::class.java),
             serviceConnection,
-            Context.BIND_AUTO_CREATE
+            Context.BIND_AUTO_CREATE,
         )
     }
 
@@ -120,7 +120,7 @@ class AlarmActivity : ComponentActivity() {
     private fun tearDownScreenOn() {
         window.clearFlags(
             WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-                or WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON
+                or WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON,
         )
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {

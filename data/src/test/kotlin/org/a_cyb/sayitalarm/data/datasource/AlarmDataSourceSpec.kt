@@ -6,9 +6,6 @@
 
 package org.a_cyb.sayitalarm.data.datasource
 
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import app.cash.turbine.test
@@ -19,6 +16,9 @@ import org.a_cyb.sayitalarm.database.SayItDB
 import org.a_cyb.sayitalarm.util.mustBe
 import tech.antibytes.kfixture.fixture
 import tech.antibytes.kfixture.kotlinFixture
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
 import org.acyb.sayitalarm.database.Alarm as AlarmDTO
 
 class AlarmDataSourceSpec {
@@ -248,6 +248,6 @@ class AlarmDataSourceSpec {
             alertType,
             ringtone,
             alarmType,
-            sayItScripts
+            sayItScripts,
         )
 }

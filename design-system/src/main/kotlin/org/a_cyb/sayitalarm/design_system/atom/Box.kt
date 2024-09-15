@@ -46,7 +46,7 @@ fun BoxAnimatedCircleBorder(
         modifier = Modifier
             .size(Sizing.CircleButton.Large)
             .animateCircleBorder(brush),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         content()
     }

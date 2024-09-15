@@ -22,27 +22,27 @@ interface AlarmPanelContract : AlarmPanelCommandContractAll {
     data class TimeUI(
         val hour: Int,
         val minute: Int,
-        val formattedTime: String
+        val formattedTime: String,
     )
 
     data class WeeklyRepeatUI(
         val formatted: String,
-        val selectableRepeats: List<SelectableRepeat>
+        val selectableRepeats: List<SelectableRepeat>,
     )
 
     data class SelectableRepeat(
         val name: String,
         val code: Int,
-        val selected: Boolean
+        val selected: Boolean,
     )
 
     data class AlertTypeUI(
-        val selectableAlertType: List<SelectableAlertType>
+        val selectableAlertType: List<SelectableAlertType>,
     )
 
     data class SelectableAlertType(
         val name: String,
-        val selected: Boolean
+        val selected: Boolean,
     )
 
     data class RingtoneUI(

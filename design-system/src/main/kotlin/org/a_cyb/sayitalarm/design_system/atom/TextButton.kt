@@ -89,10 +89,10 @@ fun TextButtonCircleSayIt(onClick: () -> Unit) {
         onClick = onClick,
         modifier = Modifier
             .size(Sizing.CircleButton.Large)
-            .animateCircleBorder(Brush.sweepGradientRainbow)
+            .animateCircleBorder(Brush.sweepGradientRainbow),
     ) {
         TextTitleAttentionLarge(
-            text = stringResource(id = R.string.say_it)
+            text = stringResource(id = R.string.say_it),
         )
     }
 }
@@ -103,10 +103,10 @@ fun TextButtonCircleStart(onClick: () -> Unit) {
         onClick = onClick,
         modifier = Modifier
             .size(Sizing.CircleButton.Large)
-            .animateCircleBorder(Brush.sweepGradientAttention)
+            .animateCircleBorder(Brush.sweepGradientAttention),
     ) {
         TextTitleAttentionLarge(
-            text = stringResource(id = R.string.start)
+            text = stringResource(id = R.string.start),
         )
     }
 }
@@ -117,7 +117,7 @@ fun TextButtonCircleTryAgain(onClick: () -> Unit) {
         onClick = onClick,
         modifier = Modifier
             .size(Sizing.CircleButton.Large)
-            .animateCircleBorder(Brush.sweepGradientDanger)
+            .animateCircleBorder(Brush.sweepGradientDanger),
     ) {
         TextTitleWarningLarge(text = stringResource(id = R.string.try_again))
     }
@@ -129,10 +129,10 @@ fun TextButtonCircleFinish(onClick: () -> Unit) {
         onClick = onClick,
         modifier = Modifier
             .size(Sizing.CircleButton.Large)
-            .animateCircleBorder(Brush.sweepGradientRainbow)
+            .animateCircleBorder(Brush.sweepGradientRainbow),
     ) {
         TextTitleAttentionLarge(
-            text = stringResource(id = R.string.finish)
+            text = stringResource(id = R.string.finish),
         )
     }
 }
@@ -143,10 +143,10 @@ fun TextButtonCircleExit(onClick: () -> Unit) {
         onClick = onClick,
         modifier = Modifier
             .size(Sizing.CircleButton.Large)
-            .animateCircleBorder(Brush.sweepGradientDanger)
+            .animateCircleBorder(Brush.sweepGradientDanger),
     ) {
         TextTitleWarningLarge(
-            text = stringResource(id = R.string.exit)
+            text = stringResource(id = R.string.exit),
         )
     }
 }
@@ -188,4 +188,3 @@ fun TextButtonDownload(onClick: () -> Unit) {
         TextTitleAttentionMedium(text = stringResource(id = R.string.download))
     }
 }
-

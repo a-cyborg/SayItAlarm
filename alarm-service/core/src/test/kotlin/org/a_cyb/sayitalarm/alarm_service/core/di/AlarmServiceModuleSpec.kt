@@ -6,7 +6,6 @@
 
 package org.a_cyb.sayitalarm.alarm_service.core.di
 
-import kotlin.test.assertNotNull
 import android.content.Context
 import io.mockk.mockk
 import kotlinx.coroutines.CoroutineScope
@@ -17,6 +16,7 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
 import org.koin.dsl.koinApplication
 import org.koin.dsl.module
+import kotlin.test.assertNotNull
 
 class AlarmServiceModuleSpec {
 
@@ -28,7 +28,7 @@ class AlarmServiceModuleSpec {
         val koinApp = koinApplication {
             androidContext(context)
             modules(
-                alarmServiceModule
+                alarmServiceModule,
             )
         }
 

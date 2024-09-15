@@ -78,4 +78,3 @@ data object OpenGitHubCommand : CommandContract.Command<SettingsCommandContract.
         receiver.openGitHub()
     }
 }
-

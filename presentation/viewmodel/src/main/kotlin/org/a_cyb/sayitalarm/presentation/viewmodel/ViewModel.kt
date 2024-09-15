@@ -6,9 +6,9 @@
 
 package org.a_cyb.sayitalarm.presentation.viewmodel
 
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
 import androidx.lifecycle.ViewModel as AndroidViewModel
-import androidx.lifecycle.viewModelScope
 
 abstract class ViewModel : AndroidViewModel() {
     val scope: CoroutineScope = viewModelScope

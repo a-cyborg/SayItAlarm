@@ -36,7 +36,7 @@ private val alarmContent: @Composable RowScope.() -> Unit = {
 fun ListItemStandardPreview() {
     ListItemStandard(
         content = alarmContent,
-        afterContent = { SwitchStandard(checked = true) {} }
+        afterContent = { SwitchStandard(checked = true) {} },
     )
 }
 

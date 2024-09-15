@@ -6,10 +6,6 @@
 
 package org.a_cyb.sayitalarm.util.formatter
 
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.hours
-import kotlin.time.Duration.Companion.minutes
-import java.util.Locale
 import android.icu.text.NumberFormat
 import android.icu.text.RelativeDateTimeFormatter
 import android.icu.util.ULocale
@@ -24,6 +20,10 @@ import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import java.util.Locale
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
 import com.ibm.icu.text.NumberFormat as IcuNumberFormat
 import com.ibm.icu.text.RelativeDateTimeFormatter as IcuRelativeDateTimeFormatter
 import com.ibm.icu.util.ULocale as IcuULocale
@@ -62,7 +62,7 @@ class DurationFormatterSpec {
                     icuLocale,
                     icuNumberFormat,
                     IcuRelativeDateTimeFormatter.Style.valueOf(
-                        (arg(2) as RelativeDateTimeFormatter.Style).name
+                        (arg(2) as RelativeDateTimeFormatter.Style).name,
                     ),
                     DisplayContext.CAPITALIZATION_NONE,
                 )
@@ -71,11 +71,11 @@ class DurationFormatterSpec {
                     formatterFake.format(
                         arg(0) as Double,
                         IcuRelativeDateTimeFormatter.Direction.valueOf(
-                            (arg(1) as RelativeDateTimeFormatter.Direction).name
+                            (arg(1) as RelativeDateTimeFormatter.Direction).name,
                         ),
                         IcuRelativeDateTimeFormatter.RelativeUnit.valueOf(
-                            (arg(2) as RelativeDateTimeFormatter.RelativeUnit).name
-                        )
+                            (arg(2) as RelativeDateTimeFormatter.RelativeUnit).name,
+                        ),
                     )
                 }
             }

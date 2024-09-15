@@ -6,7 +6,6 @@
 
 package org.a_cyb.sayitalarm.design_system.organism
 
-import kotlin.test.assertEquals
 import android.content.Context
 import android.media.RingtoneManager
 import androidx.activity.ComponentActivity
@@ -45,6 +44,7 @@ import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 import org.robolectric.shadow.api.Shadow
 import org.robolectric.shadows.ShadowActivity
+import kotlin.test.assertEquals
 
 @OptIn(ExperimentalRoborazziApi::class)
 @RunWith(AndroidJUnit4::class)
@@ -270,8 +270,8 @@ class AlarmPanelSpec {
     }
 
     /*
-    * Dismiss popup picker logic
-    * */
+     * Dismiss popup picker logic
+     * */
     @Test
     fun `When PopupPickerTime is displayed and onCancel is clicked it dismiss the picker`() {
         with(composeTestRule) {
@@ -279,7 +279,7 @@ class AlarmPanelSpec {
             setContent {
                 AlarmPanel(
                     alarmUI = alarmUI,
-                    executor = {}
+                    executor = {},
                 )
             }
 
@@ -307,7 +307,7 @@ class AlarmPanelSpec {
             setContent {
                 AlarmPanel(
                     alarmUI = alarmUI,
-                    executor = {}
+                    executor = {},
                 )
             }
 
@@ -335,7 +335,7 @@ class AlarmPanelSpec {
             setContent {
                 AlarmPanel(
                     alarmUI = alarmUI,
-                    executor = {}
+                    executor = {},
                 )
             }
 
@@ -350,8 +350,8 @@ class AlarmPanelSpec {
     }
 
     /*
-    *   Command execute tests
-    * */
+     *   Command execute tests
+     * */
     @Test
     fun `When PopupPickerTime is displayed and onConfirm is clicked it runs executor setTimeOut`() {
         // Given
@@ -361,7 +361,7 @@ class AlarmPanelSpec {
             setContent {
                 AlarmPanel(
                     alarmUI = alarmUI,
-                    executor = { commandExecutor.runCommand(it) }
+                    executor = { commandExecutor.runCommand(it) },
                 )
             }
 
@@ -387,7 +387,7 @@ class AlarmPanelSpec {
             setContent {
                 AlarmPanel(
                     alarmUI = alarmUI,
-                    executor = { commandExecutor.runCommand(it) }
+                    executor = { commandExecutor.runCommand(it) },
                 )
             }
 
@@ -411,7 +411,7 @@ class AlarmPanelSpec {
             setContent {
                 AlarmPanel(
                     alarmUI = alarmUI,
-                    executor = { commandExecutor.runCommand(it) }
+                    executor = { commandExecutor.runCommand(it) },
                 )
             }
 
@@ -434,7 +434,7 @@ class AlarmPanelSpec {
             setContent {
                 AlarmPanel(
                     alarmUI = alarmUI,
-                    executor = { commandExecutor.runCommand(it) }
+                    executor = { commandExecutor.runCommand(it) },
                 )
             }
 
@@ -448,6 +448,4 @@ class AlarmPanelSpec {
             commandExecutor.invokedType mustBe InvokedType.SET_ALERT_TYPE
         }
     }
-
-
 }

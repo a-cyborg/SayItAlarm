@@ -6,8 +6,6 @@
 
 package org.a_cyb.sayitalarm.design_system.molecule
 
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.isDialog
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -28,6 +26,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 @RunWith(AndroidJUnit4::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
@@ -162,7 +162,7 @@ class PopupPickerSpec {
                 hour = 8,
                 minute = 0,
                 onConfirm = { _, _ -> },
-                onCancel = {}
+                onCancel = {},
             )
         }
 
@@ -182,7 +182,7 @@ class PopupPickerSpec {
                 hour = 8,
                 minute = 0,
                 onConfirm = { _, _ -> onConfirmHasBeenCalled = true },
-                onCancel = { onDismissHasBeenCalled = true }
+                onCancel = { onDismissHasBeenCalled = true },
             )
         }
 
@@ -207,7 +207,7 @@ class PopupPickerSpec {
                 hour = 8,
                 minute = 0,
                 onConfirm = { _, _ -> onConfirmHasBeenCalled = true },
-                onCancel = { onDismissHasBeenCalled = true }
+                onCancel = { onDismissHasBeenCalled = true },
             )
         }
 
@@ -232,7 +232,7 @@ class PopupPickerSpec {
                 hour = 8,
                 minute = 0,
                 onConfirm = { _, _ -> onConfirmHasBeenCalled = true },
-                onCancel = { onDismissHasBeenCalled = true }
+                onCancel = { onDismissHasBeenCalled = true },
             )
         }
 

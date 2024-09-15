@@ -17,7 +17,7 @@ class TimeFlowModuleSpec {
         // Given
         val koinApp = koinApplication {
             modules(
-                timeFlowModule
+                timeFlowModule,
             )
         }
 

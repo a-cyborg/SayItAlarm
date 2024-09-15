@@ -6,7 +6,6 @@
 
 package org.a_cyb.sayitalarm.alarm_service.core
 
-import kotlin.random.Random
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
@@ -61,6 +60,7 @@ import org.robolectric.shadow.api.Shadow
 import org.robolectric.shadows.ShadowPendingIntent
 import tech.antibytes.kfixture.fixture
 import tech.antibytes.kfixture.kotlinFixture
+import kotlin.random.Random
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(AndroidJUnit4::class)
@@ -250,7 +250,7 @@ class AlarmSchedulerWorkerSpec {
         List(size) { idx ->
             getRandomAlarm(
                 id = (idx + idOffset).toLong(),
-                enabled = true
+                enabled = true,
             )
         }
 

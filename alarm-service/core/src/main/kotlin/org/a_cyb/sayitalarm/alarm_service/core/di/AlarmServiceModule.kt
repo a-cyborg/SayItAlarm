@@ -6,8 +6,6 @@
 
 package org.a_cyb.sayitalarm.alarm_service.core.di
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler
 import org.a_cyb.sayitalarm.alarm_service.core.AlarmServiceController
 import org.a_cyb.sayitalarm.alarm_service.core.AndroidSttRecognizer

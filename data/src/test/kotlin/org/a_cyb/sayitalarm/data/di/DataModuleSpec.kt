@@ -6,8 +6,6 @@
 
 package org.a_cyb.sayitalarm.data.di
 
-import kotlin.test.Test
-import kotlin.test.assertNotNull
 import io.mockk.mockk
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -18,6 +16,8 @@ import org.acyb.sayitalarm.database.SettingsQueries
 import org.koin.core.qualifier.named
 import org.koin.dsl.koinApplication
 import org.koin.dsl.module
+import kotlin.test.Test
+import kotlin.test.assertNotNull
 
 class DataModuleSpec {
     @Test

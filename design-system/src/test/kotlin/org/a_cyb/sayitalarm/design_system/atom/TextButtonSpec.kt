@@ -6,7 +6,6 @@
 
 package org.a_cyb.sayitalarm.design_system.atom
 
-import kotlin.test.assertTrue
 import android.content.ClipboardManager
 import android.content.Context
 import androidx.compose.ui.platform.LocalContext
@@ -16,6 +15,7 @@ import org.a_cyb.sayitalarm.design_system.R
 import org.a_cyb.sayitalarm.design_system.RoborazziTest
 import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Test
+import kotlin.test.assertTrue
 
 class TextButtonSpec : RoborazziTest() {
 

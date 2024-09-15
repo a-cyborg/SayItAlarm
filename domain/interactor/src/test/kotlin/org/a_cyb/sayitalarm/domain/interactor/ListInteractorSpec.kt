@@ -6,15 +6,6 @@
 
 package org.a_cyb.sayitalarm.domain.interactor
 
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import java.util.Calendar.FRIDAY
-import java.util.Calendar.MONDAY
-import java.util.Calendar.SATURDAY
-import java.util.Calendar.SUNDAY
-import java.util.Calendar.THURSDAY
-import java.util.Calendar.TUESDAY
-import java.util.Calendar.WEDNESDAY
 import app.cash.turbine.test
 import io.mockk.clearAllMocks
 import io.mockk.coVerify
@@ -45,6 +36,15 @@ import org.a_cyb.sayitalarm.entity.WeeklyRepeat
 import org.a_cyb.sayitalarm.util.fulfils
 import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Test
+import java.util.Calendar.FRIDAY
+import java.util.Calendar.MONDAY
+import java.util.Calendar.SATURDAY
+import java.util.Calendar.SUNDAY
+import java.util.Calendar.THURSDAY
+import java.util.Calendar.TUESDAY
+import java.util.Calendar.WEDNESDAY
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
 
 @ExperimentalCoroutinesApi
 class ListInteractorSpec {
@@ -73,7 +73,7 @@ class ListInteractorSpec {
         val results = listOf(
             Result.success(alarms),
             Result.failure(exception),
-            Result.success(alarms)
+            Result.success(alarms),
         )
 
         every { alarmRepository.getAllAlarms() } returns flow {
@@ -213,8 +213,8 @@ class ListInteractorSpec {
             sayItScripts = SayItScripts(
                 "I am peaceful and whole.",
                 "I do all things in love.",
-                "I embrace change seamlessly and rise to the new opportunity it presents."
-            )
+                "I embrace change seamlessly and rise to the new opportunity it presents.",
+            ),
         ),
         Alarm(
             id = 2,
@@ -230,8 +230,8 @@ class ListInteractorSpec {
                 "My body is strong.",
                 "I am thankful for my body.",
                 "My body helps me play.",
-                "I am worthy of investing time and effort into my physical health."
-            )
+                "I am worthy of investing time and effort into my physical health.",
+            ),
         ),
         Alarm(
             id = 3,
@@ -246,8 +246,8 @@ class ListInteractorSpec {
             sayItScripts = SayItScripts(
                 "I'm ready to dive into my passion",
                 "Ready to explore, ready to learn.",
-                "I embrace this hour with enthusiasm."
-            )
-        )
+                "I embrace this hour with enthusiasm.",
+            ),
+        ),
     )
 }

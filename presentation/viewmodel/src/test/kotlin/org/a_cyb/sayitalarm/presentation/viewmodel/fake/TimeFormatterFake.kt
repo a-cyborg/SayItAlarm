@@ -6,11 +6,11 @@
 
 package org.a_cyb.sayitalarm.presentation.viewmodel.fake
 
-import java.text.SimpleDateFormat
-import java.util.Calendar
 import org.a_cyb.sayitalarm.entity.Hour
 import org.a_cyb.sayitalarm.entity.Minute
 import org.a_cyb.sayitalarm.util.formatter.time.TimeFormatterContract
+import java.text.SimpleDateFormat
+import java.util.Calendar
 
 class TimeFormatterFake : TimeFormatterContract {
 

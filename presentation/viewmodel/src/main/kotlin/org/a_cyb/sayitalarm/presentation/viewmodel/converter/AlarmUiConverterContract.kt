@@ -14,11 +14,8 @@ import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.Selectable
 import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.TimeUI
 import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.WeeklyRepeatUI
 
-interface AlarmUIConverterContract {
+interface AlarmUiConverterContract {
     fun convertAsTimeUi(hour: Hour, minute: Minute): TimeUI
     fun convertAsWeeklyRepeatUi(selectableRepeats: List<SelectableRepeat>): WeeklyRepeatUI
-    fun convertToAlertTypeUi(
-        selectableTypes: List<SelectableAlertType>,
-        chosenType: String
-    ): AlertTypeUI
+    fun convertToAlertTypeUi(selectableTypes: List<SelectableAlertType>, chosenType: String): AlertTypeUI
 }

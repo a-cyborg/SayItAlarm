@@ -6,12 +6,12 @@
 
 package org.a_cyb.sayitalarm.design_system.atom
 
-import kotlin.test.assertTrue
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
 import org.a_cyb.sayitalarm.design_system.R
 import org.a_cyb.sayitalarm.design_system.RoborazziTest
 import org.junit.Test
+import kotlin.test.assertTrue
 
 class IconButtonSpec : RoborazziTest() {
 

@@ -25,40 +25,40 @@ internal class SettingsViewModelFake(initState: SettingsState = Error) : Setting
     private val _state: MutableStateFlow<SettingsState> = MutableStateFlow(initState)
     override val state: StateFlow<SettingsState> = _state
 
-    private var _executedCommand = ExecutedCommand.NONE
+    private var _executed = ExecutedCommand.NONE
     val executed: ExecutedCommand
-        get() = _executedCommand
+        get() = _executed
 
     override fun setTimeOut(timeOut: TimeOut) {
         val settingsUI = (_state.value as Success).settingsUI.copy(
             timeOut = TimeInput(
                 timeOut.timeOut,
-                timeOut.timeOut.formatAsDuration()
-            )
+                timeOut.timeOut.formatAsDuration(),
+            ),
         )
         _state.update { Success(settingsUI) }
 
-        _executedCommand = ExecutedCommand.SET_TIMEOUT
+        _executed = ExecutedCommand.SET_TIMEOUT
     }
 
     override fun setSnooze(snooze: Snooze) {
-        _executedCommand = ExecutedCommand.SET_SNOOZE
+        _executed = ExecutedCommand.SET_SNOOZE
     }
 
     override fun setTheme(themeName: String) {
-        _executedCommand = ExecutedCommand.SET_THEME
+        _executed = ExecutedCommand.SET_THEME
     }
 
     override fun sendEmail() {
-        _executedCommand = ExecutedCommand.SEND_EMAIL
+        _executed = ExecutedCommand.SEND_EMAIL
     }
 
     override fun openGitHub() {
-        _executedCommand = ExecutedCommand.OPEN_GITHUB
+        _executed = ExecutedCommand.OPEN_GITHUB
     }
 
     override fun openGooglePlay() {
-        _executedCommand = ExecutedCommand.OPEN_GOOGLE_PLAY
+        _executed = ExecutedCommand.OPEN_GOOGLE_PLAY
     }
 
     override fun <T : CommandContract.CommandReceiver> runCommand(command: CommandContract.Command<T>) {
@@ -72,7 +72,7 @@ internal class SettingsViewModelFake(initState: SettingsState = Error) : Setting
     override val contact: SettingsContract.Contact = SettingsContract.Contact(
         email = "hello@email.com",
         githubUrl = "www.github.com/sayItAlarm",
-        googlePlayUrl = "www.google-play.com/sayItAlarm"
+        googlePlayUrl = "www.google-play.com/sayItAlarm",
     )
 
     private fun formatToCamelCase(text: String): String = text.lowercase().replaceFirstChar(Char::titlecase)

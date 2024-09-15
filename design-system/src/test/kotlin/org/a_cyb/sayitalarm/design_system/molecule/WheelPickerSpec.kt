@@ -6,20 +6,16 @@
 
 package org.a_cyb.sayitalarm.design_system.molecule
 
-import kotlin.test.assertTrue
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onParent
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToIndex
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.a_cyb.sayitalarm.design_system.R
 import org.a_cyb.sayitalarm.design_system.RoborazziTest
 import org.a_cyb.sayitalarm.design_system.atom.TextHeadlineStandardLarge
 import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.annotation.Config
-import org.robolectric.annotation.GraphicsMode
+import kotlin.test.assertTrue
 
 class WheelPickerSpec : RoborazziTest() {
 

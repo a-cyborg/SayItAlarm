@@ -6,14 +6,8 @@
 
 package org.a_cyb.sayitalarm.design_system.atom
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import org.a_cyb.sayitalarm.design_system.R
-import org.a_cyb.sayitalarm.design_system.token.Spacing
 
 @Preview
 @Composable
@@ -30,14 +24,3 @@ fun CardStandardCenteredPreview() {
         TextDisplayStandardLarge(text = "CardStandardCentered")
     }
 }
-
-@Preview
-@Composable
-fun test() {
-    CardStandardCentered {
-        Box(modifier = Modifier.padding(all = Spacing.m)) {
-            TextTitleStandardMedium (text = stringResource(id = R.string.info_list_no_alarm))
-        }
-    }
-}
-

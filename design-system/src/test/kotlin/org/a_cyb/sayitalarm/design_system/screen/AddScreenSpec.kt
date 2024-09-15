@@ -6,7 +6,6 @@
 
 package org.a_cyb.sayitalarm.design_system.screen
 
-import kotlin.test.assertTrue
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.github.takahirom.roborazzi.RobolectricDeviceQualifiers
@@ -30,6 +29,7 @@ import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract.Comma
 import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract.CommandReceiver
 import org.junit.Test
 import org.robolectric.annotation.Config
+import kotlin.test.assertTrue
 
 @Config(qualifiers = RobolectricDeviceQualifiers.Pixel7)
 class AddScreenSpec : RoborazziTest() {
@@ -70,7 +70,7 @@ class AddScreenSpec : RoborazziTest() {
             setContent {
                 AddScreen(
                     viewModel = viewModel,
-                    navigateToList = {}
+                    navigateToList = {},
                 )
             }
 
@@ -91,7 +91,7 @@ class AddScreenSpec : RoborazziTest() {
             setContent {
                 AddScreen(
                     viewModel = viewModel,
-                    navigateToList = {}
+                    navigateToList = {},
                 )
             }
 
@@ -110,7 +110,7 @@ class AddScreenSpec : RoborazziTest() {
             setContent {
                 AddScreen(
                     viewModel = viewModel,
-                    navigateToList = {}
+                    navigateToList = {},
                 )
             }
 

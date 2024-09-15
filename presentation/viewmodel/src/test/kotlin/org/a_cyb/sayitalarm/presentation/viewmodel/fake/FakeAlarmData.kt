@@ -6,13 +6,6 @@
 
 package org.a_cyb.sayitalarm.presentation.viewmodel.fake
 
-import java.util.Calendar.FRIDAY
-import java.util.Calendar.MONDAY
-import java.util.Calendar.SATURDAY
-import java.util.Calendar.SUNDAY
-import java.util.Calendar.THURSDAY
-import java.util.Calendar.TUESDAY
-import java.util.Calendar.WEDNESDAY
 import android.icu.util.Calendar
 import org.a_cyb.sayitalarm.entity.Alarm
 import org.a_cyb.sayitalarm.entity.AlarmType
@@ -25,6 +18,13 @@ import org.a_cyb.sayitalarm.entity.SayItScripts
 import org.a_cyb.sayitalarm.entity.WeeklyRepeat
 import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.SelectableAlertType
 import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.SelectableRepeat
+import java.util.Calendar.FRIDAY
+import java.util.Calendar.MONDAY
+import java.util.Calendar.SATURDAY
+import java.util.Calendar.SUNDAY
+import java.util.Calendar.THURSDAY
+import java.util.Calendar.TUESDAY
+import java.util.Calendar.WEDNESDAY
 
 object FakeAlarmData {
     val alarms = listOf(
@@ -41,8 +41,8 @@ object FakeAlarmData {
             sayItScripts = SayItScripts(
                 "I am peaceful and whole.",
                 "I do all things in love.",
-                "I embrace change seamlessly and rise to the new opportunity it presents."
-            )
+                "I embrace change seamlessly and rise to the new opportunity it presents.",
+            ),
         ),
         Alarm(
             id = 2,
@@ -59,7 +59,7 @@ object FakeAlarmData {
                     "we shall not be able to keep our mind strong and clear.",
                 "My body is strong.",
                 "Fitness is my therapy.",
-            )
+            ),
         ),
         Alarm(
             id = 3,
@@ -74,9 +74,9 @@ object FakeAlarmData {
             sayItScripts = SayItScripts(
                 "I'm ready to dive into my passion",
                 "Ready to explore, ready to learn.",
-                "I embrace this hour with enthusiasm."
-            )
-        )
+                "I embrace this hour with enthusiasm.",
+            ),
+        ),
     )
 
     val selectableRepeats: List<SelectableRepeat>
@@ -84,7 +84,7 @@ object FakeAlarmData {
             SelectableRepeat(
                 WeekdayFormatterFake().formatFull(it),
                 it,
-                false
+                false,
             )
         }
 
@@ -92,7 +92,7 @@ object FakeAlarmData {
         get() = AlertType.entries.map {
             SelectableAlertType(
                 AlertTypeFormatterFake().format(it),
-                it == AlertType.SOUND_AND_VIBRATE
+                it == AlertType.SOUND_AND_VIBRATE,
             )
         }
 }

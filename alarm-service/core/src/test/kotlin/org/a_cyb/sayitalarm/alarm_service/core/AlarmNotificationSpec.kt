@@ -6,7 +6,6 @@
 
 package org.a_cyb.sayitalarm.alarm_service.core
 
-import kotlin.test.assertNotNull
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
@@ -22,6 +21,7 @@ import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
 import org.robolectric.shadow.api.Shadow
 import org.robolectric.shadows.ShadowPendingIntent
+import kotlin.test.assertNotNull
 
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [33])

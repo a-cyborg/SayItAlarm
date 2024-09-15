@@ -6,8 +6,6 @@
 
 package org.a_cyb.sayitalarm.alarm_service.core
 
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 import android.Manifest
 import android.app.ActivityManager
 import android.app.NotificationManager
@@ -24,6 +22,8 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 @RunWith(AndroidJUnit4::class)
 @SmallTest
@@ -34,7 +34,7 @@ class AlarmServiceSpec {
     @get:Rule(order = 0)
     val mRuntimePermissionRule: GrantPermissionRule = GrantPermissionRule.grant(
         Manifest.permission.POST_NOTIFICATIONS,
-        Manifest.permission.USE_FULL_SCREEN_INTENT
+        Manifest.permission.USE_FULL_SCREEN_INTENT,
     )
 
     @get:Rule(order = 1)
@@ -75,10 +75,10 @@ class AlarmServiceSpec {
             .getSystemService(NotificationManager::class.java)
             .activeNotifications
             .any {
-                it.id == 300
-                    && it.notification.channelId == "siaAlarmNotificationChannel"
-                    && it.notification.category == NotificationCompat.CATEGORY_ALARM
-                    && it.packageName == context.packageName
+                it.id == 300 &&
+                    it.notification.channelId == "siaAlarmNotificationChannel" &&
+                    it.notification.category == NotificationCompat.CATEGORY_ALARM &&
+                    it.packageName == context.packageName
             }
 
     @Test

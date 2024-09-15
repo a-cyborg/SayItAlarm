@@ -6,7 +6,6 @@
 
 package org.a_cyb.sayitalarm.data.model
 
-import kotlin.test.Test
 import org.a_cyb.sayitalarm.entity.Settings
 import org.a_cyb.sayitalarm.entity.Snooze
 import org.a_cyb.sayitalarm.entity.Theme
@@ -14,6 +13,7 @@ import org.a_cyb.sayitalarm.entity.TimeOut
 import org.a_cyb.sayitalarm.util.mustBe
 import tech.antibytes.kfixture.fixture
 import tech.antibytes.kfixture.kotlinFixture
+import kotlin.test.Test
 import org.acyb.sayitalarm.database.Get as SettingsDTO
 
 class SettingsSpec {
@@ -63,7 +63,7 @@ class SettingsSpec {
         actual mustBe SettingsDTO(
             timeOut = timeOut.toLong(),
             snooze = snooze.toLong(),
-            theme = 0
+            theme = 0,
         )
     }
 }

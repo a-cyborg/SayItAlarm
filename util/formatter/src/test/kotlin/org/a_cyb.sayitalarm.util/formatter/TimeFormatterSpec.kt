@@ -6,7 +6,6 @@
 
 package org.a_cyb.sayitalarm.util.formatter
 
-import java.util.Locale
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -20,6 +19,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowSettings
+import java.util.Locale
 
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [33])

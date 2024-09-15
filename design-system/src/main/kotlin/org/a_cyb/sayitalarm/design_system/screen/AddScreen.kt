@@ -37,7 +37,7 @@ fun AddScreen(
             onSave = {
                 viewModel.runCommand(SaveCommand)
                 navigateToList()
-            }
+            },
         )
         SpacerMedium()
 
@@ -47,7 +47,7 @@ fun AddScreen(
 
         AlarmPanel(
             alarmUI = state.value.alarmUI,
-            executor = { viewModel.runCommand(it) }
+            executor = { viewModel.runCommand(it) },
         )
     }
 }
@@ -64,6 +64,6 @@ private fun AddTopAppBar(
         },
         actions = {
             TextButtonSave(onSave)
-        }
+        },
     )
 }

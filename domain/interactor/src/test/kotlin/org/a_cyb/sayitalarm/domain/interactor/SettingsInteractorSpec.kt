@@ -6,8 +6,6 @@
 
 package org.a_cyb.sayitalarm.domain.interactor
 
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
 import app.cash.turbine.test
 import io.mockk.clearAllMocks
 import io.mockk.every
@@ -25,6 +23,8 @@ import org.a_cyb.sayitalarm.entity.TimeOut
 import org.a_cyb.sayitalarm.util.fulfils
 import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Test
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SettingsInteractorSpec {

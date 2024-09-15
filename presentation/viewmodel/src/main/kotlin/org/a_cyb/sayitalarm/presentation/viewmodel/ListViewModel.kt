@@ -31,7 +31,7 @@ class ListViewModel(
     private val interactor: InteractorContract.ListInteractor,
     private val timeFormatter: TimeFormatterContract,
     private val weekdayFormatter: WeekdayFormatterContract,
-    private val androidRecognizerOfflineHelper: AlarmServiceContract.SttRecognizerOnDeviceHelper
+    private val androidRecognizerOfflineHelper: AlarmServiceContract.SttRecognizerOnDeviceHelper,
 ) : ListContract.ListViewModel, ViewModel() {
 
     override val state: StateFlow<ListState> = interactor.alarms
@@ -39,7 +39,7 @@ class ListViewModel(
         .stateIn(
             scope = scope,
             started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = Initial
+            initialValue = Initial,
         )
 
     private fun toState(result: Result<List<Alarm>>): ListState =
@@ -53,7 +53,7 @@ class ListViewModel(
 
     private fun toSuccess(alarms: List<Alarm>): ListState =
         Success(
-            alarms.map(::toAlarmInfo)
+            alarms.map(::toAlarmInfo),
         )
 
     private fun toAlarmInfo(alarm: Alarm): AlarmInfo =
@@ -61,7 +61,7 @@ class ListViewModel(
             id = alarm.id,
             time = timeFormatter.format(alarm.hour, alarm.minute),
             labelAndWeeklyRepeat = formatLabelAndWeeklyRepeat(alarm.label, alarm.weeklyRepeat),
-            enabled = alarm.enabled
+            enabled = alarm.enabled,
         )
 
     private fun formatLabelAndWeeklyRepeat(label: Label, weeklyRepeat: WeeklyRepeat): String =
@@ -85,7 +85,7 @@ class ListViewModel(
         .stateIn(
             scope = scope,
             started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = false
+            initialValue = false,
         )
 
     override fun downloadRecognizerModel() {

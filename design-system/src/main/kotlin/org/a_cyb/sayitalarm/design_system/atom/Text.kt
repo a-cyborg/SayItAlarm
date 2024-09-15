@@ -120,7 +120,6 @@ fun TextTitleWarningLarge(text: String) {
     )
 }
 
-
 @Composable
 fun TextTitleStandardMedium(text: String) {
     Text(
@@ -138,7 +137,6 @@ fun TextTitleAttentionMedium(text: String) {
         style = Font.title.m,
     )
 }
-
 
 @Composable
 fun TextTitleWarningMedium(text: String) {
@@ -199,7 +197,7 @@ fun TextBodySubtleMediumUnderline(text: String) {
     Text(
         text = text,
         color = Color.text.subtle,
-        style = Font.body.m.copy(textDecoration = TextDecoration.Underline)
+        style = Font.body.m.copy(textDecoration = TextDecoration.Underline),
     )
 }
 

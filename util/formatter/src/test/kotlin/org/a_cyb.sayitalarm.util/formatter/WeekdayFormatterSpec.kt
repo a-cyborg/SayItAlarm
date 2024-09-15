@@ -6,14 +6,6 @@
 
 package org.a_cyb.sayitalarm.util.formatter
 
-import java.time.DayOfWeek.FRIDAY
-import java.time.DayOfWeek.MONDAY
-import java.time.DayOfWeek.SATURDAY
-import java.time.DayOfWeek.SUNDAY
-import java.time.DayOfWeek.THURSDAY
-import java.time.DayOfWeek.TUESDAY
-import java.time.DayOfWeek.WEDNESDAY
-import java.util.Locale
 import android.content.Context
 import android.content.res.Resources
 import android.icu.text.DateFormatSymbols
@@ -32,6 +24,14 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
+import java.time.DayOfWeek.FRIDAY
+import java.time.DayOfWeek.MONDAY
+import java.time.DayOfWeek.SATURDAY
+import java.time.DayOfWeek.SUNDAY
+import java.time.DayOfWeek.THURSDAY
+import java.time.DayOfWeek.TUESDAY
+import java.time.DayOfWeek.WEDNESDAY
+import java.util.Locale
 
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [33])
@@ -152,7 +152,7 @@ class WeekdayFormatterSpec {
                 FRIDAY.value,
                 SATURDAY.value,
                 SUNDAY.value,
-            )
+            ),
         )
 
         // Then
@@ -176,7 +176,7 @@ class WeekdayFormatterSpec {
                 WEDNESDAY.value,
                 THURSDAY.value,
                 FRIDAY.value,
-            )
+            ),
         )
 
         // then
@@ -268,8 +268,8 @@ class WeekdayFormatterSpec {
                 THURSDAY.value,
                 FRIDAY.value,
                 SATURDAY.value,
-                SUNDAY.value
-            )
+                SUNDAY.value,
+            ),
         )
 
         // Then
@@ -293,8 +293,8 @@ class WeekdayFormatterSpec {
                 TUESDAY.value,
                 WEDNESDAY.value,
                 THURSDAY.value,
-                FRIDAY.value
-            )
+                FRIDAY.value,
+            ),
         )
 
         // Then

@@ -36,7 +36,7 @@ fun PermissionLauncher() {
             onRequest = {
                 showRationale = false
                 permissionState.launchMultiplePermissionRequest()
-            }
+            },
         )
     } else if (!permissionState.allPermissionsGranted) {
         LaunchedEffect(Unit) {

@@ -51,17 +51,17 @@ fun SiaNavHost(
         composable(ADD_ROUTE) {
             AddScreen(
                 viewModel = koinViewModel<AddViewModel>(),
-                navigateToList = navController::navigateBackToList
+                navigateToList = navController::navigateBackToList,
             )
         }
 
         composable(
             EDIT_ROUTE_WITH_ARGUMENT,
-            arguments = listOf(navArgument(EDIT_ARGUMENT_NAME) { type = NavType.LongType })
+            arguments = listOf(navArgument(EDIT_ARGUMENT_NAME) { type = NavType.LongType }),
         ) {
             EditScreen(
                 viewModel = koinViewModel<EditViewModel>(
-                    parameters = { parametersOf(navController.getAlarmId()) }
+                    parameters = { parametersOf(navController.getAlarmId()) },
                 ),
                 navigateToList = navController::navigateBackToList,
             )

@@ -6,7 +6,6 @@
 
 package org.a_cyb.sayitalarm.presentation.viewmodel
 
-import kotlin.time.Duration.Companion.minutes
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -26,6 +25,7 @@ import org.a_cyb.sayitalarm.presentation.contracts.SettingsContract.TimeInput
 import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract
 import org.a_cyb.sayitalarm.util.formatter.duration.DurationFormatterContract
 import org.a_cyb.sayitalarm.util.link_opener.LinkOpenerContract
+import kotlin.time.Duration.Companion.minutes
 
 class SettingsViewModel(
     private val interactor: InteractorContract.SettingsInteractor,
@@ -36,7 +36,7 @@ class SettingsViewModel(
     init {
         interactor.insertOrIgnore(
             getDefaultSettings(),
-            scope
+            scope,
         )
     }
 
@@ -45,7 +45,7 @@ class SettingsViewModel(
         .stateIn(
             scope = scope,
             started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = Initial
+            initialValue = Initial,
         )
 
     private fun mapToState(result: Result<Settings>): SettingsState = result
@@ -58,13 +58,13 @@ class SettingsViewModel(
                 timeOut = toTimeInput(timeOut.timeOut),
                 snooze = toTimeInput(snooze.snooze),
                 theme = theme.name.toCamelCase(),
-            )
+            ),
         )
 
     private fun toTimeInput(time: Int): TimeInput =
         TimeInput(
             input = time,
-            formatted = durationFormatter.format(time.minutes).short
+            formatted = durationFormatter.format(time.minutes).short,
         )
 
     private fun String.toCamelCase(): String = lowercase().replaceFirstChar(Char::titlecase)

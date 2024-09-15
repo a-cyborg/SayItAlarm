@@ -31,5 +31,3 @@ data object FinishCommand : CommandContract.Command<SayItCommandContract.Finish>
         receiver.finish()
     }
 }
-
-

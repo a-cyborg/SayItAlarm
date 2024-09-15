@@ -27,7 +27,7 @@ fun AlarmScreenRingingStatePreview() {
 }
 
 private class AlarmViewModelFake(
-    state: AlarmUiState = AlarmUiState.Initial
+    state: AlarmUiState = AlarmUiState.Initial,
 ) : AlarmViewModel {
     override val state: StateFlow<AlarmUiState> = MutableStateFlow(state)
     override val currentTime: StateFlow<String> = MutableStateFlow("6:00 AM")

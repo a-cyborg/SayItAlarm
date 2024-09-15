@@ -6,10 +6,6 @@
 
 package org.a_cyb.sayitalarm.presentation.viewmodel.di
 
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-import kotlin.test.assertNotNull
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -31,6 +27,10 @@ import org.a_cyb.sayitalarm.util.time_flow.TimeFlowContract
 import org.koin.core.parameter.parametersOf
 import org.koin.dsl.koinApplication
 import org.koin.dsl.module
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertNotNull
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ViewModelModuleSpec {
@@ -92,7 +92,7 @@ class ViewModelModuleSpec {
         // When
         val viewModel = koinApp.koin
             .getOrNull<EditContract.EditViewModel>(
-                parameters = { parametersOf(2L) }
+                parameters = { parametersOf(2L) },
             )
 
         // Then
@@ -133,7 +133,7 @@ class ViewModelModuleSpec {
         val koinApp = koinApplication {
             modules(
                 viewModelModule,
-                externalModule
+                externalModule,
             )
         }
 
@@ -163,7 +163,7 @@ class ViewModelModuleSpec {
         // When
         val alarmViewModel = koinApp.koin
             .getOrNull<AlarmContract.AlarmViewModel>(
-                parameters = { parametersOf(0) }
+                parameters = { parametersOf(0) },
             )
 
         // Then

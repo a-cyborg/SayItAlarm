@@ -81,7 +81,7 @@ internal class AlarmSchedulerWorker(
 
             alarmManager.setAlarmClock(
                 AlarmManager.AlarmClockInfo(alarmTimeInMills, alarmPendingIntent),
-                alarmPendingIntent!!
+                alarmPendingIntent!!,
             )
         }
     }

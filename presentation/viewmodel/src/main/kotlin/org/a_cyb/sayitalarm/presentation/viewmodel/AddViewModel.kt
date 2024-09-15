@@ -29,13 +29,13 @@ import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.RingtoneUI
 import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.SelectableRepeat
 import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract.Command
 import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract.CommandReceiver
-import org.a_cyb.sayitalarm.presentation.viewmodel.converter.AlarmUIConverterContract
+import org.a_cyb.sayitalarm.presentation.viewmodel.converter.AlarmUiConverterContract
 import org.a_cyb.sayitalarm.presentation.viewmodel.mapper.AlarmMapperContract
 
 class AddViewModel(
     private val interactor: InteractorContract.AddInteractor,
     private val mapper: AlarmMapperContract,
-    private val converter: AlarmUIConverterContract,
+    private val converter: AlarmUiConverterContract,
 ) : AddContract.AddViewModel, ViewModel() {
 
     private val _state: MutableStateFlow<AddState> = MutableStateFlow(Initial(getDefaultAlarmUI()))
@@ -46,7 +46,7 @@ class AddViewModel(
     override fun setTime(hour: Hour, minute: Minute) {
         updateStateWithCopy {
             copy(
-                timeUI = converter.convertAsTimeUi(hour, minute)
+                timeUI = converter.convertAsTimeUi(hour, minute),
             )
         }
     }
@@ -60,7 +60,7 @@ class AddViewModel(
     override fun setWeeklyRepeat(selectableRepeats: List<SelectableRepeat>) {
         updateStateWithCopy {
             copy(
-                weeklyRepeatUI = converter.convertAsWeeklyRepeatUi(selectableRepeats)
+                weeklyRepeatUI = converter.convertAsWeeklyRepeatUi(selectableRepeats),
             )
         }
     }
@@ -76,8 +76,8 @@ class AddViewModel(
             copy(
                 alertTypeUI = converter.convertToAlertTypeUi(
                     _state.value.alarmUI.alertTypeUI.selectableAlertType,
-                    alertTypeName
-                )
+                    alertTypeName,
+                ),
             )
         }
     }
@@ -130,7 +130,7 @@ class AddViewModel(
                 alertType = ALERT_TYPE,
                 ringtone = RINGTONE,
                 alarmType = ALARM_TYPE,
-                sayItScripts = SAY_IT_SCRIPTS
+                sayItScripts = SAY_IT_SCRIPTS,
             )
     }
 }

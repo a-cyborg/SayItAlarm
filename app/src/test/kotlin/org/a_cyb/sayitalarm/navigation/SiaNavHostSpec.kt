@@ -180,10 +180,10 @@ class SiaNavHostSpec {
                         id = 1,
                         time = "6:00 AM",
                         labelAndWeeklyRepeat = "Wake Up, every weekday",
-                        enabled = true
-                    )
-                )
-            )
+                        enabled = true,
+                    ),
+                ),
+            ),
         )
         val addState = MutableStateFlow(AddState.Initial(FakeAlarmUIData.defaultAlarmUI))
         val editState = MutableStateFlow(EditContract.EditViewModel.EditState.Initial)

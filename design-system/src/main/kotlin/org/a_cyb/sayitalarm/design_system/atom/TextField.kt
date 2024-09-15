@@ -74,7 +74,7 @@ fun TextFieldSayItScript(
         colors = getTextFieldColors(),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
         keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
-        placeholder = { TextBodySubtleMedium(text = stringResource(id = R.string.info_scripts_only_letter)) }
+        placeholder = { TextBodySubtleMedium(text = stringResource(id = R.string.info_scripts_only_letter)) },
     )
 }
 

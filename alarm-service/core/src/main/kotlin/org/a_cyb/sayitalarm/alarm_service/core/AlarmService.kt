@@ -6,7 +6,6 @@
 
 package org.a_cyb.sayitalarm.alarm_service.core
 
-import kotlin.properties.Delegates
 import android.app.Notification
 import android.app.NotificationManager
 import android.app.Service
@@ -20,6 +19,7 @@ import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
 import org.a_cyb.sayitalarm.entity.AlertType
 import org.a_cyb.sayitalarm.entity.Ringtone
 import org.koin.android.ext.android.inject
+import kotlin.properties.Delegates
 
 class AlarmService : AlarmServiceContract.AlarmService, Service() {
 
@@ -28,7 +28,7 @@ class AlarmService : AlarmServiceContract.AlarmService, Service() {
     private val audioVibeController: AudioVibeControllerContract by inject()
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        alarmId = intent.getLongExtra(AlarmScheduler.EXTRA_ALARM_ID, 0L)
+        alarmId = intent.getLongExtra(AlarmScheduler.INTENT_EXTRA_ALARM_ID, 0L)
 
         val notification = AlarmNotification.getAlarmAlertNotification(this)
         val notificationManager = (getSystemService(NotificationManager::class.java) as NotificationManager)
@@ -45,19 +45,19 @@ class AlarmService : AlarmServiceContract.AlarmService, Service() {
                 startForeground(
                     FOREGROUND_ID,
                     notification,
-                    ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE
+                    ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE,
                 )
             } else {
                 startForeground(
                     FOREGROUND_ID,
                     notification,
-                    ServiceInfo.FOREGROUND_SERVICE_TYPE_NONE
+                    ServiceInfo.FOREGROUND_SERVICE_TYPE_NONE,
                 )
             }
         } else {
             startForeground(
                 FOREGROUND_ID,
-                notification
+                notification,
             )
         }
     }
@@ -86,7 +86,7 @@ class AlarmService : AlarmServiceContract.AlarmService, Service() {
         sendBroadcast(
             Intent()
                 .setPackage(packageName)
-                .setAction(ACTION_EXIT_APP)
+                .setAction(ACTION_EXIT_APP),
         )
     }
 
@@ -96,7 +96,7 @@ class AlarmService : AlarmServiceContract.AlarmService, Service() {
     }
 
     companion object {
-        const val FOREGROUND_ID = 300
+        private const val FOREGROUND_ID = 300
         const val DEFAULT_ALERT_TYPE_ORDINAL = 2
 
         const val ACTION_EXIT_APP = "org.a_cyb.sayitalarm.ACTION_EXIT_APP"

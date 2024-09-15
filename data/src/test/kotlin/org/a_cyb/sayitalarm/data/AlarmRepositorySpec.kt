@@ -8,8 +8,6 @@
 
 package org.a_cyb.sayitalarm.data
 
-import kotlin.test.AfterTest
-import kotlin.test.Test
 import app.cash.turbine.test
 import io.mockk.clearMocks
 import io.mockk.coEvery
@@ -37,6 +35,8 @@ import org.a_cyb.sayitalarm.util.fulfils
 import org.a_cyb.sayitalarm.util.mustBe
 import tech.antibytes.kfixture.fixture
 import tech.antibytes.kfixture.kotlinFixture
+import kotlin.test.AfterTest
+import kotlin.test.Test
 import org.acyb.sayitalarm.database.Alarm as AlarmDTO
 
 class AlarmRepositorySpec {
@@ -67,7 +67,7 @@ class AlarmRepositorySpec {
 
         // When
         repository.getAllAlarms().test {
-            //Then
+            // Then
             awaitItem().isFailure mustBe true
             awaitItem().isSuccess mustBe true
             awaitItem().isFailure mustBe true
@@ -80,7 +80,8 @@ class AlarmRepositorySpec {
     fun `GetAllAlarm receives data from dataSource and perform mapping before sending it downstream`() = runTest {
         // Given
         val dto = getRandomDTO(
-            weeklyRepeat = 127,  // 0b1111111 : Everyday
+            // 0b1111111 : Everyday
+            weeklyRepeat = 127,
             alertType = AlertType.SOUND_AND_VIBRATE.ordinal.toLong(),
             alarmType = AlarmType.SAY_IT.ordinal.toLong(),
             sayItScripts = "First script,Second script,Third script",
@@ -108,9 +109,9 @@ class AlarmRepositorySpec {
                         alertType = AlertType.SOUND_AND_VIBRATE,
                         ringtone = Ringtone(dto.ringtone),
                         alarmType = AlarmType.SAY_IT,
-                        sayItScripts = SayItScripts("First script", "Second script", "Third script")
-                    )
-                )
+                        sayItScripts = SayItScripts("First script", "Second script", "Third script"),
+                    ),
+                ),
             )
 
             awaitComplete()
@@ -124,7 +125,7 @@ class AlarmRepositorySpec {
             weeklyRepeat = 1,
             alertType = 1,
             alarmType = 2,
-            sayItScripts = "One,Two,Three"
+            sayItScripts = "One,Two,Three",
         )
         val dispatcher = StandardTestDispatcher(this.testScheduler)
         val repository = AlarmRepository(dataSource, dispatcher)
@@ -148,7 +149,7 @@ class AlarmRepositorySpec {
                 alertType = AlertType.VIBRATE_ONLY,
                 ringtone = Ringtone(dto.ringtone),
                 alarmType = AlarmType.PUSH_BUTTON,
-                sayItScripts = SayItScripts("One", "Two", "Three")
+                sayItScripts = SayItScripts("One", "Two", "Three"),
             )
     }
 
@@ -255,6 +256,6 @@ class AlarmRepositorySpec {
             alertType,
             ringtone,
             alarmType,
-            sayItScripts
+            sayItScripts,
         )
 }

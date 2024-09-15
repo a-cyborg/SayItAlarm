@@ -6,9 +6,6 @@
 
 package org.a_cyb.sayitalarm.domain.interactor
 
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
 import app.cash.turbine.test
 import io.mockk.clearAllMocks
 import io.mockk.coVerify
@@ -35,6 +32,9 @@ import org.a_cyb.sayitalarm.entity.Ringtone
 import org.a_cyb.sayitalarm.entity.SayItScripts
 import org.a_cyb.sayitalarm.entity.WeeklyRepeat
 import org.a_cyb.sayitalarm.util.mustBe
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class EditInteractorSpec {
@@ -120,6 +120,6 @@ class EditInteractorSpec {
             alertType = AlertType.SOUND_ONLY,
             ringtone = Ringtone(""),
             alarmType = AlarmType.SAY_IT,
-            sayItScripts = SayItScripts()
+            sayItScripts = SayItScripts(),
         )
 }

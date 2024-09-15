@@ -76,7 +76,7 @@ fun SayItScreen(
             is Processing -> {
                 ProcessingScreen(
                     info = (state.value as Processing).info,
-                    runCommand = { viewModel.runCommand(it) }
+                    runCommand = { viewModel.runCommand(it) },
                 )
             }
 
@@ -128,7 +128,7 @@ private fun ColumnScope.ProcessingScreen(
     Spacer(modifier = Modifier.weight(1f))
     ProcessingActionAndAnimation(
         status = info.status,
-        runCommand = { runCommand(it) }
+        runCommand = { runCommand(it) },
     )
     SpacerXLarge()
 }
@@ -137,12 +137,12 @@ private fun ColumnScope.ProcessingScreen(
 private fun ProcessingScreenHeader(status: SttStatus, count: Count) {
     val counter by animateFloatAsState(
         targetValue = count.current / count.total.toFloat(),
-        label = "SayItScriptCounter"
+        label = "SayItScriptCounter",
     )
 
     StatusHeader(
         status = status,
-        countAsText = "${count.current}/${count.total}"
+        countAsText = "${count.current}/${count.total}",
     )
     SpacerMedium()
     LinearProgressIndicator(

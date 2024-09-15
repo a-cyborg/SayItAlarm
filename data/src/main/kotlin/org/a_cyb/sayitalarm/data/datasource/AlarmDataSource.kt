@@ -76,7 +76,7 @@ class AlarmDataSource(
     override suspend fun updateEnabled(id: Long, enabled: Boolean) {
         alarmQueries.updateEnabled(
             enabled = enabled,
-            id = id
+            id = id,
         )
     }
 

@@ -78,7 +78,6 @@ fun PanelItemStandardLarge(
     }
 }
 
-
 @Composable
 fun PanelItemStandardClickable(
     valueLabel: String = "",

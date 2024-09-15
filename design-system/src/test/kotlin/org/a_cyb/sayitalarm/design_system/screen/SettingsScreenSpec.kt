@@ -56,7 +56,7 @@ class SettingsScreenSpec {
             timeOut = TimeInput(180, "3 hr"),
             snooze = TimeInput(15, "15 min"),
             theme = "Light",
-        )
+        ),
     )
 
     private fun getString(id: Int) = composeTestRule.activity.getString(id)
@@ -185,8 +185,8 @@ class SettingsScreenSpec {
     }
 
     /*
-    * Command execution test
-    * */
+     * Command execution test
+     * */
 
     @Test
     fun `When timeOutPopUpPicker is displayed and confirm is clicked, it executes setTimeOutCommand`() = runTest {

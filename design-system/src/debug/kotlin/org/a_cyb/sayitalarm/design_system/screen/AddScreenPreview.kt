@@ -25,7 +25,7 @@ import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract
 fun AddScreenPreview() {
     AddScreen(
         viewModel = AddViewModelFake(),
-        navigateToList = {}
+        navigateToList = {},
     )
 }
 

@@ -6,10 +6,6 @@
 
 package org.a_cyb.sayitalarm.data.datasource
 
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-import kotlin.test.assertTrue
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import app.cash.turbine.test
@@ -20,6 +16,10 @@ import org.a_cyb.sayitalarm.entity.Theme
 import org.a_cyb.sayitalarm.util.mustBe
 import tech.antibytes.kfixture.fixture
 import tech.antibytes.kfixture.kotlinFixture
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertTrue
 import org.acyb.sayitalarm.database.Get as SettingsDTO
 
 class SettingsDataSourceSpec {

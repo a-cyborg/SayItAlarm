@@ -6,10 +6,6 @@
 
 package org.a_cyb.sayitalarm.presentation.viewmodel
 
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-import java.util.Calendar
 import app.cash.turbine.test
 import io.mockk.clearMocks
 import io.mockk.mockk
@@ -42,11 +38,15 @@ import org.a_cyb.sayitalarm.presentation.viewmodel.fake.TimeFormatterFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.WeekdayFormatterFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.mapper.AlarmMapper
 import org.a_cyb.sayitalarm.presentation.viewmodel.mapper.AlarmMapperContract
-import org.a_cyb.sayitalarm.util.ringtone_resolver.RingtoneResolverContract
 import org.a_cyb.sayitalarm.util.fulfils
 import org.a_cyb.sayitalarm.util.mustBe
+import org.a_cyb.sayitalarm.util.ringtone_resolver.RingtoneResolverContract
 import tech.antibytes.kfixture.fixture
 import tech.antibytes.kfixture.kotlinFixture
+import java.util.Calendar
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class AddViewModelSpec {
@@ -103,8 +103,8 @@ class AddViewModelSpec {
             // Then
             awaitItem() mustBe Success(
                 defaultAlarmUI.copy(
-                    TimeUI(hour.hour, minute.minute, "3:33 AM")
-                )
+                    TimeUI(hour.hour, minute.minute, "3:33 AM"),
+                ),
             )
         }
     }
@@ -129,9 +129,9 @@ class AddViewModelSpec {
                     defaultAlarmUI.copy(
                         weeklyRepeatUI = WeeklyRepeatUI(
                             formatted = "Mon, Wed, and Fri",
-                            selectableRepeats = selectableRepeats
-                        )
-                    )
+                            selectableRepeats = selectableRepeats,
+                        ),
+                    ),
                 )
             }
         }
@@ -150,7 +150,7 @@ class AddViewModelSpec {
 
                 // Then
                 awaitItem() mustBe Success(
-                    defaultAlarmUI.copy(label = label)
+                    defaultAlarmUI.copy(label = label),
                 )
             }
         }
@@ -173,8 +173,8 @@ class AddViewModelSpec {
                 // Then
                 awaitItem() mustBe Success(
                     defaultAlarmUI.copy(
-                        alertTypeUI = AlertTypeUI(alertTypes)
-                    )
+                        alertTypeUI = AlertTypeUI(alertTypes),
+                    ),
                 )
             }
         }
@@ -186,7 +186,7 @@ class AddViewModelSpec {
             val selected = FakeAlarmData.alarms[1].ringtone
             val ringtoneUI = RingtoneUI(
                 ringtoneResolver.getRingtoneTitle(selected.ringtone).getOrNull()!!,
-                selected.ringtone
+                selected.ringtone,
             )
 
             viewModel.state.test {
@@ -197,7 +197,7 @@ class AddViewModelSpec {
 
                 // Then
                 awaitItem() mustBe Success(
-                    defaultAlarmUI.copy(ringtoneUI = ringtoneUI)
+                    defaultAlarmUI.copy(ringtoneUI = ringtoneUI),
                 )
             }
         }
@@ -217,8 +217,8 @@ class AddViewModelSpec {
                 // Then
                 awaitItem() mustBe Success(
                     defaultAlarmUI.copy(
-                        sayItScripts = scripts.scripts
-                    )
+                        sayItScripts = scripts.scripts,
+                    ),
                 )
             }
         }
@@ -233,7 +233,7 @@ class AddViewModelSpec {
         val alertTypeName = alertTypeFormatter.format(AlertType.VIBRATE_ONLY)
         val ringtoneUI = RingtoneUI(
             ringtoneResolver.getRingtoneTitle(alarm.ringtone.ringtone).getOrNull()!!,
-            alarm.ringtone.ringtone
+            alarm.ringtone.ringtone,
         )
 
         viewModel.state.test {
@@ -279,5 +279,5 @@ private val defaultAlarmUI: AlarmUI =
         label = "",
         alertTypeUI = AlertTypeUI(FakeAlarmData.selectableAlertTypes),
         ringtoneUI = RingtoneUI("Radial", "file://Radial.mp3"),
-        sayItScripts = emptyList()
+        sayItScripts = emptyList(),
     )

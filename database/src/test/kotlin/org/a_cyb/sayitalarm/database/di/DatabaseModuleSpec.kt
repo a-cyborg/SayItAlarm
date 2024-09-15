@@ -6,8 +6,6 @@
 
 package org.a_cyb.sayitalarm.database.di
 
-import kotlin.test.Test
-import kotlin.test.assertNotNull
 import android.content.Context
 import io.mockk.mockk
 import org.a_cyb.sayitalarm.database.SayItDB
@@ -15,6 +13,8 @@ import org.acyb.sayitalarm.database.AlarmQueries
 import org.acyb.sayitalarm.database.SettingsQueries
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.koinApplication
+import kotlin.test.Test
+import kotlin.test.assertNotNull
 
 class DatabaseModuleSpec {
     @Test

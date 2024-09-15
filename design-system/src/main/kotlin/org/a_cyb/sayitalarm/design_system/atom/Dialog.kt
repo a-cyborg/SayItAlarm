@@ -28,7 +28,7 @@ fun DialogStandardFillMax(
         Box(
             Modifier
                 .fillMaxSize()
-                .background(Color.surface.standard)
+                .background(Color.surface.standard),
         ) {
             CardStandardFillMax {
                 topAppBar()
@@ -52,7 +52,7 @@ fun DialogStandardFillMaxScrollable(
         Box(
             Modifier
                 .fillMaxSize()
-                .background(Color.surface.standard)
+                .background(Color.surface.standard),
         ) {
             ColumnScreenStandardScrollable {
                 topAppBar()

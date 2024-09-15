@@ -6,7 +6,6 @@
 
 package org.a_cyb.sayitalarm.presentation.viewmodel.mapper
 
-import java.time.DayOfWeek
 import org.a_cyb.sayitalarm.entity.Alarm
 import org.a_cyb.sayitalarm.entity.AlarmType
 import org.a_cyb.sayitalarm.entity.AlertType
@@ -24,6 +23,7 @@ import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.Selectable
 import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.TimeUI
 import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.WeeklyRepeatUI
 import org.a_cyb.sayitalarm.util.ringtone_resolver.RingtoneResolverContract
+import java.time.DayOfWeek
 
 class AlarmMapper(
     private val timeFormatter: org.a_cyb.sayitalarm.util.formatter.time.TimeFormatterContract,
@@ -33,8 +33,8 @@ class AlarmMapper(
 ) : AlarmMapperContract {
 
     /*
-    * AlarmUI -> Alarm
-    * */
+     * AlarmUI -> Alarm
+     * */
     override fun mapToAlarm(alarmUI: AlarmUI): Alarm =
         with(alarmUI) {
             Alarm(
@@ -46,7 +46,7 @@ class AlarmMapper(
                 alertType = alertTypeUI.toAlertType(),
                 ringtone = Ringtone(ringtoneUI.uri),
                 alarmType = AlarmType.SAY_IT,
-                sayItScripts = SayItScripts(sayItScripts)
+                sayItScripts = SayItScripts(sayItScripts),
             )
         }
 
@@ -71,8 +71,8 @@ class AlarmMapper(
             .associateBy { alertTypeFormatter.format(it) }
 
     /*
-    * Alarm -> AlarmUI
-    * */
+     * Alarm -> AlarmUI
+     * */
     override fun mapToAlarmUI(alarm: Alarm): AlarmUI =
         with(alarm) {
             AlarmUI(
@@ -81,7 +81,7 @@ class AlarmMapper(
                 label.label,
                 alertType.toAlertTypeUI(),
                 ringtone.toRingtoneUI(),
-                sayItScripts.scripts
+                sayItScripts.scripts,
             )
         }
 
@@ -89,7 +89,7 @@ class AlarmMapper(
         return TimeUI(
             hour = first.hour,
             minute = second.minute,
-            formattedTime = timeFormatter.format(first, second)
+            formattedTime = timeFormatter.format(first, second),
         )
     }
 
@@ -105,7 +105,7 @@ class AlarmMapper(
             SelectableRepeat(
                 name = weeklyRepeatFormatter.formatFull(code),
                 code = code,
-                selected = contains(code)
+                selected = contains(code),
             )
         }
     }
@@ -114,7 +114,7 @@ class AlarmMapper(
         val selectableAlertTypes = AlertType.entries.map { alertType ->
             SelectableAlertType(
                 name = alertTypeFormatter.format(alertType),
-                selected = this == alertType
+                selected = this == alertType,
             )
         }
 

@@ -78,7 +78,7 @@ class AlarmScreenSpec : RoborazziTest() {
                     viewModel = viewModel,
                     navigateToSayIt = {
                         hasBeenCalled = true
-                    }
+                    },
                 )
             }
 

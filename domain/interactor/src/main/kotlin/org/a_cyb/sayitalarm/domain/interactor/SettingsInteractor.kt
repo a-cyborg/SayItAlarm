@@ -16,7 +16,7 @@ import org.a_cyb.sayitalarm.entity.Theme
 import org.a_cyb.sayitalarm.entity.TimeOut
 
 class SettingsInteractor(
-    private val settingsRepository: RepositoryContract.SettingsRepository
+    private val settingsRepository: RepositoryContract.SettingsRepository,
 ) : InteractorContract.SettingsInteractor {
 
     override val settings: Flow<Result<Settings>>

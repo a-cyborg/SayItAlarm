@@ -19,13 +19,13 @@ import org.a_cyb.sayitalarm.util.formatter.weekday.WeekdayFormatterContract
 class AlarmUiConverter(
     private val timeFormatter: TimeFormatterContract,
     private val weeklyRepeatFormatter: WeekdayFormatterContract,
-) : AlarmUIConverterContract {
+) : AlarmUiConverterContract {
 
     override fun convertAsTimeUi(hour: Hour, minute: Minute): TimeUI =
         TimeUI(
             hour.hour,
             minute.minute,
-            timeFormatter.format(hour, minute)
+            timeFormatter.format(hour, minute),
         )
 
     override fun convertAsWeeklyRepeatUi(selectableRepeats: List<SelectableRepeat>): WeeklyRepeatUI {
@@ -36,20 +36,17 @@ class AlarmUiConverter(
 
         return WeeklyRepeatUI(
             weeklyRepeatFormatter.formatAbbr(codes),
-            selectableRepeats
+            selectableRepeats,
         )
     }
 
-    override fun convertToAlertTypeUi(
-        selectableTypes: List<SelectableAlertType>,
-        chosenType: String,
-    ): AlertTypeUI =
+    override fun convertToAlertTypeUi(selectableTypes: List<SelectableAlertType>, chosenType: String): AlertTypeUI =
         AlertTypeUI(
             selectableTypes.map {
                 SelectableAlertType(
                     it.name,
-                    it.name == chosenType
+                    it.name == chosenType,
                 )
-            }
+            },
         )
 }

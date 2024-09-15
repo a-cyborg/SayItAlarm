@@ -6,16 +6,16 @@
 
 package org.a_cyb.sayitalarm.database
 
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-import kotlin.test.assertNull
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import org.a_cyb.sayitalarm.util.mustBe
 import org.acyb.sayitalarm.database.Alarm
 import tech.antibytes.kfixture.fixture
 import tech.antibytes.kfixture.kotlinFixture
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertNull
 
 class AlarmSchemaSpec {
 
@@ -52,7 +52,7 @@ class AlarmSchemaSpec {
             alarmEntity.alertType,
             alarmEntity.ringtone,
             alarmEntity.alarmType,
-            alarmEntity.sayItScripts
+            alarmEntity.sayItScripts,
         )
 
         val alarms = sayItDB.alarmQueries
@@ -89,7 +89,7 @@ class AlarmSchemaSpec {
             fetched.ringtone,
             fetched.alarmType,
             fetched.sayItScripts,
-            fetched.id
+            fetched.id,
         )
 
         val actual = sayItDB.alarmQueries
@@ -198,7 +198,7 @@ class AlarmSchemaSpec {
         assertNull(
             sayItDB.alarmQueries
                 .getById(5)
-                .executeAsOneOrNull()
+                .executeAsOneOrNull(),
         )
     }
 
@@ -296,7 +296,7 @@ class AlarmSchemaSpec {
                     it.alertType,
                     it.ringtone,
                     it.alarmType,
-                    it.sayItScripts
+                    it.sayItScripts,
                 )
         }
     }
@@ -322,6 +322,6 @@ class AlarmSchemaSpec {
             alertType,
             ringtone,
             alarmType,
-            sayItScripts
+            sayItScripts,
         )
 }

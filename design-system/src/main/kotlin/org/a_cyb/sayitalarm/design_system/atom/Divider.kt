@@ -19,7 +19,7 @@ fun DividerStandard() {
     HorizontalDivider(
         modifier = Modifier.padding(horizontal = Spacing.xs),
         thickness = 0.8.dp,
-        color = Color.text.subtle.copy(alpha = 0.3f)
+        color = Color.text.subtle.copy(alpha = 0.3f),
     )
 }
 
@@ -28,6 +28,6 @@ fun DividerMedium() {
     HorizontalDivider(
         modifier = Modifier.padding(horizontal = Spacing.l),
         thickness = 0.5.dp,
-        color = Color.text.subtle.copy(alpha = 0.3f)
+        color = Color.text.subtle.copy(alpha = 0.3f),
     )
 }

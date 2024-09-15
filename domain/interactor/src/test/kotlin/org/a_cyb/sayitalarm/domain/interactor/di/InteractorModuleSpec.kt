@@ -6,7 +6,6 @@
 
 package org.a_cyb.sayitalarm.domain.interactor.di
 
-import kotlin.test.assertNotNull
 import io.mockk.mockk
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
 import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
@@ -14,6 +13,7 @@ import org.a_cyb.sayitalarm.domain.repository.RepositoryContract
 import org.junit.Test
 import org.koin.dsl.koinApplication
 import org.koin.dsl.module
+import kotlin.test.assertNotNull
 
 class InteractorModuleSpec {
     @Test

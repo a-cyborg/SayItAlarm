@@ -6,10 +6,6 @@
 
 package org.a_cyb.sayitalarm.util.formatter.duration
 
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.hours
-import kotlin.time.Duration.Companion.minutes
-import java.util.Locale
 import android.icu.text.DisplayContext
 import android.icu.text.NumberFormat
 import android.icu.text.RelativeDateTimeFormatter
@@ -18,6 +14,10 @@ import android.icu.text.RelativeDateTimeFormatter.RelativeUnit
 import android.icu.text.RelativeDateTimeFormatter.Style
 import android.icu.util.ULocale
 import org.a_cyb.sayitalarm.util.formatter.duration.DurationFormatterContract.FormattedDuration
+import java.util.Locale
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
 
 class DurationFormatter(
     locale: Locale = Locale.getDefault(),
@@ -54,15 +54,19 @@ class DurationFormatter(
     private fun concatHourAndMinute(hour: FormattedDuration, minute: FormattedDuration): FormattedDuration =
         FormattedDuration(
             short = "${hour.short} ${minute.short}",
-            long = "${hour.long} ${minute.long}"
+            long = "${hour.long} ${minute.long}",
         )
 
     private fun formatHour(hour: Duration): FormattedDuration {
         val short = formatterShort.format(
-            hour.inWholeHours.toDouble(), Direction.NEXT, RelativeUnit.HOURS
+            hour.inWholeHours.toDouble(),
+            Direction.NEXT,
+            RelativeUnit.HOURS,
         )
         val long = formatterLong.format(
-            hour.inWholeHours.toDouble(), Direction.NEXT, RelativeUnit.HOURS
+            hour.inWholeHours.toDouble(),
+            Direction.NEXT,
+            RelativeUnit.HOURS,
         )
 
         return FormattedDuration(short.stripAffixation(), long.stripAffixation())
@@ -70,10 +74,14 @@ class DurationFormatter(
 
     private fun formatMinutes(minutes: Duration): FormattedDuration {
         val short = formatterShort.format(
-            minutes.inWholeMinutes.toDouble(), Direction.NEXT, RelativeUnit.MINUTES
+            minutes.inWholeMinutes.toDouble(),
+            Direction.NEXT,
+            RelativeUnit.MINUTES,
         )
         val long = formatterLong.format(
-            minutes.inWholeMinutes.toDouble(), Direction.NEXT, RelativeUnit.MINUTES
+            minutes.inWholeMinutes.toDouble(),
+            Direction.NEXT,
+            RelativeUnit.MINUTES,
         )
 
         return FormattedDuration(short.stripAffixation(), long.stripAffixation())

@@ -6,10 +6,10 @@
 
 package org.a_cyb.sayitalarm.presentation.viewmodel.fake
 
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.hours
 import org.a_cyb.sayitalarm.util.formatter.duration.DurationFormatterContract
 import org.a_cyb.sayitalarm.util.formatter.duration.DurationFormatterContract.FormattedDuration
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.hours
 
 class DurationFormatterFake : DurationFormatterContract {
     override fun format(duration: Duration): FormattedDuration {
@@ -27,16 +27,16 @@ class DurationFormatterFake : DurationFormatterContract {
     private fun concatFormattedHourAndMin(formattedHour: FormattedDuration, formattedMin: FormattedDuration) =
         FormattedDuration(
             short = "${formattedHour.short} ${formattedMin.short}",
-            long = "${formattedHour.long} ${formattedMin.long}"
+            long = "${formattedHour.long} ${formattedMin.long}",
         )
 
     private fun formatHour(hour: Long): FormattedDuration = FormattedDuration(
         short = "$hour hr",
-        long = "$hour hours"
+        long = "$hour hours",
     )
 
     private fun formatMin(min: Long): FormattedDuration = FormattedDuration(
         short = "$min min",
-        long = "$min minutes"
+        long = "$min minutes",
     )
 }

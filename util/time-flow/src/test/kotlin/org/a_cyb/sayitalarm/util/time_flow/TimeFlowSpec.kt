@@ -6,7 +6,6 @@
 
 package org.a_cyb.sayitalarm.util.time_flow
 
-import java.time.LocalTime
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -17,6 +16,7 @@ import org.a_cyb.sayitalarm.entity.Hour
 import org.a_cyb.sayitalarm.entity.Minute
 import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Test
+import java.time.LocalTime
 
 class TimeFlowSpec {
     @Test

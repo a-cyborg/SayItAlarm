@@ -23,7 +23,7 @@ object AlarmNotification {
     fun getAlarmAlertNotification(context: Context): Notification {
         createNotificationChannel(
             NotificationManagerCompat.from(context),
-            context.getString(R.string.notification_alert_channel_name)
+            context.getString(R.string.notification_alert_channel_name),
         )
 
         val activityIntent = Intent(context, AlarmActivity::class.java)
@@ -34,12 +34,12 @@ object AlarmNotification {
             context,
             ALARM_ALERT_PENDING_INTENT_REQUEST_CODE,
             activityIntent,
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
         )
 
         val notificationBuilder = getAlertNotificationBuilder(
             context,
-            context.getString(R.string.notification_content_title)
+            context.getString(R.string.notification_content_title),
         )
 
         return notificationBuilder
@@ -64,7 +64,7 @@ object AlarmNotification {
     fun getPostBootSchedulingNotification(context: Context): Notification {
         createNotificationChannel(
             NotificationManagerCompat.from(context),
-            context.getString(R.string.notification_schedule_channel_name)
+            context.getString(R.string.notification_schedule_channel_name),
         )
 
         val notificationBuilder = NotificationCompat.Builder(context, ALARM_NOTIFICATION_CHANNEL_ID)
@@ -82,8 +82,8 @@ object AlarmNotification {
             NotificationChannel(
                 ALARM_NOTIFICATION_CHANNEL_ID,
                 chanelName,
-                NotificationManager.IMPORTANCE_HIGH
-            )
+                NotificationManager.IMPORTANCE_HIGH,
+            ),
         )
     }
 

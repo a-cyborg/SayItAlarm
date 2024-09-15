@@ -14,7 +14,7 @@ import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
 import org.a_cyb.sayitalarm.entity.Alarm
 
 class EditInteractorFake(
-    private val result: Result<Alarm>
+    private val result: Result<Alarm>,
 ) : InteractorContract.EditInteractor {
 
     private val _alarm = MutableSharedFlow<Result<Alarm>>()

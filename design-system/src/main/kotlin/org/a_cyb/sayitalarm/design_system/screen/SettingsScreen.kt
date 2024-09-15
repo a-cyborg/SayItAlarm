@@ -78,7 +78,7 @@ fun SettingsScreen(
                     timeOuts = viewModel.timeOuts,
                     snoozes = viewModel.snoozes,
                     themes = viewModel.themes,
-                    execute = { viewModel.runCommand(it) }
+                    execute = { viewModel.runCommand(it) },
                 )
             }
 
@@ -92,7 +92,7 @@ fun SettingsScreen(
         InfoPanel(
             versionName = versionName,
             contact = viewModel.contact,
-            execute = { viewModel.runCommand(it) }
+            execute = { viewModel.runCommand(it) },
         )
     }
 }
@@ -120,23 +120,23 @@ fun SettingsPanel(
             PanelItemTimeOut(
                 timeOuts = timeOuts.map { it.formatted },
                 currentIdx = timeOuts.indexOf(currentTimeOut),
-                onConfirm = { execute(SetTimeOutCommand(timeOuts[it].input)) }
+                onConfirm = { execute(SetTimeOutCommand(timeOuts[it].input)) },
             )
         },
         {
             PanelItemSnooze(
                 snoozes = snoozes.map { it.formatted },
                 currentIdx = snoozes.indexOf(currentSnooze),
-                onConfirm = { execute(SetSnoozeCommand(snoozes[it].input)) }
+                onConfirm = { execute(SetSnoozeCommand(snoozes[it].input)) },
             )
         },
         {
             PanelItemTheme(
                 themes = themes,
                 currentIdx = themes.indexOf(currentTheme),
-                onConfirm = { execute(SetThemeCommand(themes[it])) }
+                onConfirm = { execute(SetThemeCommand(themes[it])) },
             )
-        }
+        },
     )
 }
 
@@ -151,7 +151,7 @@ fun PanelItemTimeOut(
         info = stringResource(id = R.string.info_timeout),
         values = timeOuts,
         selectedItemIdx = currentIdx,
-        popUpPickerOnConfirm = { onConfirm(it) }
+        popUpPickerOnConfirm = { onConfirm(it) },
     )
 }
 
@@ -166,7 +166,7 @@ fun PanelItemSnooze(
         info = stringResource(id = R.string.info_snooze),
         values = snoozes,
         selectedItemIdx = currentIdx,
-        popUpPickerOnConfirm = { onConfirm(it) }
+        popUpPickerOnConfirm = { onConfirm(it) },
     )
 }
 
@@ -180,7 +180,7 @@ fun PanelItemTheme(
         title = stringResource(id = R.string.theme),
         values = themes,
         selectedItemIdx = currentIdx,
-        popUpPickerOnConfirm = { onConfirm(it) }
+        popUpPickerOnConfirm = { onConfirm(it) },
     )
 }
 
@@ -200,7 +200,7 @@ fun InfoPanel(
 @Composable
 private fun PanelItemAbout(
     contact: SettingsContract.Contact,
-    execute: (CommandContract.Command<out CommandReceiver>) -> Unit
+    execute: (CommandContract.Command<out CommandReceiver>) -> Unit,
 ) {
     var isShowAbout by remember { mutableStateOf(false) }
 
@@ -212,7 +212,7 @@ private fun PanelItemAbout(
         AboutDialog(
             onDisMiss = { isShowAbout = false },
             contact = contact,
-            execute = execute
+            execute = execute,
         )
     }
 }
@@ -225,7 +225,7 @@ private fun AboutDialog(
 ) {
     DialogStandardFillMaxScrollable(
         onDismiss = onDisMiss,
-        topAppBar = { AboutDialogTopBar { onDisMiss() } }
+        topAppBar = { AboutDialogTopBar { onDisMiss() } },
     ) {
         TextBoxStandardBody(text = stringResource(id = R.string.info_about))
         SpacerMedium()
@@ -254,7 +254,7 @@ private fun ContactRow(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
             .padding(horizontal = Spacing.m)
-            .fillMaxWidth()
+            .fillMaxWidth(),
     ) {
         contactContents()
         Spacer(Modifier.weight(1f))
@@ -273,7 +273,7 @@ fun PanelItemLicenses() {
     if (isShowLicenses) {
         DialogStandardFillMax(
             onDismiss = { isShowLicenses = false },
-            topAppBar = { LicensesDialogTopBar { isShowLicenses = false } }
+            topAppBar = { LicensesDialogTopBar { isShowLicenses = false } },
         ) {
             LibrariesContainer(modifier = Modifier.fillMaxSize())
         }

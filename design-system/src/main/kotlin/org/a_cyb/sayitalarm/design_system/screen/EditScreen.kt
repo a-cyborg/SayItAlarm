@@ -11,9 +11,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.res.stringResource
 import org.a_cyb.sayitalarm.design_system.R
 import org.a_cyb.sayitalarm.design_system.atom.ColumnScreenStandard
-import org.a_cyb.sayitalarm.design_system.atom.TextButtonConfirm
 import org.a_cyb.sayitalarm.design_system.atom.IconButtonNavigateBack
 import org.a_cyb.sayitalarm.design_system.atom.SpacerMedium
+import org.a_cyb.sayitalarm.design_system.atom.TextButtonConfirm
 import org.a_cyb.sayitalarm.design_system.molecule.TextBoxWarningTitle
 import org.a_cyb.sayitalarm.design_system.molecule.TopAppBarLarge
 import org.a_cyb.sayitalarm.design_system.organism.AlarmPanel
@@ -28,7 +28,6 @@ fun EditScreen(
     viewModel: EditContract.EditViewModel,
     navigateToList: () -> Unit,
 ) {
-
     val state = viewModel.state.collectAsState()
 
     ColumnScreenStandard {
@@ -37,7 +36,7 @@ fun EditScreen(
             onConfirm = {
                 viewModel.runCommand(SaveCommand)
                 navigateToList()
-            }
+            },
         )
         SpacerMedium()
 
@@ -45,7 +44,7 @@ fun EditScreen(
             is Success -> {
                 AlarmPanel(
                     alarmUI = (state.value as Success).alarmUI,
-                    executor = { viewModel.runCommand(it) }
+                    executor = { viewModel.runCommand(it) },
                 )
             }
 
@@ -55,7 +54,6 @@ fun EditScreen(
 
             Initial -> {}
         }
-
     }
 }
 
@@ -67,6 +65,6 @@ private fun EditTopAppBar(
     TopAppBarLarge(
         title = stringResource(id = R.string.edit),
         navigationIcon = { IconButtonNavigateBack(onCancel) },
-        actions = { TextButtonConfirm(onConfirm) }
+        actions = { TextButtonConfirm(onConfirm) },
     )
 }

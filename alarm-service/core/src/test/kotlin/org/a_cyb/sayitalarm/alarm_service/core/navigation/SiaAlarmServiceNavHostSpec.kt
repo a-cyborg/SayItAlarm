@@ -6,7 +6,6 @@
 
 package org.a_cyb.sayitalarm.alarm_service.core.navigation
 
-import kotlin.test.Test
 import android.app.Application
 import android.content.Context
 import androidx.compose.runtime.Composable
@@ -41,6 +40,7 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
+import kotlin.test.Test
 
 @RunWith(AndroidJUnit4::class)
 @Config(application = TestApplication::class)
@@ -119,7 +119,7 @@ class SiaAlarmServiceNavHostSpec {
         script = "I embrace this hour with enthusiasm.",
         sttResult = "I embrace this",
         status = SttStatus.READY,
-        count = SayItContract.Count(1, 7)
+        count = SayItContract.Count(1, 7),
     )
 }
 

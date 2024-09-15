@@ -69,7 +69,7 @@ fun AlarmPanel(
             time = alarmUI.timeUI,
             onConfirm = { hour, minute ->
                 executor(SetTimeCommand(Hour(hour), Minute(minute)))
-            }
+            },
         )
         SpacerLarge()
         AdvancedConfigurationPanel(
@@ -77,14 +77,14 @@ fun AlarmPanel(
             label = alarmUI.label,
             ringtoneUI = alarmUI.ringtoneUI,
             alertTypeUI = alarmUI.alertTypeUI,
-            executor = executor
+            executor = executor,
         )
         SpacerLarge()
         SayItScriptsPanel(
             value = alarmUI.sayItScripts,
             onConfirm = { scripts ->
                 executor(SetScriptsCommand(SayItScripts(scripts)))
-            }
+            },
         )
     }
 }
@@ -104,7 +104,7 @@ private fun TimePanel(
     PanelStandard {
         PanelItemClickableBordered(
             contentDescription = stringResource(id = R.string.action_set_alarm_time),
-            onClick = { showPopUpPicker = true }
+            onClick = { showPopUpPicker = true },
         ) {
             TextDisplayStandardLarge(text = time.formattedTime)
         }
@@ -115,7 +115,7 @@ private fun TimePanel(
             hour = timePickerState.hour,
             minute = timePickerState.minute,
             onConfirm = onConfirm,
-            onCancel = { showPopUpPicker = false }
+            onCancel = { showPopUpPicker = false },
         )
     }
 }
@@ -143,12 +143,12 @@ private fun PanelItemLabel(
 ) {
     PanelItemWithPopupPicker(
         valueLabel = stringResource(id = R.string.label),
-        value = label
+        value = label,
     ) { onCancel ->
         PopupPickerLabel(
             label = label,
             onConfirm = { executor(SetLabelCommand(it)) },
-            onCancel = onCancel
+            onCancel = onCancel,
         )
     }
 }
@@ -160,13 +160,13 @@ private fun PanelItemRepeat(
 ) {
     PanelItemWithPopupPicker(
         valueLabel = stringResource(id = R.string.repeat),
-        value = repeat.formatted
+        value = repeat.formatted,
     ) { onCancel ->
         PopupPickerRepeat(
             title = stringResource(id = R.string.repeat),
             selectableRepeats = repeat.selectableRepeats,
             onConfirm = { executor(SetWeeklyRepeatCommand(it)) },
-            onCancel = onCancel
+            onCancel = onCancel,
         )
     }
 }
@@ -178,7 +178,7 @@ private fun PanelItemRingtone(
 ) {
     PanelItemWithPopupPicker(
         valueLabel = stringResource(id = R.string.ringtone),
-        value = ringtoneUI.title
+        value = ringtoneUI.title,
     ) { onCancel ->
         PopupPickerRingtone(
             selectedUri = ringtoneUI.uri,
@@ -208,7 +208,7 @@ private fun PanelItemAlertType(
         popUpPickerOnConfirm = { idx ->
             val selected = selectableTypes[idx].name
             executor(SetAlertTypeCommand(selected))
-        }
+        },
     )
 }
 
@@ -266,7 +266,7 @@ private fun SayItScriptsPanel(
                 onDelete = {
                     scripts.removeAt(selectedIdx.intValue)
                     onConfirm(scripts)
-                }
+                },
             )
         }
     }

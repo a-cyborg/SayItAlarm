@@ -35,9 +35,9 @@ fun Modifier.animateCircleBorder(brush: Brush): Modifier {
         initialValue = 0f,
         targetValue = 360f,
         animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 2000, easing = LinearEasing)
+            animation = tween(durationMillis = 2000, easing = LinearEasing),
         ),
-        label = "CircleAnimation"
+        label = "CircleAnimation",
     )
 
     return this
@@ -66,7 +66,7 @@ fun Modifier.animateSlowFlickering(): Modifier {
             animation = tween(durationMillis = 2000, easing = LinearEasing),
             repeatMode = RepeatMode.Reverse,
         ),
-        label = "FlickeringAnimateFloat"
+        label = "FlickeringAnimateFloat",
     )
 
     return this.alpha(flickeringAlpha)

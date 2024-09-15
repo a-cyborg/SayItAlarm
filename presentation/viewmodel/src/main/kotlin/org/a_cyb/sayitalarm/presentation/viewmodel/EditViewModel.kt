@@ -28,14 +28,14 @@ import org.a_cyb.sayitalarm.presentation.contracts.EditContract.EditViewModel.Ed
 import org.a_cyb.sayitalarm.presentation.contracts.EditContract.EditViewModel.EditState.Initial
 import org.a_cyb.sayitalarm.presentation.contracts.EditContract.EditViewModel.EditState.Success
 import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract
-import org.a_cyb.sayitalarm.presentation.viewmodel.converter.AlarmUIConverterContract
+import org.a_cyb.sayitalarm.presentation.viewmodel.converter.AlarmUiConverterContract
 import org.a_cyb.sayitalarm.presentation.viewmodel.mapper.AlarmMapperContract
 
 class EditViewModel(
     private val alarmId: Long,
     private val interactor: InteractorContract.EditInteractor,
     private val mapper: AlarmMapperContract,
-    private val converter: AlarmUIConverterContract,
+    private val converter: AlarmUiConverterContract,
 ) : EditContract.EditViewModel, ViewModel() {
 
     private val _state: MutableStateFlow<EditState> = MutableStateFlow(Initial)
@@ -69,7 +69,7 @@ class EditViewModel(
     override fun setTime(hour: Hour, minute: Minute) {
         updateSuccessOrError {
             copy(
-                timeUI = converter.convertAsTimeUi(hour, minute)
+                timeUI = converter.convertAsTimeUi(hour, minute),
             )
         }
     }
@@ -84,7 +84,7 @@ class EditViewModel(
     override fun setWeeklyRepeat(selectableRepeats: List<SelectableRepeat>) {
         updateSuccessOrError {
             copy(
-                weeklyRepeatUI = converter.convertAsWeeklyRepeatUi(selectableRepeats)
+                weeklyRepeatUI = converter.convertAsWeeklyRepeatUi(selectableRepeats),
             )
         }
     }
@@ -100,8 +100,8 @@ class EditViewModel(
             copy(
                 alertTypeUI = converter.convertToAlertTypeUi(
                     (_state.value as Success).alarmUI.alertTypeUI.selectableAlertType,
-                    alertTypeName
-                )
+                    alertTypeName,
+                ),
             )
         }
     }

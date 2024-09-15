@@ -44,8 +44,8 @@ class AndroidSttRecognizer(private val context: Context) : SttRecognizer, Recogn
     }
 
     private fun resolveSpeechRecognizer(): SpeechRecognizer =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-            && SpeechRecognizer.isOnDeviceRecognitionAvailable(context)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+            SpeechRecognizer.isOnDeviceRecognitionAvailable(context)
         ) {
             SpeechRecognizer.createOnDeviceSpeechRecognizer(context)
         } else {

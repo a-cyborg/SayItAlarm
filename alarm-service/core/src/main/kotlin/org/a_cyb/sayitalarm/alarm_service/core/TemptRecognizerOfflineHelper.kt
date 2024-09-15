@@ -6,7 +6,6 @@
 
 package org.a_cyb.sayitalarm.alarm_service.core
 
-import java.util.concurrent.Executors
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -20,6 +19,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
+import java.util.concurrent.Executors
 
 class TemptRecognizerOfflineHelper(private val context: Context) : AlarmServiceContract.SttRecognizerOnDeviceHelper {
     private val _isOfflineAvailable: MutableStateFlow<Boolean> = MutableStateFlow(false)

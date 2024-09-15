@@ -6,11 +6,11 @@
 
 package org.a_cyb.sayitalarm.util.formatter.weekday
 
-import java.util.Locale
 import android.content.Context
 import android.icu.text.DateFormatSymbols
 import android.icu.text.ListFormatter
 import org.a_cyb.sayitalarm.util.formatter.R
+import java.util.Locale
 
 class WeekdayFormatter(
     private val context: Context,
