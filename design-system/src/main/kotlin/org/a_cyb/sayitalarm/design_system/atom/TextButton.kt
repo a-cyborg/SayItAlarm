@@ -12,6 +12,7 @@ import android.content.Context
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -99,8 +100,11 @@ fun TextButtonCircleSayIt(onClick: () -> Unit) {
 
 @Composable
 fun TextButtonCircleStart(onClick: () -> Unit) {
+    // Prevent double click
+    val doubleClickPreventer: DoubleClickPreventer = remember { DoubleClickPreventer() }
+
     TextButton(
-        onClick = onClick,
+        onClick = { doubleClickPreventer.processEvent(onClick) },
         modifier = Modifier
             .size(Sizing.CircleButton.Large)
             .animateCircleBorder(Brush.sweepGradientAttention),
@@ -186,5 +190,20 @@ fun TextButtonGitHub(onClick: () -> Unit) {
 fun TextButtonDownload(onClick: () -> Unit) {
     TextButton(onClick = onClick) {
         TextTitleAttentionMedium(text = stringResource(id = R.string.download))
+    }
+}
+
+private class DoubleClickPreventer {
+    private val now: Long
+        get() = System.currentTimeMillis()
+
+    private var lastEventTimeMs: Long = 0
+
+    fun processEvent(event: () -> Unit) {
+        if (now - lastEventTimeMs >= 300L) {
+            event()
+        }
+
+        lastEventTimeMs = now
     }
 }
