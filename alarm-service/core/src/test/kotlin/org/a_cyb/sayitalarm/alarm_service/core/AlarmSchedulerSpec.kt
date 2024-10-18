@@ -19,7 +19,7 @@ import io.mockk.unmockkAll
 import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import org.a_cyb.sayitalarm.entity.Snooze
-import org.a_cyb.sayitalarm.util.mustBe
+import org.a_cyb.sayitalarm.util.test_utils.mustBe
 import org.junit.After
 import org.junit.Before
 import org.junit.Test

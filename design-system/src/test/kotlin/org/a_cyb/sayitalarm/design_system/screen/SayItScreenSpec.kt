@@ -23,7 +23,7 @@ import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItState.Init
 import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItState.Processing
 import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SttStatus
 import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract
-import org.a_cyb.sayitalarm.util.mustBe
+import org.a_cyb.sayitalarm.util.test_utils.mustBe
 import org.junit.Test
 import org.robolectric.annotation.Config
 

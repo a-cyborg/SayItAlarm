@@ -23,8 +23,8 @@ import org.a_cyb.sayitalarm.entity.Settings
 import org.a_cyb.sayitalarm.entity.Snooze
 import org.a_cyb.sayitalarm.entity.Theme
 import org.a_cyb.sayitalarm.entity.TimeOut
-import org.a_cyb.sayitalarm.util.fulfils
-import org.a_cyb.sayitalarm.util.mustBe
+import org.a_cyb.sayitalarm.util.test_utils.fulfils
+import org.a_cyb.sayitalarm.util.test_utils.mustBe
 import org.junit.Test
 import kotlin.test.AfterTest
 import org.acyb.sayitalarm.database.Get as SettingsDTO

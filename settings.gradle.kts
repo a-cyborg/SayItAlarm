@@ -31,10 +31,10 @@ include(
     ":presentation:viewmodel",
     ":design-system",
     ":alarm-service:core",
-    ":util",
-    ":util:link-opener",
-    ":util:sound-effect-player",
     ":util:formatter",
+    ":util:link-opener",
     ":util:ringtone-resolver",
-    ":util:time-flow"
+    ":util:sound-effect-player",
+    ":util:time-flow",
+    ":util:test-utils",
 )

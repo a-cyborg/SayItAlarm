@@ -8,14 +8,21 @@ package org.a_cyb.sayitalarm.presentation.contracts.command
 
 import io.mockk.mockk
 import io.mockk.verify
-import org.a_cyb.sayitalarm.util.fulfils
+import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract.Command
+import org.a_cyb.sayitalarm.presentation.contracts.command.SettingsCommandContract.OpenGitHub
+import org.a_cyb.sayitalarm.presentation.contracts.command.SettingsCommandContract.OpenGooglePlay
+import org.a_cyb.sayitalarm.presentation.contracts.command.SettingsCommandContract.SendEmail
+import org.a_cyb.sayitalarm.presentation.contracts.command.SettingsCommandContract.SetSnooze
+import org.a_cyb.sayitalarm.presentation.contracts.command.SettingsCommandContract.SetTheme
+import org.a_cyb.sayitalarm.presentation.contracts.command.SettingsCommandContract.SetTimeOut
 import org.junit.Test
+import kotlin.test.assertIs
 
 class SettingsCommandSpec {
 
     @Test
     fun `SetTimeOutCommand fulfils Command`() {
-        SetTimeOutCommand(33) fulfils CommandContract.Command::class
+        assertIs<Command<SetTimeOut>>(SetTimeOutCommand(0))
     }
 
     @Test
@@ -32,7 +39,7 @@ class SettingsCommandSpec {
 
     @Test
     fun `SetSnoozeCommand fulfils Command`() {
-        SetSnoozeCommand(5) fulfils CommandContract.Command::class
+        assertIs<Command<SetSnooze>>(SetSnoozeCommand(0))
     }
 
     @Test
@@ -49,7 +56,7 @@ class SettingsCommandSpec {
 
     @Test
     fun `SetThemeCommand fulfils Command`() {
-        SetThemeCommand("Light") fulfils CommandContract.Command::class
+        assertIs<Command<SetTheme>>(SetThemeCommand(""))
     }
 
     @Test
@@ -66,7 +73,7 @@ class SettingsCommandSpec {
 
     @Test
     fun `SendEmailCommand fulfils Command`() {
-        SendEmailCommand fulfils CommandContract.Command::class
+        assertIs<Command<SendEmail>>(SendEmailCommand)
     }
 
     @Test
@@ -83,7 +90,7 @@ class SettingsCommandSpec {
 
     @Test
     fun `OpenGooglePlayCommand fulfils Command`() {
-        OpenGooglePlayCommand fulfils CommandContract.Command::class
+        assertIs<Command<OpenGooglePlay>>(OpenGooglePlayCommand)
     }
 
     @Test
@@ -100,7 +107,7 @@ class SettingsCommandSpec {
 
     @Test
     fun `OpenGitHubCommand fulfils Command`() {
-        OpenGitHubCommand fulfils CommandContract.Command::class
+        assertIs<Command<OpenGitHub>>(OpenGitHubCommand)
     }
 
     @Test

@@ -24,7 +24,7 @@ import org.a_cyb.sayitalarm.presentation.contracts.ListContract.ListState.Initia
 import org.a_cyb.sayitalarm.presentation.contracts.ListContract.ListState.InitialError
 import org.a_cyb.sayitalarm.presentation.contracts.ListContract.ListState.Success
 import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract
-import org.a_cyb.sayitalarm.util.mustBe
+import org.a_cyb.sayitalarm.util.test_utils.mustBe
 import org.junit.Test
 import org.robolectric.annotation.Config
 

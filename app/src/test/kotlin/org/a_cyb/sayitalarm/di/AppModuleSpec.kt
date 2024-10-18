@@ -20,27 +20,28 @@ import org.a_cyb.sayitalarm.presentation.viewmodel.EditViewModel
 import org.a_cyb.sayitalarm.presentation.viewmodel.ListViewModel
 import org.a_cyb.sayitalarm.presentation.viewmodel.SayItViewModel
 import org.a_cyb.sayitalarm.presentation.viewmodel.SettingsViewModel
-import org.a_cyb.sayitalarm.util.fulfils
+import org.a_cyb.sayitalarm.util.test_utils.createAddActivityToRobolectricRule
+import org.a_cyb.sayitalarm.util.test_utils.createKoinExternalResourceRule
+import org.a_cyb.sayitalarm.util.test_utils.fulfils
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent.getOrNull
-import org.koin.mp.KoinPlatform.stopKoin
-import kotlin.test.AfterTest
 import kotlin.test.assertNotNull
 
 @RunWith(AndroidJUnit4::class)
 class AppModuleSpec {
 
-    @AfterTest
-    fun tearDown() {
-        stopKoin()
-    }
+    @get:Rule(order = 1)
+    val addActivityRule = createAddActivityToRobolectricRule()
 
-    @get:Rule
+    @get:Rule(order = 2)
     val composeTestRule = createComposeRule()
+
+    @get:Rule(order = 3)
+    val koinTestRule = createKoinExternalResourceRule(appModule)
 
     @Test
     fun `It injects AddViewModel`() {

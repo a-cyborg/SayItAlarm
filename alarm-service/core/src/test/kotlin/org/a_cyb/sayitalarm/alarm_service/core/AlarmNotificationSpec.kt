@@ -14,14 +14,15 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
 import org.robolectric.shadow.api.Shadow
 import org.robolectric.shadows.ShadowPendingIntent
+import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [33])
@@ -40,45 +41,41 @@ class AlarmNotificationSpec {
         val actualNotification = AlarmNotification.getAlarmAlertNotification(context)
 
         // Then
-        with(actualNotification) {
-            priority mustBe NotificationCompat.PRIORITY_MAX
-            category mustBe NotificationCompat.CATEGORY_ALARM
-            visibility mustBe NotificationCompat.VISIBILITY_PUBLIC
-            smallIcon.resId mustBe R.drawable.ic_notif_small
-        }
+        @Suppress("DEPRECATION")
+        assertEquals(NotificationCompat.PRIORITY_MAX, actualNotification.priority)
+        assertEquals(NotificationCompat.CATEGORY_ALARM, actualNotification.category)
+        assertEquals(NotificationCompat.VISIBILITY_PUBLIC, actualNotification.visibility)
+        assertEquals(R.drawable.ic_notif_small, actualNotification.smallIcon.resId)
 
-        val pendingIntent = (Shadow.extract(actualNotification.fullScreenIntent) as ShadowPendingIntent)
+        val actualPendingIntent = (Shadow.extract(actualNotification.fullScreenIntent) as ShadowPendingIntent)
 
-        with(pendingIntent) {
-            isActivity mustBe true
-            isImmutable mustBe true
-            requestCode mustBe 818
-            flags mustBe (PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
-        }
-
-        with(pendingIntent.savedIntent) {
-            component!!.className mustBe AlarmActivity::class.qualifiedName
-            flags mustBe (
-                Intent.FLAG_ACTIVITY_NEW_TASK
-                    or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    or Intent.FLAG_ACTIVITY_NO_HISTORY
-                )
-        }
+        assertTrue(actualPendingIntent.isActivity)
+        assertTrue(actualPendingIntent.isImmutable)
+        assertEquals(818, actualPendingIntent.requestCode)
+        assertEquals(
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+            actualPendingIntent.flags,
+        )
+        assertEquals(AlarmActivity::class.qualifiedName, actualPendingIntent.savedIntent.component!!.className)
+        assertEquals(
+            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NO_HISTORY,
+            actualPendingIntent.savedIntent.flags,
+        )
     }
 
     @Test
     fun `When getAlarmAlertNotification is called it creates notificationChannel`() {
         // Given
         val manager = NotificationManagerCompat.from(context)
+        val actualNotification = AlarmNotification.getAlarmAlertNotification(context)
 
         // When
-        val actualNotification = AlarmNotification.getAlarmAlertNotification(context)
         val channel = manager.getNotificationChannel(actualNotification.channelId)
 
         // Then
         assertNotNull(channel)
-        channel.importance mustBe NotificationManager.IMPORTANCE_HIGH
-        channel.name mustBe context.getString(R.string.notification_alert_channel_name)
+        assertEquals(NotificationManager.IMPORTANCE_HIGH, channel.importance)
+        assertEquals(context.getString(R.string.notification_alert_channel_name), channel.name)
     }
 
     @Test
@@ -87,9 +84,10 @@ class AlarmNotificationSpec {
         val actualNotification = AlarmNotification.getPostBootSchedulingNotification(context)
 
         // Then
-        actualNotification.priority mustBe NotificationCompat.PRIORITY_DEFAULT
-        actualNotification.category mustBe NotificationCompat.CATEGORY_STATUS
-        actualNotification.smallIcon.resId mustBe R.drawable.ic_notif_small
+        @Suppress("DEPRECATION")
+        assertEquals(NotificationCompat.PRIORITY_DEFAULT, actualNotification.priority)
+        assertEquals(NotificationCompat.CATEGORY_STATUS, actualNotification.category)
+        assertEquals(R.drawable.ic_notif_small, actualNotification.smallIcon.resId)
     }
 
     @Test
@@ -103,6 +101,6 @@ class AlarmNotificationSpec {
 
         // Then
         assertNotNull(channel)
-        channel.name mustBe context.getString(R.string.notification_schedule_channel_name)
+        assertEquals(context.getString(R.string.notification_schedule_channel_name), channel.name)
     }
 }

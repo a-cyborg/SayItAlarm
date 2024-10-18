@@ -10,7 +10,7 @@ import org.a_cyb.sayitalarm.entity.Settings
 import org.a_cyb.sayitalarm.entity.Snooze
 import org.a_cyb.sayitalarm.entity.Theme
 import org.a_cyb.sayitalarm.entity.TimeOut
-import org.a_cyb.sayitalarm.util.mustBe
+import org.a_cyb.sayitalarm.util.test_utils.mustBe
 import tech.antibytes.kfixture.fixture
 import tech.antibytes.kfixture.kotlinFixture
 import kotlin.test.Test

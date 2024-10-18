@@ -31,8 +31,8 @@ import org.a_cyb.sayitalarm.entity.Minute
 import org.a_cyb.sayitalarm.entity.Ringtone
 import org.a_cyb.sayitalarm.entity.SayItScripts
 import org.a_cyb.sayitalarm.entity.WeeklyRepeat
-import org.a_cyb.sayitalarm.util.fulfils
-import org.a_cyb.sayitalarm.util.mustBe
+import org.a_cyb.sayitalarm.util.test_utils.fulfils
+import org.a_cyb.sayitalarm.util.test_utils.mustBe
 import tech.antibytes.kfixture.fixture
 import tech.antibytes.kfixture.kotlinFixture
 import kotlin.test.AfterTest

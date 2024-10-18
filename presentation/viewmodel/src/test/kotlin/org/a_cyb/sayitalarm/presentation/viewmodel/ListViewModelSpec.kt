@@ -33,8 +33,8 @@ import org.a_cyb.sayitalarm.presentation.viewmodel.fake.TimeFormatterFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.WeekdayFormatterFake
 import org.a_cyb.sayitalarm.util.formatter.time.TimeFormatterContract
 import org.a_cyb.sayitalarm.util.formatter.weekday.WeekdayFormatterContract
-import org.a_cyb.sayitalarm.util.fulfils
-import org.a_cyb.sayitalarm.util.mustBe
+import org.a_cyb.sayitalarm.util.test_utils.fulfils
+import org.a_cyb.sayitalarm.util.test_utils.mustBe
 import org.junit.Test
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest

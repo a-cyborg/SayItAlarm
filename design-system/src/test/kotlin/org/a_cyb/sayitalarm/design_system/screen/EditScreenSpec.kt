@@ -30,7 +30,7 @@ import org.a_cyb.sayitalarm.presentation.contracts.EditContract.EditViewModel.Ed
 import org.a_cyb.sayitalarm.presentation.contracts.EditContract.EditViewModel.EditState.Success
 import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract.Command
 import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract.CommandReceiver
-import org.a_cyb.sayitalarm.util.mustBe
+import org.a_cyb.sayitalarm.util.test_utils.mustBe
 import org.junit.Test
 import org.robolectric.annotation.Config
 

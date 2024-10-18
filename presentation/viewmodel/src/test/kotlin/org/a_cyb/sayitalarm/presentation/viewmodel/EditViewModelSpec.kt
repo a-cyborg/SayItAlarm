@@ -42,9 +42,9 @@ import org.a_cyb.sayitalarm.presentation.viewmodel.mapper.AlarmMapperContract
 import org.a_cyb.sayitalarm.util.formatter.enum.EnumFormatterContract
 import org.a_cyb.sayitalarm.util.formatter.time.TimeFormatterContract
 import org.a_cyb.sayitalarm.util.formatter.weekday.WeekdayFormatterContract
-import org.a_cyb.sayitalarm.util.fulfils
-import org.a_cyb.sayitalarm.util.mustBe
 import org.a_cyb.sayitalarm.util.ringtone_resolver.RingtoneResolverContract
+import org.a_cyb.sayitalarm.util.test_utils.fulfils
+import org.a_cyb.sayitalarm.util.test_utils.mustBe
 import org.junit.Test
 import tech.antibytes.kfixture.fixture
 import tech.antibytes.kfixture.kotlinFixture

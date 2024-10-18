@@ -34,8 +34,8 @@ import org.a_cyb.sayitalarm.presentation.contracts.AlarmContract.AlarmUiState
 import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.TimeFormatterFake
 import org.a_cyb.sayitalarm.util.formatter.time.TimeFormatterContract
-import org.a_cyb.sayitalarm.util.fulfils
-import org.a_cyb.sayitalarm.util.mustBe
+import org.a_cyb.sayitalarm.util.test_utils.fulfils
+import org.a_cyb.sayitalarm.util.test_utils.mustBe
 import org.a_cyb.sayitalarm.util.time_flow.TimeFlowContract
 import org.junit.After
 import org.junit.Before

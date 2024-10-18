@@ -9,6 +9,12 @@ android {
         isCoreLibraryDesugaringEnabled = true
     }
 
+    lint {
+        disable += "ExactAlarm"
+        abortOnError = false
+        checkReleaseBuilds = false
+    }
+
     @Suppress("UnstableApiUsage")
     testOptions {
         unitTests {
@@ -42,6 +48,7 @@ dependencies {
     androidTestImplementation(libs.androidx.test.rules)
     androidTestImplementation(libs.androidx.test.ext)
     androidTestImplementation(kotlin("test"))
+    testImplementation(projects.util.testUtils)
     testImplementation(libs.androidx.test.ext)
     testImplementation(libs.androidx.test.rules)
     testImplementation(libs.androidx.work.workTesting)

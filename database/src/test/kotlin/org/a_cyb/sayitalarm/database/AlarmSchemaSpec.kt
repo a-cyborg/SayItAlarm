@@ -8,7 +8,7 @@ package org.a_cyb.sayitalarm.database
 
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
-import org.a_cyb.sayitalarm.util.mustBe
+import org.a_cyb.sayitalarm.util.test_utils.mustBe
 import org.acyb.sayitalarm.database.Alarm
 import tech.antibytes.kfixture.fixture
 import tech.antibytes.kfixture.kotlinFixture

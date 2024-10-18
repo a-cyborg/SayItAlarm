@@ -30,10 +30,10 @@ import org.a_cyb.sayitalarm.entity.Minute
 import org.a_cyb.sayitalarm.entity.Ringtone
 import org.a_cyb.sayitalarm.entity.SayItScripts
 import org.a_cyb.sayitalarm.entity.WeeklyRepeat
-import org.a_cyb.sayitalarm.util.fulfils
 import org.junit.Test
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
+import kotlin.test.assertIs
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class AddInteractorSpec {
@@ -98,10 +98,7 @@ class AddInteractorSpec {
 
     @Test
     fun `It fulfills AddInteractor`() {
-        AddInteractor(
-            alarmRepository,
-            alarmScheduler,
-        ) fulfils InteractorContract.AddInteractor::class
+        assertIs<InteractorContract.AddInteractor>(AddInteractor(alarmRepository, alarmScheduler))
     }
 
     private val alarm =

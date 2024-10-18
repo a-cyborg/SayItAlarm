@@ -13,7 +13,7 @@ import androidx.compose.ui.test.performScrollToIndex
 import org.a_cyb.sayitalarm.design_system.R
 import org.a_cyb.sayitalarm.design_system.RoborazziTest
 import org.a_cyb.sayitalarm.design_system.atom.TextHeadlineStandardLarge
-import org.a_cyb.sayitalarm.util.mustBe
+import org.a_cyb.sayitalarm.util.test_utils.mustBe
 import org.junit.Test
 import kotlin.test.assertTrue
 

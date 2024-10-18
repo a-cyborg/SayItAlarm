@@ -31,7 +31,8 @@ import org.a_cyb.sayitalarm.presentation.contracts.SettingsContract.SettingsStat
 import org.a_cyb.sayitalarm.presentation.contracts.SettingsContract.SettingsState.Success
 import org.a_cyb.sayitalarm.presentation.contracts.SettingsContract.SettingsUI
 import org.a_cyb.sayitalarm.presentation.contracts.SettingsContract.TimeInput
-import org.a_cyb.sayitalarm.util.mustBe
+import org.a_cyb.sayitalarm.util.test_utils.createAddActivityToRobolectricRule
+import org.a_cyb.sayitalarm.util.test_utils.mustBe
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -44,10 +45,13 @@ import org.robolectric.annotation.GraphicsMode
 @Config(sdk = [33], qualifiers = RobolectricDeviceQualifiers.Pixel7)
 class SettingsScreenSpec {
 
-    @get:Rule
+    @get:Rule(order = 1)
+    val addActivityRule = createAddActivityToRobolectricRule()
+
+    @get:Rule(order = 2)
     val composeTestRule = createAndroidComposeRule<ComponentActivity>()
 
-    @get:Rule
+    @get:Rule(order = 3)
     val roborazziRule = roborazziOf(composeTestRule, RoborazziRule.CaptureType.None)
 
     private val versionName = "1.0"

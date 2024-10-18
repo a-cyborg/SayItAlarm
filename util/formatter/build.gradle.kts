@@ -18,7 +18,7 @@ dependencies {
 
     implementation(libs.koin.android)
 
-    // Debug
+    testImplementation(projects.util.testUtils)
     testImplementation(libs.androidx.test.ext)
     testImplementation(libs.robolectric)
     testImplementation(libs.mockk)

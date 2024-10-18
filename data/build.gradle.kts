@@ -23,6 +23,7 @@ dependencies {
     implementation(libs.koin.android)
 
     // Debug
+    testImplementation(projects.util.testUtils)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.turbine)
     testImplementation(libs.sqldelight.sqliteDriver)

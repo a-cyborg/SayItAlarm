@@ -13,7 +13,7 @@ import org.a_cyb.sayitalarm.entity.AlarmType
 import org.a_cyb.sayitalarm.entity.AlertType
 import org.a_cyb.sayitalarm.util.formatter.enum.AlarmTypeFormatter
 import org.a_cyb.sayitalarm.util.formatter.enum.AlertTypeFormatter
-import org.a_cyb.sayitalarm.util.mustBe
+import org.a_cyb.sayitalarm.util.test_utils.mustBe
 import org.junit.Test
 import org.junit.runner.RunWith
 

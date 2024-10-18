@@ -16,7 +16,7 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import kotlin.test.Test
 import org.a_cyb.sayitalarm.entity.WeeklyRepeat
-import org.a_cyb.sayitalarm.util.mustBe
+import org.a_cyb.sayitalarm.util.test_utils.mustBe
 import org.junit.After
 import org.junit.Before
 import org.junit.runner.RunWith

@@ -6,7 +6,6 @@
 
 package org.a_cyb.sayitalarm.alarm_service.core.navigation
 
-import android.app.Application
 import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
@@ -29,28 +28,32 @@ import org.a_cyb.sayitalarm.presentation.contracts.SayItContract
 import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SttStatus
 import org.a_cyb.sayitalarm.presentation.viewmodel.AlarmViewModel
 import org.a_cyb.sayitalarm.presentation.viewmodel.SayItViewModel
+import org.a_cyb.sayitalarm.util.test_utils.createAddActivityToRobolectricRule
+import org.a_cyb.sayitalarm.util.test_utils.createKoinExternalResourceRule
 import org.junit.After
 import org.junit.Rule
 import org.junit.runner.RunWith
-import org.koin.androidx.viewmodel.dsl.viewModel
-import org.koin.core.context.GlobalContext
 import org.koin.core.context.loadKoinModules
-import org.koin.core.context.startKoin
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.bind
 import org.koin.dsl.module
-import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 import kotlin.test.Test
 
 @RunWith(AndroidJUnit4::class)
-@Config(application = TestApplication::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class SiaAlarmServiceNavHostSpec {
 
     private val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
 
-    @get:Rule
+    @get:Rule(order = 1)
+    val addActivityRule = createAddActivityToRobolectricRule()
+
+    @get:Rule(order = 2)
     val composeTestRule = createComposeRule()
+
+    @get:Rule(order = 3)
+    val koinTestRule = createKoinExternalResourceRule(module { })
 
     @After
     fun teatDown() {
@@ -64,6 +67,7 @@ class SiaAlarmServiceNavHostSpec {
         every { alarmViewModel.state } returns MutableStateFlow(alarmViewModelState)
         every { alarmViewModel.currentTime } returns MutableStateFlow("")
         every { sayItViewModel.state } returns MutableStateFlow(SayItContract.SayItState.Processing(sayItInfo))
+        every { sayItViewModel.isOffline } returns MutableStateFlow(SayItContract.IsOffline.True)
 
         val viewmodelModule = module {
             viewModel { alarmViewModel } bind AlarmContract.AlarmViewModel::class
@@ -76,7 +80,7 @@ class SiaAlarmServiceNavHostSpec {
     @Composable
     private fun SetupNavHost() {
         val navController = TestNavHostController(LocalContext.current)
-            .apply { navigatorProvider.addNavigator(ComposeNavigator()) }
+        navController.navigatorProvider.addNavigator(ComposeNavigator())
 
         SiaAlarmServiceNavHost(navController = navController)
     }
@@ -109,9 +113,9 @@ class SiaAlarmServiceNavHostSpec {
             // When
             onNodeWithText(getStringRes(R.string.say_it)).performClick()
 
+            // Then
             onNodeWithText(sayItInfo.script).assertExists()
-            onNodeWithText(getStringRes(R.string.start)).assertExists()
-                .assertHasClickAction()
+            onNodeWithText(getStringRes(R.string.start)).assertExists().assertHasClickAction()
         }
     }
 
@@ -121,14 +125,4 @@ class SiaAlarmServiceNavHostSpec {
         status = SttStatus.READY,
         count = SayItContract.Count(1, 7),
     )
-}
-
-private class TestApplication : Application() {
-    override fun onCreate() {
-        super.onCreate()
-
-        if (GlobalContext.getOrNull() == null) {
-            startKoin {}
-        }
-    }
 }

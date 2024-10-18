@@ -14,9 +14,10 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.a_cyb.sayitalarm.entity.Hour
 import org.a_cyb.sayitalarm.entity.Minute
-import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Test
 import java.time.LocalTime
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class TimeFlowSpec {
     @Test
@@ -31,8 +32,8 @@ class TimeFlowSpec {
             .first()
 
         // Then
-        actualHour.hour mustBe now.hour
-        (actualMinutes.minute == now.minute || actualMinutes.minute == now.minute + 1) mustBe true
+        assertEquals(now.hour, actualHour.hour)
+        assertTrue(actualMinutes.minute == now.minute || actualMinutes.minute == now.minute + 1)
     }
 
     @Test
@@ -47,16 +48,16 @@ class TimeFlowSpec {
         // When
         delay(1)
         // Then
-        emittedTimes.size mustBe 1
+        assertEquals(1, emittedTimes.size)
 
         // When
         delay(5000)
         // Then
-        emittedTimes.size mustBe 2
+        assertEquals(2, emittedTimes.size)
 
         // When
         delay(15000)
         // Then
-        emittedTimes.size mustBe 5
+        assertEquals(5, emittedTimes.size)
     }
 }

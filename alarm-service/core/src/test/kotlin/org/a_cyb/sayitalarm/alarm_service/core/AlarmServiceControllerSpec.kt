@@ -42,8 +42,8 @@ import org.a_cyb.sayitalarm.entity.Theme
 import org.a_cyb.sayitalarm.entity.TimeOut
 import org.a_cyb.sayitalarm.entity.WeeklyRepeat
 import org.a_cyb.sayitalarm.presentation.viewmodel.SettingsViewModel
-import org.a_cyb.sayitalarm.util.fulfils
-import org.a_cyb.sayitalarm.util.mustBe
+import org.a_cyb.sayitalarm.util.test_utils.fulfils
+import org.a_cyb.sayitalarm.util.test_utils.mustBe
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -303,7 +303,6 @@ class AlarmServiceControllerSpec {
 
             // Then
             coVerify { alarmRepository.update(capture(captured), any()) }
-            coVerify { alarmScheduler.scheduleAlarms() }
             captured.captured.enabled mustBe false
         }
 

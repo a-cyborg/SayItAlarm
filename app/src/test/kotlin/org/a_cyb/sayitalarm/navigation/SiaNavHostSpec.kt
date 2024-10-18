@@ -6,7 +6,6 @@
 
 package org.a_cyb.sayitalarm.navigation
 
-import android.app.Application
 import android.content.Context
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertHasClickAction
@@ -22,51 +21,63 @@ import androidx.test.platform.app.InstrumentationRegistry
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.test.runTest
 import org.a_cyb.sayitalarm.design_system.R
+import org.a_cyb.sayitalarm.di.appModule
 import org.a_cyb.sayitalarm.presentation.contracts.AddContract
 import org.a_cyb.sayitalarm.presentation.contracts.AddContract.AddState
 import org.a_cyb.sayitalarm.presentation.contracts.EditContract
+import org.a_cyb.sayitalarm.presentation.contracts.EditContract.EditViewModel.EditState
 import org.a_cyb.sayitalarm.presentation.contracts.ListContract
+import org.a_cyb.sayitalarm.presentation.contracts.ListContract.AlarmInfo
+import org.a_cyb.sayitalarm.presentation.contracts.ListContract.ListState
 import org.a_cyb.sayitalarm.presentation.contracts.SettingsContract
+import org.a_cyb.sayitalarm.presentation.contracts.SettingsContract.SettingsState
 import org.a_cyb.sayitalarm.presentation.viewmodel.AddViewModel
 import org.a_cyb.sayitalarm.presentation.viewmodel.EditViewModel
 import org.a_cyb.sayitalarm.presentation.viewmodel.ListViewModel
 import org.a_cyb.sayitalarm.presentation.viewmodel.SettingsViewModel
+import org.a_cyb.sayitalarm.util.test_utils.createAddActivityToRobolectricRule
+import org.a_cyb.sayitalarm.util.test_utils.createKoinExternalResourceRule
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.koin.androidx.viewmodel.dsl.viewModel
-import org.koin.core.context.GlobalContext
+import org.koin.compose.KoinContext
 import org.koin.core.context.loadKoinModules
-import org.koin.core.context.startKoin
+import org.koin.core.context.unloadKoinModules
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.bind
 import org.koin.dsl.module
-import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 
 @RunWith(AndroidJUnit4::class)
-@Config(application = TestApplication::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class SiaNavHostSpec {
 
-    @get:Rule
+    private val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
+
+    @get:Rule(order = 1)
+    val addActivityRule = createAddActivityToRobolectricRule()
+
+    @get:Rule(order = 2)
     val composeTestRule = createComposeRule()
+
+    @get:Rule(order = 3)
+    val koinTestRule = createKoinExternalResourceRule(appModule)
 
     @Before
     fun setup() {
         setupViewModelMockk()
 
         composeTestRule.setContent {
-            val navController = TestNavHostController(LocalContext.current)
-            navController.navigatorProvider.addNavigator(ComposeNavigator())
+            KoinContext {
+                val navController = TestNavHostController(LocalContext.current)
+                navController.navigatorProvider.addNavigator(ComposeNavigator())
 
-            SiaNavHost(navController = navController)
+                SiaNavHost(navController = navController)
+            }
         }
     }
-
-    private val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
 
     private fun getStringRes(id: Int) = context.getString(id)
 
@@ -83,7 +94,7 @@ class SiaNavHostSpec {
     }
 
     @Test
-    fun `When add icon button is clicked, it navigate to AddScreen`() = runTest {
+    fun `When add icon button is clicked, it navigate to AddScreen`() {
         with(composeTestRule) {
             // When
             onNodeWithContentDescription(getStringRes(R.string.action_add_alarm)).performClick()
@@ -107,6 +118,8 @@ class SiaNavHostSpec {
             onNodeWithContentDescription(getStringRes(R.string.action_open_settings)).assertExists()
         }
     }
+
+    // TODO: Need to add test case which click on save return to the list screen.
 
     @Test
     fun `When settings icon button is clicked, it navigate to the SettingsScreen`() {
@@ -168,27 +181,18 @@ class SiaNavHostSpec {
     }
 
     private fun setupViewModelMockk() {
+        unloadKoinModules(appModule)
+
         val listViewModelFake: ListViewModel = mockk(relaxed = true)
         val addViewModelFake: AddViewModel = mockk(relaxed = true)
         val editViewModelFake: EditViewModel = mockk(relaxed = true)
         val settingsViewModelFake: SettingsViewModel = mockk(relaxed = true)
 
-        val listState = MutableStateFlow<ListContract.ListState>(
-            ListContract.ListState.Success(
-                listOf(
-                    ListContract.AlarmInfo(
-                        id = 1,
-                        time = "6:00 AM",
-                        labelAndWeeklyRepeat = "Wake Up, every weekday",
-                        enabled = true,
-                    ),
-                ),
-            ),
-        )
-        val addState = MutableStateFlow(AddState.Initial(FakeAlarmUIData.defaultAlarmUI))
-        val editState = MutableStateFlow(EditContract.EditViewModel.EditState.Initial)
-        val settingsState = MutableStateFlow(SettingsContract.SettingsState.Initial)
+        val listState = MutableStateFlow(ListState.Success(listOf(fakeAlarmInfo)))
         val offlineState = MutableStateFlow(true)
+        val addState = MutableStateFlow(AddState.Initial(FakeAlarmUIData.defaultAlarmUI))
+        val editState = MutableStateFlow(EditState.Initial)
+        val settingsState = MutableStateFlow(SettingsState.Initial)
 
         every { listViewModelFake.state } returns listState
         every { listViewModelFake.isOfflineAvailable } returns offlineState
@@ -205,14 +209,11 @@ class SiaNavHostSpec {
 
         loadKoinModules(viewmodelModule)
     }
-}
 
-class TestApplication : Application() {
-    override fun onCreate() {
-        super.onCreate()
-
-        if (GlobalContext.getOrNull() == null) {
-            startKoin {}
-        }
-    }
+    private val fakeAlarmInfo = AlarmInfo(
+        id = 1,
+        time = "6:00 AM",
+        labelAndWeeklyRepeat = "Wake Up, every weekday",
+        enabled = true,
+    )
 }

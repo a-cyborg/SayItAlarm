@@ -15,7 +15,7 @@ import org.a_cyb.sayitalarm.entity.Minute
 import org.a_cyb.sayitalarm.entity.Ringtone
 import org.a_cyb.sayitalarm.entity.SayItScripts
 import org.a_cyb.sayitalarm.entity.WeeklyRepeat
-import org.a_cyb.sayitalarm.util.mustBe
+import org.a_cyb.sayitalarm.util.test_utils.mustBe
 import java.util.Calendar
 import kotlin.test.Test
 import org.acyb.sayitalarm.database.Alarm as AlarmDTO

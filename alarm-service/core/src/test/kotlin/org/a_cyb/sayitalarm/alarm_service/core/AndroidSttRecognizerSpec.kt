@@ -20,8 +20,8 @@ import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.verify
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.SttRecognizer
-import org.a_cyb.sayitalarm.util.fulfils
-import org.a_cyb.sayitalarm.util.mustBe
+import org.a_cyb.sayitalarm.util.test_utils.fulfils
+import org.a_cyb.sayitalarm.util.test_utils.mustBe
 import org.junit.After
 import org.junit.Before
 import org.junit.runner.RunWith

@@ -13,20 +13,29 @@ import org.a_cyb.sayitalarm.entity.Hour
 import org.a_cyb.sayitalarm.entity.Minute
 import org.a_cyb.sayitalarm.entity.SayItScripts
 import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.RingtoneUI
-import org.a_cyb.sayitalarm.util.fulfils
+import org.a_cyb.sayitalarm.presentation.contracts.command.AlarmPanelCommandContract.Save
+import org.a_cyb.sayitalarm.presentation.contracts.command.AlarmPanelCommandContract.SetAlarmType
+import org.a_cyb.sayitalarm.presentation.contracts.command.AlarmPanelCommandContract.SetAlertType
+import org.a_cyb.sayitalarm.presentation.contracts.command.AlarmPanelCommandContract.SetLabel
+import org.a_cyb.sayitalarm.presentation.contracts.command.AlarmPanelCommandContract.SetRingtone
+import org.a_cyb.sayitalarm.presentation.contracts.command.AlarmPanelCommandContract.SetScripts
+import org.a_cyb.sayitalarm.presentation.contracts.command.AlarmPanelCommandContract.SetTime
+import org.a_cyb.sayitalarm.presentation.contracts.command.AlarmPanelCommandContract.SetWeeklyRepeat
+import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract.Command
 import org.junit.Test
+import kotlin.test.assertIs
 
 class AlarmPanelCommandSpec {
 
     @Test
     fun `SetTimeCommand fulfills Command`() {
-        SetTimeCommand(Hour(0), Minute(0)) fulfils CommandContract.Command::class
+        assertIs<Command<SetTime>>(SetTimeCommand(Hour(0), Minute(0)))
     }
 
     @Test
     fun `Given SetTimeCommand execute it runs setTime`() {
         // Given
-        val receiver: AlarmPanelCommandContract.SetTime = mockk(relaxed = true)
+        val receiver: SetTime = mockk(relaxed = true)
 
         // When
         SetTimeCommand(Hour(0), Minute(0)).execute(receiver)
@@ -37,13 +46,13 @@ class AlarmPanelCommandSpec {
 
     @Test
     fun `SetWeeklyRepeatCommand fulfills Command`() {
-        SetWeeklyRepeatCommand(emptyList()) fulfils CommandContract.Command::class
+        assertIs<Command<SetWeeklyRepeat>>(SetWeeklyRepeatCommand(emptyList()))
     }
 
     @Test
     fun `Given SetWeeklyRepeatCommand execute it runs setTime`() {
         // Given
-        val receiver: AlarmPanelCommandContract.SetWeeklyRepeat = mockk(relaxed = true)
+        val receiver: SetWeeklyRepeat = mockk(relaxed = true)
 
         // When
         SetWeeklyRepeatCommand(emptyList()).execute(receiver)
@@ -54,13 +63,13 @@ class AlarmPanelCommandSpec {
 
     @Test
     fun `SetLabelCommand fulfills Command`() {
-        SetLabelCommand("Label") fulfils CommandContract.Command::class
+        assertIs<Command<SetLabel>>(SetLabelCommand(""))
     }
 
     @Test
     fun `Given SetLabelCommand execute it runs setTime`() {
         // Given
-        val receiver: AlarmPanelCommandContract.SetLabel = mockk(relaxed = true)
+        val receiver: SetLabel = mockk(relaxed = true)
 
         // When
         SetLabelCommand("Label").execute(receiver)
@@ -71,13 +80,13 @@ class AlarmPanelCommandSpec {
 
     @Test
     fun `SetAlertTypeCommand fulfills Command`() {
-        SetAlertTypeCommand("") fulfils CommandContract.Command::class
+        assertIs<Command<SetAlertType>>(SetAlertTypeCommand(""))
     }
 
     @Test
     fun `Given SetAlertTypeCommand execute it runs setTime`() {
         // Given
-        val receiver: AlarmPanelCommandContract.SetAlertType = mockk(relaxed = true)
+        val receiver: SetAlertType = mockk(relaxed = true)
 
         // When
         SetAlertTypeCommand("").execute(receiver)
@@ -88,13 +97,13 @@ class AlarmPanelCommandSpec {
 
     @Test
     fun `SetRingtoneCommand fulfills Command`() {
-        SetRingtoneCommand(RingtoneUI("", "")) fulfils CommandContract.Command::class
+        assertIs<Command<SetRingtone>>(SetRingtoneCommand(RingtoneUI("", "")))
     }
 
     @Test
     fun `Given SetRingtoneCommand execute it runs setTime`() {
         // Given
-        val receiver: AlarmPanelCommandContract.SetRingtone = mockk(relaxed = true)
+        val receiver: SetRingtone = mockk(relaxed = true)
 
         // When
         SetRingtoneCommand(RingtoneUI("", "")).execute(receiver)
@@ -105,13 +114,13 @@ class AlarmPanelCommandSpec {
 
     @Test
     fun `SetAlarmTypeCommand fulfills Command`() {
-        SetAlarmTypeCommand(AlarmType.SAY_IT) fulfils CommandContract.Command::class
+        assertIs<Command<SetAlarmType>>(SetAlarmTypeCommand(AlarmType.SAY_IT))
     }
 
     @Test
     fun `Given SetAlarmTypeCommand execute it runs setTime`() {
         // Given
-        val receiver: AlarmPanelCommandContract.SetAlarmType = mockk(relaxed = true)
+        val receiver: SetAlarmType = mockk(relaxed = true)
 
         // When
         SetAlarmTypeCommand(AlarmType.SAY_IT).execute(receiver)
@@ -122,13 +131,13 @@ class AlarmPanelCommandSpec {
 
     @Test
     fun `SetScriptsCommand fulfills Command`() {
-        SetScriptsCommand(SayItScripts()) fulfils CommandContract.Command::class
+        assertIs<Command<SetScripts>>(SetScriptsCommand(SayItScripts()))
     }
 
     @Test
     fun `Given SetScriptsCommand execute it runs setTime`() {
         // Given
-        val receiver: AlarmPanelCommandContract.SetScripts = mockk(relaxed = true)
+        val receiver: SetScripts = mockk(relaxed = true)
 
         // When
         SetScriptsCommand(SayItScripts()).execute(receiver)
@@ -139,13 +148,13 @@ class AlarmPanelCommandSpec {
 
     @Test
     fun `SaveCommand fulfils Command`() {
-        SaveCommand fulfils CommandContract.Command::class
+        assertIs<Command<Save>>(SaveCommand)
     }
 
     @Test
     fun `Given SaveCommand executes it runs save`() {
         // Given
-        val receiver: AlarmPanelCommandContract.Save = mockk(relaxed = true)
+        val receiver: Save = mockk(relaxed = true)
 
         // When
         SaveCommand.execute(receiver)

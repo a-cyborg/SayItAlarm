@@ -17,7 +17,7 @@ import org.a_cyb.sayitalarm.design_system.RoborazziTest
 import org.a_cyb.sayitalarm.presentation.contracts.AlarmContract
 import org.a_cyb.sayitalarm.presentation.contracts.AlarmContract.AlarmUiState
 import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract
-import org.a_cyb.sayitalarm.util.mustBe
+import org.a_cyb.sayitalarm.util.test_utils.mustBe
 import org.junit.Test
 import org.robolectric.annotation.Config
 

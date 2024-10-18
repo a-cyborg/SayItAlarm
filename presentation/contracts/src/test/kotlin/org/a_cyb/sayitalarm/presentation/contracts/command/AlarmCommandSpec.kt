@@ -8,20 +8,23 @@ package org.a_cyb.sayitalarm.presentation.contracts.command
 
 import io.mockk.mockk
 import io.mockk.verify
-import org.a_cyb.sayitalarm.util.fulfils
+import org.a_cyb.sayitalarm.presentation.contracts.command.AlarmCommandContract.Snooze
+import org.a_cyb.sayitalarm.presentation.contracts.command.AlarmCommandContract.StartSayIt
+import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract.Command
 import org.junit.Test
+import kotlin.test.assertIs
 
 class AlarmCommandSpec {
 
     @Test
     fun `StartSayItCommand fulfills Command`() {
-        StartSayItCommand fulfils CommandContract.Command::class
+        assertIs<Command<StartSayIt>>(StartSayItCommand)
     }
 
     @Test
     fun `When StartSayItCommand is executed, it runs startSayIt`() {
         // Given
-        val receiver: AlarmCommandContract.StartSayIt = mockk(relaxed = true)
+        val receiver: StartSayIt = mockk(relaxed = true)
 
         // When
         StartSayItCommand.execute(receiver)
@@ -32,13 +35,13 @@ class AlarmCommandSpec {
 
     @Test
     fun `SnoozeCommand fulfills Command`() {
-        SnoozeCommand fulfils CommandContract.Command::class
+        assertIs<Command<Snooze>>(SnoozeCommand)
     }
 
     @Test
     fun `When SnoozeCommand is executed, it runs snooze`() {
         // Given
-        val receiver: AlarmCommandContract.Snooze = mockk(relaxed = true)
+        val receiver: Snooze = mockk(relaxed = true)
 
         // When
         SnoozeCommand.execute(receiver)

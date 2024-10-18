@@ -8,20 +8,23 @@ package org.a_cyb.sayitalarm.presentation.contracts.command
 
 import io.mockk.mockk
 import io.mockk.verify
-import org.a_cyb.sayitalarm.util.fulfils
+import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract.Command
+import org.a_cyb.sayitalarm.presentation.contracts.command.SayItCommandContract.Finish
+import org.a_cyb.sayitalarm.presentation.contracts.command.SayItCommandContract.ProcessScript
 import org.junit.Test
+import kotlin.test.assertIs
 
 class SayItCommandSpec {
 
     @Test
     fun `ProcessScriptCommand fulfills Command`() {
-        ProcessScriptCommand fulfils CommandContract.Command::class
+        assertIs<Command<ProcessScript>>(ProcessScriptCommand)
     }
 
     @Test
     fun `When ProcessScriptCommand is executed, it runs processScript`() {
         // Given
-        val receiver: SayItCommandContract.ProcessScript = mockk(relaxed = true)
+        val receiver: ProcessScript = mockk(relaxed = true)
 
         // When
         ProcessScriptCommand.execute(receiver)
@@ -32,13 +35,13 @@ class SayItCommandSpec {
 
     @Test
     fun `ForceQuit command fulfills Command`() {
-        FinishCommand fulfils CommandContract.Command::class
+        assertIs<Command<ProcessScript>>(FinishCommand)
     }
 
     @Test
     fun `When ForceQuiCommand is executed, it runs forceQuit`() {
         // Given
-        val receiver: SayItCommandContract.Finish = mockk(relaxed = true)
+        val receiver: Finish = mockk(relaxed = true)
 
         // When
         FinishCommand.execute(receiver)

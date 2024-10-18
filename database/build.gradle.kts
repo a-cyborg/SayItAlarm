@@ -24,6 +24,7 @@ dependencies {
     implementation(libs.koin.android)
 
     // Debug
+    testImplementation(projects.util.testUtils)
     testImplementation(libs.sqldelight.sqliteDriver)
     testImplementation(libs.antibytes.fixture)
     testImplementation(libs.mockk)

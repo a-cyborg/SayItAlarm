@@ -13,12 +13,12 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import com.github.takahirom.roborazzi.RoborazziRule
 
 fun roborazziOf(
-    szenario: AndroidComposeTestRule<ActivityScenarioRule<ComponentActivity>, ComponentActivity>,
+    scenarioRule: AndroidComposeTestRule<ActivityScenarioRule<ComponentActivity>, ComponentActivity>,
     captureType: RoborazziRule.CaptureType = RoborazziRule.CaptureType.None,
 ): RoborazziRule {
     return RoborazziRule(
-        composeRule = szenario,
-        captureRoot = szenario.onRoot(),
+        composeRule = scenarioRule,
+        captureRoot = scenarioRule.onRoot(),
         options = RoborazziRule.Options(
             captureType = captureType,
             outputDirectoryPath = "src/test/snapshots/roborazzi/images",

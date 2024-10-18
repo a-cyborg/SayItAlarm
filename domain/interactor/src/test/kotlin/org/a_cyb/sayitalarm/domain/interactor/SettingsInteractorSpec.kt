@@ -20,11 +20,11 @@ import org.a_cyb.sayitalarm.entity.Settings
 import org.a_cyb.sayitalarm.entity.Snooze
 import org.a_cyb.sayitalarm.entity.Theme
 import org.a_cyb.sayitalarm.entity.TimeOut
-import org.a_cyb.sayitalarm.util.fulfils
-import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Test
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
+import kotlin.test.assertEquals
+import kotlin.test.assertIs
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SettingsInteractorSpec {
@@ -66,9 +66,9 @@ class SettingsInteractorSpec {
         // When
         interactor.settings.test {
             // Then
-            awaitItem() mustBe results[0]
-            awaitItem() mustBe Result.success(settings)
-            awaitItem() mustBe results[2]
+            assertEquals(results[0], awaitItem())
+            assertEquals(Result.success(settings), awaitItem())
+            assertEquals(results[2], awaitItem())
 
             awaitComplete()
         }
@@ -140,6 +140,6 @@ class SettingsInteractorSpec {
 
     @Test
     fun `It fulfills SettingsInteractor`() {
-        interactor fulfils InteractorContract.SettingsInteractor::class
+        assertIs<InteractorContract.SettingsInteractor>(interactor)
     }
 }

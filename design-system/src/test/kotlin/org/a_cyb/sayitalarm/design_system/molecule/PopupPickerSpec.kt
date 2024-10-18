@@ -20,7 +20,8 @@ import com.github.takahirom.roborazzi.captureRoboImage
 import org.a_cyb.sayitalarm.design_system.R
 import org.a_cyb.sayitalarm.design_system.atom.TextDisplayStandardSmall
 import org.a_cyb.sayitalarm.design_system.roborazziOf
-import org.a_cyb.sayitalarm.util.mustBe
+import org.a_cyb.sayitalarm.util.test_utils.createAddActivityToRobolectricRule
+import org.a_cyb.sayitalarm.util.test_utils.mustBe
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -40,10 +41,13 @@ class PopupPickerSpec {
         "Gray", "Turquoise", "Maroon",
     )
 
-    @get:Rule
+    @get:Rule(order = 1)
+    val addActivityRule = createAddActivityToRobolectricRule()
+
+    @get:Rule(order = 2)
     val composeTestRule = createAndroidComposeRule<ComponentActivity>()
 
-    @get:Rule
+    @get:Rule(order = 3)
     val roborazziRule = roborazziOf(composeTestRule, RoborazziRule.CaptureType.None)
 
     private fun getString(id: Int) = composeTestRule.activity.getString(id)

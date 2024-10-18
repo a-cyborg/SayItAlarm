@@ -31,10 +31,10 @@ import org.a_cyb.sayitalarm.entity.Minute
 import org.a_cyb.sayitalarm.entity.Ringtone
 import org.a_cyb.sayitalarm.entity.SayItScripts
 import org.a_cyb.sayitalarm.entity.WeeklyRepeat
-import org.a_cyb.sayitalarm.util.mustBe
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlin.test.assertEquals
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class EditInteractorSpec {
@@ -67,7 +67,7 @@ class EditInteractorSpec {
             interactor.getAlarm(3, this)
 
             // Then
-            awaitItem() mustBe Result.success(alarm)
+            assertEquals(Result.success(alarm), awaitItem())
         }
 
         coVerify(exactly = 1) { alarmRepository.getAlarm(any(), any()) }
@@ -87,7 +87,7 @@ class EditInteractorSpec {
             interactor.getAlarm(3, this)
 
             // Then
-            awaitItem() mustBe result
+            assertEquals(result, awaitItem())
         }
 
         coVerify(exactly = 1) { alarmRepository.getAlarm(any(), any()) }

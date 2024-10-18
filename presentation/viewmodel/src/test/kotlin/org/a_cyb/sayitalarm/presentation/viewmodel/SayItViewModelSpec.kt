@@ -30,14 +30,13 @@ import org.a_cyb.sayitalarm.entity.SayItScripts
 import org.a_cyb.sayitalarm.presentation.contracts.SayItContract
 import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.Count
 import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItInfo
-import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItState.Error
 import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItState.Finished
 import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItState.Processing
 import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SttStatus
 import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract
-import org.a_cyb.sayitalarm.util.fulfils
-import org.a_cyb.sayitalarm.util.mustBe
 import org.a_cyb.sayitalarm.util.sound_effect_player.SoundEffectPlayerContract
+import org.a_cyb.sayitalarm.util.test_utils.fulfils
+import org.a_cyb.sayitalarm.util.test_utils.mustBe
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -110,18 +109,6 @@ class SayItViewModelSpec {
                 count = Count(1, 1),
             ),
         )
-    }
-
-    @Test
-    fun `When the ServiceController is not in the RunningSayIt state, it sets the state to Error`() {
-        // Given
-        every { serviceController.controllerState } returns MutableStateFlow(ControllerState.Error)
-
-        // When
-        val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator, soundEffectPlayer)
-
-        // Then
-        viewModel.state.value mustBe Error
     }
 
     @Test

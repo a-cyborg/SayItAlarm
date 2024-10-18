@@ -31,9 +31,9 @@ import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.DurationFormatterFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.SettingsInteractorFake
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.SettingsInteractorFake.InvokedType
-import org.a_cyb.sayitalarm.util.fulfils
 import org.a_cyb.sayitalarm.util.link_opener.LinkOpenerContract
-import org.a_cyb.sayitalarm.util.mustBe
+import org.a_cyb.sayitalarm.util.test_utils.fulfils
+import org.a_cyb.sayitalarm.util.test_utils.mustBe
 import org.junit.Test
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest

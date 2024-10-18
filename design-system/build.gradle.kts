@@ -28,5 +28,6 @@ android {
         testImplementation(libs.junit.jupiter)
         testImplementation(libs.robolectric)
         testImplementation(libs.bundles.roborazzi)
+        testImplementation(projects.util.testUtils)
     }
 }

@@ -42,7 +42,6 @@ internal fun Project.configureAndroidCompose(
             "debugImplementation"(libs.findLibrary("androidx.compose.ui.tooling").get())
             "testImplementation"(libs.findLibrary("androidx.compose.ui.test").get())
             "testImplementation"(kotlin("test"))
-            "testImplementation"(project(":util"))
         }
     }
 }

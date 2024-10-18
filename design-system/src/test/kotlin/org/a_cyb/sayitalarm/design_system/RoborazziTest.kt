@@ -12,6 +12,7 @@ import androidx.compose.ui.test.onRoot
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.takahirom.roborazzi.RoborazziRule
 import com.github.takahirom.roborazzi.captureRoboImage
+import org.a_cyb.sayitalarm.util.test_utils.createAddActivityToRobolectricRule
 import org.junit.After
 import org.junit.Rule
 import org.junit.runner.RunWith
@@ -24,10 +25,14 @@ import org.robolectric.annotation.GraphicsMode
 abstract class RoborazziTest(
     captureType: RoborazziRule.CaptureType = RoborazziRule.CaptureType.None,
 ) {
-    @get:Rule
+
+    @get:Rule(order = 1)
+    val addActivityRule = createAddActivityToRobolectricRule()
+
+    @get:Rule(order = 2)
     val subjectUnderTest = createAndroidComposeRule<ComponentActivity>()
 
-    @get:Rule
+    @get:Rule(order = 3)
     val roborazziRule = roborazziOf(subjectUnderTest, captureType)
 
     @After

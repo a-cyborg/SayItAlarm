@@ -13,8 +13,9 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import org.a_cyb.sayitalarm.design_system.R
 import org.a_cyb.sayitalarm.design_system.RoborazziTest
-import org.a_cyb.sayitalarm.util.mustBe
+import org.a_cyb.sayitalarm.util.test_utils.mustBe
 import org.junit.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class TextButtonSpec : RoborazziTest() {
@@ -174,18 +175,22 @@ class TextButtonSpec : RoborazziTest() {
     @Test
     fun `When TextButtonCircleStart is clicked, it executes the given action`() {
         var hasBeenCalled = false
+        var hasBeenCalledNum = 0
 
         subjectUnderTest.setContent {
             TextButtonCircleStart {
                 hasBeenCalled = true
+                hasBeenCalledNum++
             }
         }
 
         subjectUnderTest
             .onNodeWithText(getString(R.string.start))
             .performClick()
+            .performClick()
 
         assertTrue(hasBeenCalled)
+        assertEquals(1, hasBeenCalledNum)
     }
 
     @Test

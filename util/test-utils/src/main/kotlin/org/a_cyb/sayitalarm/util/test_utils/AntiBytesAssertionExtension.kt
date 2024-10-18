@@ -4,7 +4,7 @@
  * Use of this source code is governed by Apache v2.0
  */
 
-package org.a_cyb.sayitalarm.util
+package org.a_cyb.sayitalarm.util.test_utils
 
 import kotlin.reflect.KClass
 import kotlin.test.assertEquals

@@ -18,10 +18,10 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.verify
-import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Before
 import org.junit.runner.RunWith
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 @RunWith(AndroidJUnit4::class)
@@ -48,7 +48,7 @@ class AlarmBroadcastReceiverSpec {
 
         // Then
         verify { ContextCompat.startForegroundService(any(), capture(captureIntent)) }
-        captureIntent.captured.component!!.className mustBe AlarmService::class.qualifiedName
+        assertEquals(AlarmService::class.qualifiedName, captureIntent.captured.component!!.className)
     }
 
     @Test
@@ -63,7 +63,7 @@ class AlarmBroadcastReceiverSpec {
 
         // Then
         verify { ContextCompat.startForegroundService(any(), capture(captureIntent)) }
-        captureIntent.captured.component!!.className mustBe AlarmScheduleService::class.qualifiedName
+        assertEquals(AlarmScheduleService::class.qualifiedName, captureIntent.captured.component!!.className)
     }
 
     @Test
@@ -78,7 +78,7 @@ class AlarmBroadcastReceiverSpec {
 
         // Then
         verify { ContextCompat.startForegroundService(any(), capture(captureIntent)) }
-        captureIntent.captured.component!!.className mustBe AlarmScheduleService::class.qualifiedName
+        assertEquals(AlarmScheduleService::class.qualifiedName, captureIntent.captured.component!!.className)
     }
 
     @Test

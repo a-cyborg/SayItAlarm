@@ -7,9 +7,9 @@
 package org.a_cyb.sayitalarm.alarm_service.core.util
 
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
-import org.a_cyb.sayitalarm.util.fulfils
-import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertIs
 
 class EditDistanceCalculatorSpec {
 
@@ -20,7 +20,7 @@ class EditDistanceCalculatorSpec {
         val target = "Lorem ipsum dolor sit amet"
 
         // Then
-        EditDistanceCalculator.calculateEditDistance(source, target) mustBe 0
+        assertEquals(0, EditDistanceCalculator.calculateEditDistance(source, target))
     }
 
     @Test
@@ -30,7 +30,7 @@ class EditDistanceCalculatorSpec {
         val target = "Lorem ipsum dolor sit amef"
 
         // Then
-        EditDistanceCalculator.calculateEditDistance(source, target) mustBe 1
+        assertEquals(1, EditDistanceCalculator.calculateEditDistance(source, target))
     }
 
     @Test
@@ -40,7 +40,7 @@ class EditDistanceCalculatorSpec {
         val target = "Lorem ipsum dolorr sit amet"
 
         // Then
-        EditDistanceCalculator.calculateEditDistance(source, target) mustBe 1
+        assertEquals(1, EditDistanceCalculator.calculateEditDistance(source, target))
     }
 
     @Test
@@ -50,7 +50,7 @@ class EditDistanceCalculatorSpec {
         val target = "Lorem ipsu dolor sit amet"
 
         // Then
-        EditDistanceCalculator.calculateEditDistance(source, target) mustBe 1
+        assertEquals(1, EditDistanceCalculator.calculateEditDistance(source, target))
     }
 
     @Test
@@ -61,7 +61,7 @@ class EditDistanceCalculatorSpec {
         val target = "Larem ipsun dolor sut amyt"
 
         // Then
-        EditDistanceCalculator.calculateEditDistance(source, target) mustBe 4
+        assertEquals(4, EditDistanceCalculator.calculateEditDistance(source, target))
     }
 
     @Test
@@ -72,7 +72,7 @@ class EditDistanceCalculatorSpec {
         val target = "Lorem ipsom dolor sit amett, consectetur adipsicing elit"
 
         // Then
-        EditDistanceCalculator.calculateEditDistance(source, target) mustBe 4
+        assertEquals(4, EditDistanceCalculator.calculateEditDistance(source, target))
     }
 
     @Test
@@ -82,7 +82,7 @@ class EditDistanceCalculatorSpec {
         val target = "Lorem ipsum dolor sit amet."
 
         // Then
-        EditDistanceCalculator.calculateEditDistance(source, target) mustBe 22
+        assertEquals(22, EditDistanceCalculator.calculateEditDistance(source, target))
     }
 
     @Test
@@ -92,7 +92,7 @@ class EditDistanceCalculatorSpec {
         val target = ""
 
         // Then
-        EditDistanceCalculator.calculateEditDistance(source, target) mustBe 22
+        assertEquals(22, EditDistanceCalculator.calculateEditDistance(source, target))
     }
 
     @Test
@@ -102,7 +102,7 @@ class EditDistanceCalculatorSpec {
         val target = "Lorem ipsum dolor sit amet"
 
         // Then
-        EditDistanceCalculator.calculateEditDistance(source, target) mustBe 0
+        assertEquals(0, EditDistanceCalculator.calculateEditDistance(source, target))
     }
 
     @Test
@@ -112,7 +112,7 @@ class EditDistanceCalculatorSpec {
         val target = "lorem ipsum dolor sit amet"
 
         // Then
-        EditDistanceCalculator.calculateEditDistance(source, target) mustBe 0
+        assertEquals(0, EditDistanceCalculator.calculateEditDistance(source, target))
     }
 
     @Test
@@ -122,11 +122,11 @@ class EditDistanceCalculatorSpec {
         val target = "Lorem ipsum dolor sit a met"
 
         // Then
-        EditDistanceCalculator.calculateEditDistance(source, target) mustBe 0
+        assertEquals(0, EditDistanceCalculator.calculateEditDistance(source, target))
     }
 
     @Test
     fun `It fulfills EditDistanceCalculator`() {
-        EditDistanceCalculator fulfils AlarmServiceContract.EditDistanceCalculator::class
+        assertIs<AlarmServiceContract.EditDistanceCalculator>(EditDistanceCalculator)
     }
 }

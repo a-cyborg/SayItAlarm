@@ -13,8 +13,8 @@ import org.a_cyb.sayitalarm.entity.Hour
 import org.a_cyb.sayitalarm.entity.Minute
 import org.a_cyb.sayitalarm.util.formatter.time.TimeFormatter
 import org.a_cyb.sayitalarm.util.formatter.time.TimeFormatterContract
-import org.a_cyb.sayitalarm.util.fulfils
-import org.a_cyb.sayitalarm.util.mustBe
+import org.a_cyb.sayitalarm.util.test_utils.fulfils
+import org.a_cyb.sayitalarm.util.test_utils.mustBe
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config

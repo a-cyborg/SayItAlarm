@@ -13,7 +13,6 @@ dependencies {
 
     implementation(libs.kotlinx.coroutines.core)
 
-    testImplementation(libs.mockk)
-    testImplementation(projects.util)
     testImplementation(kotlin("test"))
+    testImplementation(libs.mockk)
 }

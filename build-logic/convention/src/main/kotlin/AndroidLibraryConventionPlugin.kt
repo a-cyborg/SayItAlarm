@@ -30,7 +30,6 @@ internal class AndroidLibraryConventionPlugin : Plugin<Project> {
 
             dependencies {
                 add("testImplementation", kotlin("test"))
-                add("testImplementation", project(":util"))
             }
         }
     }

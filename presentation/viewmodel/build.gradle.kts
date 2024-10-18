@@ -32,6 +32,7 @@ dependencies {
     implementation(libs.koin.androidx.compose)
 
     // Debug
+    testImplementation(projects.util.testUtils)
     testImplementation(libs.androidx.test.ext)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.turbine)

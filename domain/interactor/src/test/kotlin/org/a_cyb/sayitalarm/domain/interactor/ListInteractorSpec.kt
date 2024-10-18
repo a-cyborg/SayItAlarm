@@ -33,8 +33,6 @@ import org.a_cyb.sayitalarm.entity.Minute
 import org.a_cyb.sayitalarm.entity.Ringtone
 import org.a_cyb.sayitalarm.entity.SayItScripts
 import org.a_cyb.sayitalarm.entity.WeeklyRepeat
-import org.a_cyb.sayitalarm.util.fulfils
-import org.a_cyb.sayitalarm.util.mustBe
 import org.junit.Test
 import java.util.Calendar.FRIDAY
 import java.util.Calendar.MONDAY
@@ -45,6 +43,8 @@ import java.util.Calendar.TUESDAY
 import java.util.Calendar.WEDNESDAY
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
+import kotlin.test.assertEquals
+import kotlin.test.assertIs
 
 @ExperimentalCoroutinesApi
 class ListInteractorSpec {
@@ -85,9 +85,9 @@ class ListInteractorSpec {
         // When
         interactor.alarms.test {
             // Then
-            awaitItem() mustBe Result.success(alarms)
-            awaitItem() mustBe Result.failure(exception)
-            awaitItem() mustBe Result.success(alarms)
+            assertEquals(Result.success(alarms), awaitItem())
+            assertEquals(Result.failure(exception), awaitItem())
+            assertEquals(Result.success(alarms), awaitItem())
 
             awaitComplete()
         }
@@ -196,7 +196,7 @@ class ListInteractorSpec {
 
     @Test
     fun `It fulfills ListInteractor`() {
-        interactor fulfils InteractorContract.ListInteractor::class
+        assertIs<InteractorContract.ListInteractor>(interactor)
     }
 
     private val alarms = listOf(
