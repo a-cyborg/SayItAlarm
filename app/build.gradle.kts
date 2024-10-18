@@ -50,6 +50,7 @@ android {
     testOptions {
         unitTests {
             isReturnDefaultValues = true
+            isIncludeAndroidResources = true
         }
     }
 }
@@ -78,7 +79,9 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
 
+    testImplementation(libs.androidx.compose.ui.test)
     testImplementation(libs.androidx.navigation.testing)
     testImplementation(libs.robolectric)
     testImplementation(libs.mockk)
+    testImplementation(projects.util.testUtils)
 }
