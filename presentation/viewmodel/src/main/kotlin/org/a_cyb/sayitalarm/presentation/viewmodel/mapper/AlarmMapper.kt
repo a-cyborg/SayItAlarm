@@ -22,13 +22,16 @@ import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.Selectable
 import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.SelectableRepeat
 import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.TimeUI
 import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.WeeklyRepeatUI
+import org.a_cyb.sayitalarm.util.formatter.enum.EnumFormatterContract
+import org.a_cyb.sayitalarm.util.formatter.time.TimeFormatterContract
+import org.a_cyb.sayitalarm.util.formatter.weekday.WeekdayFormatterContract
 import org.a_cyb.sayitalarm.util.ringtone_resolver.RingtoneResolverContract
 import java.time.DayOfWeek
 
 class AlarmMapper(
-    private val timeFormatter: org.a_cyb.sayitalarm.util.formatter.time.TimeFormatterContract,
-    private val weeklyRepeatFormatter: org.a_cyb.sayitalarm.util.formatter.weekday.WeekdayFormatterContract,
-    private val alertTypeFormatter: org.a_cyb.sayitalarm.util.formatter.enum.EnumFormatterContract.AlertTypeFormatter,
+    private val timeFormatter: TimeFormatterContract,
+    private val weeklyRepeatFormatter: WeekdayFormatterContract,
+    private val alertTypeFormatter: EnumFormatterContract.AlertTypeFormatter,
     private val ringtoneResolver: RingtoneResolverContract,
 ) : AlarmMapperContract {
 
