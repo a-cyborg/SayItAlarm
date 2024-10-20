@@ -6,15 +6,15 @@
 
 package org.a_cyb.sayitalarm.alarm_service.core.util
 
+import org.a_cyb.sayitalarm.entity.Hour
+import org.a_cyb.sayitalarm.entity.Minute
+import org.a_cyb.sayitalarm.entity.WeeklyRepeat
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
 import java.time.temporal.TemporalAdjusters
-import org.a_cyb.sayitalarm.entity.Hour
-import org.a_cyb.sayitalarm.entity.Minute
-import org.a_cyb.sayitalarm.entity.WeeklyRepeat
 
 fun getSnoozeTimeInMills(snoozeMin: Int): Long =
     LocalDateTime.now()
@@ -25,7 +25,7 @@ fun getNextAlarmTimeInMills(hour: Hour, minute: Minute, weeklyRepeat: WeeklyRepe
     getNextAlarmTime(LocalTime.of(hour.hour, minute.minute), weeklyRepeat)
         .toZonedMilliSec()
 
-fun getNextAlarmTime(alarmTime: LocalTime, weeklyRepeat: WeeklyRepeat): LocalDateTime  {
+fun getNextAlarmTime(alarmTime: LocalTime, weeklyRepeat: WeeklyRepeat): LocalDateTime {
     val alarmDate = getNextDateOfAlarm(alarmTime, weeklyRepeat)
 
     return LocalDateTime.of(alarmDate, alarmTime).withSecond(0).withNano(0)

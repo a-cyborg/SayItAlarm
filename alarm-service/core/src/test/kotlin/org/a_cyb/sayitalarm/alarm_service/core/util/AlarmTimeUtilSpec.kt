@@ -10,16 +10,16 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.mockk.every
 import io.mockk.mockkStatic
 import io.mockk.unmockkAll
-import java.time.DayOfWeek
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
-import kotlin.test.Test
 import org.a_cyb.sayitalarm.entity.WeeklyRepeat
 import org.a_cyb.sayitalarm.util.test_utils.mustBe
 import org.junit.After
 import org.junit.Before
 import org.junit.runner.RunWith
+import java.time.DayOfWeek
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import kotlin.test.Test
 
 @RunWith(AndroidJUnit4::class)
 class AlarmTimeUtilSpec {
