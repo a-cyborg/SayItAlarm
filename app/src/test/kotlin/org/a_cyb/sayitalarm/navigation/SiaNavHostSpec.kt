@@ -7,10 +7,11 @@
 package org.a_cyb.sayitalarm.navigation
 
 import android.content.Context
+import androidx.activity.ComponentActivity
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertHasNoClickAction
-import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -48,19 +49,15 @@ import org.koin.core.context.unloadKoinModules
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.bind
 import org.koin.dsl.module
-import org.robolectric.annotation.GraphicsMode
 
 @RunWith(AndroidJUnit4::class)
-@GraphicsMode(GraphicsMode.Mode.NATIVE)
 class SiaNavHostSpec {
-
-    private val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
 
     @get:Rule(order = 1)
     val addActivityRule = createAddActivityToRobolectricRule()
 
     @get:Rule(order = 2)
-    val composeTestRule = createComposeRule()
+    val composeTestRule = createAndroidComposeRule<ComponentActivity>()
 
     @get:Rule(order = 3)
     val koinTestRule = createKoinExternalResourceRule(appModule)
@@ -78,6 +75,8 @@ class SiaNavHostSpec {
             }
         }
     }
+
+    private val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
 
     private fun getStringRes(id: Int) = context.getString(id)
 

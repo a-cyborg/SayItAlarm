@@ -33,7 +33,7 @@ jobs:
         run: ./gradlew check -p build-logic
 
       - name: Build and run unit test
-        run: ./gradlew build --stacktrace --scan
+        run: ./gradlew build --stacktrace
 
       - name: Spotless check
         run: ./gradlew spotlessCheck --init-script=gradle/spotless.gradle.kts

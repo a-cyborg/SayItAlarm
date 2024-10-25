@@ -12,7 +12,6 @@ import androidx.compose.ui.test.onRoot
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.takahirom.roborazzi.RoborazziRule
 import com.github.takahirom.roborazzi.captureRoboImage
-import org.a_cyb.sayitalarm.util.test_utils.createAddActivityToRobolectricRule
 import org.junit.After
 import org.junit.Rule
 import org.junit.runner.RunWith
@@ -26,18 +25,14 @@ abstract class RoborazziTest(
     captureType: RoborazziRule.CaptureType = RoborazziRule.CaptureType.None,
 ) {
 
-    @get:Rule(order = 1)
-    val addActivityRule = createAddActivityToRobolectricRule()
-
-    @get:Rule(order = 2)
+    @get:Rule
     val subjectUnderTest = createAndroidComposeRule<ComponentActivity>()
 
-    @get:Rule(order = 3)
+    @get:Rule
     val roborazziRule = roborazziOf(subjectUnderTest, captureType)
 
     @After
     fun capture() {
         subjectUnderTest.onRoot().captureRoboImage()
-        subjectUnderTest.activityRule.scenario.recreate()
     }
 }

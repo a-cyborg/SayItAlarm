@@ -23,7 +23,6 @@ import org.a_cyb.sayitalarm.design_system.atom.IconButtonEdit
 import org.a_cyb.sayitalarm.design_system.atom.TextDisplayStandardLarge
 import org.a_cyb.sayitalarm.design_system.atom.TextTitleDangerMedium
 import org.a_cyb.sayitalarm.design_system.roborazziOf
-import org.a_cyb.sayitalarm.util.test_utils.createAddActivityToRobolectricRule
 import org.a_cyb.sayitalarm.util.test_utils.mustBe
 import org.junit.Rule
 import org.junit.Test
@@ -36,13 +35,10 @@ import org.robolectric.annotation.GraphicsMode
 @Config(sdk = [33])
 class PanelItemSpec {
 
-    @get:Rule(order = 1)
-    val addActivityRule = createAddActivityToRobolectricRule()
-
-    @get:Rule(order = 2)
+    @get:Rule
     val composeTestRule = createAndroidComposeRule<ComponentActivity>()
 
-    @get:Rule(order = 3)
+    @get:Rule
     val roborazziRule = roborazziOf(composeTestRule, RoborazziRule.CaptureType.None)
 
     private fun getString(id: Int) = composeTestRule.activity.getString(id)

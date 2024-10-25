@@ -53,6 +53,7 @@ dependencies {
     testImplementation(libs.androidx.test.rules)
     testImplementation(libs.androidx.work.workTesting)
     testImplementation(libs.androidx.navigation.testing)
+    testImplementation(libs.androidx.compose.ui.testManifest)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.robolectric)
     testImplementation(libs.turbine)

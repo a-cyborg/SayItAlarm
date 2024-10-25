@@ -24,7 +24,6 @@ import junit.framework.TestCase.assertTrue
 import org.a_cyb.sayitalarm.design_system.R
 import org.a_cyb.sayitalarm.design_system.molecule.TopAppBarSmall
 import org.a_cyb.sayitalarm.design_system.roborazziOf
-import org.a_cyb.sayitalarm.util.test_utils.createAddActivityToRobolectricRule
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -37,13 +36,10 @@ import org.robolectric.annotation.GraphicsMode
 @Config(sdk = [33], qualifiers = RobolectricDeviceQualifiers.Pixel7)
 class DialogSpec {
 
-    @get:Rule(order = 1)
-    val addActivityRule = createAddActivityToRobolectricRule()
-
-    @get:Rule(order = 2)
+    @get:Rule
     val composeTestRule = createAndroidComposeRule<ComponentActivity>()
 
-    @get:Rule(order = 3)
+    @get:Rule
     val roborazziRule = roborazziOf(composeTestRule, RoborazziRule.CaptureType.None)
 
     private fun getString(id: Int) = composeTestRule.activity.getString(id)

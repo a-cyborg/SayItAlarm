@@ -17,40 +17,36 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.takahirom.roborazzi.RobolectricDeviceQualifiers
 import com.github.takahirom.roborazzi.RoborazziRule
 import com.github.takahirom.roborazzi.captureRoboImage
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 import org.a_cyb.sayitalarm.design_system.R
 import org.a_cyb.sayitalarm.design_system.atom.TextDisplayStandardSmall
 import org.a_cyb.sayitalarm.design_system.roborazziOf
-import org.a_cyb.sayitalarm.util.test_utils.createAddActivityToRobolectricRule
 import org.a_cyb.sayitalarm.util.test_utils.mustBe
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 @RunWith(AndroidJUnit4::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(sdk = [33], qualifiers = RobolectricDeviceQualifiers.ResizableExperimental)
 class PopupPickerSpec {
 
+    @get:Rule
+    val composeTestRule = createAndroidComposeRule<ComponentActivity>()
+
+    @get:Rule
+    val roborazziRule = roborazziOf(composeTestRule, RoborazziRule.CaptureType.None)
+
+    private fun getString(id: Int) = composeTestRule.activity.getString(id)
+
     private val colors: List<String> = listOf(
         "Red", "Blue", "Green", "Yellow", "Purple",
         "Orange", "Pink", "Brown", "Black", "White",
         "Gray", "Turquoise", "Maroon",
     )
-
-    @get:Rule(order = 1)
-    val addActivityRule = createAddActivityToRobolectricRule()
-
-    @get:Rule(order = 2)
-    val composeTestRule = createAndroidComposeRule<ComponentActivity>()
-
-    @get:Rule(order = 3)
-    val roborazziRule = roborazziOf(composeTestRule, RoborazziRule.CaptureType.None)
-
-    private fun getString(id: Int) = composeTestRule.activity.getString(id)
 
     @Test
     fun `It renders PopUpPickerStandardWheel`() {

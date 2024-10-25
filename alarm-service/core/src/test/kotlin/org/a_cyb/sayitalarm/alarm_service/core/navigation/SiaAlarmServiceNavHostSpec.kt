@@ -28,7 +28,6 @@ import org.a_cyb.sayitalarm.presentation.contracts.SayItContract
 import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SttStatus
 import org.a_cyb.sayitalarm.presentation.viewmodel.AlarmViewModel
 import org.a_cyb.sayitalarm.presentation.viewmodel.SayItViewModel
-import org.a_cyb.sayitalarm.util.test_utils.createAddActivityToRobolectricRule
 import org.a_cyb.sayitalarm.util.test_utils.createKoinExternalResourceRule
 import org.junit.After
 import org.junit.Rule
@@ -44,21 +43,20 @@ import kotlin.test.Test
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class SiaAlarmServiceNavHostSpec {
 
-    private val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
-
-    @get:Rule(order = 1)
-    val addActivityRule = createAddActivityToRobolectricRule()
-
-    @get:Rule(order = 2)
+    @get:Rule
     val composeTestRule = createComposeRule()
 
-    @get:Rule(order = 3)
+    @get:Rule
     val koinTestRule = createKoinExternalResourceRule(module { })
 
     @After
     fun teatDown() {
         clearAllMocks()
     }
+
+    private val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
+
+    private fun getStringRes(id: Int) = context.getString(id)
 
     private fun setupMock(alarmViewModelState: AlarmUiState = AlarmUiState.Initial) {
         val alarmViewModel: AlarmViewModel = mockk(relaxed = true)
@@ -84,8 +82,6 @@ class SiaAlarmServiceNavHostSpec {
 
         SiaAlarmServiceNavHost(navController = navController)
     }
-
-    private fun getStringRes(id: Int) = context.getString(id)
 
     @Test
     fun `It starts from AlarmScreen`() {

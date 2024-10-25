@@ -31,13 +31,11 @@ import com.github.takahirom.roborazzi.RobolectricDeviceQualifiers
 import com.github.takahirom.roborazzi.RoborazziRule
 import com.github.takahirom.roborazzi.captureRoboImage
 import com.github.takahirom.roborazzi.captureScreenRoboImage
-import kotlin.test.assertEquals
 import org.a_cyb.sayitalarm.design_system.FakeAlarmUIData
 import org.a_cyb.sayitalarm.design_system.R
 import org.a_cyb.sayitalarm.design_system.organism.CommandExecutorFake.InvokedType
 import org.a_cyb.sayitalarm.design_system.roborazziOf
 import org.a_cyb.sayitalarm.presentation.contracts.AlarmPanelContract.WeeklyRepeatUI
-import org.a_cyb.sayitalarm.util.test_utils.createAddActivityToRobolectricRule
 import org.a_cyb.sayitalarm.util.test_utils.mustBe
 import org.junit.Rule
 import org.junit.Test
@@ -46,6 +44,7 @@ import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 import org.robolectric.shadow.api.Shadow
 import org.robolectric.shadows.ShadowActivity
+import kotlin.test.assertEquals
 
 @OptIn(ExperimentalRoborazziApi::class)
 @RunWith(AndroidJUnit4::class)
@@ -53,13 +52,10 @@ import org.robolectric.shadows.ShadowActivity
 @Config(sdk = [33], qualifiers = RobolectricDeviceQualifiers.ResizableExperimental)
 class AlarmPanelSpec {
 
-    @get:Rule(order = 1)
-    val addActivityRule = createAddActivityToRobolectricRule()
-
-    @get:Rule(order = 2)
+    @get:Rule
     val composeTestRule = createAndroidComposeRule<ComponentActivity>()
 
-    @get:Rule(order = 3)
+    @get:Rule
     val roborazziRule = roborazziOf(composeTestRule, RoborazziRule.CaptureType.None)
 
     private val alarmUI = FakeAlarmUIData.defaultAlarmUI

@@ -10,6 +10,7 @@ android {
     testOptions {
         unitTests {
             isReturnDefaultValues = true
+            isIncludeAndroidResources = true
         }
     }
 
@@ -29,5 +30,6 @@ android {
         testImplementation(libs.robolectric)
         testImplementation(libs.bundles.roborazzi)
         testImplementation(projects.util.testUtils)
+        testImplementation(libs.androidx.compose.ui.testManifest)
     }
 }
