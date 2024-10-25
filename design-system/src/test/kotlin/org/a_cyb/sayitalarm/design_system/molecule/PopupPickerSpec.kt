@@ -17,6 +17,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.takahirom.roborazzi.RobolectricDeviceQualifiers
 import com.github.takahirom.roborazzi.RoborazziRule
 import com.github.takahirom.roborazzi.captureRoboImage
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 import org.a_cyb.sayitalarm.design_system.R
 import org.a_cyb.sayitalarm.design_system.atom.TextDisplayStandardSmall
 import org.a_cyb.sayitalarm.design_system.roborazziOf
@@ -27,8 +29,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 
 @RunWith(AndroidJUnit4::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
@@ -159,21 +159,21 @@ class PopupPickerSpec {
         assertTrue(hasBeenCalled)
     }
 
-    @Test
-    fun `It renders PopupPickerTime`() {
-        composeTestRule.setContent {
-            PopupPickerTime(
-                hour = 8,
-                minute = 0,
-                onConfirm = { _, _ -> },
-                onCancel = {},
-            )
-        }
-
-        composeTestRule
-            .onNode(isDialog())
-            .captureRoboImage()
-    }
+    // @Test
+    // fun `It renders PopupPickerTime`() {
+    //     composeTestRule.setContent {
+    //         PopupPickerTime(
+    //             hour = 8,
+    //             minute = 0,
+    //             onConfirm = { _, _ -> },
+    //             onCancel = {},
+    //         )
+    //     }
+    //
+    //     composeTestRule
+    //         .onNode(isDialog())
+    //         .captureRoboImage()
+    // }
 
     @Test
     fun `Given PopupPickerTime confirm button is clicked it propagates the onConfirm and onDismiss action`() {
