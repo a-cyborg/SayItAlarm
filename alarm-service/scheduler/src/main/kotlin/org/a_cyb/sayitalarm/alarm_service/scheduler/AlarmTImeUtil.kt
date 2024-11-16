@@ -4,7 +4,7 @@
  * Use of this source code is governed by Apache v2.0
  */
 
-package org.a_cyb.sayitalarm.alarm_service.core.util
+package org.a_cyb.sayitalarm.alarm_service.scheduler
 
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -25,7 +25,7 @@ fun getNextAlarmTimeInMills(hour: Hour, minute: Minute, weeklyRepeat: WeeklyRepe
     getNextAlarmTime(LocalTime.of(hour.hour, minute.minute), weeklyRepeat)
         .toZonedMilliSec()
 
-fun getNextAlarmTime(alarmTime: LocalTime, weeklyRepeat: WeeklyRepeat): LocalDateTime  {
+fun getNextAlarmTime(alarmTime: LocalTime, weeklyRepeat: WeeklyRepeat): LocalDateTime {
     val alarmDate = getNextDateOfAlarm(alarmTime, weeklyRepeat)
 
     return LocalDateTime.of(alarmDate, alarmTime).withSecond(0).withNano(0)

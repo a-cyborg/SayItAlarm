@@ -65,6 +65,7 @@ dependencies {
     implementation(projects.presentation.contracts)
     implementation(projects.presentation.viewmodel)
     implementation(projects.alarmService.core)
+    implementation(projects.alarmService.scheduler)
     implementation(projects.util.formatter)
     implementation(projects.util.linkOpener)
     implementation(projects.util.soundEffectPlayer)

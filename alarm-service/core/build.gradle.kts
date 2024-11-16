@@ -20,7 +20,6 @@ android {
         unitTests {
             isReturnDefaultValues = true
             isIncludeAndroidResources = true
-            all { it.jvmArgs("--add-opens", "java.base/java.time=ALL-UNNAMED") }
         }
     }
 
@@ -38,24 +37,22 @@ dependencies {
     implementation(projects.designSystem)
 
     coreLibraryDesugaring(libs.android.tools.desugarJdk)
-    implementation(libs.androidx.work.workRuntime)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
 
-    androidTestImplementation(libs.androidx.test.runner)
-    androidTestImplementation(libs.androidx.test.rules)
-    androidTestImplementation(libs.androidx.test.ext)
-    androidTestImplementation(kotlin("test"))
     testImplementation(projects.util.testUtils)
+    testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.androidx.test.ext)
     testImplementation(libs.androidx.test.rules)
-    testImplementation(libs.androidx.work.workTesting)
     testImplementation(libs.androidx.navigation.testing)
-    testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.robolectric)
     testImplementation(libs.turbine)
     testImplementation(libs.mockk)
     testImplementation(libs.antibytes.fixture)
+
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.rules)
+    androidTestImplementation(libs.androidx.test.ext)
 }

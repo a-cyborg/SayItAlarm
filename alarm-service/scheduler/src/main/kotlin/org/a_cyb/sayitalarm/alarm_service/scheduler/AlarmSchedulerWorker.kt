@@ -4,7 +4,7 @@
  * Use of this source code is governed by Apache v2.0
  */
 
-package org.a_cyb.sayitalarm.alarm_service.core
+package org.a_cyb.sayitalarm.alarm_service.scheduler
 
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -14,10 +14,9 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler.Companion.SCHEDULER_WORKER_INPUT_DATA_ALARM_ID
-import org.a_cyb.sayitalarm.alarm_service.core.AlarmScheduler.Companion.SCHEDULER_WORKER_INPUT_DATA_SNOOZE_MIN
-import org.a_cyb.sayitalarm.alarm_service.core.util.getNextAlarmTimeInMills
-import org.a_cyb.sayitalarm.alarm_service.core.util.getSnoozeTimeInMills
+import org.a_cyb.sayitalarm.alarm_service.core.AlarmBroadcastReceiver
+import org.a_cyb.sayitalarm.alarm_service.scheduler.AlarmScheduler.Companion.SCHEDULER_WORKER_INPUT_DATA_ALARM_ID
+import org.a_cyb.sayitalarm.alarm_service.scheduler.AlarmScheduler.Companion.SCHEDULER_WORKER_INPUT_DATA_SNOOZE_MIN
 import org.a_cyb.sayitalarm.domain.repository.RepositoryContract.AlarmRepository
 import org.a_cyb.sayitalarm.entity.Alarm
 import org.koin.core.qualifier.named
@@ -29,7 +28,7 @@ internal class AlarmSchedulerWorker(
 ) : CoroutineWorker(context, workerParameters) {
 
     override suspend fun doWork(): Result {
-        val workType = inputData.getInt(AlarmScheduler.SCHEDULER_WORKER_WORK_TYPE, 0)
+        val workType = inputData.getInt(AlarmScheduler.SCHEDULER_WORKER_WORK_TYPE, -1)
 
         return when (workType) {
             AlarmScheduler.SCHEDULER_WORKER_WORK_SET_ALARM -> scheduleEnabledAlarms()
@@ -40,30 +39,35 @@ internal class AlarmSchedulerWorker(
     }
 
     private suspend fun scheduleEnabledAlarms(): Result {
-        getAllEnabledAlarms().forEach { alarm ->
-            val nextAlarmTimeInMills = getNextAlarmTimeInMills(alarm.hour, alarm.minute, alarm.weeklyRepeat)
+        val alarmManager = applicationContext.getSystemService(AlarmManager::class.java)
 
-            setAlarmClock(alarm.id, nextAlarmTimeInMills)
+        getAllEnabledAlarms().forEach { alarm ->
+            setAlarmClock(
+                alarm.id,
+                getNextAlarmTimeInMills(alarm.hour, alarm.minute, alarm.weeklyRepeat),
+                alarmManager
+            )
         }
 
         return Result.success()
     }
 
     private fun scheduleSnooze(): Result {
+        val alarmManager = applicationContext.getSystemService(AlarmManager::class.java)
         val alarmId = inputData.getLong(SCHEDULER_WORKER_INPUT_DATA_ALARM_ID, 0)
         val snoozeMin = inputData.getInt(SCHEDULER_WORKER_INPUT_DATA_SNOOZE_MIN, 5)
         val snoozeAlarmTime = getSnoozeTimeInMills(snoozeMin)
 
-        setAlarmClock(alarmId, snoozeAlarmTime)
+        setAlarmClock(alarmId, snoozeAlarmTime, alarmManager)
 
         return Result.success()
     }
 
     private fun cancelAlarm(): Result {
+        val alarmManager = applicationContext.getSystemService(AlarmManager::class.java)
         val alarmId = inputData.getLong(SCHEDULER_WORKER_INPUT_DATA_ALARM_ID, 0)
         val deliverIntent = getDeliverAlarmIntent(alarmId)
         val pendingIntent = getPendingIntent(false, alarmId.toInt(), deliverIntent)
-        val alarmManager = applicationContext.getSystemService(AlarmManager::class.java)
 
         alarmManager.cancel(pendingIntent!!)
         pendingIntent.cancel()
@@ -71,8 +75,7 @@ internal class AlarmSchedulerWorker(
         return Result.success()
     }
 
-    private fun setAlarmClock(alarmId: Long, alarmTimeInMills: Long) {
-        val alarmManager = applicationContext.getSystemService(AlarmManager::class.java)
+    private fun setAlarmClock(alarmId: Long, alarmTimeInMills: Long, alarmManager: AlarmManager) {
         val deliverIntent = getDeliverAlarmIntent(alarmId)
         val pendingIntentToCheckDuplicate = getPendingIntent(isForDupeCheck = true, alarmId.toInt(), deliverIntent)
 
@@ -88,9 +91,9 @@ internal class AlarmSchedulerWorker(
 
     private fun getDeliverAlarmIntent(alarmId: Long): Intent =
         Intent(applicationContext, AlarmBroadcastReceiver::class.java)
-            .setAction(AlarmScheduler.INTENT_ACTION_DELIVER_ALARM)
+            .setAction(AlarmBroadcastReceiver.INTENT_ACTION_DELIVER_ALARM)
             .setFlags(Intent.FLAG_RECEIVER_FOREGROUND)
-            .putExtra(AlarmScheduler.INTENT_EXTRA_ALARM_ID, alarmId)
+            .putExtra(AlarmBroadcastReceiver.INTENT_EXTRA_ALARM_ID, alarmId)
 
     private fun getPendingIntent(isForDupeCheck: Boolean, alarmId: Int, intent: Intent): PendingIntent? {
         val flags = when (isForDupeCheck) {

@@ -4,7 +4,7 @@
  * Use of this source code is governed by Apache v2.0
  */
 
-package org.a_cyb.sayitalarm.alarm_service.core.util
+package org.a_cyb.sayitalarm.alarm_service.scheduler
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.mockk.every
@@ -15,8 +15,8 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import org.a_cyb.sayitalarm.entity.WeeklyRepeat
-import org.a_cyb.sayitalarm.util.test_utils.mustBe
 import org.junit.After
 import org.junit.Before
 import org.junit.runner.RunWith
@@ -45,10 +45,12 @@ class AlarmTimeUtilSpec {
 
         // When
         val actual = getNextAlarmTime(alarmTime, alarmWeeklyRepeat)
-        val expected = LocalDateTime.of(2024, 7, 19, 13, 33)
 
         // Then
-        actual mustBe expected
+        val expectedDate = LocalDate.of(2024, 7, 19)
+        val expected = LocalDateTime.of(expectedDate, alarmTime)
+
+        assertEquals(expected, actual)
     }
 
     @Test
@@ -66,7 +68,7 @@ class AlarmTimeUtilSpec {
         val expected = LocalDateTime.of(2024, 7, 25, 7, 0)
 
         // Then
-        actual mustBe expected
+        assertEquals(expected, actual)
     }
 
     @Test
@@ -84,7 +86,7 @@ class AlarmTimeUtilSpec {
         val expected = LocalDateTime.of(2024, 7, 18, 7, 0)
 
         // Then
-        actual mustBe expected
+        assertEquals(expected, actual)
     }
 
     @Test
@@ -102,6 +104,6 @@ class AlarmTimeUtilSpec {
         val expected = LocalDateTime.of(2024, 7, 19, 7, 0)
 
         // Then
-        actual mustBe expected
+        assertEquals(expected, actual)
     }
 }

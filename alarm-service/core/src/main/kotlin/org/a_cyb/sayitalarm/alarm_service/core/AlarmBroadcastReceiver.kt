@@ -17,11 +17,12 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         when (intent.action) {
-            AlarmScheduler.INTENT_ACTION_DELIVER_ALARM -> {
+            INTENT_ACTION_DELIVER_ALARM -> {
                 AlarmAlertWakeLock.acquireWakeLock(context)
 
                 val alarmServiceIntent = Intent(context, AlarmService::class.java)
                     .putExtras(intent.extras ?: Bundle())
+
                 ContextCompat.startForegroundService(context, alarmServiceIntent)
             }
 
@@ -32,5 +33,10 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
                 ContextCompat.startForegroundService(context, scheduleServiceIntent)
             }
         }
+    }
+
+    companion object {
+        const val INTENT_ACTION_DELIVER_ALARM = "org.a_cyb.sayitalarm.DELIVER_ALARM"
+        const val INTENT_EXTRA_ALARM_ID = "org.a_cyb.sayitalarm.EXTRA_ALARM_ID"
     }
 }
