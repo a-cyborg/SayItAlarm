@@ -10,13 +10,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.mockk.every
 import io.mockk.mockkStatic
 import io.mockk.unmockkAll
-import java.time.DayOfWeek
-import java.time.Instant
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
-import java.time.ZoneId
-import kotlin.test.Test
 import org.a_cyb.sayitalarm.entity.Hour
 import org.a_cyb.sayitalarm.entity.Minute
 import org.a_cyb.sayitalarm.entity.WeeklyRepeat
@@ -24,6 +17,13 @@ import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.runner.RunWith
+import java.time.DayOfWeek
+import java.time.Instant
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.ZoneId
+import kotlin.test.Test
 
 @RunWith(AndroidJUnit4::class)
 class AlarmTimeUtilSpec {
@@ -40,7 +40,7 @@ class AlarmTimeUtilSpec {
     @Test
     fun getNextAlarmTimeInMills_RepeatAlarm_AlarmTimeForTodayHasPassed_AvailableRepeatDayInCurrentWeek() {
         // Given
-        val alarmWeeklyRepeat = WeeklyRepeat(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY, DayOfWeek.FRIDAY)
+        val alarmWeeklyRepeat = WeeklyRepeat(DayOfWeek.MONDAY.value, DayOfWeek.WEDNESDAY.value, DayOfWeek.FRIDAY.value)
         // Current clock: 2024-July-18(Thursday) 3:33
         every { LocalDate.now() } returns LocalDate.of(2024, 7, 18)
         every { LocalTime.now() } returns LocalTime.of(3, 33)
@@ -64,7 +64,7 @@ class AlarmTimeUtilSpec {
     @Test
     fun getNextAlarmTime_RepeatAlarm_AlarmTimeForTodayHasPassed_NoAvailableRepeatDayInCurrentWeek() {
         // Given
-        val alarmWeeklyRepeat = WeeklyRepeat(DayOfWeek.THURSDAY)
+        val alarmWeeklyRepeat = WeeklyRepeat(DayOfWeek.THURSDAY.value)
         // Current clock: 2024-July-18(Thursday) 9:00
         every { LocalDate.now() } returns LocalDate.of(2024, 7, 18)
         every { LocalTime.now() } returns LocalTime.of(9, 0)
@@ -88,7 +88,7 @@ class AlarmTimeUtilSpec {
     @Test
     fun getNextAlarmTime_RepeatAlarm_AlarmTimeForToday_HasNotYetPassed() {
         // Given
-        val weeklyRepeat = WeeklyRepeat(DayOfWeek.WEDNESDAY)
+        val weeklyRepeat = WeeklyRepeat(DayOfWeek.WEDNESDAY.value)
 
         // Current clock: 2024-July-17(Wednesday) 5:00
         every { LocalDate.now() } returns LocalDate.of(2024, 7, 17)

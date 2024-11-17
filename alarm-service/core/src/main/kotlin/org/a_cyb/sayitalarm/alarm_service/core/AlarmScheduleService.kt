@@ -13,7 +13,7 @@ import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
+import org.a_cyb.sayitalarm.domain.alarm_service.AlarmSchedulerContract
 import org.koin.android.ext.android.inject
 
 class AlarmScheduleService : Service() {
@@ -21,7 +21,7 @@ class AlarmScheduleService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val notification = AlarmNotification.getPostBootSchedulingNotification(this)
         val notificationManager = (getSystemService(NotificationManager::class.java) as NotificationManager)
-        val alarmScheduler: AlarmServiceContract.AlarmScheduler by inject()
+        val alarmScheduler: AlarmSchedulerContract by inject()
 
         startForeground(notification)
         notificationManager.notify(FOREGROUND_ID, notification)

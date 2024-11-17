@@ -18,6 +18,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.verify
+import org.a_cyb.sayitalarm.alarm_service.core.AlarmBroadcastReceiver.Companion.INTENT_ACTION_DELIVER_ALARM
 import org.junit.Before
 import org.junit.runner.RunWith
 import kotlin.test.Test
@@ -40,8 +41,7 @@ class AlarmBroadcastReceiverSpec {
     fun `When onReceive is invoked with ACTION_DELIVER_ALARM action it calls startForegroundService with the AlarmService`() {
         // Given
         val captureIntent = slot<Intent>()
-        val intent = Intent(AlarmScheduler.INTENT_ACTION_DELIVER_ALARM)
-            .putExtras(Bundle())
+        val intent = Intent(INTENT_ACTION_DELIVER_ALARM).putExtras(Bundle())
 
         // When
         AlarmBroadcastReceiver().onReceive(context, intent)

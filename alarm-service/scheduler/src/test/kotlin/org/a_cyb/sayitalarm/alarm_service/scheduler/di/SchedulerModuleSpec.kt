@@ -8,11 +8,11 @@ package org.a_cyb.sayitalarm.alarm_service.scheduler.di
 
 import android.content.Context
 import io.mockk.mockk
-import kotlin.test.assertNotNull
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmSchedulerContract
 import org.junit.Test
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.koinApplication
+import kotlin.test.assertNotNull
 
 class SchedulerModuleSpec {
 
@@ -30,5 +30,4 @@ class SchedulerModuleSpec {
         // Then
         assertNotNull(alarmScheduler)
     }
-
 }

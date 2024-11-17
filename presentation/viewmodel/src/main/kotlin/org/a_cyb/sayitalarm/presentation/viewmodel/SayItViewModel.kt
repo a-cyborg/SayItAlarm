@@ -16,10 +16,10 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController.ControllerState
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.EditDistanceCalculator
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.SttRecognizer
+import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceControllerContract
+import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceControllerContract.ControllerState
+import org.a_cyb.sayitalarm.domain.alarm_service.EditDistanceCalculatorContract
+import org.a_cyb.sayitalarm.domain.alarm_service.SttRecognizerContract
 import org.a_cyb.sayitalarm.presentation.contracts.SayItContract
 import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.Count
 import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.IsOffline
@@ -35,9 +35,9 @@ import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract.Comma
 import org.a_cyb.sayitalarm.util.sound_effect_player.SoundEffectPlayerContract
 
 class SayItViewModel(
-    private val serviceController: AlarmServiceController,
-    private val sttRecognizer: SttRecognizer,
-    private val editDistanceCalculator: EditDistanceCalculator,
+    private val serviceController: AlarmServiceControllerContract,
+    private val sttRecognizer: SttRecognizerContract,
+    private val editDistanceCalculator: EditDistanceCalculatorContract,
     private val soundEffectPlayer: SoundEffectPlayerContract,
 ) : SayItContract.SayItViewModel, ViewModel() {
 
@@ -45,7 +45,7 @@ class SayItViewModel(
     override val state: StateFlow<SayItState> = _state.asStateFlow()
 
     override val isOffline: StateFlow<IsOffline> = sttRecognizer.isOnDevice
-        .map { if (it == SttRecognizer.IsOnDevice.True) IsOffline.True else IsOffline.False }
+        .map { if (it == SttRecognizerContract.IsOnDevice.True) IsOffline.True else IsOffline.False }
         .stateIn(
             scope = scope,
             started = SharingStarted.WhileSubscribed(5_000),
@@ -97,13 +97,13 @@ class SayItViewModel(
         serviceController.terminate()
     }
 
-    private fun handleRecognizerState(recognizerState: SttRecognizer.RecognizerState) {
+    private fun handleRecognizerState(recognizerState: SttRecognizerContract.RecognizerState) {
         when (recognizerState) {
-            is SttRecognizer.RecognizerState.Ready -> onReady()
-            is SttRecognizer.RecognizerState.Processing -> onProcessing(recognizerState.partialResults)
-            is SttRecognizer.RecognizerState.Done -> onDone(recognizerState.result)
-            is SttRecognizer.RecognizerState.Error -> Error.update()
-            is SttRecognizer.RecognizerState.Initial -> {}
+            is SttRecognizerContract.RecognizerState.Ready -> onReady()
+            is SttRecognizerContract.RecognizerState.Processing -> onProcessing(recognizerState.partialResults)
+            is SttRecognizerContract.RecognizerState.Done -> onDone(recognizerState.result)
+            is SttRecognizerContract.RecognizerState.Error -> Error.update()
+            is SttRecognizerContract.RecognizerState.Initial -> {}
         }
     }
 

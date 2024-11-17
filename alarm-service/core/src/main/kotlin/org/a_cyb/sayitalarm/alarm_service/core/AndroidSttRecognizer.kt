@@ -19,11 +19,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.SttRecognizer
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.SttRecognizer.IsOnDevice
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.SttRecognizer.RecognizerState
+import org.a_cyb.sayitalarm.domain.alarm_service.SttRecognizerContract
+import org.a_cyb.sayitalarm.domain.alarm_service.SttRecognizerContract.IsOnDevice
+import org.a_cyb.sayitalarm.domain.alarm_service.SttRecognizerContract.RecognizerState
 
-class AndroidSttRecognizer(private val context: Context) : SttRecognizer, RecognitionListener {
+class AndroidSttRecognizer(private val context: Context) : SttRecognizerContract, RecognitionListener {
 
     private val recognizer: SpeechRecognizer by lazy { resolveSpeechRecognizer() }
 

@@ -45,7 +45,7 @@ internal class AlarmSchedulerWorker(
             setAlarmClock(
                 alarm.id,
                 getNextAlarmTimeInMills(alarm.hour, alarm.minute, alarm.weeklyRepeat),
-                alarmManager
+                alarmManager,
             )
         }
 

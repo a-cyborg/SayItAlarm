@@ -6,14 +6,14 @@
 
 package org.a_cyb.sayitalarm.alarm_service.core.util
 
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
+import org.a_cyb.sayitalarm.domain.alarm_service.EditDistanceCalculatorContract
 import java.util.Locale
 
 /*
 * TODO: This implementation is basic. Update with a more robust solution in the future.
 * https://www.youtube.com/watch?v=XYi2-LPrwm4
 * */
-object EditDistanceCalculator : AlarmServiceContract.EditDistanceCalculator {
+object EditDistanceCalculator : EditDistanceCalculatorContract {
     override fun calculateEditDistance(source: String, target: String): Int {
         val s = source.normalizeString()
         val t = target.normalizeString()

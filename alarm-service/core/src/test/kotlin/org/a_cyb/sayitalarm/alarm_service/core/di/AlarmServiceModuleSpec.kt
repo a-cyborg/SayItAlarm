@@ -9,7 +9,9 @@ package org.a_cyb.sayitalarm.alarm_service.core.di
 import android.content.Context
 import io.mockk.mockk
 import kotlinx.coroutines.CoroutineScope
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
+import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceControllerContract
+import org.a_cyb.sayitalarm.domain.alarm_service.EditDistanceCalculatorContract
+import org.a_cyb.sayitalarm.domain.alarm_service.SttRecognizerContract
 import org.a_cyb.sayitalarm.domain.repository.RepositoryContract
 import org.junit.Test
 import org.koin.android.ext.koin.androidContext
@@ -21,23 +23,6 @@ import kotlin.test.assertNotNull
 class AlarmServiceModuleSpec {
 
     private val context: Context = mockk(relaxed = true)
-
-    @Test
-    fun `It injects AlarmScheduler`() {
-        // Given
-        val koinApp = koinApplication {
-            androidContext(context)
-            modules(
-                alarmServiceModule,
-            )
-        }
-
-        // When
-        val alarmScheduler = koinApp.koin.getOrNull<AlarmServiceContract.AlarmScheduler>()
-
-        // Then
-        assertNotNull(alarmScheduler)
-    }
 
     @Test
     fun `It injects AlarmServiceController`() {
@@ -56,7 +41,7 @@ class AlarmServiceModuleSpec {
         }
 
         // When
-        val controller = koinApp.koin.getOrNull<AlarmServiceContract.AlarmServiceController>()
+        val controller = koinApp.koin.getOrNull<AlarmServiceControllerContract>()
 
         // Then
         assertNotNull(controller)
@@ -73,7 +58,7 @@ class AlarmServiceModuleSpec {
         }
 
         // When
-        val recognizer = koinApp.koin.getOrNull<AlarmServiceContract.SttRecognizer>()
+        val recognizer = koinApp.koin.getOrNull<SttRecognizerContract>()
 
         // Then
         assertNotNull(recognizer)
@@ -89,7 +74,7 @@ class AlarmServiceModuleSpec {
         }
 
         // When
-        val calculator = koinApp.koin.getOrNull<AlarmServiceContract.EditDistanceCalculator>()
+        val calculator = koinApp.koin.getOrNull<EditDistanceCalculatorContract>()
 
         // Then
         assertNotNull(calculator)

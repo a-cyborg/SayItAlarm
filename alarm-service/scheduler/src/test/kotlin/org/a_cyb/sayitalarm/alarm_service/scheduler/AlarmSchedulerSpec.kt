@@ -17,8 +17,6 @@ import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.unmockkAll
 import io.mockk.verify
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmSchedulerContract
 import org.a_cyb.sayitalarm.entity.Snooze
 import org.junit.After
@@ -27,6 +25,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import tech.antibytes.kfixture.fixture
 import tech.antibytes.kfixture.kotlinFixture
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 
 @RunWith(AndroidJUnit4::class)
 class AlarmSchedulerSpec {
@@ -65,7 +65,7 @@ class AlarmSchedulerSpec {
             assertEquals(AlarmSchedulerWorker::class.qualifiedName, workerClassName)
             assertEquals(
                 AlarmScheduler.SCHEDULER_WORKER_WORK_SET_ALARM,
-                input.getInt(AlarmScheduler.SCHEDULER_WORKER_WORK_TYPE, -1)
+                input.getInt(AlarmScheduler.SCHEDULER_WORKER_WORK_TYPE, -1),
             )
         }
     }
@@ -88,15 +88,15 @@ class AlarmSchedulerSpec {
             assertEquals(AlarmSchedulerWorker::class.qualifiedName, workerClassName)
             assertEquals(
                 AlarmScheduler.SCHEDULER_WORKER_WORK_SET_SNOOZE,
-                input.getInt(AlarmScheduler.SCHEDULER_WORKER_WORK_TYPE, -1)
+                input.getInt(AlarmScheduler.SCHEDULER_WORKER_WORK_TYPE, -1),
             )
             assertEquals(
                 alarmId,
-                input.getLong(AlarmScheduler.SCHEDULER_WORKER_INPUT_DATA_ALARM_ID, -1)
+                input.getLong(AlarmScheduler.SCHEDULER_WORKER_INPUT_DATA_ALARM_ID, -1),
             )
             assertEquals(
                 snooze.snooze,
-                input.getInt(AlarmScheduler.SCHEDULER_WORKER_INPUT_DATA_SNOOZE_MIN, -1)
+                input.getInt(AlarmScheduler.SCHEDULER_WORKER_INPUT_DATA_SNOOZE_MIN, -1),
             )
         }
     }
@@ -118,11 +118,11 @@ class AlarmSchedulerSpec {
             assertEquals(AlarmSchedulerWorker::class.qualifiedName, workerClassName)
             assertEquals(
                 AlarmScheduler.SCHEDULER_WORKER_WORK_CANCEL_ALARM,
-                input.getInt(AlarmScheduler.SCHEDULER_WORKER_WORK_TYPE, -1)
+                input.getInt(AlarmScheduler.SCHEDULER_WORKER_WORK_TYPE, -1),
             )
             assertEquals(
                 alarmId,
-                input.getLong(AlarmScheduler.SCHEDULER_WORKER_INPUT_DATA_ALARM_ID, -1)
+                input.getLong(AlarmScheduler.SCHEDULER_WORKER_INPUT_DATA_ALARM_ID, -1),
             )
         }
     }

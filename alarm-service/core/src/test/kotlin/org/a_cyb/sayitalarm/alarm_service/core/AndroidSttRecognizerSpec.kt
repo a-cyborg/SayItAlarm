@@ -19,7 +19,7 @@ import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.verify
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.SttRecognizer
+import org.a_cyb.sayitalarm.domain.alarm_service.SttRecognizerContract
 import org.a_cyb.sayitalarm.util.test_utils.fulfils
 import org.a_cyb.sayitalarm.util.test_utils.mustBe
 import org.junit.After
@@ -33,7 +33,7 @@ import kotlin.test.Test
 class AndroidSttRecognizerSpec {
 
     private lateinit var context: Context
-    private lateinit var recognizer: SttRecognizer
+    private lateinit var recognizer: SttRecognizerContract
 
     @Before
     fun setup() {
@@ -124,11 +124,11 @@ class AndroidSttRecognizerSpec {
 
     @Test
     fun `RecognizerState is in Initial state`() {
-        recognizer.recognizerState.value mustBe SttRecognizer.RecognizerState.Initial
+        recognizer.recognizerState.value mustBe SttRecognizerContract.RecognizerState.Initial
     }
 
     @Test
-    fun `It fulfills SttRecognizer`() {
-        recognizer fulfils SttRecognizer::class
+    fun `It fulfills SttRecognizerContract`() {
+        recognizer fulfils SttRecognizerContract::class
     }
 }

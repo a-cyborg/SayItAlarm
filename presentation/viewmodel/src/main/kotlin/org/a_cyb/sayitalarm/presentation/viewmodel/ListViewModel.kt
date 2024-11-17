@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
+import org.a_cyb.sayitalarm.domain.alarm_service.SttRecognizerOnDeviceHelper
 import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
 import org.a_cyb.sayitalarm.entity.Alarm
 import org.a_cyb.sayitalarm.entity.Label
@@ -31,7 +31,7 @@ class ListViewModel(
     private val interactor: InteractorContract.ListInteractor,
     private val timeFormatter: TimeFormatterContract,
     private val weekdayFormatter: WeekdayFormatterContract,
-    private val androidRecognizerOfflineHelper: AlarmServiceContract.SttRecognizerOnDeviceHelper,
+    private val androidRecognizerOfflineHelper: SttRecognizerOnDeviceHelper,
 ) : ListContract.ListViewModel, ViewModel() {
 
     override val state: StateFlow<ListState> = interactor.alarms

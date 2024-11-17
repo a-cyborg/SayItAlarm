@@ -21,14 +21,14 @@ import org.a_cyb.sayitalarm.entity.Ringtone
 import org.koin.android.ext.android.inject
 import kotlin.properties.Delegates
 
-class AlarmService : AlarmServiceContract.AlarmService, Service() {
+class AlarmService : AlarmServiceContract, Service() {
 
     private val binder: Binder = AlertServiceBinder()
     private var alarmId by Delegates.notNull<Long>()
     private val audioVibeController: AudioVibeControllerContract by inject()
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        alarmId = intent.getLongExtra(AlarmScheduler.INTENT_EXTRA_ALARM_ID, 0L)
+        alarmId = intent.getLongExtra(AlarmBroadcastReceiver.INTENT_EXTRA_ALARM_ID, 0L)
 
         val notification = AlarmNotification.getAlarmAlertNotification(this)
         val notificationManager = (getSystemService(NotificationManager::class.java) as NotificationManager)
@@ -48,6 +48,7 @@ class AlarmService : AlarmServiceContract.AlarmService, Service() {
                     ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE,
                 )
             } else {
+                @Suppress("DEPRECATION")
                 startForeground(
                     FOREGROUND_ID,
                     notification,
@@ -92,7 +93,7 @@ class AlarmService : AlarmServiceContract.AlarmService, Service() {
 
     inner class AlertServiceBinder : Binder() {
         fun getAlarmId(): Long = alarmId
-        fun getService(): AlarmServiceContract.AlarmService = this@AlarmService
+        fun getService(): AlarmServiceContract = this@AlarmService
     }
 
     companion object {

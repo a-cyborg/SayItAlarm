@@ -23,10 +23,9 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import org.a_cyb.sayitalarm.domain.alarm_service.AlarmSchedulerContract
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController.ControllerState
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController.ControllerState.Initial
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController.ControllerState.Ringing
+import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceControllerContract.ControllerState
 import org.a_cyb.sayitalarm.domain.repository.RepositoryContract
 import org.a_cyb.sayitalarm.entity.Alarm
 import org.a_cyb.sayitalarm.entity.AlarmType
@@ -56,14 +55,14 @@ import java.util.Calendar.TUESDAY
 import java.util.Calendar.WEDNESDAY
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class AlarmServiceControllerSpec {
+class AlarmServiceControllerContractSpec {
 
     private lateinit var controller: AlarmServiceController
 
     private val alarmRepository: RepositoryContract.AlarmRepository = mockk(relaxed = true)
     private val settingsRepository: RepositoryContract.SettingsRepository = mockk(relaxed = true)
-    private val alarmService: AlarmServiceContract.AlarmService = mockk(relaxed = true)
-    private val alarmScheduler: AlarmServiceContract.AlarmScheduler = mockk(relaxed = true)
+    private val alarmService: AlarmServiceContract = mockk(relaxed = true)
+    private val alarmScheduler: AlarmSchedulerContract = mockk(relaxed = true)
 
     private val fixture = kotlinFixture()
 
@@ -92,7 +91,7 @@ class AlarmServiceControllerSpec {
 
     @Test
     fun `It is in the Initial state`() {
-        controller.controllerState.value mustBe Initial
+        controller.controllerState.value mustBe ControllerState.Initial
     }
 
     @Test
@@ -105,7 +104,7 @@ class AlarmServiceControllerSpec {
             controller.onServiceBind(alarmService, alarm.id)
 
             // Then
-            awaitItem() mustBe Ringing(alarm.label)
+            awaitItem() mustBe ControllerState.Ringing(alarm.label)
         }
 
         verify(exactly = 1) { alarmService.ringAlarm(any(), any()) }
@@ -178,7 +177,7 @@ class AlarmServiceControllerSpec {
     @Test
     fun `When the service is disconnected, it sets the state to Error`() = runTest {
         // Given
-        val alarmService: AlarmServiceContract.AlarmService = mockk(relaxed = true)
+        val alarmService: AlarmServiceContract = mockk(relaxed = true)
 
         controller.controllerState.test {
             controller.onServiceBind(alarmService, alarm.id)
@@ -196,7 +195,7 @@ class AlarmServiceControllerSpec {
     fun `When the service is bound and startSayIt is called, it sets the state to RunningSayIt and invokes the service function`() =
         runTest {
             // Given
-            val alarmService: AlarmServiceContract.AlarmService = mockk(relaxed = true)
+            val alarmService: AlarmServiceContract = mockk(relaxed = true)
 
             controller.controllerState.test {
                 controller.onServiceBind(alarmService, alarm.id)
@@ -259,7 +258,7 @@ class AlarmServiceControllerSpec {
     @Test
     fun `When terminate is called, it invokes service stopService`() = runTest {
         // Given
-        val alarmService: AlarmServiceContract.AlarmService = mockk(relaxed = true)
+        val alarmService: AlarmServiceContract = mockk(relaxed = true)
 
         controller.onServiceBind(alarmService, alarm.id)
 
@@ -308,7 +307,7 @@ class AlarmServiceControllerSpec {
 
     @Test
     fun `It fulfills AlarmServiceControllerContract`() {
-        controller fulfils AlarmServiceContract.AlarmServiceController::class
+        controller fulfils AlarmServiceController::class
     }
 
     private val alarm = Alarm(

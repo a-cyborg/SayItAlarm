@@ -13,9 +13,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.a_cyb.sayitalarm.domain.alarm_service.AlarmSchedulerContract
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController.ControllerState
+import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceControllerContract
+import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceControllerContract.ControllerState
 import org.a_cyb.sayitalarm.domain.repository.RepositoryContract
 import org.a_cyb.sayitalarm.entity.Alarm
 import org.a_cyb.sayitalarm.entity.Settings
@@ -24,18 +25,18 @@ import org.a_cyb.sayitalarm.presentation.viewmodel.SettingsViewModel
 class AlarmServiceController(
     private val alarmRepository: RepositoryContract.AlarmRepository,
     private val settingsRepository: RepositoryContract.SettingsRepository,
-    private val alarmScheduler: AlarmServiceContract.AlarmScheduler,
+    private val alarmScheduler: AlarmSchedulerContract,
     private val scope: CoroutineScope,
-) : AlarmServiceController {
+) : AlarmServiceControllerContract {
 
-    private var alarmService: AlarmServiceContract.AlarmService? = null
+    private var alarmService: AlarmServiceContract? = null
     private var alarm: Alarm? = null
     private var settings: Settings? = null
 
     private val _controllerState: MutableStateFlow<ControllerState> = MutableStateFlow(ControllerState.Initial)
     override val controllerState: StateFlow<ControllerState> = _controllerState.asStateFlow()
 
-    override fun onServiceBind(service: AlarmServiceContract.AlarmService, alarmId: Long) {
+    override fun onServiceBind(service: AlarmServiceContract, alarmId: Long) {
         alarmService = service
 
         scope.launch { setAlarmAndSettings(alarmId, this) }

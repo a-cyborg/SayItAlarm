@@ -11,8 +11,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.takeWhile
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController.ControllerState
+import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceControllerContract
+import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceControllerContract.ControllerState
 import org.a_cyb.sayitalarm.presentation.contracts.AlarmContract
 import org.a_cyb.sayitalarm.presentation.contracts.AlarmContract.AlarmUiState
 import org.a_cyb.sayitalarm.presentation.contracts.AlarmContract.AlarmUiState.Error
@@ -26,7 +26,7 @@ import org.a_cyb.sayitalarm.util.time_flow.TimeFlowContract
 
 class AlarmViewModel(
     timeFlow: TimeFlowContract,
-    private val serviceController: AlarmServiceController,
+    private val serviceController: AlarmServiceControllerContract,
     private val timeFormatter: TimeFormatterContract,
 ) : AlarmContract.AlarmViewModel, ViewModel() {
 

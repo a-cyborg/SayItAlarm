@@ -14,14 +14,14 @@ import android.speech.RecognitionSupportCallback
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import androidx.annotation.RequiresApi
+import java.util.concurrent.Executors
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
-import java.util.concurrent.Executors
+import org.a_cyb.sayitalarm.domain.alarm_service.SttRecognizerOnDeviceHelper
 
-class TemptRecognizerOfflineHelper(private val context: Context) : AlarmServiceContract.SttRecognizerOnDeviceHelper {
+class TemptRecognizerOfflineHelper(private val context: Context) : SttRecognizerOnDeviceHelper {
     private val _isOfflineAvailable: MutableStateFlow<Boolean> = MutableStateFlow(false)
     override val isOfflineAvailable: StateFlow<Boolean> = _isOfflineAvailable.asStateFlow()
 

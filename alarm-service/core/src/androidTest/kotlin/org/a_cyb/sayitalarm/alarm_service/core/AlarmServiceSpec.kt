@@ -13,17 +13,17 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import androidx.test.rule.GrantPermissionRule
 import androidx.test.rule.ServiceTestRule
-import androidx.test.runner.AndroidJUnit4
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 
 @RunWith(AndroidJUnit4::class)
 @SmallTest
@@ -70,7 +70,7 @@ class AlarmServiceSpec {
         assertTrue(notificationIsDisplayed(context))
     }
 
-    private fun notificationIsDisplayed(context: Context) =
+    private fun notificationIsDisplayed(context: Context): Boolean =
         context
             .getSystemService(NotificationManager::class.java)
             .activeNotifications
@@ -88,8 +88,8 @@ class AlarmServiceSpec {
         val service = (binder as? AlarmService.AlertServiceBinder)?.getService()
 
         // Then
-        assertTrue { binder is AlarmService.AlertServiceBinder }
-        assertTrue { service is AlarmServiceContract.AlarmService }
+        assertTrue(binder is AlarmService.AlertServiceBinder)
+        assertTrue(service is AlarmServiceContract)
     }
 
     @Test

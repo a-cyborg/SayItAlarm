@@ -15,7 +15,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.work.Data
 import androidx.work.ListenableWorker
 import androidx.work.testing.TestListenableWorkerBuilder
-import com.ibm.icu.util.Calendar
 import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
@@ -23,9 +22,6 @@ import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.unmockkAll
 import io.mockk.verify
-import kotlin.random.Random
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -64,6 +60,11 @@ import org.robolectric.shadow.api.Shadow
 import org.robolectric.shadows.ShadowPendingIntent
 import tech.antibytes.kfixture.fixture
 import tech.antibytes.kfixture.kotlinFixture
+import java.time.Instant
+import java.time.ZoneId
+import kotlin.random.Random
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(AndroidJUnit4::class)
@@ -72,10 +73,7 @@ class AlarmSchedulerWorkerSpec {
     private val contextStub: Context = mockk(relaxed = true)
     private val alarmRepositoryStub: RepositoryContract.AlarmRepository = mockk(relaxed = true)
     private val alarmManagerMock: AlarmManager = mockk(relaxed = true)
-
-    // Sut
     private val alarmSchedulerWorker = TestListenableWorkerBuilder<AlarmSchedulerWorker>(contextStub)
-
     private val fixture = kotlinFixture()
 
     @Before
@@ -87,7 +85,7 @@ class AlarmSchedulerWorkerSpec {
                 module {
                     single<RepositoryContract.AlarmRepository> { alarmRepositoryStub }
                     single<CoroutineDispatcher>(named("io")) { Dispatchers.IO }
-                }
+                },
             )
         }
 
@@ -148,10 +146,11 @@ class AlarmSchedulerWorkerSpec {
         assertEquals(Intent.FLAG_RECEIVER_FOREGROUND, pendingIntent.flags)
         assertEquals(alarm.id, pendingIntent.getLongExtra(AlarmBroadcastReceiver.INTENT_EXTRA_ALARM_ID, 0L))
 
-        val calendar = Calendar.getInstance()
-        calendar.timeInMillis = capturedAlarmClock.captured.triggerTime
-        assertEquals(alarm.hour.hour, calendar.get(Calendar.HOUR_OF_DAY))
-        assertEquals(alarm.minute.minute, calendar.get(Calendar.MINUTE))
+        val actualAlarmClock =
+            Instant.ofEpochMilli(capturedAlarmClock.captured.triggerTime).atZone(ZoneId.systemDefault())
+        assertEquals(alarm.hour.hour, actualAlarmClock.hour)
+        assertEquals(alarm.minute.minute, actualAlarmClock.minute)
+        assertEquals(0, actualAlarmClock.second)
     }
 
     @Test
@@ -242,7 +241,7 @@ class AlarmSchedulerWorkerSpec {
         assertEquals(AlarmBroadcastReceiver::class.qualifiedName, pendingIntent.component!!.shortClassName)
         assertEquals(
             alarmId.toLong(),
-            pendingIntent.getLongExtra(AlarmBroadcastReceiver.INTENT_EXTRA_ALARM_ID, 0L)
+            pendingIntent.getLongExtra(AlarmBroadcastReceiver.INTENT_EXTRA_ALARM_ID, 0L),
         )
     }
 

@@ -6,12 +6,12 @@
 
 package org.a_cyb.sayitalarm.alarm_service.core.util
 
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
+import org.a_cyb.sayitalarm.domain.alarm_service.EditDistanceCalculatorContract
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
-class EditDistanceCalculatorSpec {
+class EditDistanceCalculatorContractSpec {
 
     @Test
     fun `calculateEditDistance IdenticalSentences`() {
@@ -127,6 +127,6 @@ class EditDistanceCalculatorSpec {
 
     @Test
     fun `It fulfills EditDistanceCalculator`() {
-        assertIs<AlarmServiceContract.EditDistanceCalculator>(EditDistanceCalculator)
+        assertIs<EditDistanceCalculatorContract>(EditDistanceCalculator)
     }
 }
