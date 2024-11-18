@@ -18,6 +18,9 @@ value class Label(val label: String)
 @JvmInline
 value class Ringtone(val ringtone: String)
 
+/**
+ * This application follows the ISO-8601 day numbering system (Monday=1, Sunday=7).
+ */
 data class WeeklyRepeat(val weekdays: Set<Int>) {
     constructor(vararg weekdays: Int) : this(weekdays.toSet())
 }

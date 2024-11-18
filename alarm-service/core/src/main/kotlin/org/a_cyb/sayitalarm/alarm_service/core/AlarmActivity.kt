@@ -6,6 +6,7 @@
 
 package org.a_cyb.sayitalarm.alarm_service.core
 
+import android.annotation.SuppressLint
 import android.app.KeyguardManager
 import android.content.BroadcastReceiver
 import android.content.ComponentName
@@ -25,12 +26,12 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.core.content.ContextCompat
 import org.a_cyb.sayitalarm.alarm_service.core.navigation.SiaAlarmServiceNavHost
 import org.a_cyb.sayitalarm.design_system.token.Color
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController
+import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceControllerContract
 import org.koin.android.ext.android.inject
 
 class AlarmActivity : ComponentActivity() {
 
-    private val controller: AlarmServiceController by inject()
+    private val controller: AlarmServiceControllerContract by inject()
 
     private val appExitReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -52,6 +53,8 @@ class AlarmActivity : ComponentActivity() {
             Color.useDarkTheme()
             window.statusBarColor = Color.surface.standard.toArgb()
             window.navigationBarColor = Color.surface.standard.toArgb()
+
+            @SuppressLint("SourceLockedOrientationActivity")
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
             SiaAlarmServiceNavHost()
@@ -68,6 +71,12 @@ class AlarmActivity : ComponentActivity() {
     }
 
     private fun setupScreenOn() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            setShowWhenLocked(true)
+            setTurnScreenOn(true)
+        }
+
+        @Suppress("DEPRECATION")
         window.addFlags(
             WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
                 or WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON
@@ -78,11 +87,6 @@ class AlarmActivity : ComponentActivity() {
 
         (getSystemService(KEYGUARD_SERVICE) as KeyguardManager)
             .requestDismissKeyguard(this, null)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-            setShowWhenLocked(true)
-            setTurnScreenOn(true)
-        }
     }
 
     override fun onStart() {
@@ -118,14 +122,18 @@ class AlarmActivity : ComponentActivity() {
     }
 
     private fun tearDownScreenOn() {
-        window.clearFlags(
-            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-                or WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON,
-        )
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             setShowWhenLocked(false)
             setTurnScreenOn(false)
         }
+
+        @Suppress("DEPRECATION")
+        window.clearFlags(
+            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                or WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON
+                or WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                or WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
+                or WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON,
+        )
     }
 }
