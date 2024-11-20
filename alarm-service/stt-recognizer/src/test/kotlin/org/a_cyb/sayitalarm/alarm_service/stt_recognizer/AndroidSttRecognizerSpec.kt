@@ -4,7 +4,7 @@
  * Use of this source code is governed by Apache v2.0
  */
 
-package org.a_cyb.sayitalarm.alarm_service.core
+package org.a_cyb.sayitalarm.alarm_service.stt_recognizer
 
 import android.content.Context
 import android.content.Intent
@@ -20,16 +20,15 @@ import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.verify
 import org.a_cyb.sayitalarm.domain.alarm_service.SttRecognizerContract
-import org.a_cyb.sayitalarm.util.test_utils.fulfils
-import org.a_cyb.sayitalarm.util.test_utils.mustBe
 import org.junit.After
 import org.junit.Before
 import org.junit.runner.RunWith
-import org.robolectric.annotation.Config
 import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertIs
+import kotlin.test.assertTrue
 
 @RunWith(AndroidJUnit4::class)
-@Config(sdk = [33])
 class AndroidSttRecognizerSpec {
 
     private lateinit var context: Context
@@ -116,19 +115,25 @@ class AndroidSttRecognizerSpec {
         recognizer.startListening()
 
         // Then
-        intentSlot.isCaptured mustBe true
-        intentSlot.captured.getStringExtra(EXTRA_CALLING_PACKAGE)!!
-            .contains("org.a_cyb.sayitalarm.alarm_service.core") mustBe true
-        intentSlot.captured.getBooleanExtra(EXTRA_PREFER_OFFLINE, false) mustBe true
+        assertTrue(intentSlot.isCaptured)
+        assertTrue(intentSlot.captured.getBooleanExtra(EXTRA_PREFER_OFFLINE, false))
+        assertTrue(
+            intentSlot.captured
+                .getStringExtra(EXTRA_CALLING_PACKAGE)!!
+                .contains("org.a_cyb.sayitalarm.alarm_service.stt_recognizer"),
+        )
     }
 
     @Test
     fun `RecognizerState is in Initial state`() {
-        recognizer.recognizerState.value mustBe SttRecognizerContract.RecognizerState.Initial
+        assertEquals(
+            SttRecognizerContract.RecognizerState.Initial,
+            recognizer.recognizerState.value,
+        )
     }
 
     @Test
     fun `It fulfills SttRecognizerContract`() {
-        recognizer fulfils SttRecognizerContract::class
+        assertIs<SttRecognizerContract>(recognizer)
     }
 }

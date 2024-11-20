@@ -29,6 +29,7 @@ include(
     ":database",
     ":alarm-service:core",
     ":alarm-service:scheduler",
+    ":alarm-service:stt-recognizer",
     ":presentation:contracts",
     ":presentation:viewmodel",
     ":design-system",

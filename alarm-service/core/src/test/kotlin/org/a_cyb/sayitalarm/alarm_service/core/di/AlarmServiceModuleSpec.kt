@@ -11,7 +11,6 @@ import io.mockk.mockk
 import kotlinx.coroutines.CoroutineScope
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceControllerContract
 import org.a_cyb.sayitalarm.domain.alarm_service.EditDistanceCalculatorContract
-import org.a_cyb.sayitalarm.domain.alarm_service.SttRecognizerContract
 import org.a_cyb.sayitalarm.domain.repository.RepositoryContract
 import org.junit.Test
 import org.koin.android.ext.koin.androidContext
@@ -45,23 +44,6 @@ class AlarmServiceModuleSpec {
 
         // Then
         assertNotNull(controller)
-    }
-
-    @Test
-    fun `It injects SttRecognizer`() {
-        // Given
-        val koinApp = koinApplication {
-            androidContext(context)
-            modules(
-                alarmServiceModule,
-            )
-        }
-
-        // When
-        val recognizer = koinApp.koin.getOrNull<SttRecognizerContract>()
-
-        // Then
-        assertNotNull(recognizer)
     }
 
     @Test
