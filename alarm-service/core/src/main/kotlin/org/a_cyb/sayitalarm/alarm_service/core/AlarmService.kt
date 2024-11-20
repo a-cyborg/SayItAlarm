@@ -28,7 +28,7 @@ class AlarmService : AlarmServiceContract, Service() {
     private val audioVibeController: AudioVibeControllerContract by inject()
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        alarmId = intent.getLongExtra(AlarmBroadcastReceiver.INTENT_EXTRA_ALARM_ID, 0L)
+        alarmId = intent.getLongExtra(AlarmReceiver.INTENT_EXTRA_ALARM_ID, 0L)
 
         val notification = AlarmNotification.getAlarmAlertNotification(this)
         val notificationManager = (getSystemService(NotificationManager::class.java) as NotificationManager)

@@ -14,7 +14,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import org.a_cyb.sayitalarm.alarm_service.core.AlarmBroadcastReceiver
+import org.a_cyb.sayitalarm.alarm_service.core.AlarmReceiver
 import org.a_cyb.sayitalarm.alarm_service.scheduler.AlarmScheduler.Companion.SCHEDULER_WORKER_INPUT_DATA_ALARM_ID
 import org.a_cyb.sayitalarm.alarm_service.scheduler.AlarmScheduler.Companion.SCHEDULER_WORKER_INPUT_DATA_SNOOZE_MIN
 import org.a_cyb.sayitalarm.domain.repository.RepositoryContract.AlarmRepository
@@ -34,7 +34,7 @@ internal class AlarmSchedulerWorker(
             AlarmScheduler.SCHEDULER_WORKER_WORK_SET_ALARM -> scheduleEnabledAlarms()
             AlarmScheduler.SCHEDULER_WORKER_WORK_SET_SNOOZE -> scheduleSnooze()
             AlarmScheduler.SCHEDULER_WORKER_WORK_CANCEL_ALARM -> cancelAlarm()
-            else -> return Result.failure()
+            else -> Result.failure()
         }
     }
 
@@ -90,10 +90,10 @@ internal class AlarmSchedulerWorker(
     }
 
     private fun getDeliverAlarmIntent(alarmId: Long): Intent =
-        Intent(applicationContext, AlarmBroadcastReceiver::class.java)
-            .setAction(AlarmBroadcastReceiver.INTENT_ACTION_DELIVER_ALARM)
+        Intent(applicationContext, AlarmReceiver::class.java)
+            .setAction(AlarmReceiver.INTENT_ACTION_DELIVER_ALARM)
             .setFlags(Intent.FLAG_RECEIVER_FOREGROUND)
-            .putExtra(AlarmBroadcastReceiver.INTENT_EXTRA_ALARM_ID, alarmId)
+            .putExtra(AlarmReceiver.INTENT_EXTRA_ALARM_ID, alarmId)
 
     private fun getPendingIntent(isForDupeCheck: Boolean, alarmId: Int, intent: Intent): PendingIntent? {
         val flags = when (isForDupeCheck) {

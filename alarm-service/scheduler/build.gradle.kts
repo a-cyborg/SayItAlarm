@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2024 Mima Kang / All rights reserved.
+ *
+ * Use of this source code is governed by Apache v2.0
+ */
+
 plugins {
     alias(libs.plugins.sayitalarm.android.library)
 }
@@ -9,14 +15,18 @@ android {
         isCoreLibraryDesugaringEnabled = true
     }
 
-    defaultConfig {
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
-
     @Suppress("UnstableApiUsage")
     testOptions {
         unitTests {
-            all { it.jvmArgs("--add-opens", "java.base/java.time=ALL-UNNAMED") }
+            all {
+                it.jvmArgs(
+                    "--add-opens",
+                    "java.base/java.time=ALL-UNNAMED",
+                    "-Djdk.attach.allowAttachSelf=true"
+                )
+            }
+
+            isIncludeAndroidResources = true
         }
     }
 }

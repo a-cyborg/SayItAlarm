@@ -55,6 +55,7 @@ class AlarmServiceSpec {
         assertTrue(isRunningForeground(context))
     }
 
+    @Suppress("DEPRECATION")
     private fun isRunningForeground(context: Context): Boolean =
         context
             .getSystemService(ActivityManager::class.java)

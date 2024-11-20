@@ -13,25 +13,19 @@ import android.os.Bundle
 import androidx.core.content.ContextCompat
 import org.a_cyb.sayitalarm.alarm_service.core.util.AlarmAlertWakeLock
 
-class AlarmBroadcastReceiver : BroadcastReceiver() {
+class AlarmReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-        when (intent.action) {
-            INTENT_ACTION_DELIVER_ALARM -> {
-                AlarmAlertWakeLock.acquireWakeLock(context)
+        if (intent.action == INTENT_ACTION_DELIVER_ALARM) {
+            AlarmAlertWakeLock.acquireWakeLock(context)
 
-                val alarmServiceIntent = Intent(context, AlarmService::class.java)
+            val alarmServiceIntent =
+                Intent(context, AlarmService::class.java)
                     .putExtras(intent.extras ?: Bundle())
 
-                ContextCompat.startForegroundService(context, alarmServiceIntent)
-            }
-
-            Intent.ACTION_BOOT_COMPLETED, Intent.ACTION_TIMEZONE_CHANGED -> {
-                AlarmAlertWakeLock.acquireWakeLock(context)
-
-                val scheduleServiceIntent = Intent(context, AlarmScheduleService::class.java)
-                ContextCompat.startForegroundService(context, scheduleServiceIntent)
-            }
+            ContextCompat.startForegroundService(context, alarmServiceIntent)
+        } else {
+            return
         }
     }
 

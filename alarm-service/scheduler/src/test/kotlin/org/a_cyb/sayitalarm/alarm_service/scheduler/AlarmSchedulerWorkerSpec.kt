@@ -30,7 +30,7 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import org.a_cyb.sayitalarm.alarm_service.core.AlarmBroadcastReceiver
+import org.a_cyb.sayitalarm.alarm_service.core.AlarmReceiver
 import org.a_cyb.sayitalarm.alarm_service.scheduler.AlarmScheduler.Companion.SCHEDULER_WORKER_INPUT_DATA_ALARM_ID
 import org.a_cyb.sayitalarm.alarm_service.scheduler.AlarmScheduler.Companion.SCHEDULER_WORKER_INPUT_DATA_SNOOZE_MIN
 import org.a_cyb.sayitalarm.alarm_service.scheduler.AlarmScheduler.Companion.SCHEDULER_WORKER_WORK_CANCEL_ALARM
@@ -141,10 +141,10 @@ class AlarmSchedulerWorkerSpec {
         assertTrue(capturedPendingIntent.captured.isImmutable)
 
         val pendingIntent = (Shadow.extract(capturedPendingIntent.captured) as ShadowPendingIntent).savedIntent
-        assertEquals(AlarmBroadcastReceiver::class.qualifiedName, pendingIntent.component!!.shortClassName)
-        assertEquals(AlarmBroadcastReceiver.INTENT_ACTION_DELIVER_ALARM, pendingIntent.action)
+        assertEquals(AlarmReceiver::class.qualifiedName, pendingIntent.component!!.shortClassName)
+        assertEquals(AlarmReceiver.INTENT_ACTION_DELIVER_ALARM, pendingIntent.action)
         assertEquals(Intent.FLAG_RECEIVER_FOREGROUND, pendingIntent.flags)
-        assertEquals(alarm.id, pendingIntent.getLongExtra(AlarmBroadcastReceiver.INTENT_EXTRA_ALARM_ID, 0L))
+        assertEquals(alarm.id, pendingIntent.getLongExtra(AlarmReceiver.INTENT_EXTRA_ALARM_ID, 0L))
 
         val actualAlarmClock =
             Instant.ofEpochMilli(capturedAlarmClock.captured.triggerTime).atZone(ZoneId.systemDefault())
@@ -204,9 +204,9 @@ class AlarmSchedulerWorkerSpec {
         assertTrue(capturedIntent.captured.isImmutable)
 
         val pendingIntent = (Shadow.extract(capturedIntent.captured) as ShadowPendingIntent).savedIntent
-        assertEquals(AlarmBroadcastReceiver::class.qualifiedName, pendingIntent.component!!.shortClassName)
-        assertEquals(AlarmBroadcastReceiver.INTENT_ACTION_DELIVER_ALARM, pendingIntent.action)
-        assertEquals(alarmId, pendingIntent.getLongExtra(AlarmBroadcastReceiver.INTENT_EXTRA_ALARM_ID, 0L))
+        assertEquals(AlarmReceiver::class.qualifiedName, pendingIntent.component!!.shortClassName)
+        assertEquals(AlarmReceiver.INTENT_ACTION_DELIVER_ALARM, pendingIntent.action)
+        assertEquals(alarmId, pendingIntent.getLongExtra(AlarmReceiver.INTENT_EXTRA_ALARM_ID, 0L))
         assertEquals(Intent.FLAG_RECEIVER_FOREGROUND, pendingIntent.flags)
 
         assertEquals(snoozeMin, snoozeMinSlot.captured)
@@ -236,12 +236,12 @@ class AlarmSchedulerWorkerSpec {
         assertTrue(capturedIntent.captured.isBroadcast)
 
         val pendingIntent = (Shadow.extract(capturedIntent.captured) as ShadowPendingIntent).savedIntent
-        assertEquals(AlarmBroadcastReceiver.INTENT_ACTION_DELIVER_ALARM, pendingIntent.action)
+        assertEquals(AlarmReceiver.INTENT_ACTION_DELIVER_ALARM, pendingIntent.action)
         assertEquals(Intent.FLAG_RECEIVER_FOREGROUND, pendingIntent.flags)
-        assertEquals(AlarmBroadcastReceiver::class.qualifiedName, pendingIntent.component!!.shortClassName)
+        assertEquals(AlarmReceiver::class.qualifiedName, pendingIntent.component!!.shortClassName)
         assertEquals(
             alarmId.toLong(),
-            pendingIntent.getLongExtra(AlarmBroadcastReceiver.INTENT_EXTRA_ALARM_ID, 0L),
+            pendingIntent.getLongExtra(AlarmReceiver.INTENT_EXTRA_ALARM_ID, 0L),
         )
     }
 
