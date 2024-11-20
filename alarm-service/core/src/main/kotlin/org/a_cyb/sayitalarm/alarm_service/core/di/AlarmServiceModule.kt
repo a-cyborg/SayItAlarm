@@ -9,8 +9,6 @@ package org.a_cyb.sayitalarm.alarm_service.core.di
 import org.a_cyb.sayitalarm.alarm_service.core.AlarmServiceController
 import org.a_cyb.sayitalarm.alarm_service.core.AndroidSttRecognizer
 import org.a_cyb.sayitalarm.alarm_service.core.TemptRecognizerOfflineHelper
-import org.a_cyb.sayitalarm.alarm_service.core.util.AudioVibeController
-import org.a_cyb.sayitalarm.alarm_service.core.util.AudioVibeControllerContract
 import org.a_cyb.sayitalarm.alarm_service.core.util.EditDistanceCalculator
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceControllerContract
 import org.a_cyb.sayitalarm.domain.alarm_service.EditDistanceCalculatorContract
@@ -30,10 +28,6 @@ val alarmServiceModule = module {
 
     single<EditDistanceCalculatorContract> {
         EditDistanceCalculator
-    }
-
-    single<AudioVibeControllerContract> {
-        AudioVibeController
     }
 
     single<SttRecognizerOnDeviceHelper> {

@@ -14,10 +14,10 @@ import android.content.pm.ServiceInfo
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
-import org.a_cyb.sayitalarm.alarm_service.core.util.AudioVibeControllerContract
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
 import org.a_cyb.sayitalarm.entity.AlertType
 import org.a_cyb.sayitalarm.entity.Ringtone
+import org.a_cyb.sayitalarm.util.audio_vibe_player.AudioVibePlayerContract
 import org.koin.android.ext.android.inject
 import kotlin.properties.Delegates
 
@@ -25,7 +25,7 @@ class AlarmService : AlarmServiceContract, Service() {
 
     private val binder: Binder = AlertServiceBinder()
     private var alarmId by Delegates.notNull<Long>()
-    private val audioVibeController: AudioVibeControllerContract by inject()
+    private val audioVibeController: AudioVibePlayerContract by inject()
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         alarmId = intent.getLongExtra(AlarmReceiver.INTENT_EXTRA_ALARM_ID, 0L)
@@ -98,7 +98,6 @@ class AlarmService : AlarmServiceContract, Service() {
 
     companion object {
         private const val FOREGROUND_ID = 300
-        const val DEFAULT_ALERT_TYPE_ORDINAL = 2
 
         const val ACTION_EXIT_APP = "org.a_cyb.sayitalarm.ACTION_EXIT_APP"
     }

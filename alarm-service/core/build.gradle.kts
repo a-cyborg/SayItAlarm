@@ -37,6 +37,7 @@ dependencies {
     implementation(projects.presentation.contracts)
     implementation(projects.presentation.viewmodel)
     implementation(projects.designSystem)
+    implementation(projects.util.audioVibePlayer)
 
     coreLibraryDesugaring(libs.android.tools.desugarJdk)
     implementation(libs.androidx.navigation.compose)

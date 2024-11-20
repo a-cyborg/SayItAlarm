@@ -4,7 +4,7 @@
  * Use of this source code is governed by Apache v2.0
  */
 
-package org.a_cyb.sayitalarm.alarm_service.core.util
+package org.a_cyb.sayitalarm.util.audio_vibe_player
 
 import android.content.Context
 import android.media.AudioAttributes
@@ -15,15 +15,9 @@ import android.net.Uri
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.provider.Settings
-import org.a_cyb.sayitalarm.alarm_service.core.AlarmService.Companion.DEFAULT_ALERT_TYPE_ORDINAL
 import org.a_cyb.sayitalarm.entity.AlertType
 
-interface AudioVibeControllerContract {
-    fun startRinging(context: Context, ringtone: String?, alertTypeOrdinal: Int?)
-    fun stopRinging()
-}
-
-object AudioVibeController : AudioVibeControllerContract {
+class AudioVibePlayer : AudioVibePlayerContract {
     private var audioManager: AudioManager? = null
     private var vibrator: Vibrator? = null
     private var mediaPlayer: MediaPlayer? = null
@@ -66,7 +60,7 @@ object AudioVibeController : AudioVibeControllerContract {
             ?: Settings.System.DEFAULT_ALARM_ALERT_URI
 
     private fun resolveAlertType(alertTypeOrdinal: Int?): AlertType = AlertType.entries
-        .getOrNull(alertTypeOrdinal ?: DEFAULT_ALERT_TYPE_ORDINAL)
+        .getOrNull(alertTypeOrdinal ?: AlertType.SOUND_AND_VIBRATE.ordinal)
         ?: AlertType.SOUND_AND_VIBRATE
 
     private fun playRingtone(context: Context, ringtoneUri: Uri) {

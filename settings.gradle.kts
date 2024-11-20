@@ -32,6 +32,7 @@ include(
     ":presentation:contracts",
     ":presentation:viewmodel",
     ":design-system",
+    ":util:audio-vibe-player",
     ":util:formatter",
     ":util:link-opener",
     ":util:ringtone-resolver",
