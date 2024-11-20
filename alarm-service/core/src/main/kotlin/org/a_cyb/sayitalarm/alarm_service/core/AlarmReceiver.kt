@@ -17,13 +17,16 @@ class AlarmReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == INTENT_ACTION_DELIVER_ALARM) {
-            AlarmAlertWakeLock.acquireWakeLock(context)
+            val wakeLock = AlarmAlertWakeLock()
+            wakeLock.acquireWakeLock(context)
 
             val alarmServiceIntent =
                 Intent(context, AlarmService::class.java)
                     .putExtras(intent.extras ?: Bundle())
 
             ContextCompat.startForegroundService(context, alarmServiceIntent)
+
+            wakeLock.releaseWakeLock()
         } else {
             return
         }
