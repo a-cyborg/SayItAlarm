@@ -7,13 +7,13 @@
 package org.a_cyb.sayitalarm.domain.interactor.di
 
 import io.mockk.mockk
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
+import kotlin.test.assertNotNull
+import org.a_cyb.sayitalarm.domain.alarm_service.AlarmSchedulerContract
 import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
 import org.a_cyb.sayitalarm.domain.repository.RepositoryContract
 import org.junit.Test
 import org.koin.dsl.koinApplication
 import org.koin.dsl.module
-import kotlin.test.assertNotNull
 
 class InteractorModuleSpec {
     @Test
@@ -21,7 +21,7 @@ class InteractorModuleSpec {
         // Given
         val externalModule = module {
             single<RepositoryContract.AlarmRepository> { mockk() }
-            single<AlarmServiceContract.AlarmScheduler> { mockk() }
+            factory<AlarmSchedulerContract> { mockk() }
         }
 
         val koinApp = koinApplication {
@@ -43,7 +43,7 @@ class InteractorModuleSpec {
         // Given
         val externalModule = module {
             single<RepositoryContract.AlarmRepository> { mockk() }
-            single<AlarmServiceContract.AlarmScheduler> { mockk() }
+            factory<AlarmSchedulerContract> { mockk() }
         }
 
         val koinApp = koinApplication {
@@ -65,7 +65,7 @@ class InteractorModuleSpec {
         // Given
         val externalModule = module {
             single<RepositoryContract.AlarmRepository> { mockk() }
-            single<AlarmServiceContract.AlarmScheduler> { mockk() }
+            factory<AlarmSchedulerContract> { mockk() }
         }
 
         val koinApp = koinApplication {

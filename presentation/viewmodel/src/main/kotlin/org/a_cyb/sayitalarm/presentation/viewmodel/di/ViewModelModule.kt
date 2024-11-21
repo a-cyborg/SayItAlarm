@@ -22,8 +22,8 @@ import org.a_cyb.sayitalarm.presentation.viewmodel.converter.AlarmUiConverter
 import org.a_cyb.sayitalarm.presentation.viewmodel.converter.AlarmUiConverterContract
 import org.a_cyb.sayitalarm.presentation.viewmodel.mapper.AlarmMapper
 import org.a_cyb.sayitalarm.presentation.viewmodel.mapper.AlarmMapperContract
-import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.module.Module
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.bind
 import org.koin.dsl.module
 

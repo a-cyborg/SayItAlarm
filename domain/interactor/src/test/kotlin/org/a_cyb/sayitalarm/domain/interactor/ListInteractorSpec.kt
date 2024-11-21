@@ -22,7 +22,7 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
+import org.a_cyb.sayitalarm.domain.alarm_service.AlarmSchedulerContract
 import org.a_cyb.sayitalarm.domain.repository.RepositoryContract
 import org.a_cyb.sayitalarm.entity.Alarm
 import org.a_cyb.sayitalarm.entity.AlarmType
@@ -50,7 +50,7 @@ import kotlin.test.assertIs
 class ListInteractorSpec {
 
     private val alarmRepository: RepositoryContract.AlarmRepository = mockk(relaxed = true)
-    private val alarmScheduler: AlarmServiceContract.AlarmScheduler = mockk(relaxed = true)
+    private val alarmScheduler: AlarmSchedulerContract = mockk(relaxed = true)
 
     private lateinit var interactor: ListInteractor
 

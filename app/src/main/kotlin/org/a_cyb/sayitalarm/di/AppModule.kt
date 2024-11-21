@@ -12,6 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import org.a_cyb.sayitalarm.alarm_service.core.di.alarmServiceModule
 import org.a_cyb.sayitalarm.alarm_service.scheduler.di.schedulerModule
+import org.a_cyb.sayitalarm.alarm_service.stt_recognizer.di.sttRecognizerModule
 import org.a_cyb.sayitalarm.data.di.dataModule
 import org.a_cyb.sayitalarm.database.di.databaseModule
 import org.a_cyb.sayitalarm.domain.interactor.di.interactorModule
@@ -33,6 +34,7 @@ val appModule = module {
         databaseModule,
         alarmServiceModule,
         schedulerModule,
+        sttRecognizerModule,
         audioVibePlayerModule,
         formatterModule,
         linkOpenerModule,

@@ -115,7 +115,6 @@ class AlarmActivity : ComponentActivity() {
     override fun onDestroy() {
         super.onDestroy()
 
-        controller.terminate()
         unbindService(serviceConnection)
         unregisterReceiver(appExitReceiver)
         tearDownScreenOn()

@@ -35,7 +35,9 @@ fun SiaAlarmServiceNavHost(
         }
         composable(Route.SAY_IT_ROUTE) {
             BackHandler(true) { /* No operation. */ }
-            SayItScreen(koinViewModel<SayItViewModel>())
+            SayItScreen(
+                viewModel = koinViewModel<SayItViewModel>(),
+            )
         }
     }
 }
