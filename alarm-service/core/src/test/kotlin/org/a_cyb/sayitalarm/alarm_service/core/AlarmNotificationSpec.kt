@@ -38,7 +38,7 @@ class AlarmNotificationSpec {
     @Test
     fun `When getAlarmAlertNotification is called it returns notification`() {
         // Given
-        val actualNotification = AlarmNotification.getAlarmAlertNotification(context)
+        val actualNotification = getFullScreenNotificationForAlarm(context)
 
         // Then
         @Suppress("DEPRECATION")
@@ -67,7 +67,7 @@ class AlarmNotificationSpec {
     fun `When getAlarmAlertNotification is called it creates notificationChannel`() {
         // Given
         val manager = NotificationManagerCompat.from(context)
-        val actualNotification = AlarmNotification.getAlarmAlertNotification(context)
+        val actualNotification = getFullScreenNotificationForAlarm(context)
 
         // When
         val channel = manager.getNotificationChannel(actualNotification.channelId)
@@ -76,31 +76,5 @@ class AlarmNotificationSpec {
         assertNotNull(channel)
         assertEquals(NotificationManager.IMPORTANCE_HIGH, channel.importance)
         assertEquals(context.getString(R.string.notification_alert_channel_name), channel.name)
-    }
-
-    @Test
-    fun `When getPostBootSchedulingNotification is called it returns notification`() {
-        // When
-        val actualNotification = AlarmNotification.getPostBootSchedulingNotification(context)
-
-        // Then
-        @Suppress("DEPRECATION")
-        assertEquals(NotificationCompat.PRIORITY_DEFAULT, actualNotification.priority)
-        assertEquals(NotificationCompat.CATEGORY_STATUS, actualNotification.category)
-        assertEquals(R.drawable.ic_notif_small, actualNotification.smallIcon.resId)
-    }
-
-    @Test
-    fun `When getPostBootSchedulingNotification is called it creates notificationChannel`() {
-        // Given
-        val manager = NotificationManagerCompat.from(context)
-
-        // When
-        val actualNotification = AlarmNotification.getPostBootSchedulingNotification(context)
-        val channel = manager.getNotificationChannel(actualNotification.channelId)
-
-        // Then
-        assertNotNull(channel)
-        assertEquals(context.getString(R.string.notification_schedule_channel_name), channel.name)
     }
 }
