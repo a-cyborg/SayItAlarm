@@ -10,6 +10,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import org.a_cyb.sayitalarm.entity.Alarm
+import org.a_cyb.sayitalarm.entity.Label
 import org.a_cyb.sayitalarm.entity.Settings
 import org.a_cyb.sayitalarm.entity.Snooze
 import org.a_cyb.sayitalarm.entity.Theme
@@ -23,21 +24,39 @@ interface InteractorContract {
 
     interface EditInteractor {
         val alarm: SharedFlow<Result<Alarm>>
+
         fun getAlarm(id: Long, scope: CoroutineScope)
         fun update(alarm: Alarm, scope: CoroutineScope)
     }
 
     interface ListInteractor {
         val alarms: Flow<Result<List<Alarm>>>
+
         fun setEnabled(id: Long, enabled: Boolean, scope: CoroutineScope)
         fun deleteAlarm(id: Long, scope: CoroutineScope)
     }
 
     interface SettingsInteractor {
         val settings: Flow<Result<Settings>>
+
         fun insertOrIgnore(settings: Settings, scope: CoroutineScope)
         fun setTimeOut(timeOut: TimeOut, scope: CoroutineScope)
         fun setSnooze(snooze: Snooze, scope: CoroutineScope)
         fun setTheme(theme: Theme, scope: CoroutineScope)
+    }
+
+    interface AlarmInteractor {
+        val label: SharedFlow<Result<Label>>
+        val event: SharedFlow<AlarmInteractorEvent>
+
+        fun startAlarm(scope: CoroutineScope)
+        fun stopAlarm()
+        fun snooze()
+
+        enum class AlarmInteractorEvent {
+            ERROR_AUDIO_PLAYER,
+            ERROR_SERVICE_DISCONNECTED,
+            ERROR_ALARM_NOT_FOUND,
+        }
     }
 }
