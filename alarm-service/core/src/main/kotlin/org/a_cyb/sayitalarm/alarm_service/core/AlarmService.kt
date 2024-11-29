@@ -15,17 +15,26 @@ import android.os.Binder
 import android.os.Build
 import android.os.IBinder
 import kotlin.properties.Delegates
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
+import org.a_cyb.sayitalarm.alarm_service.core.AlarmServiceContract.ServiceEvent
 import org.a_cyb.sayitalarm.entity.AlertType
 import org.a_cyb.sayitalarm.entity.Ringtone
 import org.a_cyb.sayitalarm.util.audio_vibe_player.AudioVibePlayerContract
 import org.koin.android.ext.android.inject
 
-class AlarmService : AlarmServiceContract, Service() {
+class AlarmService : Service() {
 
-    private val binder: Binder = AlertServiceBinder()
+    private val serviceScope = CoroutineScope(Dispatchers.Unconfined + SupervisorJob())
+    private val serviceEvent = MutableSharedFlow<ServiceEvent>()
+
     private var alarmId by Delegates.notNull<Long>()
-    private val audioVibeController: AudioVibePlayerContract by inject()
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         alarmId = intent.getLongExtra(AlarmReceiver.INTENT_EXTRA_ALARM_ID, 0L)
@@ -64,24 +73,52 @@ class AlarmService : AlarmServiceContract, Service() {
     }
 
     override fun onBind(intent: Intent?): IBinder {
-        return binder
+        return AlarmServiceBinder()
     }
 
-    override fun ringAlarm(ringtone: Ringtone, alertType: AlertType) {
-        audioVibeController
-            .startRinging(this, ringtone.ringtone, alertType.ordinal)
+    override fun onDestroy() {
+        super.onDestroy()
+        serviceScope.cancel()
     }
 
-    override fun startSayIt() {
+    inner class AlarmServiceBinder : AlarmServiceContract, Binder() {
+        fun getAlarmId(): Long = this@AlarmService.alarmId
+
+        override val serviceEvent: SharedFlow<ServiceEvent> =
+            this@AlarmService.serviceEvent.asSharedFlow()
+
+        override fun startRinging(ringtone: Ringtone, alertType: AlertType) {
+            this@AlarmService.startRinging(ringtone, alertType)
+        }
+
+        override fun stopRinging() {
+            this@AlarmService.stopRinging()
+        }
+
+        override fun stopService() {
+            this@AlarmService.stopServiceAndActivity()
+        }
+    }
+
+    private val audioVibeController: AudioVibePlayerContract by inject()
+
+    private fun startRinging(ringtone: Ringtone, alertType: AlertType) {
+        try {
+            audioVibeController
+                .startRinging(this, ringtone.ringtone, alertType.ordinal)
+        } catch (exception: Exception) {
+            serviceScope.launch {
+                serviceEvent
+                    .emit(ServiceEvent.AudioVibePlayerError(exception))
+            }
+        }
+    }
+
+    private fun stopRinging() {
         audioVibeController.stopRinging()
     }
 
-    override fun startSnooze() {
-        audioVibeController.stopRinging()
-        stopServiceAndActivity()
-    }
-
-    override fun stopServiceAndActivity() {
+    private fun stopServiceAndActivity() {
         stopRinging()
         stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
@@ -90,11 +127,6 @@ class AlarmService : AlarmServiceContract, Service() {
                 .setPackage(packageName)
                 .setAction(ACTION_EXIT_APP),
         )
-    }
-
-    inner class AlertServiceBinder : Binder() {
-        fun getAlarmId(): Long = alarmId
-        fun getService(): AlarmServiceContract = this@AlarmService
     }
 
     companion object {

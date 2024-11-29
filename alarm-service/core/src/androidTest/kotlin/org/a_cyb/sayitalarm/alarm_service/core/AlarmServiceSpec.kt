@@ -17,13 +17,14 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import androidx.test.rule.GrantPermissionRule
 import androidx.test.rule.ServiceTestRule
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
+import org.a_cyb.sayitalarm.util.audio_vibe_player.di.audioVibePlayerModule
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.core.context.startKoin
 
 @RunWith(AndroidJUnit4::class)
 @SmallTest
@@ -47,31 +48,59 @@ class AlarmServiceSpec {
     }
 
     @Test
-    fun alarmService_StartsForeground() {
+    fun alarmService_onStart_startForegroundService() {
         // When
         serviceTestRule.startService(serviceIntent)
 
         // Then
-        assertTrue(isRunningForeground(context))
+        assertTrue(isForegroundServiceRunning(context))
+    }
+
+    @Test
+    fun alarmService_onStart_displaysNotification() {
+        // When
+        serviceTestRule.startService(serviceIntent)
+
+        // Then
+        assertTrue(isNotificationDisplayed(context))
+    }
+
+    @Test
+    fun alarmService_onBind_returnsAlarmService() {
+        // When
+        val service = serviceTestRule.bindService(serviceIntent)
+
+        // Then
+        assertTrue(service is AlarmServiceContract)
+    }
+
+    @Test
+    fun alarmService_stopServiceIsCalled_stopForegroundServiceAndDismissesNotification() {
+        // Given
+        startKoin {
+            modules(audioVibePlayerModule)
+        }
+
+        serviceTestRule.startService(serviceIntent)
+
+        val service = serviceTestRule.bindService(serviceIntent) as AlarmServiceContract
+
+        // When
+        service.stopService()
+
+        // Then
+        assertFalse(isNotificationDisplayed(context))
+        assertFalse(isForegroundServiceRunning(context))
     }
 
     @Suppress("DEPRECATION")
-    private fun isRunningForeground(context: Context): Boolean =
+    private fun isForegroundServiceRunning(context: Context): Boolean =
         context
             .getSystemService(ActivityManager::class.java)
             .getRunningServices(Int.MAX_VALUE)
             .any { it.foreground && it.service.className == AlarmService::class.qualifiedName }
 
-    @Test
-    fun alarmService_DisplaysNotification() {
-        // When
-        serviceTestRule.startService(serviceIntent)
-
-        // Then
-        assertTrue(notificationIsDisplayed(context))
-    }
-
-    private fun notificationIsDisplayed(context: Context): Boolean =
+    private fun isNotificationDisplayed(context: Context): Boolean =
         context
             .getSystemService(NotificationManager::class.java)
             .activeNotifications
@@ -81,29 +110,4 @@ class AlarmServiceSpec {
                     it.notification.category == NotificationCompat.CATEGORY_ALARM &&
                     it.packageName == context.packageName
             }
-
-    @Test
-    fun alarmService_onBind_Returns_AlertServiceBinder() {
-        // When
-        val binder = serviceTestRule.bindService(serviceIntent)
-        val service = (binder as? AlarmService.AlertServiceBinder)?.getService()
-
-        // Then
-        assertTrue(binder is AlarmService.AlertServiceBinder)
-        assertTrue(service is AlarmServiceContract)
-    }
-
-    @Test
-    fun alarmService_stopService_stopForegroundService_dismissesNotification() {
-        // Given
-        val binder = serviceTestRule.bindService(serviceIntent)
-        val service = (binder as? AlarmService.AlertServiceBinder)?.getService()
-
-        // When
-        service?.stopService()
-
-        // Then
-        assertFalse(notificationIsDisplayed(context))
-        assertFalse(isRunningForeground(context))
-    }
 }

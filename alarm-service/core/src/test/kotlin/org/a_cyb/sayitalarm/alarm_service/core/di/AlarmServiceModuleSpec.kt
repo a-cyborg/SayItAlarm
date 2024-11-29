@@ -9,9 +9,8 @@ package org.a_cyb.sayitalarm.alarm_service.core.di
 import android.content.Context
 import io.mockk.mockk
 import kotlinx.coroutines.CoroutineScope
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceControllerContract
+import org.a_cyb.sayitalarm.domain.alarm_service.AlarmControllerContract
 import org.a_cyb.sayitalarm.domain.alarm_service.EditDistanceCalculatorContract
-import org.a_cyb.sayitalarm.domain.repository.RepositoryContract
 import org.junit.Test
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
@@ -24,12 +23,10 @@ class AlarmServiceModuleSpec {
     private val context: Context = mockk(relaxed = true)
 
     @Test
-    fun `It injects AlarmServiceController`() {
+    fun `It injects AlarmController`() {
         // Given
         val extraModules = module {
-            single<RepositoryContract.AlarmRepository> { mockk() }
-            single<RepositoryContract.SettingsRepository> { mockk() }
-            single<CoroutineScope>(named("ioScope")) { mockk() }
+            single<CoroutineScope>(named("io")) { mockk() }
         }
         val koinApp = koinApplication {
             androidContext(context)
@@ -40,7 +37,7 @@ class AlarmServiceModuleSpec {
         }
 
         // When
-        val controller = koinApp.koin.getOrNull<AlarmServiceControllerContract>()
+        val controller = koinApp.koin.getOrNull<AlarmControllerContract>()
 
         // Then
         assertNotNull(controller)
