@@ -12,6 +12,8 @@ import io.mockk.coVerifyOrder
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlin.test.assertEquals
+import kotlin.test.assertIs
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -48,8 +50,6 @@ import org.a_cyb.sayitalarm.entity.WeeklyRepeat
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertIs
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class AlarmInteractorSpec {
@@ -315,7 +315,7 @@ class AlarmInteractorSpec {
 
         // Then
         coVerifyOrder {
-            alarmSchedulerMock.scheduleSnooze(fakeAlarm.id, fakeSettings.snooze, any())
+            alarmSchedulerMock.scheduleSnooze(fakeAlarm.id, fakeSettings.snooze)
             alarmControllerMock.stopService()
         }
     }
@@ -347,7 +347,7 @@ class AlarmInteractorSpec {
 
         // Then
         coVerifyOrder {
-            alarmSchedulerMock.scheduleSnooze(any(), Snooze(5), any())
+            alarmSchedulerMock.scheduleSnooze(any(), Snooze(5))
             alarmControllerMock.stopService()
         }
     }

@@ -26,12 +26,10 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.core.content.ContextCompat
 import org.a_cyb.sayitalarm.alarm_service.core.navigation.SiaAlarmServiceNavHost
 import org.a_cyb.sayitalarm.design_system.token.Color
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceControllerContract
-import org.koin.android.ext.android.inject
+import org.a_cyb.sayitalarm.domain.alarm_service.AlarmControllerContract
+import org.koin.android.ext.android.get
 
 class AlarmActivity : ComponentActivity() {
-
-    private val controller: AlarmServiceControllerContract by inject()
 
     private val appExitReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -99,22 +97,27 @@ class AlarmActivity : ComponentActivity() {
         )
     }
 
+    private val alarmController: AlarmControllerContract = get()
+
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            val alarmService = (service as AlarmService.AlertServiceBinder).getService()
+            val alarmService = (service as AlarmService.AlarmServiceBinder)
             val alarmId = service.getAlarmId()
 
-            controller.onServiceBind(alarmService, alarmId)
+            (alarmController as AlarmController)
+                .connectService(alarmService, alarmId)
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
-            controller.onServiceDisconnected()
+            (alarmController as AlarmController)
+                .serviceDisconnected()
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
 
+        alarmController.stopAlarm()
         unbindService(serviceConnection)
         unregisterReceiver(appExitReceiver)
         tearDownScreenOn()

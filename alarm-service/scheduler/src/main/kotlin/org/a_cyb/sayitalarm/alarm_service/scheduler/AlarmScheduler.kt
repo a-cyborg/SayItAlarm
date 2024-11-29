@@ -9,6 +9,7 @@ package org.a_cyb.sayitalarm.alarm_service.scheduler
 import android.content.Context
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmSchedulerContract
 import org.a_cyb.sayitalarm.entity.Snooze
@@ -45,6 +46,7 @@ class AlarmScheduler(private val context: Context) : AlarmSchedulerContract {
     private fun enqueueWork(data: Data) {
         val request = OneTimeWorkRequestBuilder<AlarmSchedulerWorker>()
             .setInputData(data)
+            .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
             .build()
 
         WorkManager.getInstance(context).enqueue(request)

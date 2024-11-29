@@ -63,6 +63,7 @@ class AudioVibePlayer : AudioVibePlayerContract {
         .getOrNull(alertTypeOrdinal ?: AlertType.SOUND_AND_VIBRATE.ordinal)
         ?: AlertType.SOUND_AND_VIBRATE
 
+    @Throws
     private fun playRingtone(context: Context, ringtoneUri: Uri) {
         audioManager = (context.getSystemService(Context.AUDIO_SERVICE) as AudioManager).apply {
             setStreamVolume(AudioManager.STREAM_ALARM, getStreamMaxVolume(AudioManager.STREAM_ALARM), 0)
@@ -75,7 +76,8 @@ class AudioVibePlayer : AudioVibePlayerContract {
                 setAudioAttributes(getAudioAttribute())
                 isLooping = true
                 prepare()
-            } catch (_: Exception) {
+            } catch (exception: Exception) {
+                throw exception
             }
 
             setOnPreparedListener { it.start() }
@@ -94,7 +96,7 @@ class AudioVibePlayer : AudioVibePlayerContract {
 
     override fun stopRinging() {
         audioManager?.abandonAudioFocusRequest(audioFocusRequest)
-        mediaPlayer?.stop()
+        if (mediaPlayer?.isPlaying == true) mediaPlayer?.stop()
         mediaPlayer?.release()
         vibrator?.cancel()
 

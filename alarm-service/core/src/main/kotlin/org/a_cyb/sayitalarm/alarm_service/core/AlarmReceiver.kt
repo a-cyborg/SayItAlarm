@@ -25,8 +25,6 @@ class AlarmReceiver : BroadcastReceiver() {
                     .putExtras(intent.extras ?: Bundle())
 
             ContextCompat.startForegroundService(context, alarmServiceIntent)
-
-            wakeLock.releaseWakeLock()
         } else {
             return
         }

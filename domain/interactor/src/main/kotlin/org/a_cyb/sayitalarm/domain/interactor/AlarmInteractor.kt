@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmControllerContract
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmControllerContract.AlarmControllerState
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmSchedulerContract
@@ -115,9 +116,8 @@ class AlarmInteractor(
     override fun snooze() {
         val snoozeMin = if (::settings.isInitialized) settings.snooze else Snooze(5)
 
-        ioScope.launch {
-            alarmScheduler.scheduleSnooze(alarm.id, snoozeMin, this)
-        }.invokeOnCompletion {
+        runBlocking {
+            alarmScheduler.scheduleSnooze(alarm.id, snoozeMin)
             alarmController.stopService()
         }
     }

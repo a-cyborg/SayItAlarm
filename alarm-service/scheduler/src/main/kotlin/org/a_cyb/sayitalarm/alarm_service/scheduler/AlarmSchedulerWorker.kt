@@ -11,6 +11,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import androidx.work.CoroutineWorker
+import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -36,6 +37,10 @@ internal class AlarmSchedulerWorker(
             AlarmScheduler.SCHEDULER_WORKER_WORK_CANCEL_ALARM -> cancelAlarm()
             else -> Result.failure()
         }
+    }
+
+    override suspend fun getForegroundInfo(): ForegroundInfo {
+        return super.getForegroundInfo()
     }
 
     private suspend fun scheduleEnabledAlarms(): Result {
@@ -97,7 +102,7 @@ internal class AlarmSchedulerWorker(
 
     private fun getPendingIntent(isForDupeCheck: Boolean, alarmId: Int, intent: Intent): PendingIntent? {
         val flags = when (isForDupeCheck) {
-            true -> PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_ONE_SHOT
+            true -> PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_NO_CREATE
             false -> PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_ONE_SHOT
         }
 

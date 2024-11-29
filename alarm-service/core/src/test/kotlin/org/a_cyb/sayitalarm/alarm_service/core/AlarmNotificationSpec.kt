@@ -36,7 +36,7 @@ class AlarmNotificationSpec {
     }
 
     @Test
-    fun `When getAlarmAlertNotification is called it returns notification`() {
+    fun `When getFullScreenNotificationForAlarm is called, it returns notification`() {
         // Given
         val actualNotification = getFullScreenNotificationForAlarm(context)
 
@@ -64,7 +64,7 @@ class AlarmNotificationSpec {
     }
 
     @Test
-    fun `When getAlarmAlertNotification is called it creates notificationChannel`() {
+    fun `When getFullScreenNotificationForAlarm is called, it creates notificationChannel`() {
         // Given
         val manager = NotificationManagerCompat.from(context)
         val actualNotification = getFullScreenNotificationForAlarm(context)

@@ -121,7 +121,7 @@ class SettingsViewModel(
         private const val CONTACT_GOOGLE_PLAY = "https://play.google.com/store/apps/details?id=org.a_cyb.sayitalarm"
 
         private const val DEFAULT_TIMEOUT = 180
-        private const val DEFAULT_SNOOZE = 15
+        private const val DEFAULT_SNOOZE = 5
         private val TIME_OUT_RANGE = 30..300
         private val SNOOZE_RANGE = 5..60
 
