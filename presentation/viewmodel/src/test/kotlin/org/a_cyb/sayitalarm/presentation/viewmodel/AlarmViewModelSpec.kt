@@ -7,45 +7,41 @@
 package org.a_cyb.sayitalarm.presentation.viewmodel
 
 import app.cash.turbine.test
-import app.cash.turbine.turbineScope
+import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmService
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController.ControllerState
+import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
 import org.a_cyb.sayitalarm.entity.Hour
 import org.a_cyb.sayitalarm.entity.Label
 import org.a_cyb.sayitalarm.entity.Minute
 import org.a_cyb.sayitalarm.presentation.contracts.AlarmContract
 import org.a_cyb.sayitalarm.presentation.contracts.AlarmContract.AlarmUiState
-import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract
+import org.a_cyb.sayitalarm.presentation.contracts.command.SnoozeCommand
 import org.a_cyb.sayitalarm.presentation.viewmodel.fake.TimeFormatterFake
 import org.a_cyb.sayitalarm.util.formatter.time.TimeFormatterContract
-import org.a_cyb.sayitalarm.util.test_utils.fulfils
-import org.a_cyb.sayitalarm.util.test_utils.mustBe
 import org.a_cyb.sayitalarm.util.time_flow.TimeFlowContract
 import org.junit.After
 import org.junit.Before
-import org.junit.Test
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertIs
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class AlarmViewModelSpec {
     private val timeFlowMockk: TimeFlowContract = mockk(relaxed = true)
-    private val controllerMockk: AlarmServiceController = mockk(relaxed = true)
     private val timeFormatterFake: TimeFormatterContract = TimeFormatterFake()
+    private val interactorMock: InteractorContract.AlarmInteractor = mockk(relaxed = true)
 
     @Before
     fun setup() {
@@ -54,81 +50,115 @@ class AlarmViewModelSpec {
 
     @After
     fun tearDown() {
+        clearAllMocks()
         Dispatchers.resetMain()
     }
 
-    private fun getAlarmViewModel(
-        timeFlow: TimeFlowContract = timeFlowMockk,
-        controller: AlarmServiceController = controllerMockk,
-        timeFormatter: TimeFormatterContract = timeFormatterFake,
-    ): AlarmContract.AlarmViewModel =
-        AlarmViewModel(
-            timeFlow,
-            controller,
-            timeFormatter,
-        )
-
     @Test
-    fun `It start in the Initial state`() {
-        val viewModel = getAlarmViewModel()
+    fun `When it is initialized, it calls interactor startAlarm`() {
+        // When
+        AlarmViewModel(timeFlowMockk, timeFormatterFake, interactorMock)
 
-        viewModel.state.value mustBe AlarmUiState.Initial
+        // Then
+        verify { interactorMock.startAlarm(any()) }
     }
 
     @Test
-    fun `When it is in the Initial or Ringing state, it collects the currentTime and maps it to a string`() = runTest {
+    fun `When it is initialized, it begins collecting the AlarmInteractor label`() = runTest {
+        val interactorLabelMock = MutableSharedFlow<Result<Label>>()
+
+        every { interactorMock.label } returns interactorLabelMock
+        assertEquals(0, interactorLabelMock.subscriptionCount.value)
+
+        // When
+        AlarmViewModel(timeFlowMockk, timeFormatterFake, interactorMock)
+        advanceUntilIdle()
+
+        // Then
+        assertEquals(1, interactorLabelMock.subscriptionCount.value)
+    }
+
+    @Test
+    fun `When the interactor emits a success label, it updates the state to Ringing`() = runTest {
         // Given
-        val label = Label("Good Morning🐿️")
-        val currentTimes = listOf(
+        val givenLabel = Label("Power Morning")
+        val interactorLabelMock = MutableSharedFlow<Result<Label>>()
+        every { interactorMock.label } returns interactorLabelMock
+
+        val viewModel = AlarmViewModel(timeFlowMockk, timeFormatterFake, interactorMock)
+
+        viewModel.state.test {
+            skipItems(1) // Initial.
+            advanceUntilIdle()
+
+            // When
+            interactorLabelMock.emit(Result.success(givenLabel))
+
+            // Then
+            assertEquals(AlarmUiState.Ringing(givenLabel.label), awaitItem())
+        }
+    }
+
+    @Test
+    fun `When the interactor emits a failure label, it updates the state to Error`() = runTest {
+        // Given
+        val interactorLabelMock = MutableSharedFlow<Result<Label>>()
+        every { interactorMock.label } returns interactorLabelMock
+
+        val viewModel = AlarmViewModel(timeFlowMockk, timeFormatterFake, interactorMock)
+
+        viewModel.state.test {
+            skipItems(1)
+            advanceUntilIdle()
+
+            // When
+            interactorLabelMock.emit(Result.failure(IllegalStateException()))
+
+            // Then
+            assertEquals(AlarmUiState.Error, awaitItem())
+        }
+    }
+
+    @Test
+    fun `When in the Initial or Ringing state, it collects the TimeFlow`() = runTest {
+        // Given
+        val interactorLabelMock = MutableStateFlow(Result.success(Label("label")))
+        val currentTimeFlowMock = flowOf(
             Pair(Hour(11), Minute(9)),
             Pair(Hour(11), Minute(10)),
             Pair(Hour(11), Minute(11)),
         )
-        val expected = currentTimes.map { (hour, minute) ->
-            timeFormatterFake.format(hour, minute)
-        }
+        every { interactorMock.label } returns interactorLabelMock
+        every { timeFlowMockk.currentTimeFlow } returns currentTimeFlowMock
 
-        every { timeFlowMockk.currentTimeFlow } returns
-            flow { currentTimes.forEach { emit(it) } }
+        val viewModel = AlarmViewModel(timeFlowMockk, timeFormatterFake, interactorMock)
 
-        val controller = AlarmServiceControllerFake(listOf(ControllerState.Ringing(label)))
-        val viewModel = getAlarmViewModel(controller = controller)
-
-        turbineScope {
-            val currentTime = viewModel.currentTime.testIn(backgroundScope)
-            val state = viewModel.state.testIn(backgroundScope)
-
-            // When
-            state.awaitItem() mustBe AlarmUiState.Initial
-            currentTime.skipItems(1) // Initial
-
-            // Then
-            currentTime.awaitItem() mustBe expected[0]
-
-            // When
-            controller.onServiceBind(mockk(), 0L)
-            state.awaitItem() mustBe AlarmUiState.Ringing(label.label)
-
-            // Then
-            currentTime.awaitItem() mustBe expected[1]
-            currentTime.awaitItem() mustBe expected[2]
+        viewModel.currentTime.test {
+            skipItems(1)
+            assertEquals("11:09 AM", awaitItem())
+            assertEquals("11:10 AM", awaitItem())
+            assertEquals("11:11 AM", awaitItem())
         }
     }
 
     @Test
-    fun `When it is not in the Initial or Ringing state, it does not collects the currentTime`() = runTest {
+    fun `When not in the Ringing state, it does not collect the TimeFlow`() = runTest {
         // Given
-        val controller = AlarmServiceControllerFake(listOf(ControllerState.Error))
-        val viewModel = getAlarmViewModel(
-            timeFlow = org.a_cyb.sayitalarm.util.time_flow.TimeFlow,
-            controller = controller,
+        val interactorLabelMock = MutableStateFlow<Result<Label>>(Result.failure(IllegalStateException()))
+        val currentTimeFlowMock = flowOf(
+            Pair(Hour(11), Minute(9)),
+            Pair(Hour(11), Minute(10)),
+            Pair(Hour(11), Minute(11)),
         )
+        every { interactorMock.label } returns interactorLabelMock
+        every { timeFlowMockk.currentTimeFlow } returns currentTimeFlowMock
+
+        val viewModel = AlarmViewModel(timeFlowMockk, timeFormatterFake, interactorMock)
 
         viewModel.currentTime.test {
-            skipItems(2) // Initial & One currentTime item
-
+            skipItems(1)
             // When
-            controller.onServiceBind(mockk(), 0L) // It goes into the Error state.
+            advanceUntilIdle()
 
             // Then
             expectNoEvents()
@@ -136,82 +166,53 @@ class AlarmViewModelSpec {
     }
 
     @Test
-    fun `When startSayIt is invoked, it triggers the controller's startSayIt`() = runTest {
+    fun `When startSayIt is called, it calls the AlarmInteractor stopAlarm`() {
         // Given
-        val viewModel = getAlarmViewModel()
+        val viewModel = AlarmViewModel(timeFlowMockk, timeFormatterFake, interactorMock)
 
         // When
         viewModel.startSayIt()
 
         // Then
-        verify(exactly = 1) { controllerMockk.startSayIt() }
+        verify { interactorMock.stopAlarm() }
     }
 
     @Test
-    fun `When snooze is invoked, it triggers the controller's startSnooze`() = runTest {
+    fun `When snooze is called, it calls the AlarmInteractor snooze`() {
         // Given
-        val viewModel = getAlarmViewModel()
+        val viewModel = AlarmViewModel(timeFlowMockk, timeFormatterFake, interactorMock)
 
         // When
         viewModel.snooze()
 
         // Then
-        verify(exactly = 1) { controllerMockk.startSnooze() }
+        verify { interactorMock.snooze() }
     }
 
     @Test
-    fun `Given runCommand is called it executes the given command`() {
+    fun `When runCommand is called with the Snooze command, it executes snooze`() {
         // Given
-        val viewModel = getAlarmViewModel()
-        val command: CommandContract.Command<AlarmViewModel> = mockk(relaxed = true)
+        val viewModel: AlarmContract.AlarmViewModel = AlarmViewModel(timeFlowMockk, timeFormatterFake, interactorMock)
+        val command = SnoozeCommand
 
         // When
         viewModel.runCommand(command)
 
         // Then
-        verify(exactly = 1) { command.execute(any()) }
+        verify { viewModel.snooze() }
     }
 
     @Test
     fun `It fulfills AlarmViewModel`() {
-        val viewModel = getAlarmViewModel()
+        val viewModel = AlarmViewModel(timeFlowMockk, timeFormatterFake, interactorMock)
 
-        viewModel fulfils AlarmContract.AlarmViewModel::class
-    }
-}
-
-private class AlarmServiceControllerFake(
-    results: List<ControllerState> = listOf(ControllerState.Initial),
-) : AlarmServiceController {
-
-    private val results = results.toMutableList()
-
-    private val _controllerState: MutableStateFlow<ControllerState> = MutableStateFlow(ControllerState.Initial)
-    override val controllerState: StateFlow<ControllerState> = _controllerState.asStateFlow()
-
-    override fun onServiceBind(service: AlarmService, alarmId: Long) {
-        updateState()
+        assertIs<AlarmContract.AlarmViewModel>(viewModel)
     }
 
-    override fun onServiceDisconnected() {
-        updateState()
-    }
+    @Test
+    fun `It is in the Initial state`() {
+        val viewModel = AlarmViewModel(timeFlowMockk, timeFormatterFake, interactorMock)
 
-    override fun startSayIt() {
-        updateState()
-    }
-
-    override fun startSnooze() {
-        updateState()
-    }
-
-    override fun scheduleNextAlarm(scope: CoroutineScope) {
-        updateState()
-    }
-
-    override fun terminate() {}
-
-    private fun updateState() {
-        _controllerState.update { results.removeFirst() }
+        assertEquals(AlarmUiState.Initial, viewModel.state.value)
     }
 }
