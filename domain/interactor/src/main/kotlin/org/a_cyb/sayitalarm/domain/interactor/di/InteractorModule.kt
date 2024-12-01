@@ -33,6 +33,6 @@ val interactorModule = module {
     }
 
     factory<InteractorContract.AlarmInteractor> {
-        AlarmInteractor(get(), get(), get(), get(), get(named("io")), get(named("ioScope")))
+        AlarmInteractor(get(), get(), get(), get(), get(named("io")))
     }
 }

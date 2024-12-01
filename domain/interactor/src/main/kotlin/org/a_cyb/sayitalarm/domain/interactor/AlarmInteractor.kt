@@ -35,7 +35,6 @@ class AlarmInteractor(
     private val alarmRepository: RepositoryContract.AlarmRepository,
     private val settingsRepository: RepositoryContract.SettingsRepository,
     private val ioDispatcher: CoroutineDispatcher,
-    private val ioScope: CoroutineScope,
 ) : AlarmInteractor {
 
     private lateinit var alarm: Alarm

@@ -12,18 +12,14 @@ import io.mockk.coVerifyOrder
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import kotlin.test.assertEquals
-import kotlin.test.assertIs
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -50,6 +46,8 @@ import org.a_cyb.sayitalarm.entity.WeeklyRepeat
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertIs
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class AlarmInteractorSpec {
@@ -58,14 +56,12 @@ class AlarmInteractorSpec {
     private val settingsRepositoryMock: SettingsRepository = mockk(relaxed = true)
     private val alarmSchedulerMock: AlarmSchedulerContract = mockk(relaxed = true)
     private lateinit var testDispatcher: CoroutineDispatcher
-    private lateinit var testScope: CoroutineScope
 
     private lateinit var alarmInteractor: AlarmInteractor
 
     @Before
     fun setup() {
         testDispatcher = UnconfinedTestDispatcher()
-        testScope = TestScope(testDispatcher)
 
         Dispatchers.setMain(testDispatcher)
 
@@ -75,7 +71,6 @@ class AlarmInteractorSpec {
             alarmRepositoryMock,
             settingsRepositoryMock,
             testDispatcher,
-            testScope,
         )
     }
 
@@ -364,7 +359,7 @@ class AlarmInteractorSpec {
     @Test
     fun `It fulfills AlarmInteractorContract`() {
         assertIs<InteractorContract.AlarmInteractor>(
-            AlarmInteractor(mockk(), mockk(), mockk(), mockk(), mockk(), mockk()),
+            AlarmInteractor(mockk(), mockk(), mockk(), mockk(), mockk()),
         )
     }
 

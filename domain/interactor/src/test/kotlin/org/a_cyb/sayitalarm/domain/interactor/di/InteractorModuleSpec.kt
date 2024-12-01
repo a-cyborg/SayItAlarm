@@ -8,7 +8,6 @@ package org.a_cyb.sayitalarm.domain.interactor.di
 
 import io.mockk.mockk
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmControllerContract
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmSchedulerContract
 import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
@@ -116,7 +115,6 @@ class InteractorModuleSpec {
             single<RepositoryContract.SettingsRepository> { mockk() }
             single<AlarmSchedulerContract> { mockk() }
             single<CoroutineDispatcher>(named("io")) { mockk() }
-            single<CoroutineScope>(named("ioScope")) { mockk() }
         }
 
         val koinApp = koinApplication {
