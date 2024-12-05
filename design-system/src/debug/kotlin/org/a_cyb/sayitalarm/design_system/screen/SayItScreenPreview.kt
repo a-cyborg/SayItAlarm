@@ -11,40 +11,47 @@ import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.a_cyb.sayitalarm.presentation.contracts.SayItContract
-import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItState
-import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItState.Error
-import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItState.Finished
-import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItState.Initial
-import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItState.Processing
-import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SttStatus
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItUIInfo
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItUiState
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItUiState.Finished
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItUiState.Initial
 import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract
 
 @Preview
 @Composable
-fun SayItScreenPreview_Processing_Ready() {
-    // Color.useDarkTheme()
-    val state = Processing(sayItInfo)
+fun SayItScreenPreview_InitialScene() {
+    val state = Initial
+    SayItScreen(viewModel = SayItViewModelFake(state))
+}
+
+private val sayItInfo =
+    SayItUIInfo(
+        "I embrace this hour with enthusiasm.",
+        "I embrace",
+        1,
+        3,
+    )
+
+@Preview
+@Composable
+fun SayItScreenPreview_InProgressScene_Listening() {
+    val state = SayItUiState.Listening(sayItInfo)
     SayItScreen(viewModel = SayItViewModelFake(state))
 }
 
 @Preview
 @Composable
-fun SayItScreenPreview_Processing_Listening() {
-    val state = Processing(sayItInfo.copy(status = SttStatus.LISTENING))
+fun SayItScreenPreview_InProgressScene_Success() {
+    val state = SayItUiState.Success(
+        sayItInfo.copy(transcript = sayItInfo.script),
+    )
     SayItScreen(viewModel = SayItViewModelFake(state))
 }
 
 @Preview
 @Composable
-fun SayItScreenPreview_Processing_Success() {
-    val state = Processing(sayItInfo.copy(status = SttStatus.SUCCESS))
-    SayItScreen(viewModel = SayItViewModelFake(state))
-}
-
-@Preview
-@Composable
-fun SayItScreenPreview_Processing_Failed() {
-    val state = Processing(sayItInfo.copy(status = SttStatus.FAILED))
+fun SayItScreenPreview_InProgressScene_Failed() {
+    val state = SayItUiState.Failed(sayItInfo)
     SayItScreen(viewModel = SayItViewModelFake(state))
 }
 
@@ -57,34 +64,15 @@ fun SayItScreenPreview_Finished() {
 @Preview
 @Composable
 fun SayItScreenPreview_Error() {
-    SayItScreen(viewModel = SayItViewModelFake(Error))
+    val state = SayItUiState.Error("SERVICE_DISCONNECTED")
+    SayItScreen(viewModel = SayItViewModelFake(state))
 }
 
-@Preview
-@Composable
-fun SayItScreenPreview_Initial() {
-    SayItScreen(viewModel = SayItViewModelFake(Initial))
-}
-
-private class SayItViewModelFake(state: SayItState) : SayItContract.SayItViewModel {
-    override val state: StateFlow<SayItState> = MutableStateFlow(state)
-    override val isOffline: StateFlow<SayItContract.IsOffline> = MutableStateFlow(SayItContract.IsOffline.True)
+private class SayItViewModelFake(state: SayItUiState) : SayItContract.SayItViewModel {
+    override val state: StateFlow<SayItUiState> = MutableStateFlow(state)
+    // override val isOffline: StateFlow<SayItContract.IsOffline> = MutableStateFlow(SayItContract.IsOffline.True)
 
     override fun processScript() {}
     override fun finish() {}
     override fun <T : CommandContract.CommandReceiver> runCommand(command: CommandContract.Command<T>) {}
 }
-
-// private val sayItInfo = SayItContract.SayItInfo(
-//     script = "I embrace this hour with enthusiasm.",
-//     sttResult = "I embrace this",
-//     status = SttStatus.READY,
-//     count = SayItContract.Count(3, 7)
-// )
-
-private val sayItInfo = SayItContract.SayItInfo(
-    script = "All I need is within me right now.",
-    sttResult = "All I need is",
-    status = SttStatus.READY,
-    count = SayItContract.Count(3, 7),
-)
