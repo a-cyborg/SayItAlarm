@@ -8,6 +8,7 @@ package org.a_cyb.sayitalarm.design_system.atom
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import org.a_cyb.sayitalarm.design_system.token.Color
 import org.a_cyb.sayitalarm.design_system.token.Font
@@ -85,11 +86,12 @@ fun TextHeadlineStandardSmall(text: String) {
 }
 
 @Composable
-fun TextTitleStandardLarge(text: String) {
+fun TextTitleStandardLarge(text: String, textAlign: TextAlign = TextAlign.Unspecified) {
     Text(
         text = text,
         color = Color.text.standard,
         style = Font.title.l,
+        textAlign = textAlign,
     )
 }
 
@@ -103,11 +105,12 @@ fun TextTitleAttentionLarge(text: String) {
 }
 
 @Composable
-fun TextTitleSubtleLarge(text: String) {
+fun TextTitleSubtleLarge(text: String, textAlign: TextAlign = TextAlign.Unspecified) {
     Text(
         text = text,
         color = Color.text.subtle,
         style = Font.title.l,
+        textAlign = textAlign,
     )
 }
 

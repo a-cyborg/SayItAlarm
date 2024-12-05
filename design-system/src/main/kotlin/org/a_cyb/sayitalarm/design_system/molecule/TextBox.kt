@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import org.a_cyb.sayitalarm.design_system.R
 import org.a_cyb.sayitalarm.design_system.atom.SpacerLarge
 import org.a_cyb.sayitalarm.design_system.atom.TextBodyStandardLarge
@@ -76,7 +77,7 @@ fun TextBoxSayItScript(text: String) {
         modifier = Modifier.padding(Spacing.xl),
         contentAlignment = Alignment.Center,
     ) {
-        TextTitleStandardLarge(text = text)
+        TextTitleStandardLarge(text = text, textAlign = TextAlign.Center)
     }
 }
 
@@ -86,7 +87,7 @@ fun TextBoxSttResult(text: String) {
         modifier = Modifier.padding(horizontal = Spacing.xl),
         contentAlignment = Alignment.Center,
     ) {
-        TextTitleSubtleLarge(text = text)
+        TextTitleSubtleLarge(text = text, textAlign = TextAlign.Center)
     }
 }
 

@@ -16,16 +16,13 @@ import kotlinx.coroutines.flow.StateFlow
 import org.a_cyb.sayitalarm.design_system.R
 import org.a_cyb.sayitalarm.design_system.RoborazziTest
 import org.a_cyb.sayitalarm.presentation.contracts.SayItContract
-import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItState
-import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItState.Error
-import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItState.Finished
-import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItState.Initial
-import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItState.Processing
-import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SttStatus
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItUIInfo
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItUiState
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItUiState.Initial
 import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract
-import org.a_cyb.sayitalarm.util.test_utils.mustBe
 import org.junit.Test
 import org.robolectric.annotation.Config
+import kotlin.test.assertEquals
 
 @Config(qualifiers = RobolectricDeviceQualifiers.Pixel7)
 class SayItScreenSpec : RoborazziTest() {
@@ -33,157 +30,109 @@ class SayItScreenSpec : RoborazziTest() {
     private fun getString(id: Int) = subjectUnderTest.activity.getString(id)
 
     @Test
-    fun `When SayItViewModel is in the Initial state, It displays LoadingScreen`() {
-        // Given
+    fun whenVewModelStateIsInitial_displaysInitialScene() {
         val viewModel = SayItViewModelFake(Initial)
 
         subjectUnderTest.setContent {
-            // When
             SayItScreen(viewModel = viewModel)
         }
-        // Then
-        subjectUnderTest.onNodeWithText(getString(R.string.loading))
-            .assertExists()
+
+        subjectUnderTest.onNodeWithText(getString(R.string.loading)).assertExists()
     }
 
     @Test
-    fun `When SayItViewModel is in the Finished state, It displays FinishScreen`() {
-        // Given
-        val viewModel = SayItViewModelFake(Finished)
+    fun whenViewModelStateIsListening_displaysInProgressListeningScene() {
+        val viewModel = SayItViewModelFake(SayItUiState.Listening(sayItUiInfo))
 
         subjectUnderTest.setContent {
-            // When
             SayItScreen(viewModel = viewModel)
         }
-        // Then
-        subjectUnderTest.onNodeWithText(getString(R.string.finish)).assertExists()
-            .assertHasClickAction()
-            .performClick()
-        viewModel.invokedType mustBe SayItViewModelFake.InvokedType.FORCE_QUIT
+
+        subjectUnderTest.onNodeWithText(getString(R.string.listening)).assertExists()
+        subjectUnderTest.onNodeWithText("${sayItUiInfo.currentCount} / ${sayItUiInfo.totalCount}").assertExists()
+        subjectUnderTest.onNodeWithText(sayItUiInfo.script).assertExists()
+        subjectUnderTest.onNodeWithText(sayItUiInfo.transcript).assertExists()
     }
 
     @Test
-    fun `When SayItViewModel is in the Error state, It displays ErrorScreen`() {
-        // Given
-        val viewModel = SayItViewModelFake(Error)
+    fun whenViewModelStateIsSuccess_displaysInProgressSuccessScene() {
+        val givenSayItInfo = sayItUiInfo.copy(transcript = sayItUiInfo.script)
+        val viewModel = SayItViewModelFake(SayItUiState.Success(givenSayItInfo))
 
         subjectUnderTest.setContent {
-            // When
             SayItScreen(viewModel = viewModel)
         }
 
-        // Then
+        subjectUnderTest.onNodeWithText(getString(R.string.success)).assertExists()
+        subjectUnderTest.onNodeWithText("${sayItUiInfo.currentCount} / ${sayItUiInfo.totalCount}").assertExists()
+        assertEquals(
+            2,
+            subjectUnderTest.onAllNodesWithText(sayItUiInfo.script).fetchSemanticsNodes().size,
+        )
+    }
+
+    @Test
+    fun whenViewModelStateIsFailed_displaysInProgressFailedScene() {
+        val viewModel = SayItViewModelFake(SayItUiState.Failed(sayItUiInfo))
+
+        subjectUnderTest.setContent {
+            SayItScreen(viewModel = viewModel)
+        }
+
+        subjectUnderTest.onNodeWithText(getString(R.string.failed)).assertExists()
+        subjectUnderTest.onNodeWithText("${sayItUiInfo.currentCount} / ${sayItUiInfo.totalCount}").assertExists()
+        subjectUnderTest.onNodeWithText(sayItUiInfo.script).assertExists()
+        subjectUnderTest.onNodeWithText(sayItUiInfo.transcript).assertExists()
+    }
+
+    @Test
+    fun whenViewModelStateIsError_displaysErrorScene() {
+        val givenErrorMessage = "SERVICE_DISCONNECTED"
+        val viewModel = SayItViewModelFake(SayItUiState.Error(givenErrorMessage))
+
+        subjectUnderTest.setContent {
+            SayItScreen(viewModel = viewModel)
+        }
+
         subjectUnderTest.onNodeWithText(getString(R.string.error)).assertExists()
         subjectUnderTest.onNodeWithText(getString(R.string.info_say_it_error)).assertExists()
-        subjectUnderTest.onNodeWithText(getString(R.string.exit)).assertExists()
+        subjectUnderTest
+            .onNodeWithText("${getString(R.string.info_say_it_error_name)} $givenErrorMessage")
+            .assertExists()
+        subjectUnderTest.onNodeWithText(getString(R.string.exit))
+            .assertExists()
             .assertHasClickAction()
             .performClick()
-        viewModel.invokedType mustBe SayItViewModelFake.InvokedType.FORCE_QUIT
+        assertEquals(SayItViewModelFake.InvokedType.FINISH, viewModel.invokedType)
     }
 
     @Test
-    fun `When SayItViewModel is in the Processing_Ready state, It displays ProcessingScreen`() {
-        // Given
-        val viewModel = SayItViewModelFake(Processing(sayItInfo))
+    fun whenViewModelStateIsFinished_displaysFinishScene() {
+        val viewModel = SayItViewModelFake(SayItUiState.Finished)
 
         subjectUnderTest.setContent {
-            // When
             SayItScreen(viewModel = viewModel)
         }
 
-        // Then
-        subjectUnderTest.onNodeWithText(getString(R.string.ready)).assertExists()
-        subjectUnderTest.onNodeWithText("${sayItInfo.count.current}/${sayItInfo.count.total}").assertExists()
-        subjectUnderTest.onNodeWithText(sayItInfo.script).assertExists()
-        subjectUnderTest.onNodeWithText(getString(R.string.start)).assertExists()
+        subjectUnderTest.onNodeWithText(getString(R.string.say_it)).assertExists()
+        subjectUnderTest.onNodeWithText(getString(R.string.finish))
+            .assertExists()
             .assertHasClickAction()
             .performClick()
-        viewModel.invokedType mustBe SayItViewModelFake.InvokedType.PROCESS_SCRIPT
+        assertEquals(SayItViewModelFake.InvokedType.FINISH, viewModel.invokedType)
     }
 
-    @Test
-    fun `When SayItViewModel is in the Processing_Listening state, It displays ProcessingScreen with Listening anim`() {
-        // Given
-        val sayItInfo = sayItInfo.copy(
-            status = SttStatus.LISTENING,
-            sttResult = "I emb",
+    private val sayItUiInfo =
+        SayItUIInfo(
+            "I embrace this hour with enthusiasm.",
+            "I embrace",
+            1,
+            3,
         )
-        val viewModel = SayItViewModelFake(Processing(sayItInfo))
-
-        subjectUnderTest.setContent {
-            // When
-            SayItScreen(viewModel = viewModel)
-        }
-
-        // Then
-        subjectUnderTest.onAllNodesWithText(getString(R.string.listening)).fetchSemanticsNodes()
-            .size mustBe 2
-        subjectUnderTest.onNodeWithText("${sayItInfo.count.current}/${sayItInfo.count.total}").assertExists()
-        subjectUnderTest.onNodeWithText(sayItInfo.script).assertExists()
-        subjectUnderTest.onNodeWithText("I emb").assertExists()
-    }
-
-    @Test
-    fun `When SayItViewModel is in the Processing_Success state, It displays ProcessingScreen with Success action`() {
-        // Given
-        val sayItInfo = sayItInfo.copy(
-            status = SttStatus.SUCCESS,
-            sttResult = sayItInfo.script,
-        )
-        val viewModel = SayItViewModelFake(Processing(sayItInfo))
-
-        subjectUnderTest.setContent {
-            // When
-            SayItScreen(viewModel = viewModel)
-        }
-
-        // Then
-        subjectUnderTest.onNodeWithText(getString(R.string.success)).assertExists()
-        subjectUnderTest.onNodeWithText("${sayItInfo.count.current}/${sayItInfo.count.total}").assertExists()
-        subjectUnderTest.onAllNodesWithText(sayItInfo.script).fetchSemanticsNodes()
-            .size mustBe 2
-        subjectUnderTest.onNodeWithText(getString(R.string.start)).assertExists()
-            .assertHasClickAction()
-            .performClick()
-        viewModel.invokedType mustBe SayItViewModelFake.InvokedType.PROCESS_SCRIPT
-    }
-
-    @Test
-    fun `When SayItViewModel is in the Processing_Failed state, It displays ProcessingScreen with Failed action`() {
-        // Given
-        val sayItInfo = sayItInfo.copy(
-            status = SttStatus.FAILED,
-            sttResult = "It's wrong",
-        )
-        val viewModel = SayItViewModelFake(Processing(sayItInfo))
-
-        subjectUnderTest.setContent {
-            // When
-            SayItScreen(viewModel = viewModel)
-        }
-
-        // Then
-        subjectUnderTest.onNodeWithText(getString(R.string.failed)).assertExists()
-        subjectUnderTest.onNodeWithText("${sayItInfo.count.current}/${sayItInfo.count.total}").assertExists()
-        subjectUnderTest.onNodeWithText(sayItInfo.script).assertExists()
-        subjectUnderTest.onNodeWithText("It's wrong").assertExists()
-        subjectUnderTest.onNodeWithText(getString(R.string.try_again)).assertExists()
-            .assertHasClickAction()
-            .performClick()
-        viewModel.invokedType mustBe SayItViewModelFake.InvokedType.PROCESS_SCRIPT
-    }
-
-    private val sayItInfo = SayItContract.SayItInfo(
-        script = "I embrace this hour with enthusiasm.",
-        sttResult = "I embrace this",
-        status = SttStatus.READY,
-        count = SayItContract.Count(3, 7),
-    )
 }
 
-private class SayItViewModelFake(state: SayItState) : SayItContract.SayItViewModel {
-    override val state: StateFlow<SayItState> = MutableStateFlow(state)
-    override val isOffline: StateFlow<SayItContract.IsOffline> = MutableStateFlow(SayItContract.IsOffline.True)
+private class SayItViewModelFake(state: SayItUiState) : SayItContract.SayItViewModel {
+    override val state: StateFlow<SayItUiState> = MutableStateFlow(state)
 
     private var _invokedType: InvokedType = InvokedType.NONE
     val invokedType: InvokedType
@@ -194,7 +143,7 @@ private class SayItViewModelFake(state: SayItState) : SayItContract.SayItViewMod
     }
 
     override fun finish() {
-        _invokedType = InvokedType.FORCE_QUIT
+        _invokedType = InvokedType.FINISH
     }
 
     override fun <T : CommandContract.CommandReceiver> runCommand(command: CommandContract.Command<T>) {
@@ -204,7 +153,7 @@ private class SayItViewModelFake(state: SayItState) : SayItContract.SayItViewMod
 
     enum class InvokedType {
         PROCESS_SCRIPT,
-        FORCE_QUIT,
+        FINISH,
         NONE,
     }
 }
