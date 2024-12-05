@@ -11,6 +11,7 @@ import org.a_cyb.sayitalarm.domain.interactor.AlarmInteractor
 import org.a_cyb.sayitalarm.domain.interactor.EditInteractor
 import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
 import org.a_cyb.sayitalarm.domain.interactor.ListInteractor
+import org.a_cyb.sayitalarm.domain.interactor.SayItInteractor
 import org.a_cyb.sayitalarm.domain.interactor.SettingsInteractor
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -34,5 +35,9 @@ val interactorModule = module {
 
     factory<InteractorContract.AlarmInteractor> {
         AlarmInteractor(get(), get(), get(), get(), get(named("io")))
+    }
+
+    factory<InteractorContract.SayItInteractor> {
+        SayItInteractor(get(), get(), get(), get(), get(named("io")))
     }
 }

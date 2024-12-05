@@ -9,8 +9,10 @@ package org.a_cyb.sayitalarm.domain.interactor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import org.a_cyb.sayitalarm.entity.Alarm
 import org.a_cyb.sayitalarm.entity.Label
+import org.a_cyb.sayitalarm.entity.SayIt
 import org.a_cyb.sayitalarm.entity.Settings
 import org.a_cyb.sayitalarm.entity.Snooze
 import org.a_cyb.sayitalarm.entity.Theme
@@ -57,6 +59,31 @@ interface InteractorContract {
             ERROR_AUDIO_PLAYER,
             ERROR_SERVICE_DISCONNECTED,
             ERROR_ALARM_NOT_FOUND,
+        }
+    }
+
+    interface SayItInteractor {
+        val sayItState: StateFlow<SayItState>
+
+        fun startSayIt(scope: CoroutineScope)
+        fun startListening()
+        fun stopSayIt()
+        fun shutdown()
+
+        sealed interface SayItState {
+            data object Initial : SayItState
+            data object Ready : SayItState
+            data class InProgress(val status: ProgressStatus, val sayIt: SayIt, val count: Count) : SayItState
+            data class Error(val error: SayItError) : SayItState
+            data object Completed : SayItState
+        }
+
+        data class Count(val current: Int, val total: Int)
+        enum class ProgressStatus { IN_PROGRESS, SUCCESS, FAILED }
+        enum class SayItError {
+            ALARM_LOAD_FAILED,
+            SERVICE_DISCONNECTED_WHILE_RESOLVING_ALARM_ID,
+            SPEECH_RECOGNIZER_ERROR,
         }
     }
 }

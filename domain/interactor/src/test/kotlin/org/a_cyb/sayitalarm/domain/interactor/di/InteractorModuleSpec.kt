@@ -10,6 +10,8 @@ import io.mockk.mockk
 import kotlinx.coroutines.CoroutineDispatcher
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmControllerContract
 import org.a_cyb.sayitalarm.domain.alarm_service.AlarmSchedulerContract
+import org.a_cyb.sayitalarm.domain.alarm_service.EditDistanceCalculatorContract
+import org.a_cyb.sayitalarm.domain.alarm_service.SttRecognizerContract
 import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
 import org.a_cyb.sayitalarm.domain.repository.RepositoryContract
 import org.junit.Test
@@ -129,5 +131,30 @@ class InteractorModuleSpec {
 
         // Then
         assertNotNull(alarmInteractor)
+    }
+
+    @Test
+    fun `It injects SayItInteractor`() {
+        // Given
+        val externalModule = module {
+            single<AlarmControllerContract> { mockk(relaxed = true) }
+            factory<EditDistanceCalculatorContract> { mockk() }
+            single<SttRecognizerContract> { mockk() }
+            single<RepositoryContract.AlarmRepository> { mockk() }
+            single<CoroutineDispatcher>(named("io")) { mockk() }
+        }
+
+        val koinApp = koinApplication {
+            modules(
+                interactorModule,
+                externalModule,
+            )
+        }
+
+        // When
+        val sayItInteractor = koinApp.koin.getOrNull<InteractorContract.SayItInteractor>()
+
+        // Then
+        assertNotNull(sayItInteractor)
     }
 }
