@@ -12,7 +12,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract
+import org.a_cyb.sayitalarm.domain.alarm_service.SttRecognizerOnDeviceHelper
 import org.a_cyb.sayitalarm.domain.interactor.InteractorContract
 import org.a_cyb.sayitalarm.presentation.contracts.AddContract
 import org.a_cyb.sayitalarm.presentation.contracts.AlarmContract
@@ -23,6 +23,7 @@ import org.a_cyb.sayitalarm.presentation.contracts.SettingsContract
 import org.a_cyb.sayitalarm.presentation.viewmodel.mapper.AlarmMapperContract
 import org.a_cyb.sayitalarm.util.formatter.time.TimeFormatterContract
 import org.a_cyb.sayitalarm.util.formatter.weekday.WeekdayFormatterContract
+import org.a_cyb.sayitalarm.util.sound_effect_player.SoundEffectPlayerContract
 import org.a_cyb.sayitalarm.util.time_flow.TimeFlowContract
 import org.koin.core.parameter.parametersOf
 import org.koin.dsl.koinApplication
@@ -39,7 +40,7 @@ class ViewModelModuleSpec {
         single<TimeFormatterContract> { mockk() }
         single<WeekdayFormatterContract> { mockk() }
         single<AlarmMapperContract> { mockk(relaxed = true) }
-        single<AlarmServiceContract.SttRecognizerOnDeviceHelper> { mockk(relaxed = true) }
+        single<SttRecognizerOnDeviceHelper> { mockk(relaxed = true) }
     }
 
     @BeforeTest
@@ -148,7 +149,7 @@ class ViewModelModuleSpec {
     fun `It injects AlarmViewModel`() {
         // Given
         val externalModule = module {
-            single<AlarmServiceContract.AlarmServiceController> { mockk(relaxed = true) }
+            single<InteractorContract.AlarmInteractor> { mockk(relaxed = true) }
             single<TimeFlowContract> { mockk(relaxed = true) }
         }
 
@@ -174,10 +175,8 @@ class ViewModelModuleSpec {
     fun `It injects SayItViewModel`() {
         // Given
         val externalModule = module {
-            single<AlarmServiceContract.AlarmServiceController> { mockk(relaxed = true) }
-            single<AlarmServiceContract.SttRecognizer> { mockk(relaxed = true) }
-            single<AlarmServiceContract.EditDistanceCalculator> { mockk(relaxed = true) }
-            single<org.a_cyb.sayitalarm.util.sound_effect_player.SoundEffectPlayerContract> { mockk(relaxed = true) }
+            single<InteractorContract.SayItInteractor> { mockk(relaxed = true) }
+            single<SoundEffectPlayerContract> { mockk(relaxed = true) }
         }
 
         val koinApp = koinApplication {

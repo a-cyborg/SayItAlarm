@@ -14,50 +14,44 @@ import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.AlarmServiceController.ControllerState
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.EditDistanceCalculator
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.SttRecognizer
-import org.a_cyb.sayitalarm.domain.alarm_service.AlarmServiceContract.SttRecognizer.RecognizerState
-import org.a_cyb.sayitalarm.entity.SayItScripts
+import org.a_cyb.sayitalarm.domain.interactor.InteractorContract.SayItInteractor
+import org.a_cyb.sayitalarm.domain.interactor.InteractorContract.SayItInteractor.Count
+import org.a_cyb.sayitalarm.domain.interactor.InteractorContract.SayItInteractor.ProgressStatus
+import org.a_cyb.sayitalarm.entity.SayIt
 import org.a_cyb.sayitalarm.presentation.contracts.SayItContract
-import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.Count
-import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItInfo
-import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItState.Finished
-import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItState.Processing
-import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SttStatus
-import org.a_cyb.sayitalarm.presentation.contracts.command.CommandContract
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItUIInfo
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItUiState
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItUiState.Initial
 import org.a_cyb.sayitalarm.util.sound_effect_player.SoundEffectPlayerContract
-import org.a_cyb.sayitalarm.util.test_utils.fulfils
-import org.a_cyb.sayitalarm.util.test_utils.mustBe
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import tech.antibytes.kfixture.fixture
 import tech.antibytes.kfixture.kotlinFixture
+import kotlin.test.assertEquals
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SayItViewModelSpec {
-    private val serviceController: AlarmServiceController = mockk(relaxed = true)
-    private val sttRecognizer: SttRecognizer = mockk(relaxed = true)
-    private val editDistanceCalculator: EditDistanceCalculator = mockk(relaxed = true)
-    private val soundEffectPlayer: SoundEffectPlayerContract = mockk(relaxed = true)
+    private val sayItInteractorMock: SayItInteractor = mockk(relaxed = true)
+    private val soundEffectPlayerMock: SoundEffectPlayerContract = mockk(relaxed = true)
+    private lateinit var interactorStateMock: MutableStateFlow<SayItInteractor.SayItState>
+    private lateinit var viewModel: SayItContract.SayItViewModel
 
     private val fixture = kotlinFixture()
 
     @Before
     fun setup() {
-        Dispatchers.setMain(StandardTestDispatcher())
+        Dispatchers.setMain(UnconfinedTestDispatcher())
 
-        every { serviceController.controllerState } returns
-            MutableStateFlow(ControllerState.RunningSayIt(SayItScripts("")))
+        interactorStateMock = MutableStateFlow(SayItInteractor.SayItState.Initial)
+        every { sayItInteractorMock.sayItState } returns interactorStateMock
+
+        viewModel = SayItViewModel(sayItInteractorMock, soundEffectPlayerMock)
     }
 
     @After
@@ -67,311 +61,166 @@ class SayItViewModelSpec {
     }
 
     @Test
-    fun `When processScript is called it invokes SttRecognizer `() {
-        // Given
-        val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator, soundEffectPlayer)
+    fun stateIsInitiallyInitial() = runTest {
+        assertEquals(Initial, actual = viewModel.state.value)
+    }
 
+    @Test
+    fun onInit_beginsCollectingInteractorState() = runTest {
+        assertEquals(1, interactorStateMock.subscriptionCount.value)
+    }
+
+    @Test
+    fun whenProcessScriptIsCalled_triggersInteractorStartListening() {
         // When
         viewModel.processScript()
 
         // Then
-        verify { sttRecognizer.startListening() }
+        verify { sayItInteractorMock.startListening() }
     }
 
     @Test
-    fun `When forceQuite is called it invokes scheduleNextAlarm, terminate, and stopRecognizer`() {
-        // Given
-        val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator, soundEffectPlayer)
-
+    fun whenFinishIsCalled_triggersPlayerStopPlay_andInteractorShutDown() {
         // When
         viewModel.finish()
 
         // Then
-        verify { serviceController.scheduleNextAlarm(any()) }
-        verify { serviceController.terminate() }
-        verify { sttRecognizer.stopRecognizer() }
+        verify { soundEffectPlayerMock.stopPlayer() }
+        verify { sayItInteractorMock.shutdown() }
     }
 
     @Test
-    fun `When the ServiceController is in the RunningSayIt state, it sets the state to Processing with SayItInfo`() {
-        // Given
-        every { serviceController.controllerState } returns
-            MutableStateFlow(ControllerState.RunningSayIt(SayItScripts("SayIt")))
+    fun whenInteractorStateIsInitial_triggersInteractorStartSayIt() = runTest {
+        // Interactor initial state is provided on setUp
+        verify { sayItInteractorMock.startSayIt(any()) }
+    }
 
-        val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator, soundEffectPlayer)
+    @Test
+    fun whenInteractorStateIsReady_triggersInteractorStartListening() = runTest {
+        // When
+        interactorStateMock.update { SayItInteractor.SayItState.Ready }
 
         // Then
-        viewModel.state.value mustBe Processing(
-            SayItInfo(
-                script = "SayIt",
-                sttResult = "",
-                status = SttStatus.READY,
-                count = Count(1, 1),
-            ),
+        verify { sayItInteractorMock.startListening() }
+    }
+
+    @Test
+    fun whenInteractorStateIsInProgressAndStatusIsPROGRESS_updateStateToListening() = runTest {
+        // Given
+        val givenInteractorState = SayItInteractor.SayItState.InProgress(
+            status = ProgressStatus.IN_PROGRESS,
+            sayIt = SayIt("Script One", ""),
+            count = Count(1, 3),
         )
-    }
-
-    @Test
-    fun `when the SttRecognizer is in the Ready, it sets the state to Listening`() = runTest {
-        // Given
-        val sttRecognizer = SttRecognizerFake(listOf(RecognizerState.Ready))
-        val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator, soundEffectPlayer)
 
         viewModel.state.test {
             skipItems(1)
 
             // When
-            viewModel.processScript()
+            interactorStateMock.update { givenInteractorState }
 
             // Then
-            awaitItem() mustBe Processing(info = sayItInfo.copy(status = SttStatus.LISTENING))
-        }
-    }
-
-    @Test
-    fun `when the SttRecognizer is in the Processing, it updates the Processing state`() = runTest {
-        // Given
-        val sttResult: String = fixture.fixture()
-        val sttRecognizer = SttRecognizerFake(listOf(RecognizerState.Processing(sttResult)))
-        val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator, soundEffectPlayer)
-
-        viewModel.state.test {
-            skipItems(1)
-
-            // When
-            viewModel.processScript()
-
-            // Then
-            awaitItem() mustBe Processing(sayItInfo.copy(sttResult = sttResult))
-        }
-    }
-
-    @Test
-    fun `When the SttRecognizer is in Done, it updates the state to Success`() = runTest {
-        // Given
-        val scripts: List<String> = List(3) { fixture.fixture() }
-        // Set the SpeechToText result to match the script.
-        val sttRecognizer = SttRecognizerFake(listOf(RecognizerState.Done(scripts.first())))
-
-        // It sets the serviceController.controller state to ControllerState.RunningSayIt(given_scripts)
-        setupServiceController(scripts)
-
-        val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator, soundEffectPlayer)
-
-        viewModel.state.test {
-            skipItems(1)
-
-            // When
-            viewModel.processScript()
-
-            // Then
-            awaitItem() mustBe Processing(
-                SayItInfo(
-                    script = scripts[1],
-                    count = Count(2, 3),
-                    sttResult = "",
-                    status = SttStatus.SUCCESS,
+            val expected = SayItUiState.Listening(
+                SayItUIInfo(
+                    givenInteractorState.sayIt.script,
+                    givenInteractorState.sayIt.transcript,
+                    givenInteractorState.count.current,
+                    givenInteractorState.count.total,
                 ),
             )
-            verify { soundEffectPlayer.playSuccessSoundEffect() }
+            assertEquals(expected, awaitItem())
         }
     }
 
     @Test
-    fun `When the SttRecognizer is in Done, it updates the state to Failure`() = runTest {
+    fun whenInteractorStateIsInProgressAndStatusIsSUCCESS_updateStateToSuccess() = runTest {
         // Given
-        val scripts: List<String> = List(3) { fixture.fixture() }
-        val wrongResult: String = fixture.fixture()
-        val recognizerState = listOf(RecognizerState.Done(wrongResult))
-        val sttRecognizer = SttRecognizerFake(recognizerState)
-
-        setupServiceController(scripts)
-        every { editDistanceCalculator.calculateEditDistance(any(), any()) } returns Int.MAX_VALUE
-
-        val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator, soundEffectPlayer)
-
-        viewModel.state.test {
-            skipItems(1)
-
-            // When
-            viewModel.processScript()
-
-            // Then
-            awaitItem() mustBe Processing(
-                SayItInfo(
-                    script = scripts[0],
-                    sttResult = wrongResult,
-                    status = SttStatus.FAILED,
-                    count = Count(current = 1, total = 3),
-                ),
-            )
-            verify { soundEffectPlayer.playFailureSoundEffect() }
-        }
-    }
-
-    @Test
-    fun `When the SttRecognizer state is in Done and It's the last script, It sets the state to Finish`() = runTest {
-        // Given
-        val scripts: List<String> = List(3) { fixture.fixture() }
-        setupServiceController(scripts)
-        val recognizerState = listOf(
-            RecognizerState.Done(scripts[0]),
-            RecognizerState.Done(scripts[1]),
-            RecognizerState.Done(scripts[2]),
+        val givenInteractorState = SayItInteractor.SayItState.InProgress(
+            status = ProgressStatus.SUCCESS,
+            sayIt = SayIt(fixture.fixture(), fixture.fixture()),
+            count = Count(fixture.fixture(), fixture.fixture()),
         )
-        val sttRecognizer = SttRecognizerFake(recognizerState)
-        val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator, soundEffectPlayer)
 
         viewModel.state.test {
             skipItems(1)
 
             // When
-            viewModel.processScript()
-            awaitItem() mustBe Processing(
-                SayItInfo(
-                    script = scripts[1],
-                    sttResult = "",
-                    status = SttStatus.SUCCESS,
-                    count = Count(current = 2, total = 3),
-                ),
-            )
-
-            viewModel.processScript()
-            awaitItem() mustBe Processing(
-                SayItInfo(
-                    script = scripts[2],
-                    sttResult = "",
-                    status = SttStatus.SUCCESS,
-                    count = Count(current = 3, total = 3),
-                ),
-            )
-
-            viewModel.processScript()
+            interactorStateMock.update { givenInteractorState }
 
             // Then
-            awaitItem() mustBe Finished
+            val expected = SayItUiState.Success(
+                SayItUIInfo(
+                    givenInteractorState.sayIt.script,
+                    givenInteractorState.sayIt.transcript,
+                    givenInteractorState.count.current,
+                    givenInteractorState.count.total,
+                ),
+            )
+            assertEquals(expected, awaitItem())
+            verify { soundEffectPlayerMock.playSuccessSoundEffect() }
+            verify { sayItInteractorMock.startListening() }
         }
     }
 
     @Test
-    fun `When Recognizer is in Done, It determines success or failure based on ERROR_ACCEPTANCE_RATE`() = runTest {
+    fun whenInteractorStateIsInProgressAndStatusIsFAILED_updateStateToFailed() = runTest {
         // Given
-        val lengthOfScript: Int = fixture.fixture(range = 9..90)
-        val script = "A".repeat(lengthOfScript)
-        val sttRecognizer = SttRecognizerFake(listOf(RecognizerState.Done("")))
-
-        setupServiceController(listOf(script))
-        every { editDistanceCalculator.calculateEditDistance(any(), any()) } returns
-            (lengthOfScript * 0.2).toInt() + 1
-
-        val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator, soundEffectPlayer)
+        val givenInteractorState = SayItInteractor.SayItState.InProgress(
+            status = ProgressStatus.FAILED,
+            sayIt = SayIt(fixture.fixture(), fixture.fixture()),
+            count = Count(fixture.fixture(), fixture.fixture()),
+        )
 
         viewModel.state.test {
             skipItems(1)
 
             // When
-            viewModel.processScript()
+            interactorStateMock.update { givenInteractorState }
 
             // Then
-            awaitItem() mustBe Processing(
-                SayItInfo(
-                    script = script,
-                    sttResult = "",
-                    status = SttStatus.FAILED,
-                    count = Count(current = 1, total = 1),
+            val expected = SayItUiState.Failed(
+                SayItUIInfo(
+                    givenInteractorState.sayIt.script,
+                    givenInteractorState.sayIt.transcript,
+                    givenInteractorState.count.current,
+                    givenInteractorState.count.total,
                 ),
             )
+            assertEquals(expected, awaitItem())
+            verify { soundEffectPlayerMock.playFailureSoundEffect() }
+            verify { sayItInteractorMock.startListening() }
         }
     }
 
     @Test
-    fun `When Recognizer is in Done, It determines success or failure based on ERROR_ACCEPTANCE_RATE(success case)`() =
-        runTest {
-            // Given
-            val lengthOfScript: Int = fixture.fixture(range = 9..90)
-            val script = "A".repeat(lengthOfScript)
-            val sttRecognizer = SttRecognizerFake(listOf(RecognizerState.Done("")))
+    fun whenInteractorStateIsCompleted_updateStateToFinished() = runTest {
+        viewModel.state.test {
+            skipItems(1)
 
-            setupServiceController(listOf(script))
-            every { editDistanceCalculator.calculateEditDistance(any(), any()) } returns
-                (lengthOfScript * 0.2).toInt() - 1
+            // When
+            interactorStateMock.update { SayItInteractor.SayItState.Completed }
 
-            val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator, soundEffectPlayer)
+            // Then
+            assertEquals(SayItUiState.Finished, awaitItem())
+            verify { soundEffectPlayerMock.playSuccessSoundEffect() }
+        }
+    }
 
-            viewModel.state.test {
-                skipItems(1)
+    @Test
+    fun whenInteractorStateIsError_updateStateToError() = runTest {
+        // Given
+        val givenInteractorError = SayItInteractor.SayItError.SPEECH_RECOGNIZER_ERROR
 
-                // When
-                viewModel.processScript()
+        viewModel.state.test {
+            skipItems(1)
 
-                // Then
-                awaitItem() mustBe Finished
+            // When
+            interactorStateMock.update {
+                SayItInteractor.SayItState.Error(givenInteractorError)
             }
+
+            // Then
+            assertEquals(SayItUiState.Error(givenInteractorError.name), awaitItem())
         }
-
-    @Test
-    fun `When finish is called, it calls ServiceController scheduleNextAlarm and close all the services`() {
-        // Given
-        val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator, soundEffectPlayer)
-
-        // When
-        viewModel.finish()
-
-        // then
-        verify { sttRecognizer.stopRecognizer() }
-        verify { soundEffectPlayer.stopPlayer() }
-        verify { serviceController.scheduleNextAlarm(any()) }
-        verify { serviceController.terminate() }
-    }
-
-    @Test
-    fun `Given runCommand is called it executes the given command`() {
-        // Given
-        val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator, soundEffectPlayer)
-        val command: CommandContract.Command<SayItViewModel> = mockk(relaxed = true)
-
-        // When
-        viewModel.runCommand(command)
-
-        // Then
-        verify(exactly = 1) { command.execute(any()) }
-    }
-
-    @Test
-    fun `It fulfills SayItViewModel`() {
-        // Given
-        val viewModel = SayItViewModel(serviceController, sttRecognizer, editDistanceCalculator, soundEffectPlayer)
-
-        viewModel fulfils SayItContract.SayItViewModel::class
-    }
-
-    private fun setupServiceController(scripts: List<String>) {
-        every { serviceController.controllerState } returns
-            MutableStateFlow(ControllerState.RunningSayIt(SayItScripts(scripts)))
-    }
-
-    private val sayItInfo =
-        SayItInfo(
-            script = "",
-            sttResult = "",
-            status = SttStatus.READY,
-            count = Count(1, 1),
-        )
-}
-
-private class SttRecognizerFake(state: List<RecognizerState>) : SttRecognizer {
-    private val states = state.toMutableList()
-
-    private val _recognizerState: MutableStateFlow<RecognizerState> = MutableStateFlow(RecognizerState.Initial)
-    override val recognizerState: StateFlow<RecognizerState> = _recognizerState.asStateFlow()
-
-    override val isOnDevice: StateFlow<SttRecognizer.IsOnDevice> = MutableStateFlow(SttRecognizer.IsOnDevice.True)
-
-    override fun startListening() {
-        _recognizerState.update { states.removeFirst() }
-    }
-
-    override fun stopRecognizer() {
-        _recognizerState.update { states.removeFirst() }
     }
 }

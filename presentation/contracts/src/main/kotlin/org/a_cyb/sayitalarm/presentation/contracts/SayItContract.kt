@@ -12,25 +12,22 @@ import org.a_cyb.sayitalarm.presentation.contracts.command.SayItCommandContractA
 
 interface SayItContract {
     interface SayItViewModel : SayItCommandContractAll, CommandContract.CommandExecutor {
-        val state: StateFlow<SayItState>
-        val isOffline: StateFlow<IsOffline>
+        val state: StateFlow<SayItUiState>
     }
 
-    sealed interface SayItState {
-        data object Initial : SayItState
-        data object Error : SayItState
-        data class Processing(val info: SayItInfo) : SayItState
-        data object Finished : SayItState
+    sealed interface SayItUiState {
+        data object Initial : SayItUiState
+        data class Listening(val sayItUi: SayItUIInfo) : SayItUiState
+        data class Success(val sayItUi: SayItUIInfo) : SayItUiState
+        data class Failed(val sayItUi: SayItUIInfo) : SayItUiState
+        data class Error(val message: String) : SayItUiState
+        data object Finished : SayItUiState
     }
 
-    data class SayItInfo(
+    data class SayItUIInfo(
         val script: String,
-        val sttResult: String,
-        val status: SttStatus,
-        val count: Count,
+        val transcript: String,
+        val currentCount: Int,
+        val totalCount: Int,
     )
-
-    data class Count(val current: Int, val total: Int)
-    enum class SttStatus { READY, LISTENING, SUCCESS, FAILED, }
-    enum class IsOffline { True, False }
 }
