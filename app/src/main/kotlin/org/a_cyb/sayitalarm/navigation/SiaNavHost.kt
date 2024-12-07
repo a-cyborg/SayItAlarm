@@ -88,9 +88,8 @@ private fun NavHostController.getAlarmId(): Long = getBackStackEntry(EDIT_ROUTE_
 private object NavRoute {
     const val LIST_ROUTE = "list_route"
     const val ADD_ROUTE = "add_route"
-    const val EDIT_ROUTE = "edit_route"
     const val SETTINGS_ROUTE = "settings_route"
-
+    const val EDIT_ROUTE = "edit_route"
     const val EDIT_ARGUMENT_NAME = "alarmId"
     const val EDIT_ROUTE_WITH_ARGUMENT = "$EDIT_ROUTE/{$EDIT_ARGUMENT_NAME}"
 }

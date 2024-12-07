@@ -47,4 +47,9 @@ private object Route {
     const val SAY_IT_ROUTE = "sayIt_route"
 }
 
-private fun NavHostController.navigateToSayIt() = navigate(Route.SAY_IT_ROUTE)
+private fun NavHostController.navigateToSayIt() =
+    navigate(Route.SAY_IT_ROUTE) {
+        popUpTo(Route.ALARM_ROUTE) {
+            inclusive = true
+        }
+    }

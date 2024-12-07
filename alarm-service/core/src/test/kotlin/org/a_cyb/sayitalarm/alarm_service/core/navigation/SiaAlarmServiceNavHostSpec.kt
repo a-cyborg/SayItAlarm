@@ -9,7 +9,6 @@ package org.a_cyb.sayitalarm.alarm_service.core.navigation
 import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -25,7 +24,7 @@ import org.a_cyb.sayitalarm.design_system.R
 import org.a_cyb.sayitalarm.presentation.contracts.AlarmContract
 import org.a_cyb.sayitalarm.presentation.contracts.AlarmContract.AlarmUiState
 import org.a_cyb.sayitalarm.presentation.contracts.SayItContract
-import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SttStatus
+import org.a_cyb.sayitalarm.presentation.contracts.SayItContract.SayItUIInfo
 import org.a_cyb.sayitalarm.presentation.viewmodel.AlarmViewModel
 import org.a_cyb.sayitalarm.presentation.viewmodel.SayItViewModel
 import org.a_cyb.sayitalarm.util.test_utils.createAddActivityToRobolectricRule
@@ -66,8 +65,7 @@ class SiaAlarmServiceNavHostSpec {
 
         every { alarmViewModel.state } returns MutableStateFlow(alarmViewModelState)
         every { alarmViewModel.currentTime } returns MutableStateFlow("")
-        every { sayItViewModel.state } returns MutableStateFlow(SayItContract.SayItState.Processing(sayItInfo))
-        every { sayItViewModel.isOffline } returns MutableStateFlow(SayItContract.IsOffline.True)
+        every { sayItViewModel.state } returns MutableStateFlow(SayItContract.SayItUiState.Listening(sayItUiInfo))
 
         val viewmodelModule = module {
             viewModel { alarmViewModel } bind AlarmContract.AlarmViewModel::class
@@ -114,15 +112,15 @@ class SiaAlarmServiceNavHostSpec {
             onNodeWithText(getStringRes(R.string.say_it)).performClick()
 
             // Then
-            onNodeWithText(sayItInfo.script).assertExists()
-            onNodeWithText(getStringRes(R.string.start)).assertExists().assertHasClickAction()
+            onNodeWithText(sayItUiInfo.script).assertExists()
         }
     }
 
-    private val sayItInfo = SayItContract.SayItInfo(
-        script = "I embrace this hour with enthusiasm.",
-        sttResult = "I embrace this",
-        status = SttStatus.READY,
-        count = SayItContract.Count(1, 7),
-    )
+    private val sayItUiInfo =
+        SayItUIInfo(
+            "I embrace this hour with enthusiasm.",
+            "I embrace",
+            1,
+            3,
+        )
 }
